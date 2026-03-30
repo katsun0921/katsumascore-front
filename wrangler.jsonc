@@ -1,0 +1,5 @@
+{
+  "name": "katsumascore",
+  "compatibility_date": "2026-03-30",
+  "compatibility_flags": ["nodejs_compat"]
+}
