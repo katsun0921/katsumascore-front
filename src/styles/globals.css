@@ -8,8 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-body: var(--font-noto-sans-jp), sans-serif;
-  --font-heading: var(--font-shippori-mincho), serif;
+  --font-body: var(--font-body), sans-serif;
+  --font-heading: var(--font-heading), serif;
 }
 
 body {
