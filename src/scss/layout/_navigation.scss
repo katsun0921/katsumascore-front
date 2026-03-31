@@ -1,0 +1,49 @@
+// $navigation, $white, $header, $category are injected via vite additionalData
+@use '../global/mixin/transition' as *;
+
+.l-navigation {
+  $AnchorPaddingY: 28px;
+  $linkListHeight: calc(#{$AnchorPaddingY} * 2 + 1.5rem);
+  $countLinkList: 4;
+  background: $navigation;
+  &__menuButton {
+    color: $white;
+    padding: 25px 0;
+    &--hidden {
+      display: none;
+    }
+    .c-hamburgerMenu {
+      color: $white;
+      &__line {
+        background-color: $white;
+      }
+    }
+  }
+  &__list {
+    .c-list__header {
+      max-height: 0;
+      display: block;
+      background-color: $header;
+      transition: max-height 0.3s ease;
+    }
+  }
+
+  // Desktop 表示
+  &--isDesktop {
+    .l-navigation__menuButton {
+      display: none;
+    }
+    .l-navigation__list {
+      .c-list__header {
+        display: flex;
+        background-color: $category;
+        max-height: calc(#{$linkListHeight} * #{$countLinkList});
+      }
+    }
+  }
+  &__list.open-menu {
+    .c-list__header {
+      max-height: calc(#{$linkListHeight} * #{$countLinkList});
+    }
+  }
+}

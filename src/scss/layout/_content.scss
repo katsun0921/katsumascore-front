@@ -1,0 +1,8 @@
+@use '../global/mixin/screens' as *;
+
+.l-content {
+  width: 100%;
+  @include md {
+    width: 72%;
+  }
+}

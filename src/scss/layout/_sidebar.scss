@@ -1,0 +1,7 @@
+@use '../global/mixin/screens' as *;
+
+.l-sidebar {
+  @include md {
+    width: 24%;
+  }
+}

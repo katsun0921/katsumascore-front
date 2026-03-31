@@ -1,0 +1,37 @@
+// $footer, $white are injected via vite additionalData
+@use '../global/mixin/screens' as *;
+
+.l-footer {
+  padding: 40px 0 60px;
+  background-color: $footer;
+  color: $white;
+  a {
+    color: $white;
+  }
+  .c-list__term {
+    font-size: 1.2em;
+    font-weight: 700;
+  }
+  &__info {
+    @include md {
+      display: flex;
+      justify-content: space-between;
+    }
+  }
+  &__support {
+    margin-top: 2rem;
+    @include md {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      margin-left: auto;
+    }
+  }
+  &__help {
+    display: flex;
+    margin-left: auto;
+    > li:not(:last-of-type) {
+      margin-right: 1em;
+    }
+  }
+}
