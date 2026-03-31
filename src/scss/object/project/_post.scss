@@ -1,14 +1,137 @@
-// Post project styles - placeholder for future implementation
-.p-post {
-  &__header {
-    margin-bottom: 2rem;
-  }
+// $black, $white, $category are injected via vite additionalData
+@use '../../global/mixin/screens' as *;
 
+.p-postImageOverlay {
+  // 黄金比1:1.6 でセット
+  $height: 360px;
+  position: relative;
+  overflow: hidden;
+  display: block;
+  max-width: calc(#{$height} * 1.6);
+  height: $height;
+  border-radius: 6px;
+  background: $black;
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  @include sm {
+    width: 100%;
+  }
+  .c-category {
+    transform: skew(0);
+  }
+  .c-heading__post {
+    color: $white;
+  }
   &__content {
-    line-height: 1.8;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 10;
+    text-shadow: 1px 1px 2px $black;
+    background-color: rgba(0, 0, 0, 0.3);
   }
+}
 
-  &__footer {
-    margin-top: 2rem;
+.p-postLeftImage {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  align-items: center;
+  height: 360px;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+  &__image {
+    width: calc(100% / 3);
+    height: 100%;
+    background: $black;
+    position: relative;
+    img {
+      position: absolute;
+      width: auto;
+      max-height: 80%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .c-heading__post {
+    color: $category;
+  }
+  &__content {
+    $margin: 32px;
+    width: calc((100% / 3 * 2));
+    height: calc(100% - (#{$margin} * 2));
+    padding-right: $margin;
+    position: relative;
+    overflow: hidden;
+  }
+}
+
+.p-postTopImage {
+  // 黄金比1:1.6 でセット
+  $width: 360px;
+  $height: calc(#{$width} * 1.6);
+  $margin: 32px;
+  $borderWidth: 2px;
+  display: block;
+  width: 100%;
+  min-width: $width;
+  height: $height;
+  position: relative;
+  overflow: hidden;
+  &::before, &::after {
+    position: absolute;
+    content: '';
+    display: block;
+    width: calc(100% - (#{$borderWidth} * 2));
+    height: $margin;
+    left: 50%;
+    transform: translate(-50%);
+    background-color: $white;
+  }
+  &:before {
+    bottom: $margin;
+    background: linear-gradient(0deg, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%);
+    z-index: 40;
+  }
+  &::after {
+    bottom: 0;
+    z-index: 30;
+    border-bottom: $borderWidth solid rgba(0, 0, 0, 0.1);
+  }
+  &__image {
+    border-radius: 6px 6px 0 0;
+    background: $black;
+    height: calc(#{$height} - #{$width});
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    img {
+      height: auto;
+      max-width: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+  .c-heading__post {
+    color: $category;
+  }
+  &__content {
+    background-color: $white;
+    height: $width;
+    padding: $margin;
+    position: relative;
+    border-width: 0 2px 2px 2px;
+    border-style: solid;
+    border-color: rgba(0, 0, 0, 0.1);
+    z-index: 0;
+  }
+  &__excerpt {
+    margin-top: 0.5rem;
+    color: $black;
   }
 }

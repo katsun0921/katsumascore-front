@@ -1,0 +1,12 @@
+// $category is injected via vite additionalData
+
+.p-summary {
+  blockquote {
+    border-left: 4px solid $category;
+    padding-left: 30px;
+    outline: none;
+    p {
+      margin-bottom: 1rem;
+    }
+  }
+}
