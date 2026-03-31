@@ -10,12 +10,12 @@
 
 ### 1.1 既存デザインシステム
 
-WordPressテーマのデザインシステムは `packages/katsumascore_design_system/` で管理されており、SCSSとReact/TypeScriptで構成されている。Next.js移行後はこのリポジトリのSCSS構造・コンポーネント設計を**参照・移植**してkatsumascore-front内のStorybookを構築する。
+WordPressテーマのデザインシステムは `katsumascore_design_system` で管理されており、SCSSとReact/TypeScriptで構成されている。Next.js移行後はこのリポジトリのSCSS構造・コンポーネント設計を**参照・移植**してkatsumascore-front内のStorybookを構築する。
 
 | 項目 | 現行（WordPress） | Next.js移行後 |
 |---|---|---|
 | リポジトリ | katsumascore_wordpress_theme | katsumascore-front（新規） |
-| デザインシステム | packages/katsumascore_design_system/ | 同パッケージを移植 |
+| デザインシステム | katsumascore_design_system | 同パッケージを移植 |
 | CSSソース | src/scss/（SCSS + BEM） | Storybookコンポーネント用SCSSとして継承 |
 | Storybook | npm run storybook（katsumascore_design_system内） | katsumascore-frontの `.storybook/`（ルート）に移植。v9.1.5・React Vite |
 | フォント（本文） | Noto Sans JP | next/font/google → Noto Sans JP |

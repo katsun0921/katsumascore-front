@@ -1,0 +1,65 @@
+// $white, $category, $twitter, $facebook are injected via vite additionalData
+@use '../../global/mixin/transition' as *;
+
+.c-link {
+  $socialFontSize: 14px;
+  &__social {
+    $socialHeight: 50px;
+    display: block;
+    font-size: $socialFontSize;
+    text-align: center;
+    height: $socialHeight;
+    line-height: $socialHeight;
+    color: $white;
+    position: relative;
+    text-transform: uppercase;
+    &:hover {
+      color: rgba(255, 255, 255, 0.6);
+      opacity: 0.8;
+    }
+  }
+  &__socialText {
+    $socialTextHeight: calc(#{$socialFontSize} * 1.5);
+    position: relative;
+    &::before {
+      position: absolute;
+      top: 0px;
+      left: calc(($socialTextHeight * -1) - ($socialFontSize / 2));
+      width: $socialTextHeight;
+      height: $socialTextHeight;
+      background-size: contain;
+      background-repeat: no-repeat;
+      display: block;
+      content: '';
+    }
+  }
+  &__twitter {
+    background: $twitter;
+    .c-link__socialText::before {
+      background-image: url('https://katsumascore.blog/images/logo-twitter-white.png');
+    }
+  }
+  &__facebook {
+    background: $facebook;
+    .c-link__socialText::before {
+      background-image: url('https://katsumascore.blog/images/logo-facebook.png');
+    }
+  }
+  &__primary {
+    width: auto;
+    max-width: 1200px;
+    display: block;
+    text-align: center;
+    border-radius: 4px;
+    padding: 18px 26px;
+    text-transform: uppercase;
+    font-style: italic;
+    background-color: $category;
+    color: $white;
+    @include transition;
+    &:hover {
+      color: $white;
+      opacity: 0.8;
+    }
+  }
+}
