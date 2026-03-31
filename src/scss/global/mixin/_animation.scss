@@ -25,16 +25,6 @@
   }
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -44,21 +34,4 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-@mixin animate-fade-in($duration: 0.3s) {
-  animation: fadeIn $duration ease forwards;
-}
-
-@mixin animate-fade-in-up($duration: 0.4s) {
-  animation: fadeInUp $duration ease forwards;
 }
