@@ -2,7 +2,6 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import '@/scss/layout/_container.scss';
 import '@/scss/object/component/_link.scss';
-import '@/scss/object/utility/index.scss';
 
 type TLinkProps = {
   backgroundColor?: string;

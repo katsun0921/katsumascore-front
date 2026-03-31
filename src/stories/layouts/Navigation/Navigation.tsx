@@ -4,7 +4,6 @@ import { HamburgerMenu } from '../../components/HamburgerMenu/HamburgerMenu';
 import { changeClassWhenResizeOnNavigation } from '../../../ts/navigation';
 import '@/scss/layout/_container.scss';
 import '@/scss/layout/_navigation.scss';
-import '@/scss/object/utility/index.scss';
 
 export const Navigation = ({}) => {
   useEffect(() => {

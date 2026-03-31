@@ -5,7 +5,6 @@ import {
   LinkRssIcon,
 } from '../Link/LinkSocialIcon';
 import '@/scss/object/component/_list.scss';
-import '@/scss/object/utility/index.scss';
 
 export const ListSocialIcon = ({}) => {
   return (

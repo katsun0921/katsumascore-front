@@ -4,7 +4,6 @@ import { ListSocialIcon } from '../../components/List/ListSocialIcon';
 import type { TListTaxonomyProps } from '../../components/List/ListTaxonomy';
 import '@/scss/layout/_container.scss';
 import '@/scss/layout/_footer.scss';
-import '@/scss/object/utility/index.scss';
 
 export const Footer = ({}) => {
   const categories: TListTaxonomyProps = {

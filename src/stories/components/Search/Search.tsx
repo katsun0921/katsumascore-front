@@ -1,6 +1,5 @@
 import React from 'react';
 import '@/scss/object/component/_search.scss';
-import '@/scss/object/utility/index.scss';
 
 export const Search = ({}) => {
   return (

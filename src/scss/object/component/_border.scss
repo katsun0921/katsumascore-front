@@ -1,0 +1,7 @@
+// $header is injected via vite additionalData
+
+.c-border {
+  &__primary {
+    border: 1px solid $header;
+  }
+}

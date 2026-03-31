@@ -1,0 +1,56 @@
+// $gray100, $gray300, $gray700, $rss are injected via vite additionalData
+
+.c-icon {
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  &__arrowInCircle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    background-color: $gray100;
+    opacity: 0.7;
+    border-radius: 50%;
+    &::after {
+      content: '';
+      margin: 0 auto;
+      width: 10px;
+      height: 10px;
+      border-top: 3px solid $gray700;
+      border-right: 3px solid $gray700;
+    }
+    &:hover {
+      background-color: $gray300;
+    }
+    &__next {
+      &::after {
+        transform: rotate(45deg);
+      }
+    }
+    &__prev {
+      &::after {
+        transform: rotate(-135deg);
+      }
+    }
+  }
+  &__rss {
+    background-color: $rss;
+  }
+  &__circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: block;
+    position: relative;
+    > img {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { LinkFacebook, LinkTwitter } from '../../components/Link/Link';
-import '@/scss/object/utility/index.scss';
 import '@/scss/layout/_sharing.scss';
 
 export const Sharing = ({}) => {

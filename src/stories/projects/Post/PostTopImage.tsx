@@ -4,7 +4,6 @@ import { Score } from '../../components/Score/Score';
 import { Heading } from '../../components/Heading/Heading';
 import type { WPPost } from '../../../types/wordpress';
 import '@/scss/layout/_post.scss';
-import '@/scss/object/utility/index.scss';
 
 type TPostTopImageProps = {
   post?: WPPost;

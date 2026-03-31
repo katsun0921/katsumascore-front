@@ -1,0 +1,23 @@
+// $category, $white are injected via vite additionalData
+@use '../../global/mixin/transition' as *;
+
+.c-button {
+  &__loadmore {
+    a {
+      width: auto;
+      max-width: 1200px;
+      display: block;
+      text-align: center;
+      border-radius: 4px;
+      padding: 18px 26px;
+      text-transform: uppercase;
+      font-style: italic;
+      background-color: $category;
+      color: $white;
+      @include transition;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+}
