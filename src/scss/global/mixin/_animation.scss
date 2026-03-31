@@ -1,3 +1,21 @@
+// Animation mixins
+@mixin transition-base($duration: 0.2s, $easing: ease) {
+  transition: all $duration $easing;
+}
+
+@mixin fade-in($duration: 0.3s) {
+  animation: fadeIn $duration ease forwards;
+}
+
+@mixin hover-lift {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -11,6 +29,16 @@
   from {
     opacity: 0;
     transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
   }
   to {
     opacity: 1;

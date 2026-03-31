@@ -20,6 +20,9 @@
 # production
 /build
 
+# storybook
+/storybook-static
+
 # misc
 .DS_Store
 *.pem
@@ -44,3 +47,8 @@ next-env.d.ts
 
 # storybook
 storybook-static/
+.claude/*
+
+wordpress/*
+
+storybook/*
