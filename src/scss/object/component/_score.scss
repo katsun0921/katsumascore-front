@@ -1,0 +1,67 @@
+// $scoreBackground, $scoreBackgroundBorder, $white are injected via vite additionalData
+
+.c-score {
+  $blockClipPath: polygon(50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%, 0 20%);
+  position: relative;
+  text-align: center;
+  font-style: italic;
+  color: $white;
+
+  &::before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    background-color: $scoreBackgroundBorder;
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    clip-path: $blockClipPath;
+    z-index: 0;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    display: inline-block;
+    width: 90%;
+    height: 90%;
+    background-color: $scoreBackground;
+    clip-path: $blockClipPath;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto;
+    z-index: 1;
+  }
+
+  &__small {
+    font-size: 16px;
+    width: 44px;
+    height: 52px;
+  }
+
+  &__medium {
+    font-size: 22px;
+    width: 62px;
+    height: 72px;
+  }
+
+  &__large {
+    font-size: 30px;
+    width: 96px;
+    height: 105px;
+  }
+
+  &__count {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+}

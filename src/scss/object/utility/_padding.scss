@@ -1,0 +1,33 @@
+$spacing-base: 8px;
+
+@each $size in 0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24 {
+  .u-pt-#{$size} {
+    padding-top: #{$size * $spacing-base};
+  }
+
+  .u-pb-#{$size} {
+    padding-bottom: #{$size * $spacing-base};
+  }
+
+  .u-pl-#{$size} {
+    padding-left: #{$size * $spacing-base};
+  }
+
+  .u-pr-#{$size} {
+    padding-right: #{$size * $spacing-base};
+  }
+
+  .u-p-#{$size} {
+    padding: #{$size * $spacing-base};
+  }
+
+  .u-px-#{$size} {
+    padding-left: #{$size * $spacing-base};
+    padding-right: #{$size * $spacing-base};
+  }
+
+  .u-py-#{$size} {
+    padding-top: #{$size * $spacing-base};
+    padding-bottom: #{$size * $spacing-base};
+  }
+}
