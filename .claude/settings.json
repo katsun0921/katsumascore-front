@@ -1,7 +1,6 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm install:*)",
       "Bash(npm view:*)",
       "Bash(.env.local:*)",
       "Bash(npx tsc:*)",
