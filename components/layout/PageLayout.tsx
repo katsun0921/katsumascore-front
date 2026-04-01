@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
-import { Header } from '@/stories/layouts/Header/Header';
-import { Footer } from '@/stories/layouts/Footer/Footer';
+import { Header } from '@/components/layout/Header/Header';
+import { Footer } from '@/components/layout/Footer/Footer';
 
 type PageLayoutProps = {
   children: ReactNode;

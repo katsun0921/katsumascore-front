@@ -9,9 +9,6 @@
       "Bash(do echo:*)",
       "Bash(done)",
       "Bash(grep \"\\\\.scss$\")"
-    ],
-    "additionalDirectories": [
-      "/Users/katsu/katsumscore/katsumascore-front/src/scss/object/utility"
     ]
   }
 }
