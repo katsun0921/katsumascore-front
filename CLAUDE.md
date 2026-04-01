@@ -834,52 +834,52 @@ i18n: { locales: ['ja', 'en'], defaultLocale: 'ja' }
 
 ### 6.1 セットアップ
 
-- [ ] Next.js 15プロジェクト作成（Pages Router）
-- [ ] @opennextjs/cloudflare + wrangler.jsonc 設定
-- [ ] Tailwind CSS v4 設定（フォント変数含む）
-- [ ] フォント設定（Noto Sans JP + Shippori Mincho）
-- [ ] `sass` と Storybook パッケージを devDependencies に追加
-- [ ] `lib/ranking.ts` 作成（1〜5 → SS/S/A/B/Cランク変換）
-- [ ] `types/wordpress.ts` 作成（全ACFフィールドの型定義）
-- [ ] `lib/wordpress.ts` 作成（APIクライアント・ベースURLは`.env.local`参照）
-- [ ] `.env.local` 作成（`WP_API_URL=http://localhost:8080/wp-json/wp/v2`）
-- [ ] `.env.example` 作成（Gitにコミット）
+- [x] Next.js 15プロジェクト作成（Pages Router）
+- [x] @opennextjs/cloudflare + wrangler.jsonc 設定
+- [x] Tailwind CSS v4 設定（フォント変数含む）
+- [x] フォント設定（Noto Sans JP + Shippori Mincho）
+- [x] `sass` と Storybook パッケージを devDependencies に追加
+- [x] `lib/ranking.ts` 作成（1〜5 → SS/S/A/B/Cランク変換）
+- [x] `types/wordpress.ts` 作成（全ACFフィールドの型定義）
+- [x] `lib/wordpress.ts` 作成（APIクライアント・ベースURLは`.env.local`参照）
+- [x] `.env.local` 作成（`WP_API_URL=http://localhost:8080/wp-json/wp/v2`）
+- [x] `.env.example` 作成（Gitにコミット）
 
 ### 6.2 Storybookコンポーネント
 
 **components/（TSX）**
-- [ ] src/stories/components/Score/Score.tsx + src/scss/object/component/_score.scss
-- [ ] components/post/VodBadge.tsx
+- [x] src/stories/components/Score/Score.tsx + src/scss/object/component/_score.scss
+- [x] components/post/VodBadge.tsx
 - [ ] components/post/PostCard.tsx
-- [ ] components/layout/Header.tsx
+- [x] components/layout/Header.tsx
 - [ ] components/post/Breadcrumbs.tsx
-- [ ] components/post/Sharing.tsx
+- [x] components/post/Sharing.tsx
 
 **src/stories/（ストーリーファイル・design_systemの構成を踏襲）**
-- [ ] ReviewScore.stories.tsx
-- [ ] VodBadge.stories.tsx
+- [x] ReviewScore.stories.tsx
+- [x] VodBadge.stories.tsx
 - [ ] PostCard.stories.tsx
-- [ ] Header.stories.tsx
+- [x] Header.stories.tsx
 - [ ] Breadcrumbs.stories.tsx
-- [ ] Sharing.stories.tsx
+- [x] Sharing.stories.tsx
 
 **src/scss/（コンポーネントSCSS・design_systemから移植）**
-- [ ] src/scss/global/variable/_colors.scss（vite additionalDataで自動注入）
-- [ ] ReviewScore.scss
-- [ ] VodBadge.scss
+- [x] src/scss/global/variable/_colors.scss（vite additionalDataで自動注入）
+- [x] ReviewScore.scss
+- [x] VodBadge.scss
 - [ ] PostCard.scss
-- [ ] Header.scss
+- [x] Header.scss
 - [ ] Breadcrumbs.scss
-- [ ] Sharing.scss
+- [x] Sharing.scss
 
 ### 6.3 ページ実装（Tailwindで基本スタイル）
 
-- [ ] pages/_app.tsx（フォント・グローバルCSS）
-- [ ] pages/index.tsx（記事一覧）
+- [x] pages/_app.tsx（フォント・グローバルCSS）
+- [x] pages/index.tsx（記事一覧）
 - [ ] pages/posts/[slug].tsx（記事詳細・single.php相当）
 - [ ] pages/category/[slug].tsx（カテゴリーアーカイブ）
 - [ ] pages/search.tsx
-- [ ] pages/404.tsx
+- [x] pages/404.tsx
 - [ ] pages/api/vod.ts（VOD在庫API SSR）
 - [ ] pages/api/revalidate.ts
 
