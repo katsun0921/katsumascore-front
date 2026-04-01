@@ -537,7 +537,7 @@ CLIの質問には以下のように回答する:
 | Would you like to use TypeScript? | **Yes** | 型安全 |
 | Would you like to use ESLint? | **Yes（ESLint）** | |
 | Would you like to use Tailwind CSS? | **Yes** | Next.jsページのスタイリングに使用 |
-| Would you like your code inside a `src/` directory? | **No** | pages/をルート直下に置く |
+| Would you like your code inside a `src/` directory? | **Yes** | pages/をルート直下に置く |
 | Would you like to use App Router? | **No** | Pages Routerを使用 |
 | Would you like to use Turbopack for `next dev`? | **Yes** | Next.js 15でstable・高速HMR |
 | Would you like to customize the import alias? | **No** | デフォルト（@/）のまま |

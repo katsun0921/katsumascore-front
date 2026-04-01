@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { PostTopImage } from '@/components/features/post/variants/PostTopImage';
+import { PostTopImage } from '@/features/post/components/PostTopImage';
 import { getPosts } from '@/lib/api/wordpress';
 import type { WPPost } from '@/types/wordpress';
 
