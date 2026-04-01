@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/scss/object/component/_heading.scss';
+import '@/scss/object/component/heading.scss';
 
 type HeadingProps = {
   color?: string;

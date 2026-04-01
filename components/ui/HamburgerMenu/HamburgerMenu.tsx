@@ -1,6 +1,6 @@
 import React from 'react';
 import { clickHamburgerMenu } from '../../../ts/hamburgerMenu/hamburgerMenu';
-import '@/scss/object/component/_hamburgerMenu.scss';
+import '@/scss/object/component/hamburgerMenu.scss';
 
 type THamburgerMenuProps = {
   label: string;

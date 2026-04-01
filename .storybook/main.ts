@@ -24,7 +24,7 @@ const config: StorybookConfig = {
     config.css = {
       preprocessorOptions: {
         scss: {
-          additionalData: `@use "@/scss/global/variable/_colors.scss" as *; @use "@/scss/global/variable/_fontWeight.scss" as *;`,
+          additionalData: `@use "@/scss/global/variable/colors.scss" as *; @use "@/scss/global/variable/fontWeight.scss" as *;`,
         },
       },
     }

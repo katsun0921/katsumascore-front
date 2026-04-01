@@ -1,7 +1,7 @@
 import React from 'react';
-import '@/scss/layout/_container.scss';
-import '@/scss/layout/_navigation.scss';
-import '@/scss/object/component/_list.scss';
+import '@/scss/layout/container.scss';
+import '@/scss/layout/navigation.scss';
+import '@/scss/object/component/list.scss';
 
 type TLinkHeader = {
   label: string;

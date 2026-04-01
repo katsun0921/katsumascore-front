@@ -2,8 +2,8 @@ import React, { useEffect } from 'react';
 import { ListHeader } from '../../components/List/ListHeader';
 import { HamburgerMenu } from '../../components/HamburgerMenu/HamburgerMenu';
 import { changeClassWhenResizeOnNavigation } from '../../../ts/navigation';
-import '@/scss/layout/_container.scss';
-import '@/scss/layout/_navigation.scss';
+import '@/scss/layout/container.scss';
+import '@/scss/layout/navigation.scss';
 
 export const Navigation = ({}) => {
   useEffect(() => {

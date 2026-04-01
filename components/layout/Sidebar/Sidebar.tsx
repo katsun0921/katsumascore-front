@@ -1,6 +1,6 @@
 import React from 'react';
-import '@/scss/layout/_container.scss';
-import '@/scss/layout/_sidebar.scss';
+import '@/scss/layout/container.scss';
+import '@/scss/layout/sidebar.scss';
 
 export const Sidebar = ({}) => {
   return (

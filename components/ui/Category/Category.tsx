@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/scss/object/component/_category.scss';
+import '@/scss/object/component/category.scss';
 
 type CategoryProps = {
   label?: string;

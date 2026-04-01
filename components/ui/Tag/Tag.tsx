@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/scss/object/component/_tag.scss';
+import '@/scss/object/component/tag.scss';
 
 export type TTagsProps = {
   tags: {

@@ -3,7 +3,7 @@ import { Category } from '../../components/Category/Category';
 import { Score } from '../../components/Score/Score';
 import { Heading } from '../../components/Heading/Heading';
 import type { WPPost } from '../../../types/wordpress';
-import '@/scss/layout/_post.scss';
+import '@/scss/layout/post.scss';
 
 type TPostLeftImageProps = {
   post?: WPPost;

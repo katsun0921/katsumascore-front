@@ -1,5 +1,5 @@
 import React from 'react';
-import '@/scss/object/component/_vodBadge.scss';
+import '@/scss/object/component/vodBadge.scss';
 
 interface VodBadgeProps {
   netflix?: boolean;

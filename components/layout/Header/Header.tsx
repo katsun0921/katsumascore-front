@@ -1,6 +1,6 @@
 import React from 'react';
-import '@/scss/layout/_container.scss';
-import '@/scss/layout/_header.scss';
+import '@/scss/layout/container.scss';
+import '@/scss/layout/header.scss';
 import { Search } from '../../components/Search/Search';
 import { Navigation } from '../Navigation/Navigation';
 import { ListSocialIcon } from '../../components/List/ListSocialIcon';

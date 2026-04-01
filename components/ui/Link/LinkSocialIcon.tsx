@@ -1,8 +1,8 @@
 import React from 'react';
 import type { ReactNode } from 'react';
-import '@/scss/layout/_container.scss';
-import '@/scss/layout/_navigation.scss';
-import '@/scss/object/component/_link.scss';
+import '@/scss/layout/container.scss';
+import '@/scss/layout/navigation.scss';
+import '@/scss/object/component/link.scss';
 
 type TLinkSocialProps = {
   backgroundColor?: string;
