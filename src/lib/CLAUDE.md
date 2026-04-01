@@ -1,0 +1,42 @@
+# src/lib/
+
+ユーティリティ関数・APIクライアントを管理するディレクトリ。
+
+## ファイル構成
+
+| ファイル | 役割 |
+|---|---|
+| `wordpress.ts` | WP REST API クライアント |
+| `ranking.ts` | スコアランク変換関数（1〜5 → SS/S/A/B/C） |
+| `i18n.ts` | 多言語ヘルパー関数 |
+| `vod.ts` | Cloudflare KV アクセス |
+
+## wordpress.ts の関数一覧
+
+- `getPosts(params?)` — 記事一覧取得
+- `getPostBySlug(slug, lang?)` — スラッグで記事取得
+- `getCategories(lang?)` — カテゴリー一覧取得
+- `getPostsByCategory(categoryId, lang?)` — カテゴリー別記事取得
+- `getRelatedPosts(ids)` — 関連記事取得
+- `searchPosts(query, lang?)` — 記事検索
+
+共通仕様:
+- ベースURL: `process.env.WP_API_URL`
+- 全リクエストに `_embed&acf_format=standard` を付与
+- エラー時は `null` を返す（`try/catch`）
+
+## ranking.ts の仕様
+
+`inc/get-ranking-icon.php` の `get_ranking_icon()` をTypeScriptに移植したもの。
+
+```ts
+export function getScoreRank(score: 1 | 2 | 3 | 4 | 5): 'SS' | 'S' | 'A' | 'B' | 'C'
+```
+
+| スコア | ランク |
+|---|---|
+| 5 | SS |
+| 4 | S |
+| 3 | A |
+| 2 | B |
+| 1 | C |
