@@ -10,7 +10,7 @@ export const Header = ({}) => {
         <div className='l-header__logo'>
           <h1
             id='logo-pro'
-            className='u-m-0 u-py-3 u-w-28 u-leading-none logo-inside-nav-pro noselect'
+            className='u-m-0 u-py-3 u-w-28 u-leading-none'
           >
             <a href='/' rel='home'>
               <img

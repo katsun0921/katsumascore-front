@@ -1,19 +1,37 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary: #2563eb;
+  --color-secondary: #1e1b4b;
+  --color-accent: #6d28d9;
+  --color-score-bg: #14082e;
+  --color-score-border: #ff2dfc;
+  --color-bg: #ffffff;
+  --color-bg-muted: #f3f4f6;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-inverse: #ffffff;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text-primary);
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-score-bg: var(--color-score-bg);
+  --color-score-border: var(--color-score-border);
+  --color-bg: var(--color-bg);
+  --color-bg-muted: var(--color-bg-muted);
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-inverse: var(--color-text-inverse);
   --font-body: var(--font-body), sans-serif;
   --font-heading: var(--font-heading), serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--color-bg);
+  color: var(--color-text-primary);
   font-family: var(--font-body);
 }

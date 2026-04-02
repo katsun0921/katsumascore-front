@@ -31,7 +31,7 @@ export const PostLeftImage = ({ post, excerpt }: TPostLeftImageProps) => {
             <Category label='映画' size='small' />
           </div>
           <Heading headingLevel='3' isLink={false} type='post' label={title} />
-          <p className='u-text-black u-mt-2'>{displayExcerpt}</p>
+          <p className='u-mt-2'>{displayExcerpt}</p>
         </div>
       </div>
     </a>

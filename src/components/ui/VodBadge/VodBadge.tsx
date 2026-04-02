@@ -10,8 +10,8 @@ interface VodBadgeProps {
 export const VodBadge = ({ netflix, amazon, unext, isCinema }: VodBadgeProps) => {
   if (isCinema) {
     return (
-      <div className='vod-badge'>
-        <span className='vod-badge__item vod-badge__item--cinema'>劇場公開中</span>
+      <div>
+        <span>劇場公開中</span>
       </div>
     );
   }
@@ -21,10 +21,10 @@ export const VodBadge = ({ netflix, amazon, unext, isCinema }: VodBadgeProps) =>
   }
 
   return (
-    <div className='vod-badge'>
-      {netflix && <span className='vod-badge__item vod-badge__item--netflix'>Netflix</span>}
-      {amazon && <span className='vod-badge__item vod-badge__item--amazon'>Amazon Prime</span>}
-      {unext && <span className='vod-badge__item vod-badge__item--unext'>U-NEXT</span>}
+    <div>
+      {netflix && <span>Netflix</span>}
+      {amazon && <span>Amazon Prime</span>}
+      {unext && <span>U-NEXT</span>}
     </div>
   );
 };

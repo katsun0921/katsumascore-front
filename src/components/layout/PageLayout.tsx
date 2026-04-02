@@ -9,7 +9,7 @@ type PageLayoutProps = {
 export const PageLayout = ({ children }: PageLayoutProps) => (
   <>
     <Header />
-    <main className="l-container py-8">
+    <main className="l-container">
       {children}
     </main>
     <Footer />

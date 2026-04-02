@@ -5,7 +5,6 @@ type CategoryProps = {
   size?: 'small' | 'medium' | 'large';
 };
 
-export const Category = ({ label, size }: CategoryProps) => {
-  const mode = size ? `c-category__${size}` : '';
-  return <div className={['c-category', mode].join(' ')}>{label}</div>;
+export const Category = ({ label }: CategoryProps) => {
+  return <div>{label}</div>;
 };

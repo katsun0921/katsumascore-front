@@ -18,9 +18,9 @@ export default function Home({ posts }: IndexProps) {
       </Head>
       <PageLayout>
         {posts.length === 0 ? (
-          <p className="text-center text-gray-500 py-16">記事が見つかりませんでした</p>
+          <p>記事が見つかりませんでした</p>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div>
             {posts.map((post) => (
               <PostTopImage key={post.id} post={post} />
             ))}

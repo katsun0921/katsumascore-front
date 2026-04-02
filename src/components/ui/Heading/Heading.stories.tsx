@@ -26,7 +26,7 @@ export const TitleHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '1',
     type: 'title',
-    color: 'rgb(0, 0, 0)',
+    color: 'var(--color-text-primary)',
     label: 'title の見出し',
     isLink: false,
   },
@@ -37,7 +37,7 @@ export const PostHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '3',
     type: 'post',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     isLink: true,
     label: 'title の見出し',
   },
@@ -48,7 +48,7 @@ export const PostRelatedHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '3',
     type: 'related',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'title の見出し',
     isLink: false,
   },
@@ -59,7 +59,7 @@ export const BgAccentHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'bg-accent',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'アクセント背景見出し',
     isLink: false,
   },
@@ -70,7 +70,7 @@ export const BgGradientHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'bg-gradient',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'グラデーション背景見出し',
     isLink: false,
   },
@@ -81,7 +81,7 @@ export const RibbonHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'ribbon',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'リボン風見出し',
     isLink: false,
   },
@@ -92,7 +92,7 @@ export const BgWrapHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'bg-wrap',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: '背景に回り込むイメージの見出し',
     isLink: false,
   },
@@ -103,7 +103,7 @@ export const QuoteHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'quote',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'カギ括弧を付けた見出し',
     isLink: false,
   },
@@ -114,7 +114,7 @@ export const GoldTextHeading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'gold-text',
-    color: 'rgb(0, 0, 0)',
+    color: 'var(--color-text-primary)',
     label: '文字ゴールドグラデーション',
     isLink: false,
   },
@@ -125,7 +125,7 @@ export const ContentH2Heading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '2',
     type: 'content-h2',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'コンテンツH2見出し',
     isLink: false,
   },
@@ -136,7 +136,7 @@ export const ContentH3Heading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '3',
     type: 'content-h3',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'コンテンツH3見出し',
     isLink: false,
   },
@@ -147,7 +147,7 @@ export const ContentH4Heading: StoryObj<typeof Heading> = {
   args: {
     headingLevel: '4',
     type: 'content-h4',
-    color: 'rgb(255, 255, 255)',
+    color: 'var(--color-bg)',
     label: 'コンテンツH4見出し',
     isLink: false,
   },

@@ -13,16 +13,16 @@ export type TListProps = {
 
 export const ListTaxonomy = ({ label, lists }: TListTaxonomyProps) => {
   return (
-    <dl className='c-list__taxonomy'>
-      <dt className='c-list__term u-mb-4'>{label}</dt>
-      <dd className='c-list__content'>
-        <ul className='u-flex'>
+    <dl>
+      <dt>{label}</dt>
+      <dd>
+        <ul>
           {lists.map((list, i) => {
             return (
-              <li key={i} className='c-list__termList'>
+              <li key={i}>
                 <a href={list.link}>
                   {list.name}
-                  <span className='c-list__termCount'>{list.count}</span>
+                  <span>{list.count}</span>
                 </a>
               </li>
             );

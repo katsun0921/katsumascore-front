@@ -5,10 +5,10 @@ export type TScoreProps = {
   size?: 'small' | 'medium' | 'large'
 }
 
-export const Score = ({ score, size = 'medium' }: TScoreProps) => {
+export const Score = ({ score }: TScoreProps) => {
   return (
-    <div className={['c-score', `c-score__${size}`].join(' ')}>
-      <span className='c-score__count'>{score}</span>
+    <div>
+      <span>{score}</span>
     </div>
   )
 }

@@ -34,16 +34,16 @@ const headerNavigationMenu: TLinksHeader = [
 
 export const ListHeader = ({}) => {
   return (
-    <ul id='menu-category' className='c-list__header'>
+    <ul id='menu-category'>
       {headerNavigationMenu.map((link, i) => {
         return (
-          <li key={i} className={link.current ? 'current-menu-item' : ''}>
+          <li key={i}>
             <a href={link.href}>
-              <span className='progression-studios-menu-title'>
+              <span>
                 {link.label}
               </span>
               {link.count && (
-                <span className='progression-studios-nav-cat-count'>
+                <span>
                   {link.count}
                 </span>
               )}
