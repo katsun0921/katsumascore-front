@@ -2,33 +2,24 @@ import React from 'react';
 import { Category } from '@/components/ui/Category/Category';
 import { Score } from '@/components/ui/Score/Score';
 import { Heading } from '@/components/ui/Heading/Heading';
-import type { WPPost } from '@/types/wordpress';
+import type { PostCardData } from '@/features/post/types/PostCard';
 
 type TPostOverlayProps = {
-  post?: WPPost;
-  locale?: string;
+  post: PostCardData;
 };
 
-export const PostOverlay = ({ post, locale = 'ja' }: TPostOverlayProps) => {
-  const title =
-    locale === 'ja'
-      ? post?.acf?.title_jp || post?.title?.rendered || 'ジュピター[映画マトリックスのウォシャウスキー姉弟監督が手がけるSF大作]'
-      : post?.acf?.title_en || post?.title?.rendered || 'ジュピター[映画マトリックスのウォシャウスキー姉弟監督が手がけるSF大作]';
-
-  const imageSrc =
-    post?._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/dummy-540X400.webp';
-
-  const score = post?.acf?.review_score;
+export const PostOverlay = ({ post }: TPostOverlayProps) => {
+  const { title, thumbnail, href, score } = post;
 
   return (
     <a
       className='p-postImageOverlay'
-      href='#'
-      style={{ backgroundImage: `url(${imageSrc})` }}
+      href={href}
+      style={{ backgroundImage: `url(${thumbnail})` }}
     >
       {score && (
         <div className='u-z-20 u-absolute u-right-1-5 u-top-1-5'>
-          <Score score={String(score) as '1' | '2' | '3' | '4' | '5'} />
+          <Score score={score} />
         </div>
       )}
       <div className='u-z-20 u-relative'>

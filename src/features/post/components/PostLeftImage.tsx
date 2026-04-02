@@ -1,35 +1,28 @@
 import React from 'react';
+import Image from 'next/image';
 import { Category } from '@/components/ui/Category/Category';
 import { Score } from '@/components/ui/Score/Score';
 import { Heading } from '@/components/ui/Heading/Heading';
-import type { WPPost } from '@/types/wordpress';
+import type { PostCardData } from '@/features/post/types/PostCard';
 
 type TPostLeftImageProps = {
-  post?: WPPost;
+  post: PostCardData;
   excerpt?: string;
-  locale?: string;
 };
 
-export const PostLeftImage = ({ post, excerpt, locale = 'ja' }: TPostLeftImageProps) => {
-  const title =
-    locale === 'ja'
-      ? post?.acf?.title_jp || post?.title?.rendered || '夏目漱石「私の個人主義」'
-      : post?.acf?.title_en || post?.title?.rendered || '夏目漱石「私の個人主義」';
+export const PostLeftImage = ({ post, excerpt }: TPostLeftImageProps) => {
+  const { title, thumbnail, href, score } = post;
 
-  const imageSrc =
-    post?._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/dummy-540X400.webp';
-
-  const score = post?.acf?.review_score;
-  const displayExcerpt = excerpt ?? post?.excerpt?.rendered ?? '';
+  const displayExcerpt = excerpt ?? post.excerpt;
 
   return (
-    <a className='p-postLeftImage' href='#'>
+    <a className='p-postLeftImage' href={href}>
       <div className='p-postLeftImage__image'>
-        <img src={imageSrc} alt='' width={540} />
+        <Image src={thumbnail} alt='' width={540} height={400} />
       </div>
       {score && (
         <div className='u-absolute u-right-2 u-top-2'>
-          <Score score={String(score) as '1' | '2' | '3' | '4' | '5'} />
+          <Score score={score} />
         </div>
       )}
       <div className='p-postLeftImage__content'>

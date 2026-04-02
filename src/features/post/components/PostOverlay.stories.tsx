@@ -15,5 +15,15 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const ProjectPostImageOverlay: Story = {
-  args: {},
+  args: {
+    post: {
+      id: 1,
+      title: 'ジュピター[映画マトリックスのウォシャウスキー姉弟監督が手がけるSF大作]',
+      excerpt: '',
+      thumbnail: '/images/dummy-540X400.webp',
+      score: '4',
+      publishedAt: '2026-04-01',
+      href: '#',
+    },
+  },
 };

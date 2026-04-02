@@ -1,4 +1,5 @@
 import type { WPPost, WPCategory } from "@/types/wordpress";
+import type { PostCardData } from "@/features/post/types/PostCard";
 
 const BASE_URL = process.env.WP_API_URL;
 
@@ -58,4 +59,22 @@ export async function searchPosts(query: string, lang?: string): Promise<WPPost[
   const params: Record<string, string | number> = { search: query };
   if (lang) params.lang = lang;
   return (await wpFetch<WPPost[]>("/posts", params)) ?? [];
+}
+
+export function normalizePost(post: WPPost, locale: string = "ja"): PostCardData {
+  const title =
+    locale === "ja"
+      ? post.acf?.title_jp || post.title.rendered || ""
+      : post.acf?.title_en || post.title.rendered || "";
+
+  return {
+    id: post.id,
+    title,
+    excerpt: post.excerpt?.rendered ?? "",
+    thumbnail: post._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? "/images/dummy-540X400.webp",
+    category: undefined,
+    score: post.acf?.review_score,
+    publishedAt: post.date,
+    href: `/posts/${post.slug}`,
+  };
 }

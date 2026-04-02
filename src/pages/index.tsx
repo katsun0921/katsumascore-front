@@ -2,11 +2,11 @@ import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PostTopImage } from '@/features/post/components/PostTopImage';
-import { getPosts } from '@/lib/api/wordpress';
-import type { WPPost } from '@/types/wordpress';
+import type { PostCardData } from '@/features/post/types/PostCard';
+import { getPosts, normalizePost } from '@/lib/api/wordpress';
 
 type IndexProps = {
-  posts: WPPost[];
+  posts: PostCardData[];
 };
 
 export default function Home({ posts }: IndexProps) {
@@ -31,8 +31,11 @@ export default function Home({ posts }: IndexProps) {
 }
 
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const posts = await getPosts({ per_page: 12, lang: locale ?? 'ja' });
+  const currentLocale = locale ?? 'ja';
+  const posts = await getPosts({ per_page: 12, lang: currentLocale });
+  const normalizedPosts = posts.map((post) => normalizePost(post, currentLocale));
+
   return {
-    props: { posts: posts ?? [] },
+    props: { posts: normalizedPosts },
   };
 };
