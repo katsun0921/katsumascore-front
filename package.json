@@ -10,7 +10,7 @@
     "preview": "opennextjs-cloudflare build && wrangler dev",
     "deploy": "opennextjs-cloudflare build && wrangler deploy",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "rm -rf storybook-static && storybook build -o storybook-static"
   },
   "dependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
