@@ -3,7 +3,8 @@ import type { GetServerSideProps } from 'next';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { PostTopImage } from '@/features/post/components/PostTopImage';
 import type { PostCardData } from '@/features/post/types/PostCard';
-import { getPosts, normalizePost } from '@/lib/api/wordpress';
+import { normalizePosts } from '@/features/post/utils/normalizePost';
+import { getPosts } from '@/lib/api/wordpress';
 
 type IndexProps = {
   posts: PostCardData[];
@@ -33,7 +34,7 @@ export default function Home({ posts }: IndexProps) {
 export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
   const currentLocale = locale ?? 'ja';
   const posts = await getPosts({ per_page: 12, lang: currentLocale });
-  const normalizedPosts = posts.map((post) => normalizePost(post, currentLocale));
+  const normalizedPosts = normalizePosts(posts, currentLocale);
 
   return {
     props: { posts: normalizedPosts },
