@@ -11,3 +11,4 @@ export { PostContent } from '@/components/features/post/PostContent/PostContent'
 export { PostSection } from '@/components/features/post/PostSection/PostSection';
 export { PostDetail } from '@/components/features/post/PostDetail/PostDetail';
 export type { PostDetailProps } from '@/components/features/post/PostDetail/PostDetail.types';
+export { PostSEO } from '@/components/features/post/PostSEO/PostSEO';
