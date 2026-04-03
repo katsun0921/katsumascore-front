@@ -25,15 +25,15 @@ export const Footer = ({}) => {
     ],
   };
   return (
-    <footer className='l-footer'>
-      <div className='l-container'>
+    <footer className='bg-[var(--color-footer)] px-0 py-10 pb-[60px] text-[var(--color-text-inverse)]'>
+      <div className='relative mx-auto w-[90%] max-w-[1200px] p-0'>
         <section>
           <ListTaxonomy {...categories} />
         </section>
-        <section className='u-mt-8 l-footer__info'>
+        <section className='mt-8 md:flex md:justify-between'>
           <ListSocialIcon />
-          <div className='l-footer__support'>
-            <ul className='l-footer__help'>
+          <div className='mt-8 ml-auto md:mt-0 md:flex md:flex-col'>
+            <ul className='ml-auto flex gap-4'>
               <li>
                 <a href=''>サイトについて</a>
               </li>
@@ -44,7 +44,7 @@ export const Footer = ({}) => {
                 <a href=''>お問い合わせ</a>
               </li>
             </ul>
-            <p className='u-ml-auto u-mt-auto'>
+            <p className='mt-4 ml-auto'>
               All Rights Reserved. Developed by Katsumascore.
             </p>
           </div>

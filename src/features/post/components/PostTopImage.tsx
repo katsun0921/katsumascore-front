@@ -1,4 +1,5 @@
 import React from 'react';
+import './PostTopImage.scss';
 import { Category } from '@/components/ui/Category/Category';
 import { Score } from '@/components/ui/Score/Score';
 import { Heading } from '@/components/ui/Heading/Heading';
@@ -19,14 +20,14 @@ export const PostTopImage = ({ post, excerpt }: TPostTopImageProps) => {
       <div className='p-postTopImage__image'>
         <img src={thumbnail} alt='' width={540} />
         {score && (
-          <div className='u-absolute u-right-2 u-top-2'>
+          <div className='absolute top-2 right-2'>
             <Score score={score} />
           </div>
         )}
       </div>
       <div className='p-postTopImage__content'>
         <div>
-          <div className='u-mb-4'>
+          <div className='mb-4'>
             <Category label='映画' size='small' />
           </div>
           <Heading headingLevel='3' isLink={false} type='post' label={title} />

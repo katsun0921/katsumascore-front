@@ -1,6 +1,5 @@
 import type { Preview } from '@storybook/react'
-// globals.css（Tailwind）は読み込まない
-// SCSSはviteのadditionalDataで自動注入済み
+import '../src/styles/globals.css'
 
 const preview: Preview = {
   parameters: {

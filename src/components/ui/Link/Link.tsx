@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ReactNode } from 'react';
+import './Link.scss';
 
 type TLinkProps = {
   backgroundColor?: string;
@@ -12,16 +13,16 @@ export const Link = ({ children, backgroundColor }: TLinkProps) => {
 
 export const LinkFacebook = ({}) => {
   return (
-    <a href='#' target='_blank'>
-      <span>Share on Facebook</span>
+    <a href='#' className='c-link__social c-link__facebook' target='_blank'>
+      <span className='c-link__socialText'>Share on Facebook</span>
     </a>
   );
 };
 
 export const LinkTwitter = ({}) => {
   return (
-    <a href='#' target='_blank'>
-      <span>Share on Twitter</span>
+    <a href='#' className='c-link__social c-link__twitter' target='_blank'>
+      <span className='c-link__socialText'>Share on Twitter</span>
     </a>
   );
 };

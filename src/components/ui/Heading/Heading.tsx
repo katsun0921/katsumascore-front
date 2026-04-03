@@ -1,4 +1,5 @@
 import React from 'react';
+import './Heading.scss';
 
 type HeadingProps = {
   color?: string;
@@ -16,19 +17,54 @@ type HeadingProps = {
 
 export const Heading = ({
   headingLevel,
+  type,
   isLink = false,
   label = 'title の見出し',
 }: HeadingProps) => {
   const HeadingTag = `h${headingLevel}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+  const typeToClass: Record<string, string> = {
+    post: 'c-heading__post',
+    title: 'c-heading__title',
+    related: 'c-heading__related',
+    underline: 'c-heading__underline',
+    dotted: 'c-heading__dotted',
+    dashed: 'c-heading__dashed',
+    double: 'c-heading__double',
+    'bg-simple': 'c-heading__bg-simple',
+    'bg-accent': 'c-heading__bg-accent',
+    'bg-gradient': 'c-heading__bg-gradient',
+    'bg-gradient-gold': 'c-heading__bg-gradient-gold',
+    'bg-wrap': 'c-heading__bg-wrap',
+    'border-simple': 'c-heading__border-simple',
+    'border-accent': 'c-heading__border-accent',
+    'border-gradient': 'c-heading__border-gradient',
+    shadow: 'c-heading__shadow',
+    'shadow-colored': 'c-heading__shadow-colored',
+    tag: 'c-heading__tag',
+    'tag-rounded': 'c-heading__tag-rounded',
+    ribbon: 'c-heading__ribbon',
+    speech: 'c-heading__speech',
+    checkered: 'c-heading__checkered',
+    striped: 'c-heading__striped',
+    outline: 'c-heading__outline',
+    'outline-colored': 'c-heading__outline-colored',
+    '3d': 'c-heading__3d',
+    quote: 'c-heading__quote',
+    'gold-text': 'c-heading__gold-text',
+    'content-h2': 'c-heading__content-h2',
+    'content-h3': 'c-heading__content-h3',
+    'content-h4': 'c-heading__content-h4',
+  };
+  const className = type ? typeToClass[type] ?? 'c-heading' : 'c-heading';
 
   return (
     <>
       {isLink ? (
-        <HeadingTag>
+        <HeadingTag className={className}>
           <a href='#'>{label}</a>
         </HeadingTag>
       ) : (
-        <HeadingTag>{label}</HeadingTag>
+        <HeadingTag className={className}>{label}</HeadingTag>
       )}
     </>
   );

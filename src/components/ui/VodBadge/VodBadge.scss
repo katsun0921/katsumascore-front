@@ -1,0 +1,31 @@
+.vod-badge {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  &__item {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 4px;
+    color: var(--color-text-inverse);
+    font-size: 12px;
+    font-weight: var(--font-weight-bold);
+
+    &--netflix {
+      background: var(--color-netflix);
+    }
+
+    &--amazon {
+      background: var(--color-amazon);
+    }
+
+    &--unext {
+      border: 1px solid var(--color-border-muted);
+      background: var(--color-unext);
+    }
+
+    &--cinema {
+      background: var(--color-category);
+    }
+  }
+}

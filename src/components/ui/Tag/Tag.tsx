@@ -1,4 +1,5 @@
 import React from 'react';
+import './Tag.scss';
 
 export type TTagsProps = {
   tags: {
@@ -8,7 +9,7 @@ export type TTagsProps = {
 
 export const Tags = ({ tags }: TTagsProps) => {
   return (
-    <div>
+    <div className='c-tags'>
       {tags.map((tag, _i) => {
         const { label } = tag;
         return <a key={_i} href='#'>{label}</a>;

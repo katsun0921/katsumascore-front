@@ -1,14 +1,15 @@
 import React from 'react'
+import './Score.scss'
 
 export type TScoreProps = {
   score: '1' | '2' | '3' | '4' | '5'
   size?: 'small' | 'medium' | 'large'
 }
 
-export const Score = ({ score }: TScoreProps) => {
+export const Score = ({ score, size = 'medium' }: TScoreProps) => {
   return (
-    <div>
-      <span>{score}</span>
+    <div className={['c-score', `c-score__${size}`].join(' ')}>
+      <span className='c-score__count'>{score}</span>
     </div>
   )
 }

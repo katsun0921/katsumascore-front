@@ -1,4 +1,5 @@
 import React from 'react';
+import './ListHeader.scss';
 
 type TLinkHeader = {
   label: string;
@@ -34,16 +35,16 @@ const headerNavigationMenu: TLinksHeader = [
 
 export const ListHeader = ({}) => {
   return (
-    <ul id='menu-category'>
+    <ul id='menu-category' className='c-list__header'>
       {headerNavigationMenu.map((link, i) => {
         return (
-          <li key={i}>
+          <li key={i} className={link.current ? 'current-menu-item' : ''}>
             <a href={link.href}>
-              <span>
+              <span className='progression-studios-menu-title'>
                 {link.label}
               </span>
               {link.count && (
-                <span>
+                <span className='progression-studios-nav-cat-count'>
                   {link.count}
                 </span>
               )}

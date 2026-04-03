@@ -1,0 +1,56 @@
+.c-list__header {
+  display: flex;
+  justify-content: center;
+  font-family: 'Sawarabi Gothic', sans-serif;
+
+  > li {
+    position: relative;
+
+    &:not(:last-child)::after {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      display: block;
+      width: 2px;
+      height: 1.6em;
+      transform: translateY(-50%);
+      background-color: rgba(255, 255, 255, 0.3);
+      content: '';
+    }
+
+    > a {
+      position: relative;
+      display: block;
+      padding: 28px 42px;
+      color: var(--color-text-inverse);
+
+      &::before {
+        position: absolute;
+        bottom: 18px;
+        display: block;
+        width: 0;
+        height: 2px;
+        background: transparent;
+        content: '';
+        transition: all 0.3s ease;
+      }
+
+      .progression-studios-nav-cat-count {
+        display: inline-block;
+        width: 1.5em;
+        height: 1.5em;
+        margin-left: 0.5em;
+        border-radius: 9999px;
+        background: rgba(255, 255, 255, 0.11);
+        line-height: 1.5em;
+        text-align: center;
+      }
+    }
+
+    &.current-menu-item > a::before,
+    > a:hover::before {
+      width: calc(100% - 84px);
+      background: rgba(255, 255, 255, 0.3);
+    }
+  }
+}

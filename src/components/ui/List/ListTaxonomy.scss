@@ -1,0 +1,21 @@
+.c-list__term {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+.c-list__termList {
+  &:not(:last-child) {
+    margin-right: 1.5em;
+  }
+}
+
+.c-list__termCount {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  margin-left: 0.3em;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.08);
+  line-height: 1.5;
+  text-align: center;
+}

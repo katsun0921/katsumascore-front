@@ -6,11 +6,13 @@ export const changeClassWhenResizeOnNavigation = () => {
   if (!navigation || !navigationList) return;
   const showDesktop = () => {
     navigation.classList.add('l-navigation--isDesktop');
-    navigationList.classList.remove('u-opacity-0');
+    navigationList.classList.remove('hidden');
+    navigationList.classList.remove('opacity-0');
   };
   const showMobile = () => {
     navigation.classList.remove('l-navigation--isDesktop');
-    navigationList.classList.add('u-opacity-0');
+    navigationList.classList.add('hidden');
+    navigationList.classList.add('opacity-0');
   };
   if (mediaQuery.matches) {
     showDesktop();

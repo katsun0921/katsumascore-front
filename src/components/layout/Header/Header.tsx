@@ -6,26 +6,26 @@ import { ListSocialIcon } from '@/components/ui/List/ListSocialIcon';
 export const Header = ({}) => {
   return (
     <header id='masthead-pro'>
-      <div className='l-header'>
-        <div className='l-header__logo'>
+      <div className='grid grid-cols-2 grid-rows-2 gap-0 bg-[var(--color-header)] p-[15px] md:flex md:items-center md:justify-between md:px-[50px] md:py-0'>
+        <div className='col-[1/2] row-[1/2] my-auto'>
           <h1
             id='logo-pro'
-            className='u-m-0 u-py-3 u-w-28 u-leading-none'
+            className='m-0 w-28 py-3 leading-none'
           >
             <a href='/' rel='home'>
               <img
                 src='https://katsumascore.blog/images/logo-primary.png'
                 alt=''
-                className='u-w-24'
+                className='w-24'
                 width='100'
               />
             </a>
           </h1>
         </div>
-        <div className='l-header__search'>
+        <div className='col-[1/3] row-[2/3] m-auto md:m-0'>
           <Search />
         </div>
-        <div className='l-header__snsLinks'>
+        <div className='col-[2/3] row-[1/2] my-auto ml-auto'>
           <ListSocialIcon />
         </div>
       </div>

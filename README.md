@@ -34,6 +34,10 @@ The static files are generated in `storybook-static/`.
 
 This repository includes a GitHub Actions workflow for Storybook deployment.
 
+Published Storybook:
+
+`https://katsun0921.github.io/katsumascore-front/`
+
 1. Push to the `release/v1` branch.
 2. In GitHub, open `Settings > Pages`.
 3. Set `Source` to `GitHub Actions`.

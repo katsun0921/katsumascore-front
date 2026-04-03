@@ -1,8 +1,14 @@
 import { resolve } from 'path'
 import type { StorybookConfig } from '@storybook/react-vite'
 
+const srcDir = resolve(__dirname, '../src')
+const publicDir = resolve(__dirname, '../public')
+
 const config: StorybookConfig = {
-  stories: ['../src/components/**/*.stories.@(js|jsx|ts|tsx)'],
+  stories: [
+    '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/features/**/*.stories.@(js|jsx|ts|tsx)',
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-docs',
@@ -15,17 +21,9 @@ const config: StorybookConfig = {
   viteFinal: async (config) => {
     config.resolve = config.resolve ?? {}
     config.resolve.alias = {
-      '@': resolve(__dirname, '../src'),
-      '@/scss': resolve(__dirname, '../src/styles/scss'),
-      '@/assets': resolve(__dirname, '../public'),
-    }
-    // SCSSカラー変数・フォント変数を全SCSSに自動注入
-    config.css = {
-      preprocessorOptions: {
-        scss: {
-          additionalData: `@use "@/scss/global/variable/colors.scss" as *; @use "@/scss/global/variable/fontWeight.scss" as *;`,
-        },
-      },
+      ...(config.resolve.alias ?? {}),
+      '@/assets': publicDir,
+      '@': srcDir,
     }
     return config
   },

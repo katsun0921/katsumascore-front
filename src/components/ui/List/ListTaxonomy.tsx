@@ -1,4 +1,5 @@
 import React from 'react';
+import './ListTaxonomy.scss';
 
 export type TListTaxonomyProps = {
   label: string;
@@ -13,16 +14,16 @@ export type TListProps = {
 
 export const ListTaxonomy = ({ label, lists }: TListTaxonomyProps) => {
   return (
-    <dl>
-      <dt>{label}</dt>
-      <dd>
-        <ul>
+    <dl className='c-list__taxonomy'>
+      <dt className='c-list__term mb-4'>{label}</dt>
+      <dd className='c-list__content'>
+        <ul className='flex'>
           {lists.map((list, i) => {
             return (
-              <li key={i}>
+              <li key={i} className='c-list__termList'>
                 <a href={list.link}>
                   {list.name}
-                  <span>{list.count}</span>
+                  <span className='c-list__termCount'>{list.count}</span>
                 </a>
               </li>
             );

@@ -1,4 +1,5 @@
 import React from 'react';
+import './ListSocialIcon.scss';
 import {
   LinkFacebookIcon,
   LinkTwitterIcon,
@@ -7,7 +8,7 @@ import {
 
 export const ListSocialIcon = ({}) => {
   return (
-    <ul>
+    <ul className='c-list__socialLink'>
       <li>
         <LinkTwitterIcon />
       </li>

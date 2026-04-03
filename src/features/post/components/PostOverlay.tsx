@@ -1,4 +1,5 @@
 import React from 'react';
+import './PostOverlay.scss';
 import { Category } from '@/components/ui/Category/Category';
 import { Score } from '@/components/ui/Score/Score';
 import { Heading } from '@/components/ui/Heading/Heading';
@@ -18,15 +19,15 @@ export const PostOverlay = ({ post }: TPostOverlayProps) => {
       style={{ backgroundImage: `url(${thumbnail})` }}
     >
       {score && (
-        <div className='u-z-20 u-absolute u-right-1-5 u-top-1-5'>
+        <div className='absolute top-6 right-6 z-20'>
           <Score score={score} />
         </div>
       )}
-      <div className='u-z-20 u-relative'>
+      <div className='relative z-20'>
         <Category label='映画' size='small' />
       </div>
       <div className='p-postImageOverlay__content'>
-        <div className='u-p-3'>
+        <div className='p-3'>
           <Heading headingLevel='3' isLink={false} type='post' label={title} />
         </div>
       </div>

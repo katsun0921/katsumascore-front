@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ReactNode } from 'react';
+import './LinkSocialIcon.scss';
 
 type TLinkSocialProps = {
   backgroundColor?: string;
@@ -18,6 +19,7 @@ export const LinkFacebookIcon = ({}) => {
     <a
       href='https://www.facebook.com/people/Katsumascore/100072246676709/'
       target='_blank'
+      className='c-icon__circle'
       rel='noreferrer'
     >
       <img
@@ -35,6 +37,7 @@ export const LinkTwitterIcon = ({}) => {
     <a
       href='https://twitter.com/Katsun0921'
       target='_blank'
+      className='c-icon__circle'
       rel='noreferrer'
     >
       <img
@@ -52,6 +55,7 @@ export const LinkRssIcon = ({}) => {
     <a
       href='https://katsumascore.blog/feed/'
       target='_blank'
+      className='c-icon__rss c-icon__circle'
       rel='noreferrer'
     >
       <img

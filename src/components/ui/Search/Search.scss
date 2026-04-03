@@ -1,0 +1,24 @@
+.c-search {
+  &__label {
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+  }
+
+  &__field {
+    width: 290px;
+    padding: 6px 1em;
+    font-size: 0.875rem;
+    font-style: italic;
+  }
+
+  &__submit {
+    display: block;
+    width: 28px;
+    height: 38px;
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.5);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+}
