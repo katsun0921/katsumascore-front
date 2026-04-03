@@ -100,6 +100,79 @@
 
 ---
 
+# ■ Typography ルール
+
+## ■ 方針
+
+Typography は「役割」と「言語」で管理する。  
+本文、見出し、UI、アクセントを分離し、直接 font-family を散発的に書かない。
+
+---
+
+## ■ 日本語 font-family
+
+- 本文：`Noto Sans JP`
+- 見出し：`Noto Serif JP`
+- 限定アクセント：`Shippori Mincho`
+
+### ■ 意味づけ
+
+- `Noto Sans JP` → 情報を正しく読ませる
+- `Noto Serif JP` → 見出しに信頼と格を付与する
+- `Shippori Mincho` → 一瞬で世界観を作る
+
+### ■ 使用ルール
+
+- body / 本文 / 通常説明文は `Noto Sans JP`
+- h1 / h2 は `Noto Serif JP`
+- h3 以降は `Noto Sans JP`
+- `Shippori Mincho` は限定アクセント専用 class でのみ使う
+- 本文に serif を使わない
+
+---
+
+## ■ 英語 font-family
+
+- 本文 / UI：`Inter`
+- 演出的な見出し / アクセント：`Playfair Display`
+
+### ■ 意味づけ
+
+- `Inter` → 情報と UI を明快かつ安定して読ませる
+- `Playfair Display` → 英語見出しにコントラストとエディトリアル感を与える
+
+### ■ 使用ルール
+
+- 英語本文は `Inter`
+- button / nav / meta / tag など英語 UI は常に `Inter`
+- 英語の演出的な見出しだけ `Playfair Display`
+- 英語 UI に serif を混在させない
+
+---
+
+## ■ Weight ルール
+
+### ■ Sans
+
+- 400：本文
+- 500：UI
+- 700：強調
+
+### ■ Serif
+
+- 600〜700：見出し
+
+---
+
+## ■ 実装ルール
+
+- `:root` の `--font-*` token で定義する
+- `:lang(ja)` と `:lang(en)` で言語を分離する
+- 日本語と英語の font-family を暗黙に混在させない
+- fallback は必ず `system-ui`, `sans-serif`, `serif` を含める
+
+---
+
 # ■ Tailwind × Design Token 責務（最終版）
 
 ## ■ 方針

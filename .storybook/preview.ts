@@ -1,7 +1,22 @@
+import '@/styles/globals.css'
+import { createElement } from 'react'
+import type { CSSProperties } from 'react'
 import type { Preview } from '@storybook/react'
-import '../src/styles/globals.css'
 
 const preview: Preview = {
+  decorators: [
+    (Story) =>
+      createElement(
+        'div',
+        {
+          style: {
+            '--font-body': '"Noto Sans JP"',
+            '--font-heading': '"Shippori Mincho"',
+          } as CSSProperties,
+        },
+        createElement(Story, {}),
+      ),
+  ],
   parameters: {
     backgrounds: {
       default: 'light',
