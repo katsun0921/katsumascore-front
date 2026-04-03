@@ -1,4 +1,30 @@
 import type { WPPost, WPCategory } from "@/types/wordpress";
+import type { Post } from "@/components/features/post/types/post";
+
+// Strip HTML tags and decode basic entities — used to clean WP excerpt
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#039;/g, "'").trim();
+}
+
+export function mapWPPostToPost(wp: WPPost): Post & { content: string } {
+  const image = wp._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
+  // wp:term is an array of term arrays: [[categories...], [tags...]]
+  const terms = (wp._embedded as Record<string, unknown> | undefined)?.["wp:term"];
+  const categories = Array.isArray(terms) ? (terms[0] as Array<{ name: string }> | undefined) : undefined;
+  const category = categories?.[0]?.name;
+
+  return {
+    id: String(wp.id),
+    slug: `/posts/${wp.slug}`,
+    title: wp.title.rendered,
+    excerpt: stripHtml(wp.excerpt.rendered),
+    content: wp.content.rendered,
+    image: image ?? null,
+    publishedAt: wp.date.slice(0, 10), // "2026-04-01T..." → "2026-04-01"
+    category,
+    score: wp.acf?.review_score,
+  };
+}
 
 const BASE_URL = process.env.WP_API_URL;
 
