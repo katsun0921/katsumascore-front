@@ -1,0 +1,38 @@
+.p-postOverlay {
+  position: relative;
+
+  .c-postCard {
+    overflow: hidden;
+  }
+
+  .c-postCard__media {
+    aspect-ratio: 16 / 10;
+    min-height: 360px;
+  }
+
+  .c-postCard__link {
+    position: relative;
+  }
+
+  .c-postCard__body {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    background:
+      linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--color-secondary) 82%, transparent) 100%);
+  }
+
+  .c-postCard__date,
+  .c-postCard__title,
+  .c-postCard__excerpt {
+    color: var(--color-text-inverse);
+    text-shadow: 0 2px 8px color-mix(in srgb, var(--color-secondary) 45%, transparent);
+  }
+
+  .c-postCard__excerpt {
+    -webkit-line-clamp: 2;
+  }
+}

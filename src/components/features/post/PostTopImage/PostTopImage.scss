@@ -1,0 +1,11 @@
+.p-postTopImage {
+  position: relative;
+
+  .c-postCard__media {
+    aspect-ratio: 16 / 9;
+  }
+
+  .c-postCard__body {
+    padding: 1.5rem;
+  }
+}

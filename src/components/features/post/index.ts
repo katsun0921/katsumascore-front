@@ -2,9 +2,9 @@ export type { Post, PostContentData, PostVariantProps } from '@/components/featu
 export { mockPost, mockPostLongTitle, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/post/mocks/post';
 export { PostCard } from '@/components/features/post/PostCard/PostCard';
 export type { PostCardProps } from '@/components/features/post/PostCard/PostCard.types';
-export { PostLeftImage } from '@/components/features/post/PostVariants/PostLeftImage';
-export { PostTopImage } from '@/components/features/post/PostVariants/PostTopImage';
-export { PostOverlay } from '@/components/features/post/PostVariants/PostOverlay';
+export { PostLeftImage } from '@/components/features/post/PostLeftImage/PostLeftImage';
+export { PostTopImage } from '@/components/features/post/PostTopImage/PostTopImage';
+export { PostOverlay } from '@/components/features/post/PostOverlay/PostOverlay';
 export { PostList } from '@/components/features/post/PostList/PostList';
 export type { PostListProps, PostListVariant } from '@/components/features/post/PostList/PostList.types';
 export { PostContent } from '@/components/features/post/PostContent/PostContent';

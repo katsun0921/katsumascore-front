@@ -1,13 +1,11 @@
 import { PostCard } from '@/components/features/post/PostCard/PostCard';
 import type { PostVariantProps } from '@/components/features/post/types/post';
-import './PostVariants.scss';
-
-const cx = (...classNames: Array<string | undefined | false>) =>
-  classNames.filter(Boolean).join(' ');
+import './PostOverlay.scss';
 
 export const PostOverlay = ({ post, isLoading = false, className }: PostVariantProps) => {
+  const classes = ['p-postOverlay', className].filter(Boolean).join(' ');
   return (
-    <div className={cx('p-postVariant', 'p-postVariant--overlay', className)}>
+    <div className={classes}>
       {isLoading ? <PostCard isLoading /> : <PostCard post={post} />}
     </div>
   );

@@ -1,0 +1,31 @@
+.p-postLeftImage {
+  position: relative;
+
+  .c-postCard__link {
+    display: grid;
+    grid-template-columns: minmax(220px, 36%) minmax(0, 1fr);
+    align-items: stretch;
+  }
+
+  .c-postCard__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+
+  .c-postCard__body {
+    align-content: center;
+    min-height: 100%;
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .c-postCard__link {
+      grid-template-columns: 1fr;
+    }
+
+    .c-postCard__media {
+      aspect-ratio: 16 / 10;
+      min-height: 0;
+    }
+  }
+}
