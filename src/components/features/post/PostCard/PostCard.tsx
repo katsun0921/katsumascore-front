@@ -1,109 +1,65 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import type { PostCardProps } from './PostCard.types';
-import styles from './PostCard.module.scss';
+import './PostCard.scss';
 
-const getPostHref = (slug: string) => {
-  if (slug.startsWith('/')) {
-    return slug;
-  }
+const cx = (...classNames: Array<string | undefined | false>) =>
+  classNames.filter(Boolean).join(' ');
 
-  return `/${slug}`;
-};
-
-const getScoreLabel = (score?: number) => {
-  if (typeof score !== 'number' || Number.isNaN(score)) {
-    return null;
-  }
-
-  const normalizedScore = Math.max(0, Math.min(5, score));
-
-  return Number.isInteger(normalizedScore)
-    ? String(normalizedScore)
-    : normalizedScore.toFixed(1);
-};
-
-const PostCardSkeleton = ({ variant }: Pick<PostCardProps, 'variant'>) => {
+const PostCardSkeleton = ({ className }: Pick<PostCardProps, 'className'>) => {
   return (
-    <article
-      className={[styles.card, variant === 'compact' ? styles.compact : ''].filter(Boolean).join(' ')}
-      aria-busy='true'
-    >
-      <div className={styles.linkSurface}>
-        <div className={[styles.media, styles.skeleton].join(' ')} />
-        <div className={styles.body}>
-          <div className={styles.meta}>
-            <span className={[styles.skeleton, styles.skeletonChip].join(' ')} />
-            <span className={[styles.skeleton, styles.skeletonDate].join(' ')} />
-          </div>
-          <span className={[styles.skeleton, styles.skeletonTitle].join(' ')} />
-          <span className={[styles.skeleton, styles.skeletonTitleShort].join(' ')} />
-          {variant !== 'compact' && (
-            <>
-              <span className={[styles.skeleton, styles.skeletonExcerpt].join(' ')} />
-              <span className={[styles.skeleton, styles.skeletonExcerptShort].join(' ')} />
-            </>
-          )}
+    <article className={cx('c-postCard', 'is-loading', className)} aria-busy='true'>
+      <div className='c-postCard__link'>
+        <div className='c-postCard__media c-postCard__skeleton' />
+        <div className='c-postCard__body'>
+          <span className='c-postCard__date c-postCard__skeleton c-postCard__skeletonDate' />
+          <span className='c-postCard__title c-postCard__skeleton c-postCard__skeletonTitle' />
+          <span className='c-postCard__title c-postCard__skeleton c-postCard__skeletonTitleShort' />
+          <span className='c-postCard__excerpt c-postCard__skeleton c-postCard__skeletonExcerpt' />
+          <span className='c-postCard__excerpt c-postCard__skeleton c-postCard__skeletonExcerptShort' />
         </div>
       </div>
     </article>
   );
 };
 
-export const PostCard = ({
-  post,
-  variant = 'default',
-  isLoading = false,
-}: PostCardProps) => {
-  if (isLoading) {
-    return <PostCardSkeleton variant={variant} />;
+export const PostCard = (props: PostCardProps) => {
+  if (props.isLoading) {
+    return <PostCardSkeleton className={props.className} />;
   }
 
-  const href = getPostHref(post.slug);
-  const scoreLabel = getScoreLabel(post.score);
+  const { post, className } = props;
   const imageAlt = `${post.title}のサムネイル画像`;
 
   return (
-    <article className={[styles.card, variant === 'compact' ? styles.compact : ''].filter(Boolean).join(' ')}>
-      <Link
-        href={href}
-        className={styles.linkSurface}
-        aria-label={`${post.title}の記事詳細へ移動`}
-      >
-        <div className={styles.media}>
+    <article className={cx('c-postCard', className)}>
+      <Link href={post.slug} className='c-postCard__link'>
+        <div className='c-postCard__media'>
           {post.image ? (
             <Image
               src={post.image}
               alt={imageAlt}
               fill
-              sizes={variant === 'compact' ? '(max-width: 768px) 100vw, 240px' : '(max-width: 768px) 100vw, 540px'}
-              className={styles.image}
+              sizes='(max-width: 768px) 100vw, 540px'
+              className='c-postCard__image'
             />
           ) : (
             <div
-              className={styles.fallback}
+              className='c-postCard__fallback'
               role='img'
               aria-label={`${post.title}の画像はありません`}
             >
-              <span className={styles.fallbackLabel}>No Image</span>
-            </div>
-          )}
-          {scoreLabel && (
-            <div className={styles.score} aria-label={`スコア ${scoreLabel}`}>
-              <span>{scoreLabel}</span>
+              <span className='c-postCard__fallbackLabel'>No Image</span>
             </div>
           )}
         </div>
 
-        <div className={styles.body}>
-          <div className={styles.meta}>
-            <span className={styles.category}>{post.category}</span>
-            <time className={styles.date} dateTime={post.publishedAt}>
-              {post.publishedAt}
-            </time>
-          </div>
-          <h3 className={styles.title}>{post.title}</h3>
-          {variant !== 'compact' && <p className={styles.excerpt}>{post.excerpt}</p>}
+        <div className='c-postCard__body'>
+          <time className='c-postCard__date' dateTime={post.publishedAt}>
+            {post.publishedAt}
+          </time>
+          <h3 className='c-postCard__title'>{post.title}</h3>
+          <p className='c-postCard__excerpt'>{post.excerpt}</p>
         </div>
       </Link>
     </article>

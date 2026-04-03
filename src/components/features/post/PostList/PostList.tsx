@@ -10,7 +10,6 @@ export const PostList = ({
   variant = 'grid',
 }: PostListProps) => {
   const items = isLoading ? Array.from({ length: SKELETON_COUNT }, (_, index) => `loading-${index}`) : posts;
-  const cardVariant = variant === 'list' ? 'compact' : 'default';
 
   if (!isLoading && posts.length === 0) {
     return (
@@ -29,21 +28,9 @@ export const PostList = ({
         {items.map((item) => (
           <li className={styles.item} key={typeof item === 'string' ? item : item.id}>
             {typeof item === 'string' ? (
-              <PostCard
-                post={{
-                  id: item,
-                  title: '',
-                  excerpt: '',
-                  slug: item,
-                  image: null,
-                  category: '',
-                  publishedAt: '',
-                }}
-                isLoading
-                variant={cardVariant}
-              />
+              <PostCard isLoading />
             ) : (
-              <PostCard post={item} variant={cardVariant} />
+              <PostCard post={item} />
             )}
           </li>
         ))}

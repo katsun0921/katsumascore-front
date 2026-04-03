@@ -1,12 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostCard } from './PostCard';
 import {
-  postCardCompactMock,
-  postCardDefaultMock,
-  postCardLoadingMock,
-  postCardLongTitleMock,
-  postCardNoImageMock,
-} from './PostCard.mock';
+  mockPost,
+  mockPostLongTitle,
+  mockPostNoImage,
+} from '@/components/features/post/mocks/post';
 
 const meta = {
   title: 'Features/Post/PostCard',
@@ -22,32 +20,18 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    post: postCardDefaultMock,
+    post: mockPost,
   },
 };
 
 export const NoImage: Story = {
   args: {
-    post: postCardNoImageMock,
+    post: mockPostNoImage,
   },
 };
 
 export const LongTitle: Story = {
   args: {
-    post: postCardLongTitleMock,
-  },
-};
-
-export const Loading: Story = {
-  args: {
-    post: postCardLoadingMock,
-    isLoading: true,
-  },
-};
-
-export const Compact: Story = {
-  args: {
-    post: postCardCompactMock,
-    variant: 'compact',
+    post: mockPostLongTitle,
   },
 };

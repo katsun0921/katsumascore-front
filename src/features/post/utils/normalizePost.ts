@@ -1,24 +1,24 @@
-import type { PostCardData } from '@/components/features/post/PostCard/PostCard.types';
+import type { Post } from '@/components/features/post/types/post';
 import type { WPPost } from '@/types/wordpress';
 
-export function normalizePost(post: WPPost, locale: string = 'ja'): PostCardData {
+export function normalizePost(post: WPPost, locale: string = 'ja'): Post {
   const title =
     locale === 'ja'
       ? post.acf?.title_jp || post.title.rendered || ''
       : post.acf?.title_en || post.title.rendered || '';
 
   return {
-    id: post.id,
+    id: String(post.id),
+    slug: `/posts/${post.slug}`,
     title,
     excerpt: post.excerpt?.rendered ?? '',
-    thumbnail: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/dummy-540X400.webp',
-    category: undefined,
-    score: post.acf?.review_score ? String(post.acf.review_score) as '1' | '2' | '3' | '4' | '5' : undefined,
+    image: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/dummy-540X400.webp',
     publishedAt: post.date,
-    href: `/posts/${post.slug}`,
+    category: undefined,
+    score: typeof post.acf?.review_score === 'number' ? post.acf.review_score : undefined,
   };
 }
 
-export function normalizePosts(posts: WPPost[], locale: string = 'ja'): PostCardData[] {
+export function normalizePosts(posts: WPPost[], locale: string = 'ja'): Post[] {
   return posts.map((post) => normalizePost(post, locale));
 }

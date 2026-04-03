@@ -1,21 +1,11 @@
-import React from 'react';
+import type { PostContentData } from '@/components/features/post/types/post';
 import './PostContent.scss';
 
-interface PostContentProps {
-  content: string;
-  className?: string;
-}
-
-export const PostContent = ({
-  content,
-  className = '',
-  ...props
-}: PostContentProps) => {
+export const PostContent = ({ content }: PostContentData) => {
   return (
     <div
-      className={`p-content ${className}`.trim()}
+      className='p-content'
       dangerouslySetInnerHTML={{ __html: content }}
-      {...props}
     />
   );
 };

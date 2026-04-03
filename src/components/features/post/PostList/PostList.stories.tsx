@@ -1,10 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostList } from './PostList';
-import {
-  postListEmptyMock,
-  postListLoadingMock,
-  postListMock,
-} from './PostList.mock';
+import { mockPosts } from '@/components/features/post/mocks/post';
 
 const meta = {
   title: 'Features/Post/PostList',
@@ -20,35 +16,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    posts: postListMock,
+    posts: mockPosts,
     variant: 'grid',
   },
 };
 
 export const Empty: Story = {
   args: {
-    posts: postListEmptyMock,
+    posts: [],
   },
 };
 
 export const Loading: Story = {
   args: {
-    posts: postListLoadingMock,
+    posts: [],
     isLoading: true,
-    variant: 'grid',
-  },
-};
-
-export const Grid: Story = {
-  args: {
-    posts: postListMock,
-    variant: 'grid',
-  },
-};
-
-export const List: Story = {
-  args: {
-    posts: postListMock,
-    variant: 'list',
   },
 };
