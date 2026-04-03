@@ -147,7 +147,76 @@ TailwindとDesign Tokenは責務を明確に分離する。
 
 ---
 
+# ■ TSX と SCSS の関係
+
+## ■ 方針
+
+SCSS はコンポーネントが所有する。  
+共通の `styles/scss` ディレクトリは作らない。
+
+---
+
+## ■ ルール
+
+- `tsx` と `scss` は必ず同じディレクトリに置く
+- ファイル名は `Component.tsx` と `Component.scss` を基本とする
+- SCSS は対応する TSX から直接 import する
+- 1つのコンポーネントの見た目は、そのコンポーネント配下で閉じる
+- グローバルに許可されるのは `styles/globals.css` のみ
+
+---
+
+## ■ 例
+
+```bash
+src/components/ui/Heading/
+├── Heading.tsx
+├── Heading.scss
+└── Heading.stories.tsx
+```
+
+```tsx
+import './Heading.scss'
+```
+
+---
+
+## ■ 責務分離
+
+### ■ `Component.tsx`
+
+- DOM構造
+- props
+- state
+- className の付与
+- `Component.scss` の import
+
+### ■ `Component.scss`
+
+- そのコンポーネント固有の見た目
+- BEM / component class の定義
+- pseudo element や hover など Tailwind で持たせない視覚表現
+
+### ■ `styles/globals.css`
+
+- reset
+- base
+- Design Token の CSS 変数
+- Tailwind の入口
+
+---
+
+## ■ 禁止事項
+
+- `styles/scss` のような専用SCSSディレクトリを再作成する
+- 他コンポーネントの SCSS を前提に見た目を成立させる
+- TSX から離れた場所にコンポーネント専用 SCSS を置く
+- reset / base 以外の責務を `globals.css` に追加する
+
+---
+
 ## ■ 原則
 
 Tailwindは「構造と配置」、  
-Tokenは「意味と視覚」を定義する。
+Tokenは「意味と視覚」を定義する。  
+SCSSは「コンポーネント固有の視覚表現」を定義する。
