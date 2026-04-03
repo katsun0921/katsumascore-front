@@ -7,7 +7,6 @@ const publicDir = resolve(__dirname, '../public')
 const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
-    '../src/features/**/*.stories.@(js|jsx|ts|tsx)',
   ],
   addons: [
     '@storybook/addon-links',

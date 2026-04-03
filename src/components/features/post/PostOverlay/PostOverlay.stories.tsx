@@ -2,6 +2,7 @@ import React from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
 import { PostOverlay } from './PostOverlay';
+import { postOverlayMock } from '@/components/features/post/PostCard/PostCard.mock';
 
 const meta: Meta<typeof PostOverlay> = {
   title: 'Project/Post',
@@ -16,14 +17,6 @@ type Story = StoryObj<typeof meta>;
 
 export const ProjectPostImageOverlay: Story = {
   args: {
-    post: {
-      id: 1,
-      title: 'ジュピター[映画マトリックスのウォシャウスキー姉弟監督が手がけるSF大作]',
-      excerpt: '',
-      thumbnail: '/images/dummy-540X400.webp',
-      score: '4',
-      publishedAt: '2026-04-01',
-      href: '#',
-    },
+    post: postOverlayMock,
   },
 };

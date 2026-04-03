@@ -1,7 +1,7 @@
 import React from 'react';
 import { Search } from '@/components/ui/Search/Search';
 import { Navigation } from '@/components/layout/Navigation/Navigation';
-import { ListSocialIcon } from '@/components/ui/List/ListSocialIcon';
+import { ListSocialIcon } from '@/components/ui/ListSocialIcon/ListSocialIcon';
 
 export const Header = ({}) => {
   return (

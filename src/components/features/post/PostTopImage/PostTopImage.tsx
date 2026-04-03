@@ -3,7 +3,7 @@ import './PostTopImage.scss';
 import { Category } from '@/components/ui/Category/Category';
 import { Score } from '@/components/ui/Score/Score';
 import { Heading } from '@/components/ui/Heading/Heading';
-import type { PostCardData } from '@/features/post/types/PostCard';
+import type { PostCardData } from '@/components/features/post/PostCard/PostCard.types';
 
 type TPostTopImageProps = {
   post: PostCardData;

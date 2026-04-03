@@ -1,7 +1,7 @@
 import React from 'react';
-import { ListTaxonomy } from '@/components/ui/List/ListTaxonomy';
-import { ListSocialIcon } from '@/components/ui/List/ListSocialIcon';
-import type { TListTaxonomyProps } from '@/components/ui/List/ListTaxonomy';
+import { ListTaxonomy } from '@/components/ui/ListTaxonomy/ListTaxonomy';
+import { ListSocialIcon } from '@/components/ui/ListSocialIcon/ListSocialIcon';
+import type { TListTaxonomyProps } from '@/components/ui/ListTaxonomy/ListTaxonomy';
 
 export const Footer = ({}) => {
   const categories: TListTaxonomyProps = {

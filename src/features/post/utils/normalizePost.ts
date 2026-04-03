@@ -1,4 +1,4 @@
-import type { PostCardData } from '@/features/post/types/PostCard';
+import type { PostCardData } from '@/components/features/post/PostCard/PostCard.types';
 import type { WPPost } from '@/types/wordpress';
 
 export function normalizePost(post: WPPost, locale: string = 'ja'): PostCardData {

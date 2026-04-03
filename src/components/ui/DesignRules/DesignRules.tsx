@@ -1,20 +1,18 @@
-import type { ReactNode } from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
-
-import './DesignRules.stories.scss'
+import type { ReactNode } from 'react';
+import './DesignRules.stories.scss';
 
 type RuleGroup = {
-  title: string
-  description: string
-  items: string[]
-}
+  title: string;
+  description: string;
+  items: string[];
+};
 
 type TokenCard = {
-  title: string
-  token: string
-  meaning: string
-  example: string
-}
+  title: string;
+  token: string;
+  meaning: string;
+  example: string;
+};
 
 const colorRules: RuleGroup[] = [
   {
@@ -37,7 +35,7 @@ const colorRules: RuleGroup[] = [
       '同一画面で強い色を複数競合させない',
     ],
   },
-]
+];
 
 const typographyRules: RuleGroup[] = [
   {
@@ -60,7 +58,7 @@ const typographyRules: RuleGroup[] = [
       'button / nav / meta / tag は Inter に揃える',
     ],
   },
-]
+];
 
 const implementationRules: RuleGroup[] = [
   {
@@ -83,7 +81,7 @@ const implementationRules: RuleGroup[] = [
       'グローバル例外は src/styles/globals.css のみ',
     ],
   },
-]
+];
 
 const tokenCards: TokenCard[] = [
   {
@@ -110,13 +108,13 @@ const tokenCards: TokenCard[] = [
     meaning: '言語と役割に応じた書体の切り替え',
     example: '本文 / 見出し / UI',
   },
-]
+];
 
 const Page = ({ children }: { children: ReactNode }) => (
   <div className='sb-design-rules-page'>
     <div className='sb-design-rules-shell'>{children}</div>
   </div>
-)
+);
 
 const RuleSection = ({ title, description, items }: RuleGroup) => (
   <article className='sb-design-rules-card sb-design-rules-stack'>
@@ -130,29 +128,10 @@ const RuleSection = ({ title, description, items }: RuleGroup) => (
       ))}
     </ul>
   </article>
-)
+);
 
-const meta = {
-  title: 'Docs/Design Rules',
-  tags: ['autodocs'],
-  parameters: {
-    layout: 'fullscreen',
-    controls: { disable: true },
-    docs: {
-      description: {
-        component:
-          'KatsumaScore のデザインルールを Storybook 上で確認するための docs ページです。`docs/katsumascore_design_rules.md` と `src/styles/globals.css` の運用方針をまとめています。',
-      },
-    },
-  },
-} satisfies Meta
-
-export default meta
-
-type Story = StoryObj<typeof meta>
-
-export const Overview: Story = {
-  render: () => (
+export const DesignRules = () => {
+  return (
     <Page>
       <section className='sb-design-rules-hero'>
         <div className='sb-design-rules-eyebrow'>Docs / Design Rules</div>
@@ -225,5 +204,5 @@ export const Overview: Story = {
         </p>
       </section>
     </Page>
-  ),
-}
+  );
+};

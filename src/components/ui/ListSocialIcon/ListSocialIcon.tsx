@@ -4,7 +4,7 @@ import {
   LinkFacebookIcon,
   LinkTwitterIcon,
   LinkRssIcon,
-} from '../Link/LinkSocialIcon';
+} from '@/components/ui/LinkSocialIcon/LinkSocialIcon';
 
 export const ListSocialIcon = ({}) => {
   return (

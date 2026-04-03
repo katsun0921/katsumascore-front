@@ -1,14 +1,11 @@
 import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
-import { PageLayout } from '@/components/layout/PageLayout';
-import { PostTopImage } from '@/features/post/components/PostTopImage';
-import type { PostCardData } from '@/features/post/types/PostCard';
+import type { ComponentProps } from 'react';
+import { HomeTemplate } from '@/components/templates/HomeTemplate/HomeTemplate';
 import { normalizePosts } from '@/features/post/utils/normalizePost';
 import { getPosts } from '@/lib/api/wordpress';
 
-type IndexProps = {
-  posts: PostCardData[];
-};
+type IndexProps = ComponentProps<typeof HomeTemplate>;
 
 export default function Home({ posts }: IndexProps) {
   return (
@@ -16,17 +13,7 @@ export default function Home({ posts }: IndexProps) {
       <Head>
         <title>KatsumaScore</title>
       </Head>
-      <PageLayout>
-        {posts.length === 0 ? (
-          <p>記事が見つかりませんでした</p>
-        ) : (
-          <div>
-            {posts.map((post) => (
-              <PostTopImage key={post.id} post={post} />
-            ))}
-          </div>
-        )}
-      </PageLayout>
+      <HomeTemplate posts={posts} />
     </>
   );
 }

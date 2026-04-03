@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { ListHeader } from '@/components/ui/List/ListHeader';
+import { ListHeader } from '@/components/ui/ListHeader/ListHeader';
 import { HamburgerMenu } from '@/components/ui/HamburgerMenu/HamburgerMenu';
 import { changeClassWhenResizeOnNavigation } from '@/hooks/useNavigation';
 
