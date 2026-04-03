@@ -8,3 +8,4 @@ export { PostOverlay } from '@/components/features/post/PostOverlay/PostOverlay'
 export { PostList } from '@/components/features/post/PostList/PostList';
 export type { PostListProps, PostListVariant } from '@/components/features/post/PostList/PostList.types';
 export { PostContent } from '@/components/features/post/PostContent/PostContent';
+export { PostSection } from '@/components/features/post/PostSection/PostSection';
