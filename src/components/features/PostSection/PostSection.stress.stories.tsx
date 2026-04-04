@@ -14,7 +14,8 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
-import { PostList } from '@/components/features/post/PostList/PostList';
+import { PostList } from '@/components/features/PostList/PostList';
+import { PostListRow } from '@/components/features/PostList/PostListRow';
 import type { Post } from '@/components/features/post/types/post';
 
 const meta = {
@@ -66,19 +67,19 @@ export const MultipleSections: Story = {
   render: () => (
     <>
       <PostSection title='最新映画レビュー'>
-        <PostList posts={generatePosts(4, 'sec1')} variant='grid' />
+        <PostList posts={generatePosts(4, 'sec1')} />
       </PostSection>
 
       <PostSection title='春アニメ2026 注目作'>
-        <PostList posts={generatePosts(4, 'sec2')} variant='grid' />
+        <PostList posts={generatePosts(4, 'sec2')} />
       </PostSection>
 
       <PostSection title='人気ドラマランキング'>
-        <PostList posts={generatePosts(4, 'sec3')} variant='list' />
+        <PostListRow posts={generatePosts(4, 'sec3')} />
       </PostSection>
 
       <PostSection title='編集部おすすめ'>
-        <PostList posts={generatePosts(4, 'sec4')} variant='grid' />
+        <PostList posts={generatePosts(4, 'sec4')} />
       </PostSection>
     </>
   ),
@@ -94,19 +95,19 @@ export const MixedSections: Story = {
   render: () => (
     <>
       <PostSection title='1件のみのセクション'>
-        <PostList posts={generatePosts(1, 'mix-sm')} variant='grid' />
+        <PostList posts={generatePosts(1, 'mix-sm')} />
       </PostSection>
 
       <PostSection title='3件のセクション'>
-        <PostList posts={generatePosts(3, 'mix-md')} variant='grid' />
+        <PostList posts={generatePosts(3, 'mix-md')} />
       </PostSection>
 
       <PostSection title='10件のセクション'>
-        <PostList posts={generatePosts(10, 'mix-lg')} variant='grid' />
+        <PostList posts={generatePosts(10, 'mix-lg')} />
       </PostSection>
 
       <PostSection title='20件の大規模セクション'>
-        <PostList posts={generatePosts(20, 'mix-xl')} variant='grid' />
+        <PostList posts={generatePosts(20, 'mix-xl')} />
       </PostSection>
     </>
   ),
@@ -147,7 +148,7 @@ export const ExtremelyLongSectionTitle: Story = {
   args: {
     title:
       '2026年春クールにおけるアニメ・映画・ドラマ全ジャンルを横断した包括的なエンターテインメントレビューコーナー：注目作品総まとめスペシャルエディション',
-    children: <PostList posts={generatePosts(4, 'long-title-sec')} variant='grid' />,
+    children: <PostList posts={generatePosts(4, 'long-title-sec')} />,
   },
 };
 
@@ -198,11 +199,11 @@ export const MixedContentSections: Story = {
   render: () => (
     <>
       <PostSection title='カオスセクション 1（grid）'>
-        <PostList posts={chaosPosts} variant='grid' />
+        <PostList posts={chaosPosts} />
       </PostSection>
 
       <PostSection title='カオスセクション 2（list）'>
-        <PostList posts={chaosPosts} variant='list' />
+        <PostListRow posts={chaosPosts} />
       </PostSection>
 
       <PostSection title='カオスセクション 3（grid・20件）'>
@@ -211,7 +212,7 @@ export const MixedContentSections: Story = {
             ...chaosPosts,
             ...generatePosts(16, 'fill', { image: null, score: undefined, category: undefined }),
           ]}
-          variant='grid'
+         
         />
       </PostSection>
     </>

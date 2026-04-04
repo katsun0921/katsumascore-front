@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/components/features/post/mocks/post';
-import { PostTopImage } from './PostTopImage';
+import { PostCardOverlay } from './PostCardOverlay';
 
 const meta = {
-  title: 'Features/Post/PostTopImage',
-  component: PostTopImage,
+  title: 'Features/Post/PostCardOverlay',
+  component: PostCardOverlay,
   parameters: {
     layout: 'padded',
   },
-} satisfies Meta<typeof PostTopImage>;
+} satisfies Meta<typeof PostCardOverlay>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

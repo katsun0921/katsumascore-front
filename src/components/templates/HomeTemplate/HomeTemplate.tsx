@@ -1,5 +1,5 @@
 import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
-import { PostList } from '@/components/features/post/PostList/PostList';
+import { PostList } from '@/components/features/PostList/PostList';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 
 export const HomeTemplate = ({ posts, isLoading = false }: HomeTemplateProps) => {
@@ -22,7 +22,7 @@ export const HomeTemplate = ({ posts, isLoading = false }: HomeTemplateProps) =>
               </div>
             </header>
 
-            <PostList posts={posts} isLoading={isLoading} variant='grid' />
+            <PostList posts={posts} isLoading={isLoading} />
           </div>
 
           <aside className='space-y-6 rounded-[24px] border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-6'>

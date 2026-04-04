@@ -1,0 +1,40 @@
+.p-share-buttons {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  &__label {
+    font-size: 13px;
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  &__list {
+    display: flex;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    color: var(--color-text-inverse);
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.85; }
+
+    &--x        { background: var(--color-x); }
+    &--facebook { background: var(--color-facebook); }
+    &--line     { background: var(--color-line); }
+  }
+}

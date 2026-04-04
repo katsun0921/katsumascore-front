@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
-import { PostList } from '@/components/features/post/PostList/PostList';
+import { PostList } from '@/components/features/PostList/PostList';
+import { PostListRow } from '@/components/features/PostList/PostListRow';
 import { mockPosts } from '@/components/features/post/mocks/post';
 
 const meta = {
@@ -43,7 +44,7 @@ export const MultipleSections: Story = {
       </PostSection>
 
       <PostSection title='人気記事'>
-        <PostList posts={mockPosts} variant='list' />
+        <PostListRow posts={mockPosts} />
       </PostSection>
 
       <PostSection title='アニメ'>

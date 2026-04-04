@@ -53,9 +53,9 @@
   &--netflix { border-top: 3px solid var(--color-netflix); }
   &--amazon  { border-top: 3px solid var(--color-amazon); }
   &--unext   { border-top: 3px solid var(--color-unext); }
-  &--disney  { border-top: 3px solid #113ccf; }
-  &--dmmtv   { border-top: 3px solid #ff4b00; }
-  &--youtube { border-top: 3px solid #ff0000; }
-  &--appletv { border-top: 3px solid #555; }
-  &--abema   { border-top: 3px solid #00bcd4; }
+  &--disney  { border-top: 3px solid var(--color-disney); }
+  &--dmmtv   { border-top: 3px solid var(--color-dmmtv); }
+  &--youtube { border-top: 3px solid var(--color-youtube); }
+  &--appletv { border-top: 3px solid var(--color-appletv); }
+  &--abema   { border-top: 3px solid var(--color-abema); }
 }

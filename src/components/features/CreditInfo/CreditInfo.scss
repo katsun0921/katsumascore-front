@@ -1,0 +1,32 @@
+.p-credit-info {
+  margin-top: 32px;
+
+  &__heading {
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 12px;
+    color: var(--color-text-primary);
+  }
+
+  &__list {
+    margin: 0;
+    border-top: 1px solid var(--color-border-muted);
+
+    dt, dd {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border-muted);
+      margin: 0;
+      font-size: 14px;
+    }
+  }
+
+  &__role {
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
+  }
+
+  &__names {
+    padding-left: 12px;
+    color: var(--color-text-primary);
+  }
+}

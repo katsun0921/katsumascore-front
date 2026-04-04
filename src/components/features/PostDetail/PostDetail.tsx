@@ -1,5 +1,5 @@
-import { PostContent } from '@/components/features/post/PostContent/PostContent';
-import { PostList } from '@/components/features/post/PostList/PostList';
+import { PostContent } from '@/components/features/PostContent/PostContent';
+import { PostList } from '@/components/features/PostList/PostList';
 import type { PostDetailProps } from './PostDetail.types';
 import './PostDetail.scss';
 
@@ -31,7 +31,7 @@ export const PostDetail = ({ post, relatedPosts }: PostDetailProps) => {
       {relatedPosts && relatedPosts.length > 0 && (
         <aside className='p-postDetail__related'>
           <h2 className='p-postDetail__relatedTitle'>関連記事</h2>
-          <PostList posts={relatedPosts} variant='grid' />
+          <PostList posts={relatedPosts} />
         </aside>
       )}
     </article>

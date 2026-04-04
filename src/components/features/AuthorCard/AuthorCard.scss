@@ -74,9 +74,9 @@
     transition: opacity 0.15s;
 
     &:hover { opacity: 0.75; }
-    &--twitter   { background: #1da1f2; color: #fff; border-color: #1da1f2; }
+    &--twitter   { background: var(--color-twitter); color: var(--color-text-inverse); border-color: var(--color-twitter); }
     &--facebook  { background: var(--color-facebook); color: #fff; border-color: var(--color-facebook); }
-    &--instagram { background: #e1306c; color: #fff; border-color: #e1306c; }
-    &--youtube   { background: #ff0000; color: #fff; border-color: #ff0000; }
+    &--instagram { background: var(--color-instagram); color: var(--color-text-inverse); border-color: var(--color-instagram); }
+    &--youtube   { background: var(--color-youtube); color: var(--color-text-inverse); border-color: var(--color-youtube); }
   }
 }

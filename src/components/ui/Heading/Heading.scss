@@ -2,26 +2,26 @@
   &__title {
     display: inline-block;
     margin: 0 auto;
-    color: rgb(255 255 255);
+    color: var(--color-text-inverse);
     font-size: clamp(32px, 5vw, 68px);
     font-weight: 500;
     line-height: 1.4;
     text-align: center;
-    text-shadow: 0 0 10px rgb(55 65 81);
+    text-shadow: 0 0 10px var(--color-text-primary);
     word-break: break-word;
     word-wrap: break-word;
   }
 
   &__post {
     display: inline-block;
-    color: #2f2f2f;
+    color: var(--color-text-dark);
     font-size: clamp(1.5rem, 2vw, 2rem);
 
     a {
-      color: rgb(37 99 235);
+      color: var(--color-primary);
 
       &:hover {
-        color: rgb(30 64 175);
+        color: var(--color-primary);
       }
     }
   }
@@ -29,7 +29,7 @@
   &__related {
     position: relative;
     padding-bottom: 15px;
-    color: #1e023d;
+    color: var(--color-secondary);
     font-family: var(--font-accent-soft);
     font-size: clamp(1.5rem, 2vw, 2rem);
     font-style: italic;
@@ -41,7 +41,7 @@
       display: block;
       width: 35px;
       height: 3px;
-      background-color: rgb(37 99 235);
+      background-color: var(--color-primary);
       content: '';
     }
   }
@@ -51,7 +51,7 @@
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
     background: linear-gradient(135deg, rgb(37 99 235) 0%, rgb(37 99 235) 100%);
-    color: rgb(255 255 255);
+    color: var(--color-text-inverse);
     font-size: clamp(1.5rem, 2vw, 2rem);
   }
 
@@ -60,15 +60,15 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: rgb(255 255 255);
+    color: var(--color-text-inverse);
     font-size: clamp(1.5rem, 2vw, 2rem);
   }
 
   &__ribbon {
     position: relative;
     padding: 15px 30px;
-    background-color: rgb(37 99 235);
-    color: rgb(255 255 255);
+    background-color: var(--color-primary);
+    color: var(--color-text-inverse);
     font-size: clamp(1.5rem, 2vw, 2rem);
 
     &::before {
@@ -87,7 +87,7 @@
     padding: 20px 40px 20px 20px;
     border-radius: 8px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: rgb(255 255 255);
+    color: var(--color-text-inverse);
     font-size: clamp(1.5rem, 2vw, 2rem);
 
     &::after {
@@ -108,13 +108,13 @@
   &__quote {
     position: relative;
     padding: 20px 40px;
-    color: #333;
+    color: var(--color-text-dark);
     font-size: clamp(1.5rem, 2vw, 2rem);
 
     &::before,
     &::after {
       position: absolute;
-      color: rgb(37 99 235);
+      color: var(--color-primary);
       font-size: 3em;
       font-weight: 700;
       content: '"';
@@ -147,7 +147,7 @@
     border-left: 5px solid rgb(234 179 8);
     box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
     background: linear-gradient(135deg, rgb(37 99 235) 0%, rgb(30 64 175) 100%);
-    color: rgb(255 255 255);
+    color: var(--color-text-inverse);
     font-size: 1.8rem;
   }
 
@@ -165,7 +165,7 @@
       margin-right: 0.1em;
       background: linear-gradient(135deg, rgb(37 99 235) 0%, rgb(30 64 175) 100%);
       background-clip: text;
-      color: rgb(37 99 235);
+      color: var(--color-primary);
       font-size: 1.5em;
       font-weight: 700;
       -webkit-text-fill-color: transparent;

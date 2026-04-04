@@ -1,14 +1,10 @@
-import { PostCard } from '@/components/features/post/PostCard/PostCard';
+import { PostCard } from '@/components/features/PostCard/PostCard';
 import type { PostListProps } from './PostList.types';
 import styles from './PostList.module.scss';
 
 const SKELETON_COUNT = 4;
 
-export const PostList = ({
-  posts,
-  isLoading = false,
-  variant = 'grid',
-}: PostListProps) => {
+export const PostListRow = ({ posts, isLoading = false }: PostListProps) => {
   const items = isLoading ? Array.from({ length: SKELETON_COUNT }, (_, index) => `loading-${index}`) : posts;
 
   if (!isLoading && posts.length === 0) {
@@ -24,7 +20,7 @@ export const PostList = ({
 
   return (
     <section aria-busy={isLoading} aria-live='polite'>
-      <ul className={[styles.list, variant === 'list' ? styles.listVariant : styles.gridVariant].join(' ')}>
+      <ul className={[styles.list, styles.listVariant].join(' ')}>
         {items.map((item) => (
           <li className={styles.item} key={typeof item === 'string' ? item : item.id}>
             {typeof item === 'string' ? (

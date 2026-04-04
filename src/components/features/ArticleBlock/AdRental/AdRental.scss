@@ -42,12 +42,12 @@
     }
 
     &--tsutaya {
-      background: #003087;
+      background: var(--color-tsutaya);
       color: var(--color-text-inverse);
     }
 
     &--geo {
-      background: #0066cc;
+      background: var(--color-geo);
       color: var(--color-text-inverse);
     }
   }

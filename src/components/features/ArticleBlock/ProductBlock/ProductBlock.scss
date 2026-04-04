@@ -73,10 +73,10 @@
 
     &:hover { opacity: 0.85; }
 
-    &--amazon_prime { background: #00a8e0; }
-    &--netflix      { background: #e50914; }
-    &--amazon       { background: #ff9900; }
-    &--rakuten      { background: #bf0000; }
+    &--amazon_prime { background: var(--color-amazon); }
+    &--netflix      { background: var(--color-netflix); }
+    &--amazon       { background: var(--color-amazon-shopping); }
+    &--rakuten      { background: var(--color-rakuten); }
   }
 
   @media (max-width: 768px) {

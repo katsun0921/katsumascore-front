@@ -1,8 +1,8 @@
 import type { GetServerSideProps } from 'next';
 import { getPostBySlug, mapWPPostToPost } from '@/lib/api/wordpress';
-import { PostDetail } from '@/components/features/post/PostDetail/PostDetail';
-import { PostSEO } from '@/components/features/post/PostSEO/PostSEO';
-import type { PostDetailProps } from '@/components/features/post/PostDetail/PostDetail.types';
+import { PostDetail } from '@/components/features/PostDetail/PostDetail';
+import { PostSEO } from '@/components/features/PostSEO/PostSEO';
+import type { PostDetailProps } from '@/components/features/PostDetail/PostDetail.types';
 
 type Props = {
   post: PostDetailProps['post'];
