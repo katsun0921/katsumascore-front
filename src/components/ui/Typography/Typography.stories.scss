@@ -217,16 +217,16 @@
   font-family: var(--font-ja-heading), serif;
 }
 
-.sb-typography-font-sample--accent-ja {
-  font-family: var(--font-ja-accent), serif;
+.sb-typography-font-sample--accent-strong {
+  font-family: var(--font-accent-strong);
+}
+
+.sb-typography-font-sample--accent-soft {
+  font-family: var(--font-accent-soft);
 }
 
 .sb-typography-font-sample--en-base {
   font-family: var(--font-en-base), sans-serif;
-}
-
-.sb-typography-font-sample--en-display {
-  font-family: var(--font-en-display), serif;
 }
 
 .sb-typography-note {

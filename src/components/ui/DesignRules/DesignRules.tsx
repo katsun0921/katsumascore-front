@@ -43,19 +43,21 @@ const typographyRules: RuleGroup[] = [
     description: '本文、見出し、アクセントで役割を分離します。',
     items: [
       '本文は Noto Sans JP',
-      'h1 / h2 は Noto Serif JP',
+      'h1 / h2 は Kaisei Tokumin',
       'h3 以降は Noto Sans JP',
-      'Shippori Mincho は限定アクセント専用',
+      'Rampart One はランキング・スコア・特集に限定',
+      'Yusei Magic はタグ・補助ラベル・CTAに限定',
+      'アクセントフォントは常用しない',
     ],
   },
   {
     title: 'English Typography',
-    description: '英語は UI と演出の線引きを明確にします。',
+    description: '英語は Inter に一本化し、日本語設計との一貫性を優先します。',
     items: [
       '英語本文と UI は Inter',
-      '演出的な見出しだけ Playfair Display',
       '英語 UI に serif を混在させない',
       'button / nav / meta / tag は Inter に揃える',
+      '英語の演出的フォントは使用しない',
     ],
   },
 ];

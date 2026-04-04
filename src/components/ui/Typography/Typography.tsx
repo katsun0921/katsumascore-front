@@ -65,18 +65,26 @@ const fontEntries: FontEntry[] = [
   {
     name: 'Japanese Heading',
     token: '--font-ja-heading',
-    stack: '"Noto Serif JP", serif',
+    stack: '"Kaisei Tokumin", serif',
     sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--heading',
-    sampleText: '映画レビューに信頼と格を与える、日本語見出し用のセリフです。',
+    sampleText: '映画レビューに信頼と作品性を与える、日本語見出し用のセリフです。',
     note: 'h1 と h2 の既定値です。Serif 600〜700 を見出しに限定して使います。',
   },
   {
-    name: 'Japanese Accent',
-    token: '--font-ja-accent / .font-accent',
-    stack: '"Shippori Mincho", "Noto Serif JP", serif',
-    sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--accent-ja',
-    sampleText: '余韻や世界観を一瞬で立ち上げたい場面だけに使う限定書体です。',
-    note: '限定運用です。本文や通常見出しには使わず、アクセント専用クラスだけで使います。',
+    name: 'Japanese Accent Strong',
+    token: '--font-accent-strong / .font-accent-strong',
+    stack: '"Rampart One", sans-serif',
+    sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--accent-strong',
+    sampleText: 'ランキング・スコア・特集で強いインパクトを与える限定書体です。',
+    note: '常用禁止です。ランキング・スコア・特集など視線を止めたい場面に限定します。',
+  },
+  {
+    name: 'Japanese Accent Soft',
+    token: '--font-accent-soft / .font-accent-soft',
+    stack: '"Yusei Magic", sans-serif',
+    sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--accent-soft',
+    sampleText: 'タグ・補助ラベル・軽いCTAに親しみと軽やかさで寄り添う書体です。',
+    note: '常用禁止です。タグ・補助ラベル・軽い CTA に限定して使います。',
   },
   {
     name: 'English Base / UI',
@@ -84,24 +92,19 @@ const fontEntries: FontEntry[] = [
     stack: '"Inter", system-ui, sans-serif',
     sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--en-base',
     sampleText: 'Inter keeps UI copy clear, stable, and easy to scan across dense layouts.',
-    note: '英語本文と UI の既定値です。Base / UI は常に Inter を使います。',
-  },
-  {
-    name: 'English Display',
-    token: '--font-en-display',
-    stack: '"Playfair Display", serif',
-    sampleClassName: 'sb-typography-font-sample sb-typography-font-sample--en-display',
-    sampleText: 'Playfair Display adds tone, contrast, and editorial character to featured headlines.',
-    note: '英語のアクセント見出し用です。通常 UI や本文には使いません。',
+    note: '英語本文と UI の既定値です。Base / UI は常に Inter を使います。英語の演出的フォントは使用しません。',
   },
 ];
 
 const fontRules = [
   '本文は Noto Sans JP を使い、情報を正しく読ませることを優先する。',
-  '見出しは Noto Serif JP を使い、信頼と格を付与する。',
-  'Shippori Mincho は世界観を作るための限定アクセントとしてのみ使う。',
+  'h1 / h2 は Kaisei Tokumin を使い、信頼と作品性を付与する。',
+  'h3 以降は Noto Sans JP に戻す。',
+  'Rampart One はランキング・スコア・特集など強いインパクトが必要な場面のみ。',
+  'Yusei Magic はタグ・補助ラベル・軽い CTA に限定する。',
+  'アクセントフォントは常用しない（使用率を制限する）。',
   '英語本文と英語 UI は Inter を使い、一貫して明快に見せる。',
-  '英語の演出的な見出しだけ Playfair Display を使う。',
+  '英語の演出的フォントは使用しない（日本語設計との一貫性を優先）。',
 ];
 
 const weightRules = [
