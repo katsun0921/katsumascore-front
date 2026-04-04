@@ -2,7 +2,7 @@ import Head from 'next/head';
 import type { GetServerSideProps } from 'next';
 import type { ComponentProps } from 'react';
 import { HomeTemplate } from '@/components/templates/HomeTemplate/HomeTemplate';
-import { normalizePosts } from '@/features/post/utils/normalizePost';
+import { normalizePosts } from '@/components/features/post/utils/normalizePost';
 import { getPosts } from '@/lib/api/wordpress';
 
 type IndexProps = ComponentProps<typeof HomeTemplate>;
