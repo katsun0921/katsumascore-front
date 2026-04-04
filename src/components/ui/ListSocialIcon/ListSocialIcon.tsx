@@ -8,7 +8,7 @@ import {
 
 export const ListSocialIcon = ({}) => {
   return (
-    <ul className='c-list__socialLink'>
+    <ul className='list__socialLink'>
       <li>
         <LinkTwitterIcon />
       </li>

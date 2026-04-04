@@ -1,4 +1,4 @@
-.c-postSection {
+.postSection {
   padding: 2.5rem 0;
 
   & + & {
@@ -19,7 +19,7 @@
 }
 
 @media (max-width: 767px) {
-  .c-postSection {
+  .postSection {
     padding: 1.75rem 0;
 
     &__title {

@@ -11,15 +11,15 @@ export const VideoEmbed = ({ embedCode, videoUrl, title = 'Video' }: TVideoEmbed
   if (!embedCode && !videoUrl) return null
 
   return (
-    <div className='c-video-embed'>
+    <div className='video-embed'>
       {embedCode ? (
         <div
-          className='c-video-embed__iframe'
+          className='video-embed__iframe'
           dangerouslySetInnerHTML={{ __html: embedCode }}
         />
       ) : (
         <iframe
-          className='c-video-embed__iframe'
+          className='video-embed__iframe'
           src={videoUrl}
           title={title}
           allowFullScreen

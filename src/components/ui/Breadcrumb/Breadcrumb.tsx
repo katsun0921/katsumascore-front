@@ -14,22 +14,22 @@ export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
   if (!items.length) return null
 
   return (
-    <nav className='c-breadcrumb' aria-label='Breadcrumb'>
-      <ol className='c-breadcrumb__list'>
+    <nav className='breadcrumb' aria-label='Breadcrumb'>
+      <ol className='breadcrumb__list'>
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (
-            <li key={index} className='c-breadcrumb__item'>
+            <li key={index} className='breadcrumb__item'>
               {!isLast && item.href ? (
-                <a className='c-breadcrumb__link' href={item.href}>
+                <a className='breadcrumb__link' href={item.href}>
                   {item.label}
                 </a>
               ) : (
-                <span className='c-breadcrumb__current' aria-current={isLast ? 'page' : undefined}>
+                <span className='breadcrumb__current' aria-current={isLast ? 'page' : undefined}>
                   {item.label}
                 </span>
               )}
-              {!isLast && <span className='c-breadcrumb__separator' aria-hidden='true'>/</span>}
+              {!isLast && <span className='breadcrumb__separator' aria-hidden='true'>/</span>}
             </li>
           )
         })}

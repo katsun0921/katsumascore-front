@@ -35,7 +35,7 @@ const headerNavigationMenu: TLinksHeader = [
 
 export const ListHeader = ({}) => {
   return (
-    <ul id='menu-category' className='c-list__header'>
+    <ul id='menu-category' className='list__header'>
       {headerNavigationMenu.map((link, i) => {
         return (
           <li key={i} className={link.current ? 'current-menu-item' : ''}>

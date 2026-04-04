@@ -10,7 +10,7 @@ export type TBadgeProps = {
 
 export const Badge = ({ label, variant = 'default' }: TBadgeProps) => {
   return (
-    <span className={['c-badge', `c-badge--${variant}`].join(' ')}>
+    <span className={['badge', `badge--${variant}`].join(' ')}>
       {label}
     </span>
   )

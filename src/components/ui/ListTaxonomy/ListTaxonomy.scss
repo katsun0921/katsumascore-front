@@ -1,15 +1,15 @@
-.c-list__term {
+.list__term {
   font-size: 1.2em;
   font-weight: 700;
 }
 
-.c-list__termList {
+.list__termList {
   &:not(:last-child) {
     margin-right: 1.5em;
   }
 }
 
-.c-list__termCount {
+.list__termCount {
   display: inline-block;
   width: 25px;
   height: 25px;

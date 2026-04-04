@@ -54,18 +54,18 @@ export const VodItem = ({
       : '未登録の方はこちらから登録できます。')
 
   return (
-    <div className={['c-vod-item', `c-vod-item--${service}`].join(' ')}>
+    <div className={['vod-item', `vod-item--${service}`].join(' ')}>
       {isPaid && (
-        <em className='c-vod-item__paid'>
+        <em className='vod-item__paid'>
           {locale === 'en' ? 'This distribution is paid.' : 'この配信は有料になります。'}
         </em>
       )}
-      <div className='c-vod-item__logo-wrap'>
-        <span className='c-vod-item__service-name'>{label}</span>
+      <div className='vod-item__logo-wrap'>
+        <span className='vod-item__service-name'>{label}</span>
       </div>
       {signupUrl && (
         <a
-          className='c-vod-item__signup'
+          className='vod-item__signup'
           href={signupUrl}
           target='_blank'
           rel='noopener noreferrer'
@@ -74,7 +74,7 @@ export const VodItem = ({
         </a>
       )}
       <a
-        className='c-vod-item__watch'
+        className='vod-item__watch'
         href={streamingUrl}
         target='_blank'
         rel='noopener noreferrer'

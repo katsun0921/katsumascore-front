@@ -11,15 +11,15 @@ export const HamburgerMenu = ({ label }: THamburgerMenuProps) => {
     <button
       type='button'
       id='js-menu-button'
-      className='c-hamburgerMenu'
+      className='hamburgerMenu'
       onClick={() => clickHamburgerMenu()}
     >
-      <span className='c-hamburgerMenu__lineContainer'>
-        <span className='c-hamburgerMenu__line'></span>
-        <span className='c-hamburgerMenu__line'></span>
-        <span className='c-hamburgerMenu__line'></span>
+      <span className='hamburgerMenu__lineContainer'>
+        <span className='hamburgerMenu__line'></span>
+        <span className='hamburgerMenu__line'></span>
+        <span className='hamburgerMenu__line'></span>
       </span>
-      <span className='c-hamburgerMenu__label'>{label}</span>
+      <span className='hamburgerMenu__label'>{label}</span>
     </button>
   );
 };

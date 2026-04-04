@@ -19,7 +19,7 @@ export const LinkFacebookIcon = ({}) => {
     <a
       href='https://www.facebook.com/people/Katsumascore/100072246676709/'
       target='_blank'
-      className='c-icon__circle'
+      className='icon__circle'
       rel='noreferrer'
     >
       <img
@@ -37,7 +37,7 @@ export const LinkTwitterIcon = ({}) => {
     <a
       href='https://twitter.com/Katsun0921'
       target='_blank'
-      className='c-icon__circle'
+      className='icon__circle'
       rel='noreferrer'
     >
       <img
@@ -55,7 +55,7 @@ export const LinkRssIcon = ({}) => {
     <a
       href='https://katsumascore.blog/feed/'
       target='_blank'
-      className='c-icon__rss c-icon__circle'
+      className='icon__rss icon__circle'
       rel='noreferrer'
     >
       <img

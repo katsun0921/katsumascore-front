@@ -8,8 +8,8 @@ export type TScoreProps = {
 
 export const Score = ({ score, size = 'medium' }: TScoreProps) => {
   return (
-    <div className={['c-score', `c-score__${size}`].join(' ')}>
-      <span className='c-score__count'>{score}</span>
+    <div className={['score', `score__${size}`].join(' ')}>
+      <span className='score__count'>{score}</span>
     </div>
   )
 }

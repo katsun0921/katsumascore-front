@@ -39,23 +39,23 @@ export const ProductBlock = ({
   const linkCta = type === 'vod' ? 'で視聴' : 'で購入'
 
   return (
-    <div className={['c-product', `c-product--${type}`].join(' ')}>
-      <div className='c-product__inner'>
+    <div className={['product', `product--${type}`].join(' ')}>
+      <div className='product__inner'>
         {imageUrl && (
-          <div className='c-product__image'>
+          <div className='product__image'>
             <img src={imageUrl} alt={imageAlt || title} width={110} height='auto' />
           </div>
         )}
-        <div className='c-product__body'>
-          <span className='c-product__type'>{type === 'vod' ? 'VOD' : '買い物'}</span>
-          <p className='c-product__title'>{title}</p>
-          {description && <p className='c-product__desc'>{description}</p>}
+        <div className='product__body'>
+          <span className='product__type'>{type === 'vod' ? 'VOD' : '買い物'}</span>
+          <p className='product__title'>{title}</p>
+          {description && <p className='product__desc'>{description}</p>}
           {links.length > 0 && (
-            <ul className='c-product__links'>
+            <ul className='product__links'>
               {links.map((link, i) => (
                 <li key={i}>
                   <a
-                    className={['c-product__btn', `c-product__btn--${link.site}`].join(' ')}
+                    className={['product__btn', `product__btn--${link.site}`].join(' ')}
                     href={link.url}
                     target='_blank'
                     rel='noopener noreferrer'

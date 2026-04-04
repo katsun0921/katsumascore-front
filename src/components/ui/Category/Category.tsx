@@ -7,7 +7,7 @@ type CategoryProps = {
 };
 
 export const Category = ({ label, size }: CategoryProps) => {
-  const mode = size ? `c-category__${size}` : '';
+  const mode = size ? `category__${size}` : '';
 
-  return <div className={['c-category', mode].filter(Boolean).join(' ')}>{label}</div>;
+  return <div className={['category', mode].filter(Boolean).join(' ')}>{label}</div>;
 };

@@ -1,4 +1,4 @@
-.c-link {
+.link {
   &__social {
     position: relative;
     display: block;
@@ -35,7 +35,7 @@
   &__twitter {
     background: var(--color-twitter);
 
-    .c-link__socialText::before {
+    .link__socialText::before {
       background-image: url('https://katsumascore.blog/images/logo-twitter-white.png');
     }
   }
@@ -43,7 +43,7 @@
   &__facebook {
     background: var(--color-facebook);
 
-    .c-link__socialText::before {
+    .link__socialText::before {
       background-image: url('https://katsumascore.blog/images/logo-facebook.png');
     }
   }

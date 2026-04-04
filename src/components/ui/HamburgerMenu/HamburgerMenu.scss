@@ -1,4 +1,4 @@
-.c-hamburgerMenu {
+.hamburgerMenu {
   display: flex;
   align-items: center;
   padding: 0;
@@ -43,7 +43,7 @@
 }
 
 .change-line {
-  .c-hamburgerMenu__line {
+  .hamburgerMenu__line {
     &:nth-child(1) {
       top: 50%;
       transform: translateY(-50%) rotate(-45deg);

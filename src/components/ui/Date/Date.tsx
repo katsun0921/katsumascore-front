@@ -22,7 +22,7 @@ export const Date = ({ publishedAt, updatedAt, locale = 'ja' }: TDateProps) => {
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 
   return (
-    <div className='c-date'>
+    <div className='date'>
       {updated && (
         <p>
           <time dateTime={updated.datetime}>
