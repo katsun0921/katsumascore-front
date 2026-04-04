@@ -37,6 +37,9 @@ const eslintConfig = defineConfig([
       // No hex colors in JSX inline styles — use SCSS variables or CSS tokens
       'katsumascore-ui/no-hardcoded-hex-color': 'error',
 
+      // No hardcoded font-family — use design tokens (var(--font-*))
+      'katsumascore-ui/no-hardcoded-font-family': 'error',
+
       // No variant prop with layout values (grid/list/overlay/left/right/…)
       // Separate components should be created for each layout variant
       'katsumascore-ui/no-variant-layout-prop': 'error',

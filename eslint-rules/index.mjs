@@ -10,6 +10,7 @@ import noHardcodedHexColor from './no-hardcoded-hex-color.mjs'
 import noVariantLayoutProp from './no-variant-layout-prop.mjs'
 import noPostSectionDirectPostCard from './no-postsection-direct-postcard.mjs'
 import noPostListSectionTitle from './no-postlist-section-title.mjs'
+import noHardcodedFontFamily from './no-hardcoded-font-family.mjs'
 
 /** @type {import('eslint').ESLint.Plugin} */
 const plugin = {
@@ -23,6 +24,7 @@ const plugin = {
     'no-variant-layout-prop': noVariantLayoutProp,
     'no-postsection-direct-postcard': noPostSectionDirectPostCard,
     'no-postlist-section-title': noPostListSectionTitle,
+    'no-hardcoded-font-family': noHardcodedFontFamily,
   },
 }
 

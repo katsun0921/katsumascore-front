@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;500;700&family=Playfair+Display:wght@400;700&family=Shippori+Mincho:wght@400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Kaisei+Tokumin:wght@400;500;700&family=Rampart+One&family=Yusei+Magic&display=swap");
 @import "tailwindcss";
 
 :root {
@@ -156,10 +156,13 @@ select {
 
 :root {
   --font-ja-body: "Noto Sans JP", system-ui, sans-serif;
-  --font-ja-heading: "Noto Serif JP", serif;
-  --font-ja-accent: "Shippori Mincho", "Noto Serif JP", serif;
+  --font-ja-heading: "Kaisei Tokumin", serif;
+
+  --font-accent-strong: "Rampart One", sans-serif;
+  --font-accent-soft: "Yusei Magic", sans-serif;
+
   --font-en-base: "Inter", system-ui, sans-serif;
-  --font-en-display: "Playfair Display", serif;
+
   --font-body: var(--font-ja-body);
   --font-heading: var(--font-ja-heading);
   --font-ui: var(--font-en-base);
@@ -194,6 +197,10 @@ nav,
   font-family: var(--font-ui);
 }
 
-.font-accent {
-  font-family: var(--font-ja-accent);
+.font-accent-strong {
+  font-family: var(--font-accent-strong);
+}
+
+.font-accent-soft {
+  font-family: var(--font-accent-soft);
 }

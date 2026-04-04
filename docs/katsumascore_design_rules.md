@@ -112,41 +112,43 @@ Typography は「役割」と「言語」で管理する。
 ## ■ 日本語 font-family
 
 - 本文：`Noto Sans JP`
-- 見出し：`Noto Serif JP`
-- 限定アクセント：`Shippori Mincho`
+- 見出し：`Kaisei Tokumin`
+- アクセント（強）：`Rampart One`
+- アクセント（柔）：`Yusei Magic`
 
 ### ■ 意味づけ
 
 - `Noto Sans JP` → 情報を正しく読ませる
-- `Noto Serif JP` → 見出しに信頼と格を付与する
-- `Shippori Mincho` → 一瞬で世界観を作る
+- `Kaisei Tokumin` → 見出しに信頼と作品性を与える
+- `Rampart One` → 強いインパクトで視線を止める
+- `Yusei Magic` → 親しみと軽やかさで読者に寄り添う
 
 ### ■ 使用ルール
 
 - body / 本文 / 通常説明文は `Noto Sans JP`
-- h1 / h2 は `Noto Serif JP`
+- h1 / h2 は `Kaisei Tokumin`
 - h3 以降は `Noto Sans JP`
-- `Shippori Mincho` は限定アクセント専用 class でのみ使う
+- `Rampart One` はランキング・スコア・特集など限定的に使用
+- `Yusei Magic` はタグ・補助ラベル・軽いCTAに限定
 - 本文に serif を使わない
+- アクセントフォントは常用しない（使用率を制限する）
 
 ---
 
 ## ■ 英語 font-family
 
 - 本文 / UI：`Inter`
-- 演出的な見出し / アクセント：`Playfair Display`
 
 ### ■ 意味づけ
 
 - `Inter` → 情報と UI を明快かつ安定して読ませる
-- `Playfair Display` → 英語見出しにコントラストとエディトリアル感を与える
 
 ### ■ 使用ルール
 
 - 英語本文は `Inter`
 - button / nav / meta / tag など英語 UI は常に `Inter`
-- 英語の演出的な見出しだけ `Playfair Display`
 - 英語 UI に serif を混在させない
+- 英語の演出的フォントは使用しない（日本語設計との一貫性を優先）
 
 ---
 
