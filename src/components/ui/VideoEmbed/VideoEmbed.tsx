@@ -1,0 +1,31 @@
+import React from 'react'
+import './VideoEmbed.scss'
+
+export type TVideoEmbedProps = {
+  embedCode?: string
+  videoUrl?: string
+  title?: string
+}
+
+export const VideoEmbed = ({ embedCode, videoUrl, title = 'Video' }: TVideoEmbedProps) => {
+  if (!embedCode && !videoUrl) return null
+
+  return (
+    <div className='c-video-embed'>
+      {embedCode ? (
+        <div
+          className='c-video-embed__iframe'
+          dangerouslySetInnerHTML={{ __html: embedCode }}
+        />
+      ) : (
+        <iframe
+          className='c-video-embed__iframe'
+          src={videoUrl}
+          title={title}
+          allowFullScreen
+          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+        />
+      )}
+    </div>
+  )
+}

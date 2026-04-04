@@ -1,0 +1,54 @@
+.p-ad-rental {
+  margin-top: 32px;
+
+  &__heading {
+    font-size: 18px;
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 16px;
+    color: var(--color-text-primary);
+  }
+
+  &__list {
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    gap: 16px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__item {
+    flex: 0 1 33%;
+  }
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: var(--font-weight-bold);
+    font-size: 14px;
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.85; }
+
+    span {
+      font-size: 12px;
+      font-weight: normal;
+    }
+
+    &--tsutaya {
+      background: #003087;
+      color: var(--color-text-inverse);
+    }
+
+    &--geo {
+      background: #0066cc;
+      color: var(--color-text-inverse);
+    }
+  }
+}

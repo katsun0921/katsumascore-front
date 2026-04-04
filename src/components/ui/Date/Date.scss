@@ -1,0 +1,15 @@
+.c-date {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+
+  p {
+    margin: 0;
+  }
+
+  time {
+    display: inline-block;
+  }
+}

@@ -1,0 +1,39 @@
+.c-breadcrumb {
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 13px;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__link {
+    color: var(--color-primary);
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &__current {
+    color: var(--color-text-secondary);
+    max-width: 240px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__separator {
+    color: var(--color-text-secondary);
+  }
+}

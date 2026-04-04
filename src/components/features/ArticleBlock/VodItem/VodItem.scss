@@ -1,0 +1,61 @@
+.c-vod-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid var(--color-border-muted);
+  background: var(--color-bg);
+
+  &__paid {
+    display: block;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+    font-style: italic;
+  }
+
+  &__logo-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__service-name {
+    font-size: 15px;
+    font-weight: var(--font-weight-bold);
+  }
+
+  &__signup {
+    display: block;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+
+    &:hover { text-decoration: underline; }
+  }
+
+  &__watch {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    text-align: center;
+    background: var(--color-primary);
+    color: var(--color-text-inverse);
+    transition: opacity 0.15s;
+
+    &:hover { opacity: 0.85; }
+  }
+
+  // service-specific accent colors
+  &--netflix { border-top: 3px solid var(--color-netflix); }
+  &--amazon  { border-top: 3px solid var(--color-amazon); }
+  &--unext   { border-top: 3px solid var(--color-unext); }
+  &--disney  { border-top: 3px solid #113ccf; }
+  &--dmmtv   { border-top: 3px solid #ff4b00; }
+  &--youtube { border-top: 3px solid #ff0000; }
+  &--appletv { border-top: 3px solid #555; }
+  &--abema   { border-top: 3px solid #00bcd4; }
+}

@@ -1,0 +1,22 @@
+.l-container {
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: 16px;
+  padding-left: 16px;
+
+  &--sm  { max-width: 640px; }
+  &--md  { max-width: 768px; }
+  &--lg  { max-width: 1200px; }
+  &--full { max-width: none; }
+
+  @media (min-width: 640px) {
+    padding-right: 24px;
+    padding-left: 24px;
+  }
+
+  @media (min-width: 1024px) {
+    padding-right: 32px;
+    padding-left: 32px;
+  }
+}

@@ -1,0 +1,36 @@
+import type { Meta, StoryObj } from '@storybook/react'
+import { StreamingVod } from './StreamingVod'
+
+const mockServices = [
+  { service: 'netflix' as const, url: 'https://netflix.com/watch/123', signupUrl: 'https://netflix.com/signup' },
+  { service: 'amazon' as const, url: 'https://amazon.co.jp/watch/123', signupUrl: 'https://amazon.co.jp/prime' },
+  { service: 'unext' as const, url: 'https://unext.jp/watch/123', isPaid: true },
+]
+
+const meta: Meta<typeof StreamingVod> = {
+  title: 'features/ArticleBlock/StreamingVod',
+  component: StreamingVod,
+  tags: ['autodocs'],
+  args: {
+    titleJp: '鬼滅の刃',
+    titleEn: 'Demon Slayer',
+    services: mockServices,
+    locale: 'ja',
+  },
+}
+export default meta
+
+type Story = StoryObj<typeof StreamingVod>
+
+export const Japanese: Story = { args: { locale: 'ja' } }
+export const English: Story = { args: { locale: 'en' } }
+export const SingleService: Story = { args: { services: [mockServices[0]] } }
+export const AllServices: Story = {
+  args: {
+    services: [
+      ...mockServices,
+      { service: 'disney' as const, url: 'https://disneyplus.com/watch/123' },
+      { service: 'dmmtv' as const, url: 'https://dmmtv.jp/watch/123' },
+    ],
+  },
+}

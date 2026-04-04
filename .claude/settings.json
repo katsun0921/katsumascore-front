@@ -7,7 +7,8 @@
       "Bash(for f:*)",
       "Bash(do echo:*)",
       "Bash(done)",
-      "Bash(grep \"\\\\.scss$\")"
+      "Bash(grep \"\\\\.scss$\")",
+      "Bash(npm run:*)"
     ]
   }
 }
