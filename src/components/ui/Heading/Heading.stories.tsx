@@ -120,35 +120,3 @@ export const GoldTextHeading: StoryObj<typeof Heading> = {
   },
 };
 
-export const ContentH2Heading: StoryObj<typeof Heading> = {
-  render: Template,
-  args: {
-    headingLevel: '2',
-    type: 'content-h2',
-    color: 'var(--color-bg)',
-    label: 'コンテンツH2見出し',
-    isLink: false,
-  },
-};
-
-export const ContentH3Heading: StoryObj<typeof Heading> = {
-  render: Template,
-  args: {
-    headingLevel: '3',
-    type: 'content-h3',
-    color: 'var(--color-bg)',
-    label: 'コンテンツH3見出し',
-    isLink: false,
-  },
-};
-
-export const ContentH4Heading: StoryObj<typeof Heading> = {
-  render: Template,
-  args: {
-    headingLevel: '4',
-    type: 'content-h4',
-    color: 'var(--color-bg)',
-    label: 'コンテンツH4見出し',
-    isLink: false,
-  },
-};

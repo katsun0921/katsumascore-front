@@ -9,8 +9,7 @@ type HeadingProps = {
          'border-simple' | 'border-accent' | 'border-gradient' |
          'shadow' | 'shadow-colored' | 'tag' | 'tag-rounded' |
          'ribbon' | 'speech' | 'checkered' | 'striped' |
-         'outline' | 'outline-colored' | '3d' | 'quote' | 'gold-text' |
-         'content-h2' | 'content-h3' | 'content-h4';
+         'outline' | 'outline-colored' | '3d' | 'quote' | 'gold-text';
   isLink: boolean;
   label: string;
 };
@@ -51,9 +50,6 @@ export const Heading = ({
     '3d': 'heading__3d',
     quote: 'heading__quote',
     'gold-text': 'heading__gold-text',
-    'content-h2': 'heading__content-h2',
-    'content-h3': 'heading__content-h3',
-    'content-h4': 'heading__content-h4',
   };
   const className = type ? typeToClass[type] ?? 'heading' : 'heading';
 
