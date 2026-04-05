@@ -1,0 +1,66 @@
+.header-nav {
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    display: block;
+  }
+
+  // ─── PC レイアウト ─────────────────────────────────────────────────────────
+  &--pc {
+    .header-nav__list {
+      display: flex;
+      gap: 28px;
+    }
+
+    .header-nav__link {
+      display: block;
+      font-family: var(--font-ui);
+      font-size: 0.9375rem;
+      font-weight: var(--font-weight-medium);
+      color: var(--color-text-inverse);
+      letter-spacing: 0.06em;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      // PCではactive表示なし（Navigation barが別途あるため）
+    }
+  }
+
+  // ─── SP レイアウト ─────────────────────────────────────────────────────────
+  &--sp {
+    .header-nav__list {
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+    }
+
+    .header-nav__link {
+      display: block;
+      padding: 4px 8px;
+      font-family: var(--font-ui);
+      font-size: 0.875rem;
+      font-weight: var(--font-weight-medium);
+      color: rgba(255, 255, 255, 0.6);
+      letter-spacing: 0.06em;
+      transition: color 0.15s ease;
+
+      &:hover {
+        color: rgba(255, 255, 255, 0.9);
+        opacity: 1;
+      }
+
+      &--active {
+        color: var(--color-text-inverse);
+        border-bottom: 2px solid var(--color-primary);
+        padding-bottom: 2px;
+      }
+    }
+  }
+}

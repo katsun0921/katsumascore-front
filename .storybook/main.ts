@@ -19,7 +19,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  viteFinal: async (config) => {
+  viteFinal: async (config, { configType }) => {
     config.plugins = [...(config.plugins ?? []), tailwindcss()]
     config.resolve = config.resolve ?? {}
     config.resolve.alias = {
@@ -32,6 +32,9 @@ const config: StorybookConfig = {
     }
     config.define = config.define ?? {}
     config.define['process.env'] = {}
+    if (configType === 'PRODUCTION') {
+      config.base = './'
+    }
     return config
   },
 }

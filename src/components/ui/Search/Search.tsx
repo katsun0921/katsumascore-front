@@ -5,9 +5,10 @@ import './Search.scss';
 
 type Props = {
   onNavigate?: (href: string) => void;
+  className?: string;
 };
 
-export const Search = ({ onNavigate }: Props) => {
+export const Search = ({ onNavigate, className }: Props) => {
   const { query, setQuery, results, isOpen, activeIndex, activeResult, moveDown, moveUp, close } =
     useSearch();
 
@@ -56,7 +57,7 @@ export const Search = ({ onNavigate }: Props) => {
   const showDropdown = isOpen && results.length > 0;
 
   return (
-    <div className="search" ref={containerRef}>
+    <div className={`search${className ? ` ${className}` : ''}`} ref={containerRef}>
       <input
         ref={inputRef}
         type="search"

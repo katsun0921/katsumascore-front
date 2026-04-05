@@ -1,45 +1,64 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Container } from '@/components/layout/Container/Container';
-import { Navigation } from '@/components/layout/Navigation/Navigation';
 import { Search } from '@/components/ui/Search/Search';
-import { VodMenu } from '@/components/ui/VodMenu/VodMenu';
-import type { TVodMenuService } from '@/components/ui/VodMenu/VodMenu.types';
-
-const vodServices: TVodMenuService[] = [
-  { service: 'netflix', label: 'Netflix', status: true, href: '/vod/netflix' },
-  { service: 'amazon', label: 'Amazon Prime', status: true, href: '/vod/amazon' },
-  { service: 'unext', label: 'U-NEXT', status: false, href: '/vod/unext' },
-];
+import { CTAButton } from '@/components/ui/CTAButton/CTAButton';
+import { HeaderNav } from '@/components/ui/HeaderNav/HeaderNav';
 
 export const Header = () => {
   const router = useRouter();
 
   return (
     <header className='bg-[var(--color-header)]' role='banner'>
-      <div className='py-3'>
-        <Container>
-          <div className='flex items-center justify-between'>
-            <h1 className='m-0 leading-none'>
-              <Link href='/' className='block hover:opacity-85 transition-opacity duration-200'>
-                <Image
-                  src='/images/logo.webp'
-                  alt='KatsumaScore'
-                  className='block h-[36px] w-auto'
-                  width={100}
-                  height={36}
-                />
-              </Link>
-            </h1>
-            <Search onNavigate={router.push} />
-            <div className='hidden lg:block'>
-              <VodMenu services={vodServices} />
-            </div>
-          </div>
-        </Container>
+
+      {/* ─── PC レイアウト：md以上で表示 ──────────────────────────── */}
+      <div className='hidden md:flex h-16 items-center justify-between px-6'>
+        <div className='flex items-center shrink-0'>
+          <Link href='/' className='block hover:opacity-80 transition-opacity duration-200'>
+            <Image
+              src='/images/logo.webp'
+              alt='KatsumaScore'
+              width={120}
+              height={40}
+              className='block h-10 w-auto'
+            />
+          </Link>
+        </div>
+
+        <div className='flex flex-1 items-center justify-center gap-3 px-6'>
+          <Search onNavigate={router.push} className='header-search-pc' />
+          <CTAButton href='/vod' />
+        </div>
+
+        <div className='flex items-center shrink-0'>
+          <HeaderNav layout='pc' />
+        </div>
       </div>
-      <Navigation />
+
+      {/* ─── SP レイアウト：md未満で表示 ──────────────────────────── */}
+      <div className='md:hidden'>
+        <div className='flex h-14 items-center gap-3 px-4'>
+          <Link href='/' className='block shrink-0 hover:opacity-80 transition-opacity duration-200'>
+            <Image
+              src='/images/logo.webp'
+              alt='KatsumaScore'
+              width={120}
+              height={36}
+              className='block h-9 w-auto'
+            />
+          </Link>
+          <div className='flex-1'>
+            <Search onNavigate={router.push} className='header-search-sp' />
+          </div>
+        </div>
+
+        <div className='mx-4 my-2'>
+          <CTAButton href='/vod' fullWidth />
+        </div>
+
+        <HeaderNav layout='sp' />
+      </div>
+
     </header>
   );
 };
