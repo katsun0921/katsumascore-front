@@ -4,7 +4,14 @@ import Image from 'next/image';
 import { Container } from '@/components/layout/Container/Container';
 import { Navigation } from '@/components/layout/Navigation/Navigation';
 import { Search } from '@/components/ui/Search/Search';
-import { VodLink } from '@/components/ui/VodLink/VodLink';
+import { VodMenu } from '@/components/ui/VodMenu/VodMenu';
+import type { TVodMenuService } from '@/components/ui/VodMenu/VodMenu.types';
+
+const vodServices: TVodMenuService[] = [
+  { service: 'netflix', label: 'Netflix', status: true, href: '/vod/netflix' },
+  { service: 'amazon', label: 'Amazon Prime', status: true, href: '/vod/amazon' },
+  { service: 'unext', label: 'U-NEXT', status: false, href: '/vod/unext' },
+];
 
 export const Header = () => {
   return (
@@ -25,7 +32,7 @@ export const Header = () => {
             </h1>
             <Search />
             <div className='hidden lg:block'>
-              <VodLink />
+              <VodMenu services={vodServices} />
             </div>
           </div>
         </Container>
