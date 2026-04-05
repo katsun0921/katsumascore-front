@@ -112,7 +112,6 @@ components/
 │   ├── VodPanel
 │   ├── ArticleHeader
 │   ├── ArticleMeta
-│   ├── AuthorCard
 │   ├── BasicInfo
 │   ├── CreditInfo
 │   ├── ShareButtons
