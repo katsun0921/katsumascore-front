@@ -12,7 +12,7 @@ export function normalizePost(post: WPPost, locale: string = 'ja'): Post {
     slug: `/posts/${post.slug}`,
     title,
     excerpt: post.excerpt?.rendered ?? '',
-    image: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/dummy-540X400.webp',
+    image: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '/images/mock-image.webp',
     publishedAt: post.date,
     category: undefined,
     score: typeof post.acf?.review_score === 'number' ? post.acf.review_score : undefined,

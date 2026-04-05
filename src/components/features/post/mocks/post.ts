@@ -6,7 +6,7 @@ export const mockPost: Post = {
   title: '映画『花束みたいな恋をした』の余韻を静かにほどくレビュー',
   excerpt:
     '登場人物の距離感や東京の空気を追いながら、恋愛映画としての切なさと現代性を丁寧に読み解くためのレビューです。',
-  image: '/images/dummy-540X400.webp',
+  image: '/images/mock-image.webp',
   publishedAt: '2026-04-01',
   category: '映画',
   score: 4.5,

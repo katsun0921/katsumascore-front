@@ -45,7 +45,7 @@ const makePost = (overrides: Partial<Post> & Pick<Post, 'id'>): Post => ({
   slug: `/posts/${overrides.id}`,
   title: `記事タイトル ${overrides.id}`,
   excerpt: '通常の長さの概要テキストです。',
-  image: '/images/dummy-540X400.webp',
+  image: '/images/mock-image.webp',
   publishedAt: '2026-04-01',
   category: '映画',
   score: 3,

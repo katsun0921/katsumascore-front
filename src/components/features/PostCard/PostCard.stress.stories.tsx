@@ -31,7 +31,7 @@ const basePost: Post = {
   slug: '/posts/stress-test',
   title: 'ベースタイトル',
   excerpt: '通常の概要テキスト。',
-  image: '/images/dummy-540X400.webp',
+  image: '/images/mock-image.webp',
   publishedAt: '2026-04-01',
   category: '映画',
   score: 3,

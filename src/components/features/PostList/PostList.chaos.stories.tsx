@@ -171,7 +171,7 @@ const heightChaosPosts: Post[] = [
     slug: '/posts/height-min',
     title: '映',
     excerpt: '。',
-    image: '/images/dummy-540X400.webp', // wide source (16:9 native)
+    image: '/images/mock-image.webp', // wide source (16:9 native)
     publishedAt: '2026-04-01',
     category: '映画',
     score: 3,
@@ -185,7 +185,7 @@ const heightChaosPosts: Post[] = [
     title:
       '劇場版アニメーションにおける長回し演出の系譜：押井守から湯浅政明まで、日本アニメが蓄積してきた「時間の映画的操作」についての包括的批評【全作品レビュー付き】',
     excerpt: '短い概要文。',
-    image: '/images/dummy-540X400.webp', // wide source (16:9 native)
+    image: '/images/mock-image.webp', // wide source (16:9 native)
     publishedAt: '2026-03-28',
     category: 'アニメ',
     score: 5,
@@ -199,7 +199,7 @@ const heightChaosPosts: Post[] = [
     title: '2026年春アニメ総評',
     excerpt:
       'このクールが一貫して示してきた傾向は、原作の複雑な世界観をシリーズ構成の段階で思い切って圧縮し、映像的なリズムと感情の密度を優先するというアプローチであり、それが視聴者層の広がりと批評的な評価の両立という難題を、少なくとも今季に限っては見事にクリアしていたという点において、今後の業界的な参照点になりうる重要なシーズンだったと評価できます。',
-    image: '/images/dummy-540X400.webp', // tall source (3:4 native)
+    image: '/images/mock-image.webp', // tall source (3:4 native)
     publishedAt: '2026-04-02',
     category: 'アニメ',
     score: 4,
@@ -227,7 +227,7 @@ const heightChaosPosts: Post[] = [
       '「映像化不可能」と言われた長編小説を完全映像化した監督の意図と、8年間の制作期間を経て完成した映像表現の限界への挑戦について：世界市場への訴求を同時に達成した傑作の包括的批評',
     excerpt:
       '原作のページ数は1,200ページを超え、登場人物は300人以上にのぼる。それをアニメーション映像に落とし込む作業は、単なる「翻訳」ではなく、メディアの特性そのものを問い直す行為であった。監督が8年間にわたって積み上げてきた演出メモと絵コンテは、完成した映像の一カット一カットに痕跡を残している。',
-    image: '/images/dummy-540X400.webp', // square source (1:1 native)
+    image: '/images/mock-image.webp', // square source (1:1 native)
     publishedAt: '2026-01-10',
     category: 'アニメ',
     score: 5,
