@@ -10,13 +10,13 @@ export const GoodPoint = ({ points, locale = 'ja' }: TGoodPointProps) => {
   if (!points.length) return null
 
   return (
-    <section className='p-good-point'>
-      <h2 className='p-good-point__heading'>
+    <section className='good-point'>
+      <h2 className='good-point__heading'>
         {locale === 'en' ? 'I highly recommend this!' : 'ここがおすすめ！'}
       </h2>
-      <ul className='p-good-point__list'>
+      <ul className='good-point__list'>
         {points.map((point, i) => (
-          <li key={i} className='p-good-point__item'>
+          <li key={i} className='good-point__item'>
             {point}
           </li>
         ))}
