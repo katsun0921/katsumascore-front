@@ -16,9 +16,6 @@ const Template: Story['render'] = (args) => <Tags {...args} />;
 export const PrimaryTags: Story = {
   render: Template,
   args: {
-    tags: [
-      { label: 'Wordpress Tag' },
-      { label: 'Wordpress Tag2' },
-    ],
+    labels: ['Tag', 'Tag2'],
   },
 };

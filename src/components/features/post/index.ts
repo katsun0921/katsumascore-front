@@ -6,7 +6,7 @@ export { PostCardLeft } from '@/components/features/PostCard/variants/PostCardLe
 export { PostCardTop } from '@/components/features/PostCard/variants/PostCardTop/PostCardTop';
 export { PostCardOverlay } from '@/components/features/PostCard/variants/PostCardOverlay/PostCardOverlay';
 export { PostList } from '@/components/features/PostList/PostList';
-export { PostListRow } from '@/components/features/PostList/PostListRow';
+export { PostListRow } from '@/components/features/PostList/PostListRow/PostListRow';
 export type { PostListProps } from '@/components/features/PostList/PostList.types';
 export { PostContent } from '@/components/features/PostContent/PostContent';
 export { PostSection } from '@/components/features/PostSection/PostSection';

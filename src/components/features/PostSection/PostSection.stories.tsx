@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
 import { PostList } from '@/components/features/PostList/PostList';
-import { PostListRow } from '@/components/features/PostList/PostListRow';
+import { PostListRow } from '@/components/features/PostList/PostListRow/PostListRow';
 import { mockPosts } from '@/components/features/post/mocks/post';
 
 const meta = {

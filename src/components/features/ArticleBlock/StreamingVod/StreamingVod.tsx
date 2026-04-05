@@ -1,6 +1,6 @@
 import React from 'react'
 import './StreamingVod.scss'
-import { VodItem, TVodService } from '../VodItem/VodItem'
+import { VodItem, TVodService } from '@/components/ui/VodItem/VodItem'
 
 export type TStreamingVodEntry = {
   service: TVodService

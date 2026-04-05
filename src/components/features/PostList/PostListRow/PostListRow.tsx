@@ -1,6 +1,6 @@
 import { PostCard } from '@/components/features/PostCard/PostCard';
-import type { PostListProps } from './PostList.types';
-import styles from './PostList.module.scss';
+import type { PostListProps } from '../PostList.types';
+import styles from './PostListRow.module.scss';
 
 const SKELETON_COUNT = 4;
 
@@ -20,7 +20,7 @@ export const PostListRow = ({ posts, isLoading = false }: PostListProps) => {
 
   return (
     <section aria-busy={isLoading} aria-live='polite'>
-      <ul className={[styles.list, styles.listVariant].join(' ')}>
+      <ul className={styles.list}>
         {items.map((item) => (
           <li className={styles.item} key={typeof item === 'string' ? item : item.id}>
             {typeof item === 'string' ? (

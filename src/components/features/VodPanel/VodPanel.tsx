@@ -1,6 +1,6 @@
 import React from 'react'
 import './VodPanel.scss'
-import { VodItem, TVodService } from '../ArticleBlock/VodItem/VodItem'
+import { VodItem, TVodService } from '@/components/ui/VodItem/VodItem'
 
 export type TVodPanelEntry = {
   service: TVodService
