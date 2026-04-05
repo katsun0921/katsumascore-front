@@ -289,10 +289,49 @@ pages
 
 ```ts
 // ✅ 正しい
-const label = t(['header', 'search'])
+const label = t(messages, ['header', 'search'], locale)
 
 // ❌ 禁止
 const label = “検索”
+```
+
+### 実装構成（確定）
+
+```
+src/i18n/
+├── t.ts          — t(messages, path[], locale) 関数。missing時にconsole.warn
+└── provider.tsx  — I18nProvider + useLocale() hook
+
+components/Header/
+└── i18n.ts       — コンポーネントローカルのメッセージ定義
+```
+
+### i18n.ts の書き方
+
+```ts
+export const messages = {
+  logo: {
+    alt: { ja: 'KatsumaScore', en: 'KatsumaScore' },
+  },
+  cta: {
+    watch: { ja: '動画配信を探す', en: 'Find Streaming' },
+  },
+} as const
+```
+
+- `as const` 必須
+- keyはUI構造ベース（`logo.alt`、`cta.watch` など）
+- ja / en の両キー必須
+
+### コンポーネントでの使い方
+
+```tsx
+import { useLocale } from '@/i18n/provider'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
+
+const locale = useLocale()
+const label = t(messages, ['cta', 'watch'], locale)
 ```
 
 ### ESLintルール
@@ -309,8 +348,16 @@ const label = “OK”
 
 ### Storybook検証
 
-- locale切替（ja / en）を必ず実装する
+- `I18nProvider` は `.storybook/preview.ts` のdecoratorで全Storyに適用済み
+- toolbar（globeアイコン）で ja / en をリアルタイム切替可能
 - 翻訳漏れは `console.warn` で検知する
+- locale固定のStoryは `globals: { locale: 'en' }` で指定する
+
+```ts
+export const English: Story = {
+  globals: { locale: 'en' },
+}
+```
 
 ---
 

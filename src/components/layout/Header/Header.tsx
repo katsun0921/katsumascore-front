@@ -4,9 +4,13 @@ import { useRouter } from 'next/router';
 import { Search } from '@/components/ui/Search/Search';
 import { CTAButton } from '@/components/ui/CTAButton/CTAButton';
 import { HeaderNav } from '@/components/ui/HeaderNav/HeaderNav';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export const Header = () => {
   const router = useRouter();
+  const locale = useLocale();
 
   return (
     <header className='bg-[var(--color-header)]' role='banner'>
@@ -17,7 +21,7 @@ export const Header = () => {
           <Link href='/' className='block hover:opacity-80 transition-opacity duration-200'>
             <Image
               src='/images/logo.webp'
-              alt='KatsumaScore'
+              alt={t(messages, ['logo', 'alt'], locale)}
               width={120}
               height={40}
               unoptimized
@@ -42,7 +46,7 @@ export const Header = () => {
           <Link href='/' className='block shrink-0 hover:opacity-80 transition-opacity duration-200'>
             <Image
               src='/images/logo.webp'
-              alt='KatsumaScore'
+              alt={t(messages, ['logo', 'alt'], locale)}
               width={120}
               height={36}
               unoptimized

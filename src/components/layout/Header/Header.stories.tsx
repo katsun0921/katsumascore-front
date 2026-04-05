@@ -12,4 +12,12 @@ const meta: Meta<typeof Header> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/** デフォルト（ja） — toolbar の Locale で ja/en を切り替え可能 */
 export const Default: Story = {};
+
+/** 英語表示を固定確認したい場合は globals で locale を上書き */
+export const English: Story = {
+  globals: {
+    locale: 'en',
+  },
+};

@@ -474,6 +474,87 @@ import './Heading.scss'
 
 ## ■ 原則
 
-Tailwindは「構造と配置」、  
-Tokenは「意味と視覚」を定義する。  
+Tailwindは「構造と配置」、
+Tokenは「意味と視覚」を定義する。
 SCSSは「コンポーネント固有の視覚表現」を定義する。
+
+---
+
+# ■ i18n（テキスト管理）ルール
+
+## ■ 方針
+
+テキストはコンポーネント単位で管理する。
+文字列の直書きを禁止し、すべて `i18n.ts` 経由で扱う。
+
+---
+
+## ■ 基盤構成
+
+```
+src/i18n/
+├── t.ts          — 翻訳関数（path配列アクセス、missing時console.warn）
+└── provider.tsx  — I18nProvider / useLocale() hook
+```
+
+各コンポーネントに `i18n.ts` を配置する。
+
+```
+components/Header/
+├── Header.tsx
+└── i18n.ts
+```
+
+---
+
+## ■ messages定義ルール
+
+```ts
+export const messages = {
+  logo: {
+    alt: { ja: 'KatsumaScore', en: 'KatsumaScore' },
+  },
+  cta: {
+    watch: { ja: '動画配信を探す', en: 'Find Streaming' },
+  },
+} as const
+```
+
+- `as const` 必須
+- keyはUI構造ベースで命名（意味ベース禁止）
+- `ja` / `en` 両キー必須
+
+---
+
+## ■ アクセス方法
+
+```tsx
+import { useLocale } from '@/i18n/provider'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
+
+const locale = useLocale()
+const label = t(messages, ['cta', 'watch'], locale)
+```
+
+---
+
+## ■ 禁止事項
+
+- JSX内への日本語・英語文字列の直書き
+- string keyによるアクセス（`messages.cta.watch.ja` など）
+- `any` 型の使用
+
+---
+
+## ■ ESLintによる強制
+
+`katsumascore-ui/no-hardcoded-i18n`（現在: warn、将来: error）
+
+---
+
+## ■ Storybookでの検証
+
+- toolbar（globeアイコン）で ja / en をリアルタイム切替
+- 翻訳漏れは `console.warn` で検知
+- locale固定Storyは `globals: { locale: 'en' }` で指定

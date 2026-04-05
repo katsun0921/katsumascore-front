@@ -1,4 +1,7 @@
 import Link from 'next/link';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 import './CTAButton.scss';
 
 type Props = {
@@ -7,6 +10,8 @@ type Props = {
 };
 
 export const CTAButton = ({ href, fullWidth = false }: Props) => {
+  const locale = useLocale();
+
   return (
     <Link
       href={href}
@@ -23,7 +28,7 @@ export const CTAButton = ({ href, fullWidth = false }: Props) => {
       >
         <path d="M8 5v14l11-7z" />
       </svg>
-      <span className="cta-button__label">配信中</span>
+      <span className="cta-button__label">{t(messages, ['button', 'label'], locale)}</span>
     </Link>
   );
 };
