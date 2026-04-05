@@ -9,11 +9,19 @@ type Props = {
   [key: string]: unknown;
 };
 
-const Image = ({ src, alt, width, height, fill, className }: Props) => {
-  if (fill) {
-    return <img src={src} alt={alt} className={className} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />;
+const normalizeImageSrc = (src: string): string => {
+  if (src.startsWith('/') && !src.startsWith('//')) {
+    return `.${src}`
   }
-  return <img src={src} alt={alt} width={width} height={height} className={className} />;
+  return src
+}
+
+const Image = ({ src, alt, width, height, fill, className }: Props) => {
+  const resolvedSrc = normalizeImageSrc(src)
+  if (fill) {
+    return <img src={resolvedSrc} alt={alt} className={className} style={{ objectFit: 'cover', width: '100%', height: '100%' }} />;
+  }
+  return <img src={resolvedSrc} alt={alt} width={width} height={height} className={className} />;
 };
 
 export default Image;

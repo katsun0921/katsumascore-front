@@ -9,7 +9,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  staticDirs: [{ from: publicDir, to: '/katsumascore-front' }],
+  staticDirs: [{ from: publicDir, to: '/' }],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-docs',
