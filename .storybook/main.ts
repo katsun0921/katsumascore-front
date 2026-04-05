@@ -9,7 +9,7 @@ const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  staticDirs: [publicDir],
+  staticDirs: [{ from: publicDir, to: '/' }],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-docs',
@@ -32,9 +32,6 @@ const config: StorybookConfig = {
     }
     config.define = config.define ?? {}
     config.define['process.env'] = {}
-    if (configType === 'PRODUCTION') {
-      config.base = '/katsumascore-front/'
-    }
     return config
   },
 }
