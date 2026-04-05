@@ -101,6 +101,8 @@ components/
 - any型の使用
 - ハードコードカラー（#xxxxxx）
 - Tailwindの色指定（bg-blue-500など）
+- `<a href="...">` によるページ遷移 → `<Link>` from `next/link` を使用
+- `<img>` タグの使用 → `<Image>` from `next/image` を使用
 
 ---
 

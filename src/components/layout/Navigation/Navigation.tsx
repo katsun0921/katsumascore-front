@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ListHeader } from '@/components/ui/ListHeader/ListHeader';
 import { HamburgerMenu } from '@/components/ui/HamburgerMenu/HamburgerMenu';
+import { VodLink } from '@/components/ui/VodLink/VodLink';
 import { changeClassWhenResizeOnNavigation } from '@/hooks/useNavigation';
 
 export const Navigation = ({}) => {
@@ -19,6 +20,9 @@ export const Navigation = ({}) => {
       </div>
       <nav id='js-mobile-menu' className='l-navigation__list hidden bg-[var(--color-header)] opacity-0 lg:block lg:bg-[var(--color-category)] lg:opacity-100'>
         <ListHeader />
+        <div className='l-navigation__vodLink lg:hidden'>
+          <VodLink />
+        </div>
       </nav>
     </div>
   );

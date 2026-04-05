@@ -1,25 +1,32 @@
 import React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { Container } from '@/components/layout/Container/Container';
 import { Navigation } from '@/components/layout/Navigation/Navigation';
-import './Header.scss';
+import { Search } from '@/components/ui/Search/Search';
+import { VodLink } from '@/components/ui/VodLink/VodLink';
 
 export const Header = () => {
   return (
-    <header className='l-header' role='banner'>
-      <div className='l-header__top'>
+    <header className='bg-[var(--color-header)]' role='banner'>
+      <div className='py-3'>
         <Container>
-          <div className='l-header__inner'>
-            <h1 className='l-header__logo'>
-              <a href='/' rel='home' className='l-header__logoLink'>
-                <img
-                  src='https://katsumascore.blog/images/logo-primary.png'
+          <div className='flex items-center justify-between'>
+            <h1 className='m-0 leading-none'>
+              <Link href='/' className='block hover:opacity-85 transition-opacity duration-200'>
+                <Image
+                  src='/images/logo.webp'
                   alt='KatsumaScore'
-                  className='l-header__logoImage'
-                  width='100'
-                  height='auto'
+                  className='block w-[100px] h-auto'
+                  width={100}
+                  height={40}
                 />
-              </a>
+              </Link>
             </h1>
+            <Search />
+            <div className='hidden lg:block'>
+              <VodLink />
+            </div>
           </div>
         </Container>
       </div>
