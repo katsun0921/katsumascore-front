@@ -27,6 +27,7 @@ const config: StorybookConfig = {
       '@/assets': publicDir,
       '@': srcDir,
       'next/image': resolve(__dirname, './mocks/nextImage.tsx'),
+      'next/router': resolve(__dirname, './mocks/nextRouter.tsx'),
     }
     return config
   },

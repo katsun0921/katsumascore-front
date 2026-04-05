@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { Container } from '@/components/layout/Container/Container';
 import { Navigation } from '@/components/layout/Navigation/Navigation';
 import { Search } from '@/components/ui/Search/Search';
@@ -14,6 +15,8 @@ const vodServices: TVodMenuService[] = [
 ];
 
 export const Header = () => {
+  const router = useRouter();
+
   return (
     <header className='bg-[var(--color-header)]' role='banner'>
       <div className='py-3'>
@@ -30,7 +33,7 @@ export const Header = () => {
                 />
               </Link>
             </h1>
-            <Search />
+            <Search onNavigate={router.push} />
             <div className='hidden lg:block'>
               <VodMenu services={vodServices} />
             </div>
