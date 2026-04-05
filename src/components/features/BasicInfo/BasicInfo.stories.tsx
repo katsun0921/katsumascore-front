@@ -31,3 +31,14 @@ export const Minimal: Story = {
     locale: 'ja',
   },
 }
+export const WithCredits: Story = {
+  args: {
+    locale: 'ja',
+    credits: [
+      { role: '監督', names: ['外崎春雄'] },
+      { role: 'キャラクターデザイン', names: ['松島晃'] },
+      { role: '音楽', names: ['梶浦由記', 'Elliott Smith'] },
+      { role: '制作', names: ['ufotable'] },
+    ],
+  },
+}

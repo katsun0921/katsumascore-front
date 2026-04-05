@@ -1,11 +1,25 @@
 .p-review-scores {
-  margin-top: 32px;
+  margin-top: 2rem;
 
   &__heading {
-    font-size: 20px;
+    font-family: var(--font-ja-heading), serif;
+    font-size: 1.25rem;
     font-weight: var(--font-weight-bold);
-    margin-bottom: 16px;
-    color: var(--color-text-primary);
+    color: var(--color-secondary);
+    padding-bottom: 12px;
+    margin-bottom: 1.25rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      display: block;
+      background-color: var(--color-category);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 35px;
+      height: 3px;
+    }
   }
 
   &__list {
@@ -14,13 +28,14 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
   }
 
   &__item {
-    background: var(--color-bg-muted);
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 12px 16px;
+    border: 1px solid var(--color-border-muted);
+    background: var(--color-bg);
   }
 
   &__link {
@@ -35,19 +50,21 @@
     &:hover .p-review-scores__site-name {
       color: var(--color-primary);
       text-decoration: underline;
+      opacity: 1;
     }
   }
 
   &__site-name {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
+    font-size: 0.9375rem;
     min-width: 120px;
   }
 
   &__score {
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: var(--font-weight-bold);
-    color: var(--color-primary);
+    color: var(--color-category);
   }
 
   &__audience {
@@ -57,7 +74,7 @@
   }
 
   &__bar {
-    height: 6px;
+    height: 5px;
     background: var(--color-border-muted);
     border-radius: 3px;
     overflow: hidden;
@@ -65,14 +82,14 @@
 
   &__bar-fill {
     height: 100%;
-    background: var(--color-primary);
+    background: var(--color-category);
     border-radius: 3px;
     transition: width 0.4s ease;
   }
 
   &__average {
-    margin-top: 16px;
-    font-size: 15px;
+    margin-top: 1rem;
+    font-size: 0.9375rem;
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     text-align: right;
@@ -82,5 +99,6 @@
     margin-top: 8px;
     font-size: 12px;
     color: var(--color-text-secondary);
+    line-height: 1.6;
   }
 }

@@ -52,6 +52,10 @@ const eslintConfig = defineConfig([
 
       // Enforce strict TypeScript — no implicit any allowed
       '@typescript-eslint/no-explicit-any': 'error',
+
+      // UI text must go through i18n.ts — no hardcoded Japanese or English words
+      // Phase 1: warn (will be promoted to error once coverage is sufficient)
+      'katsumascore-ui/no-hardcoded-i18n': 'warn',
     },
   },
 ])

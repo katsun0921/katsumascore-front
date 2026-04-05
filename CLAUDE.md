@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v3.1 ― スタイリング設計ルール改訂（Tailwind優先・layout/templates明確化）
+> v3.2 ― i18n設計ルール追加
 > 2026年4月5日
 
 ## ■ 本ドキュメントの位置付け
@@ -168,8 +168,8 @@ src/
 | pages | Tailwind |
 | components/layout | Tailwind |
 | components/templates | Tailwind |
-| components/features | SCSS（コンポーネントスコープ） |
-| components/ui | SCSS（コンポーネントスコープ） |
+| components/features | SCSS（コンポーネントスコープ）※ドメインロジックに依存し複雑になるため許容 |
+| components/ui | Tailwind |
 
 ### Tailwind使用ルール
 
@@ -177,7 +177,7 @@ src/
 - カラーは必ずCSS変数経由で指定する（例: `bg-[var(--color-footer)]`）
 - Tailwindのデフォルトカラークラス（`bg-blue-500` など）は使用禁止
 
-### SCSSの使用範囲（features / ui のみ）
+### SCSSの使用範囲（features のみ）
 
 - `font-family` / `font-size` / `letter-spacing` / `line-height` などタイポグラフィ
 - `color`（`rgba` による透明度階層管理）
@@ -264,7 +264,57 @@ pages
 
 ---
 
+## ■ i18n設計
+
+### 原則
+
+- 設計しすぎない。実際の使用頻度から最適化する
+- 初期はコンポーネント単位で分散し、問題を観測してから共通化する
+
+### フェーズ構成
+
+| フェーズ | 状態 | 内容 |
+|----------|------|------|
+| 1（現行） | 運用中 | コンポーネント単位のi18n |
+| 2 | 将来 | 頻出語の検知・警告 |
+| 3 | 将来 | global i18nへ昇格（Design Token化） |
+| 4 | 将来 | `/src/i18n/messages.ts` に統合 |
+
+### フェーズ1ルール（厳守）
+
+- i18nは各コンポーネント内に閉じる
+- messagesはコンポーネント配下の `i18n.ts` に定義する
+- keyはUI構造ベースで命名する（意味ベース禁止）
+- path配列でアクセスする（string直書き禁止）
+
+```ts
+// ✅ 正しい
+const label = t(['header', 'search'])
+
+// ❌ 禁止
+const label = “検索”
+```
+
+### ESLintルール
+
+`katsumascore-ui/no-hardcoded-i18n` — 日本語・英語単語のハードコードを検出（現在: `warn`）
+
+- 将来的に `error` へ昇格する
+- 例外はコメントで個別に許可する:
+
+```ts
+// eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n
+const label = “OK”
+```
+
+### Storybook検証
+
+- locale切替（ja / en）を必ず実装する
+- 翻訳漏れは `console.warn` で検知する
+
+---
+
 ## ■ 最終指針
 
-このプロジェクトは「WordPressテーマの移植」ではない。  
+このプロジェクトは「WordPressテーマの移植」ではない。
 “再設計されたフロントエンド”である。

@@ -1,0 +1,91 @@
+.p-posts-group {
+  margin-top: 1.5rem;
+
+  // c-heading__related 相当
+  &__heading {
+    font-family: var(--font-ja-heading), serif;
+    font-style: italic;
+    text-transform: uppercase;
+    font-size: 1.5rem;
+    line-height: 2rem;
+    color: var(--color-secondary);
+    padding-bottom: 15px;
+    margin-bottom: 1rem;
+    position: relative;
+
+    // 下線アクセント（::before）
+    &::before {
+      content: '';
+      display: block;
+      background-color: var(--color-category);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 35px;
+      height: 3px;
+    }
+  }
+
+  &__description {
+    font-size: 0.9375rem;
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.6;
+  }
+
+  // l-postRelated__3columns 相当
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    @media (min-width: 768px) {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+  }
+
+  &__item {}
+
+  &__link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    transition: opacity 0.2s;
+
+    &:hover { opacity: 0.75; }
+  }
+
+  &__thumb {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    background: var(--color-surface-muted);
+    overflow: hidden;
+  }
+
+  &__image {
+    object-fit: cover;
+  }
+
+  &__fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+  }
+
+  &__title {
+    font-size: 0.875rem;
+    line-height: 1.5;
+    font-weight: var(--font-weight-medium);
+  }
+}

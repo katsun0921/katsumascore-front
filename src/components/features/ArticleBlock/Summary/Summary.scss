@@ -1,24 +1,40 @@
 .p-summary {
-  margin-top: 32px;
+  margin-top: 2rem;
 
+  // c-heading__related 風の見出し
   &__heading {
-    font-size: 20px;
+    font-family: var(--font-ja-heading), serif;
+    font-size: 1.25rem;
     font-weight: var(--font-weight-bold);
-    margin-bottom: 12px;
-    color: var(--color-text-primary);
+    color: var(--color-secondary);
+    padding-bottom: 12px;
+    margin-bottom: 1rem;
+    position: relative;
+
+    &::before {
+      content: '';
+      display: block;
+      background-color: var(--color-category);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 35px;
+      height: 3px;
+    }
   }
 
+  // WordPress の p-summary blockquote 相当
   &__quote {
     margin: 0;
-    padding: 16px 20px;
-    border-left: 4px solid var(--color-primary);
-    background: var(--color-bg-muted);
-    border-radius: 0 4px 4px 0;
+    border-left: 4px solid var(--color-category);
+    padding-left: 30px;
+    outline: none;
 
     p {
       margin: 0 0 12px;
       line-height: 1.8;
       color: var(--color-text-primary);
+      font-size: 0.9375rem;
     }
 
     cite {
@@ -31,9 +47,7 @@
         color: var(--color-primary);
         text-decoration: none;
 
-        &:hover {
-          text-decoration: underline;
-        }
+        &:hover { text-decoration: underline; }
       }
     }
   }

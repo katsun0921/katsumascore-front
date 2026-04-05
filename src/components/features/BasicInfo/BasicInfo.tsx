@@ -1,12 +1,25 @@
 import React from 'react'
 import './BasicInfo.scss'
 
+export type TStudioEntry = {
+  name: string
+  href?: string
+}
+
+export type TCreditEntry = {
+  role: string
+  names: string[]
+}
+
 export type TBasicInfoProps = {
   titleEn?: string
   officialUrl?: string
   copyright?: string
   releaseDate?: string
   officialSns?: Record<string, { link?: string }>
+  filmStudios?: TStudioEntry[]
+  productionStudios?: TStudioEntry[]
+  credits?: TCreditEntry[]
   locale?: 'ja' | 'en'
 }
 
@@ -25,6 +38,9 @@ export const BasicInfo = ({
   copyright,
   releaseDate,
   officialSns,
+  filmStudios,
+  productionStudios,
+  credits,
   locale = 'ja',
 }: TBasicInfoProps) => {
   let parsedDate: string | null = null
@@ -85,6 +101,52 @@ export const BasicInfo = ({
           <dd className='p-basic-info__desc'>{parsedDate}</dd>
         </>
       )}
+      {filmStudios && filmStudios.length > 0 && (
+        <>
+          <dt className='p-basic-info__term'>
+            {locale === 'en' ? 'Distributed by' : '配給会社'}
+          </dt>
+          <dd className='p-basic-info__desc'>
+            <ul className='p-basic-info__studio-list'>
+              {filmStudios.map((s, i) => (
+                <li key={i}>
+                  {s.href ? (
+                    <a href={s.href} className='p-basic-info__link'>{s.name}</a>
+                  ) : (
+                    s.name
+                  )}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </>
+      )}
+      {productionStudios && productionStudios.length > 0 && (
+        <>
+          <dt className='p-basic-info__term'>
+            {locale === 'en' ? 'Production Companies' : '制作会社'}
+          </dt>
+          <dd className='p-basic-info__desc'>
+            <ul className='p-basic-info__studio-list'>
+              {productionStudios.map((s, i) => (
+                <li key={i}>
+                  {s.href ? (
+                    <a href={s.href} className='p-basic-info__link'>{s.name}</a>
+                  ) : (
+                    s.name
+                  )}
+                </li>
+              ))}
+            </ul>
+          </dd>
+        </>
+      )}
+      {credits && credits.length > 0 && credits.map((entry, i) => (
+        <React.Fragment key={i}>
+          <dt className='p-basic-info__term'>{entry.role}</dt>
+          <dd className='p-basic-info__desc'>{entry.names.join(' / ')}</dd>
+        </React.Fragment>
+      ))}
     </dl>
   )
 }

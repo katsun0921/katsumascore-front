@@ -1,82 +1,72 @@
 .p-postDetail {
-  &__header {
-    margin-bottom: 2.5rem;
-  }
-
-  &__title {
-    font-family: var(--font-heading);
-    font-size: 2rem;
-    font-weight: var(--font-weight-bold);
-    line-height: 1.45;
-    word-break: break-word;
-    color: var(--color-text-primary);
-    margin-bottom: 1.25rem;
-  }
-
-  &__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.625rem;
-    align-items: center;
-  }
-
-  &__date {
-    font-family: var(--font-ui);
-    font-size: 0.875rem;
-    color: var(--color-text-secondary);
-  }
-
-  &__category {
-    display: inline-block;
-    padding: 0.2rem 0.75rem;
-    border: 1px solid var(--color-category);
-    border-radius: 999px;
-    font-family: var(--font-ui);
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-medium);
-    color: var(--color-category);
-    line-height: 1.6;
-  }
-
-  &__score {
-    display: inline-block;
-    padding: 0.2rem 0.75rem;
-    border-radius: 999px;
-    background: var(--color-secondary);
-    font-family: var(--font-ui);
-    font-size: 0.8125rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-inverse);
-    line-height: 1.6;
-  }
-
+  // l-container 相当：最大幅・中央揃え
   &__body {
-    margin-bottom: 3rem;
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto 0;
+    position: relative;
+
+    // l-container の flex化（768px以上）
+    @media (min-width: 768px) {
+      display: flex;
+      justify-content: space-between;
+      gap: 3rem;
+    }
   }
 
-  &__related {
-    margin-top: 3rem;
-    padding-top: 2rem;
-    border-top: 1px solid var(--color-border-soft);
+  // l-content 相当：メインカラム
+  &__main {
+    width: 100%;
+    min-width: 0;
+
+    @media (min-width: 768px) {
+      width: 72%;
+    }
   }
 
-  &__relatedTitle {
-    font-family: var(--font-heading);
-    font-size: 1.25rem;
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-primary);
+  // サイドバーカラム（サイドバー相当）
+  &__aside {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+
+    @media (min-width: 768px) {
+      width: 25%;
+      margin-top: 0;
+      flex-shrink: 0;
+    }
+  }
+
+  // p-info 相当：スコア・基本情報ブロック
+  &__info {
+    position: relative;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-bottom-width: 14px;
+    padding: 90px 35px 35px;
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  // p-info__score 相当：中央上部に突き出し
+  &__score {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;
+    top: 20px;
+  }
+
+  &__excerpt {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
     margin-bottom: 1.5rem;
   }
-}
 
-@media (max-width: 767px) {
-  .p-postDetail {
-    &__title {
-      font-size: 1.5rem;
-    }
-
-    &__header {
-      margin-bottom: 1.75rem;
-    }
+  // the_content 相当
+  &__content {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
   }
 }

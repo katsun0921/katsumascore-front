@@ -1,4 +1,4 @@
-import React from 'react'
+import Link from 'next/link'
 import './ArticleHeader.scss'
 
 export type TArticleHeaderProps = {
@@ -29,30 +29,22 @@ export const ArticleHeader = ({
   updatedAt,
   categories = [],
   imageUrl,
-  imageAlt,
   locale = 'ja',
 }: TArticleHeaderProps) => {
   const title = locale === 'en' && titleEn ? titleEn : titleJp
   const published = formatDate(publishedAt, locale)
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 
+  const bgStyle = imageUrl
+    ? { backgroundImage: `url('${imageUrl}')` }
+    : undefined
+
   return (
-    <header className='p-article-header'>
-      {categories.length > 0 && (
-        <ul className='p-article-header__categories'>
-          {categories.map((cat, i) => (
-            <li key={i}>
-              <a className='p-article-header__category' href={cat.href}>
-                {cat.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-      <h1 className='p-article-header__title'>{title}</h1>
-      {titleEn && locale === 'ja' && (
-        <p className='p-article-header__subtitle'>{titleEn}</p>
-      )}
+    <header
+      className={`p-article-header${!imageUrl ? ' p-article-header--no-image' : ''}`}
+      style={bgStyle}
+    >
+      {/* 日付：右上に絶対配置（c-date 相当） */}
       <div className='p-article-header__meta'>
         {updated && (
           <time className='p-article-header__date' dateTime={updated.datetime}>
@@ -63,10 +55,26 @@ export const ArticleHeader = ({
           {locale === 'en' ? `Published: ${published.display}` : `公開: ${published.display}`}
         </time>
       </div>
-      {imageUrl && (
-        <div className='p-article-header__image'>
-          <img src={imageUrl} alt={imageAlt || title} />
-        </div>
+
+      {/* カテゴリバッジ（c-category 相当） */}
+      {categories.length > 0 && (
+        <ul className='p-article-header__categories'>
+          {categories.map((cat, i) => (
+            <li key={i}>
+              <Link className='p-article-header__category' href={cat.href}>
+                {cat.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {/* タイトル（c-heading__title 相当） */}
+      <h1 className='p-article-header__title'>{title}</h1>
+
+      {/* 英語サブタイトル */}
+      {titleEn && locale === 'ja' && (
+        <p className='p-article-header__subtitle'>{titleEn}</p>
       )}
     </header>
   )

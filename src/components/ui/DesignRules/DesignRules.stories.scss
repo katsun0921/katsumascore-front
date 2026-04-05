@@ -2,9 +2,9 @@
   min-height: 100vh;
   padding: 40px 24px 80px;
   background:
-    radial-gradient(circle at top left, rgb(37 99 235 / 0.14), transparent 28%),
-    radial-gradient(circle at top right, rgb(30 27 75 / 0.1), transparent 26%),
-    linear-gradient(180deg, rgb(243 244 246) 0%, rgb(255 255 255) 100%);
+    radial-gradient(circle at top left, rgba(var(--color-primary-rgb), 0.14), transparent 28%),
+    radial-gradient(circle at top right, rgba(var(--color-secondary-rgb), 0.1), transparent 26%),
+    linear-gradient(180deg, var(--color-bg-muted) 0%, var(--color-bg) 100%);
   color: var(--color-text-primary);
 }
 
@@ -19,8 +19,8 @@
   border: 1px solid var(--color-border-soft);
   border-radius: 28px;
   background:
-    linear-gradient(135deg, rgb(255 255 255 / 0.98) 0%, rgb(243 244 246 / 0.95) 100%);
-  box-shadow: 0 28px 90px rgb(17 24 39 / 0.08);
+    linear-gradient(135deg, rgba(var(--color-white-rgb), 0.98) 0%, rgba(var(--color-bg-muted-rgb), 0.95) 100%);
+  box-shadow: 0 28px 90px rgba(var(--color-text-primary-rgb), 0.08);
 }
 
 .sb-design-rules-hero h1 {
@@ -33,9 +33,9 @@
   align-items: center;
   margin-bottom: 18px;
   padding: 7px 13px;
-  border: 1px solid rgb(37 99 235 / 0.18);
+  border: 1px solid rgba(var(--color-primary-rgb), 0.18);
   border-radius: 9999px;
-  background: rgb(37 99 235 / 0.08);
+  background: rgba(var(--color-primary-rgb), 0.08);
   color: var(--color-primary);
   font-family: var(--font-ui);
   font-size: 0.75rem;
@@ -79,8 +79,8 @@
   padding: 24px;
   border: 1px solid var(--color-border-soft);
   border-radius: 22px;
-  background: rgb(255 255 255 / 0.95);
-  box-shadow: 0 16px 50px rgb(17 24 39 / 0.05);
+  background: rgba(var(--color-white-rgb), 0.95);
+  box-shadow: 0 16px 50px rgba(var(--color-text-primary-rgb), 0.05);
 }
 
 .sb-design-rules-token-card {
@@ -142,7 +142,7 @@
 .sb-design-rules-note {
   margin-top: 28px;
   background:
-    linear-gradient(180deg, rgb(255 255 255) 0%, rgb(243 244 246 / 0.75) 100%);
+    linear-gradient(180deg, var(--color-bg) 0%, rgba(var(--color-bg-muted-rgb), 0.75) 100%);
 }
 
 @media (min-width: 900px) {
