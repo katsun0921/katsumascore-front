@@ -1,6 +1,21 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Kaisei+Tokumin:wght@400;500;700&family=Rampart+One&family=Yusei+Magic&display=swap");
 @import "tailwindcss";
 
+/* ─── Breakpoints ───────────────────────────────────────────────
+   コンポーネント側には直接 @media を書かない。
+   ブレークポイントはここで一元管理し、Tailwind の sm/md/lg を使う。
+   ──────────────────────────────────────────────────────────────
+   sm:  480px  （モバイル横向き・小型端末）
+   md:  768px  （タブレット）
+   lg:  1024px （デスクトップ）
+   xl:  1280px （ワイドデスクトップ）
+   ─────────────────────────────────────────────────────────────── */
+@theme inline {
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-xl: 1280px;
+}
+
 :root {
   --color-primary: #2563eb;
   --color-secondary: #1e1b4b;
@@ -221,4 +236,97 @@ nav,
 
 .font-accent-soft {
   font-family: var(--font-accent-soft);
+}
+
+/* ─── Footer ────────────────────────────────────────────────────
+   layout コンポーネントはTailwind管理。
+   ただし font-family / color(rgba) / transition / hover などの
+   表現レイヤーはここで定義し、Tailwindの任意値記述を避ける。
+   ─────────────────────────────────────────────────────────────── */
+
+/* Catchcopy — Serif・余韻の一文 */
+.footer-catchcopy {
+  font-family: var(--font-ja-heading);
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1;
+}
+
+/* Site name — Sans・wide tracking・ブランドの核 */
+.footer-sitename {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1;
+}
+
+/* Divider — 極細・極短 */
+.footer-divider {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Category link — 主導線 */
+.footer-category-link {
+  font-family: var(--font-ja-body);
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-category-link:hover {
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+}
+
+/* VOD link — 補助情報・uppercase */
+.footer-vod-link {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+.footer-vod-link:hover {
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 1;
+}
+
+/* SNS link — アイコンのみ・scale */
+.footer-sns-link {
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.footer-sns-link:hover {
+  color: rgba(255, 255, 255, 1);
+  opacity: 1;
+  transform: scale(1.1);
+}
+.footer-sns-link svg {
+  fill: currentColor;
+  display: block;
+}
+
+/* Meta link — 法的・補助・最小 */
+.footer-meta-link {
+  font-family: var(--font-ja-body);
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.4);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-meta-link:hover {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  opacity: 1;
+}
+
+/* Copyright — 最薄・最小・ページの終端 */
+.footer-copyright {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.2);
+  line-height: 1;
 }

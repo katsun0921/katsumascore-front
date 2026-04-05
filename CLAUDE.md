@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v3.0 ― Storybook最終構造（ACF統合版）反映  
-> 2026年4月4日
+> v3.1 ― スタイリング設計ルール改訂（Tailwind優先・layout/templates明確化）
+> 2026年4月5日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -161,12 +161,55 @@ src/
 
 ## ■ スタイリング設計（厳守）
 
-### 原則：Tailwind と SCSS を混在させない
+### 原則：Tailwind を優先し、SCSS は限定的に使用する
 
 | 対象 | 技術 |
 |------|------|
-| pages / layout | Tailwind |
-| Storybookコンポーネント | SCSS |
+| pages | Tailwind |
+| components/layout | Tailwind |
+| components/templates | Tailwind |
+| components/features | SCSS（コンポーネントスコープ） |
+| components/ui | SCSS（コンポーネントスコープ） |
+
+### Tailwind使用ルール
+
+- `padding` / `margin` / `text-align` / `display` / `gap` / `flex` / `grid` 等のレイアウト・余白はTailwindで記述する
+- カラーは必ずCSS変数経由で指定する（例: `bg-[var(--color-footer)]`）
+- Tailwindのデフォルトカラークラス（`bg-blue-500` など）は使用禁止
+
+### SCSSの使用範囲（features / ui のみ）
+
+- `font-family` / `font-size` / `letter-spacing` / `line-height` などタイポグラフィ
+- `color`（`rgba` による透明度階層管理）
+- `transition` / `transform` などアニメーション
+- `:hover` / `:focus` などインタラクション
+- `@media` によるレスポンシブ（gapの調整など細粒度のもの）
+
+### @media クエリの管理（重要）
+
+- ブレークポイントの値は `globals.css` の `@theme` で一元管理する
+- コンポーネント（TSX / SCSS）に `@media (max-width: 480px)` などの値を直接書かない
+- レスポンシブは Tailwind のプレフィックス（`sm:` / `md:` / `lg:`）で表現する
+
+```css
+/* globals.css — ブレークポイント定義 */
+@theme inline {
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-xl: 1280px;
+}
+```
+
+```tsx
+{/* コンポーネント — Tailwind プレフィックスで使用 */}
+<ul className='flex gap-9 sm:gap-6'>
+```
+
+### 混在禁止
+
+❌ layout・templates のコンポーネントに `.scss` ファイルを作成しない
+❌ features・ui のコンポーネントで Tailwind の余白・レイアウトクラスを使用しない
+❌ コンポーネントの TSX / SCSS に `@media` のブレークポイント値を直書きしない
 
 ---
 

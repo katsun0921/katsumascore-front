@@ -11,7 +11,7 @@ const meta: Meta<typeof Container> = {
         Container content
       </div>
     ),
-    size: 'lg',
+    size: 'xl',
   },
 }
 export default meta
@@ -20,5 +20,5 @@ type Story = StoryObj<typeof Container>
 
 export const Small: Story = { args: { size: 'sm' } }
 export const Medium: Story = { args: { size: 'md' } }
-export const Large: Story = { args: { size: 'lg' } }
+export const ExtraLarge: Story = { args: { size: 'xl' } }
 export const Full: Story = { args: { size: 'full' } }

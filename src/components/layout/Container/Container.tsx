@@ -1,8 +1,7 @@
 import React from 'react'
 import type { ReactNode } from 'react'
-import './Container.scss'
 
-export type TContainerSize = 'sm' | 'md' | 'lg' | 'full'
+export type TContainerSize = 'sm' | 'md' | 'xl' | 'full'
 
 export type TContainerProps = {
   children: ReactNode
@@ -10,7 +9,17 @@ export type TContainerProps = {
   className?: string
 }
 
-export const Container = ({ children, size = 'lg', className }: TContainerProps) => {
-  const classes = ['l-container', `l-container--${size}`, className].filter(Boolean).join(' ')
-  return <div className={classes}>{children}</div>
+const sizeClasses: Record<TContainerSize, string> = {
+  sm:   'max-w-[640px]',
+  md:   'max-w-[768px]',
+  xl:   'max-w-[1200px]',
+  full: 'max-w-none',
+}
+
+export const Container = ({ children, size = 'xl', className = '' }: TContainerProps) => {
+  return (
+    <div className={`w-full mx-auto px-4 sm:px-6 md:px-8 ${sizeClasses[size]} ${className}`.trim()}>
+      {children}
+    </div>
+  )
 }
