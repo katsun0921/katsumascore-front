@@ -207,8 +207,8 @@ src/
 
 ### 混在禁止
 
-❌ layout・templates のコンポーネントに `.scss` ファイルを作成しない
-❌ features・ui のコンポーネントで Tailwind の余白・レイアウトクラスを使用しない
+❌ layout・templates・ui のコンポーネントに `.scss` ファイルを作成しない
+❌ features のコンポーネントで Tailwind の余白・レイアウトクラスを使用しない。ビジネスロジックや複雑なレイアウトが多々あるためscssファイルのみで運用をする
 ❌ コンポーネントの TSX / SCSS に `@media` のブレークポイント値を直書きしない
 
 ---
