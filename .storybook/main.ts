@@ -28,7 +28,10 @@ const config: StorybookConfig = {
       '@': srcDir,
       'next/image': resolve(__dirname, './mocks/nextImage.tsx'),
       'next/router': resolve(__dirname, './mocks/nextRouter.tsx'),
+      'next/link': resolve(__dirname, './mocks/nextLink.tsx'),
     }
+    config.define = config.define ?? {}
+    config.define['process.env'] = {}
     return config
   },
 }

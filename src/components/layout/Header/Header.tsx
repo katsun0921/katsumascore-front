@@ -1,4 +1,3 @@
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -27,9 +26,9 @@ export const Header = () => {
                 <Image
                   src='/images/logo.webp'
                   alt='KatsumaScore'
-                  className='block w-[100px] h-auto'
+                  className='block h-[36px] w-auto'
                   width={100}
-                  height={40}
+                  height={36}
                 />
               </Link>
             </h1>

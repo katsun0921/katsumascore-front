@@ -103,6 +103,7 @@ components/
 - Tailwindの色指定（bg-blue-500など）
 - `<a href="...">` によるページ遷移 → `<Link>` from `next/link` を使用
 - `<img>` タグの使用 → `<Image>` from `next/image` を使用
+- `style` propの直接使用 → featuresからのpropsとして受け取る場合のみ許可
 
 ---
 
