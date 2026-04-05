@@ -33,7 +33,7 @@ const config: StorybookConfig = {
     config.define = config.define ?? {}
     config.define['process.env'] = {}
     if (configType === 'PRODUCTION') {
-      config.base = './'
+      config.base = '/katsumascore-front/'
     }
     return config
   },
