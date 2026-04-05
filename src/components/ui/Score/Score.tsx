@@ -1,15 +1,16 @@
-import React from 'react'
 import './Score.scss'
 
-export type TScoreProps = {
-  score: '1' | '2' | '3' | '4' | '5'
-  size?: 'small' | 'medium' | 'large'
+export type ScoreProps = {
+  value: number
+  max?: number
 }
 
-export const Score = ({ score, size = 'medium' }: TScoreProps) => {
+export const Score = ({ value, max }: ScoreProps) => {
+  const display = max != null ? `${value}/${max}` : value.toFixed(1)
+
   return (
-    <div className={['score', `score__${size}`].join(' ')}>
-      <span className='score__count'>{score}</span>
+    <div className='score'>
+      <span className='score__value'>{display}</span>
     </div>
   )
 }

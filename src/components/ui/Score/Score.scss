@@ -1,54 +1,25 @@
 .score {
   position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
   color: var(--color-text-inverse);
   font-style: italic;
   text-align: center;
+  background-color: var(--color-score-bg);
+  border: 2px solid var(--color-score-border);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--color-score-border), inset 0 0 8px rgba(255, 45, 252, 0.15);
 
-  &::before {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    margin: auto;
-    clip-path: polygon(50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%, 0 20%);
-    background-color: var(--color-score-border);
-    content: '';
-  }
-
-  &::after {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    width: 90%;
-    height: 90%;
-    margin: auto;
-    clip-path: polygon(50% 0, 100% 20%, 100% 80%, 50% 100%, 0 80%, 0 20%);
-    background-color: var(--color-score-bg);
-    content: '';
-  }
-
-  &__small {
-    width: 44px;
-    height: 52px;
-    font-size: 16px;
-  }
-
-  &__medium {
-    width: 62px;
-    height: 72px;
+  &__value {
     font-size: 22px;
+    font-weight: 700;
+    line-height: 1;
+    font-family: var(--font-ui);
   }
 
-  &__large {
-    width: 96px;
-    height: 105px;
-    font-size: 30px;
-  }
 
-  &__count {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    z-index: 2;
-    transform: translate(-50%, -50%);
-  }
 }

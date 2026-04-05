@@ -1,7 +1,190 @@
-# カラールール & Tailwind × Design Token 責務（最終版）
+# KatsumaScore フロントエンド設計規約（統合版）
 
 > KatsumaScore フロントエンド設計仕様  
 > 2026年4月
+
+---
+
+# ■ UIアーキテクチャ原則
+
+## ■ コンポーネント責務分離
+
+- PostCard：最小UI（情報表示のみ）
+- PostVariants：レイアウト差分（ラップのみ）
+- PostList：配置（レイアウトエンジン）
+- PostSection：意味と余白
+- Template：画面構造
+
+---
+
+## ■ 禁止事項
+
+- variantによる分岐肥大
+- コンポーネント内でのデータ取得
+- UIとレイアウトの混在
+
+---
+
+## ■ レイアウト原則
+
+- 余白は親が管理する
+- 高さは意図的に揃える/崩す
+- grid崩れを許容しない
+
+---
+
+## ■ Storybook原則
+
+- 正常系ではなく異常系を重視
+- Chaosデータで検証
+- UI仕様書として扱う
+
+---
+
+## ■ データ原則
+
+- APIレスポンスは必ず変換する
+- UIは整形済みデータのみ扱う
+- null / 欠損前提で設計する
+
+---
+
+## ■ 最終原則
+
+UIは「壊れないこと」が最優先である。
+
+---
+
+# ■ Storybook移行設計書（ACF統合版）
+
+## ■ 参照ルート
+
+```
+./katsumascore_wordpress_theme/
+```
+
+---
+
+## ■ 目的
+
+WordPressテーマのUIを完全に分解し、
+ACFコンポーネントを含めてStorybookへ統合する。
+
+---
+
+## ■ 最重要原則：データ非改変
+
+- WordPress DB構造は変更しない
+- ACFフィールドは変更しない
+- REST APIレスポンスは変更しない
+
+---
+
+## ■ 設計の本質
+
+template-partsはすべて「UIコンポーネント」として扱う。
+とくに以下は重要：
+
+- components → ui / features
+- plugins/acf → ArticleBlock（最重要）
+- post → features
+
+---
+
+## ■ Storybook最終構造（確定）
+
+```
+components/
+├── ui/
+│   ├── Score
+│   ├── Heading
+│   ├── Date
+│   ├── Badge
+│   ├── Pagination
+│   ├── SocialIcons
+│   ├── Breadcrumb
+│   ├── SearchBox
+│   ├── VideoEmbed
+│
+├── features/
+│   ├── PostCard
+│   ├── PostList
+│   ├── VodPanel
+│   ├── ArticleHeader
+│   ├── ArticleMeta
+│   ├── AuthorCard
+│   ├── BasicInfo
+│   ├── CreditInfo
+│   ├── ShareButtons
+│   ├── Carousel
+│
+├── features/ArticleBlock/
+│   ├── Summary
+│   ├── GoodPoint
+│   ├── ReviewSiteScores
+│   ├── StreamingVod
+│   ├── ActorsInfo
+│   ├── ProductBlock
+│   ├── AdRental
+│   ├── CinemaCheck
+│   ├── RelationPost
+│   ├── VodItem
+│
+├── layout/
+│   ├── Header
+│   ├── Footer
+│   ├── Sidebar
+│   ├── Container
+│   ├── Grid
+```
+
+---
+
+## ■ ACFコンポーネント対応
+
+| WordPress（ACF） | Storybook |
+|---|---|
+| acf-summary.php | ArticleBlock/Summary |
+| acf-good-point.php | ArticleBlock/GoodPoint |
+| acf-review-site-scores.php | ArticleBlock/ReviewSiteScores |
+| acf-streaming-vod.php | ArticleBlock/StreamingVod |
+| actors-info.php | ArticleBlock/ActorsInfo |
+| product-block.php | ArticleBlock/ProductBlock |
+| ad-rental.php | ArticleBlock/AdRental |
+| single-cinema-check.php | ArticleBlock/CinemaCheck |
+| acf-relation-by-post-id.php | ArticleBlock/RelationPost |
+
+---
+
+## ■ VOD個別コンポーネント
+
+`vod/` 配下はすべて分解してUI化する。
+
+| WordPress | Storybook |
+|---|---|
+| netflix.php | VodItem |
+| amazon-prime-video.php | VodItem |
+| u-next.php | VodItem |
+| disney-plus.php | VodItem |
+
+---
+
+## ■ マッピングルール（確定）
+
+| WordPress | Storybook |
+|---|---|
+| template-parts/components | ui / features |
+| template-parts/post | features |
+| template-parts/plugins/acf | features/ArticleBlock |
+| template-parts/plugins/acf/vod | ui/VodItem |
+
+---
+
+## ■ 結論
+
+ACFも含め、WordPressテーマのすべてのUIはStorybookコンポーネントへ完全分解される。
+
+WordPressは「データ定義」、Storybookは「UI定義」として分離される。
 
 ---
 
@@ -175,7 +358,7 @@ Typography は「役割」と「言語」で管理する。
 
 ---
 
-# ■ Tailwind × Design Token 責務（最終版）
+# ■ Tailwind × Design Token 責務
 
 ## ■ 方針
 
