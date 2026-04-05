@@ -19,7 +19,7 @@ const config: StorybookConfig = {
     name: '@storybook/react-vite',
     options: {},
   },
-  viteFinal: async (config, { configType }) => {
+  viteFinal: async (config) => {
     config.plugins = [...(config.plugins ?? []), tailwindcss()]
     config.resolve = config.resolve ?? {}
     config.resolve.alias = {

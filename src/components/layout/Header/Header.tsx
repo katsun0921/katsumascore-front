@@ -16,10 +16,11 @@ export const Header = () => {
         <div className='flex items-center shrink-0'>
           <Link href='/' className='block hover:opacity-80 transition-opacity duration-200'>
             <Image
-              src='images/logo.webp'
+              src='/images/logo.webp'
               alt='KatsumaScore'
               width={120}
               height={40}
+              unoptimized
               className='block h-10 w-auto'
             />
           </Link>
@@ -40,10 +41,11 @@ export const Header = () => {
         <div className='flex h-14 items-center gap-3 px-4'>
           <Link href='/' className='block shrink-0 hover:opacity-80 transition-opacity duration-200'>
             <Image
-              src='images/logo.webp'
+              src='/images/logo.webp'
               alt='KatsumaScore'
               width={120}
               height={36}
+              unoptimized
               className='block h-9 w-auto'
             />
           </Link>
