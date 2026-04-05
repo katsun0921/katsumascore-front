@@ -10,7 +10,9 @@ export const Score = ({ value, max }: ScoreProps) => {
 
   return (
     <div className='score'>
-      <span className='score__value'>{display}</span>
+      <div className='score__bg'>
+        <span className='score__value'>{display}</span>
+      </div>
     </div>
   )
 }

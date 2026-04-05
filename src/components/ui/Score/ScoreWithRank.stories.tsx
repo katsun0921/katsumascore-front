@@ -45,7 +45,7 @@ export const OutOfRange: Story = {
   args: { value: 0.5 },
 }
 
-// max指定あり
+// max指定あり（scoreは非表示のためvalueのみ使用）
 export const WithMax: Story = {
-  args: { value: 4, max: 5 },
+  args: { value: 4 },
 }

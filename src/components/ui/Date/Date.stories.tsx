@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { Date } from './Date'
+import { PostDate } from './Date'
 
-const meta: Meta<typeof Date> = {
+const meta: Meta<typeof PostDate> = {
   title: 'ui/Date',
-  component: Date,
+  component: PostDate,
   tags: ['autodocs'],
   args: {
     publishedAt: '2024-03-15T00:00:00Z',
@@ -13,7 +13,7 @@ const meta: Meta<typeof Date> = {
 }
 export default meta
 
-type Story = StoryObj<typeof Date>
+type Story = StoryObj<typeof PostDate>
 
 export const Japanese: Story = {
   args: { locale: 'ja' },

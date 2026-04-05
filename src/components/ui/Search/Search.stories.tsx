@@ -1,18 +1,35 @@
+import { useEffect } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Search } from './Search';
+
+const WithNavigationBackground = (Story: React.ComponentType) => {
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('.sb-show-main')
+    if (el) el.style.background = 'var(--color-navigation)'
+    return () => {
+      if (el) el.style.background = ''
+    }
+  }, [])
+  return <Story />
+}
+
+const WithLightBackground = (Story: React.ComponentType) => {
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('.sb-show-main')
+    if (el) el.style.background = 'var(--color-bg)'
+    return () => {
+      if (el) el.style.background = ''
+    }
+  }, [])
+  return <Story />
+}
 
 const meta: Meta<typeof Search> = {
   title: 'UI/Search',
   component: Search,
+  decorators: [WithNavigationBackground],
   parameters: {
     layout: 'centered',
-    backgrounds: {
-      default: 'dark',
-      values: [
-        { name: 'dark', value: '#1e1b4b' },
-        { name: 'light', value: '#ffffff' },
-      ],
-    },
   },
   args: {
     onNavigate: (href: string) => {
@@ -46,7 +63,5 @@ export const Empty: Story = {
 // Light background variant
 export const OnLightBackground: Story = {
   name: 'OnLightBackground（白背景）',
-  parameters: {
-    backgrounds: { default: 'light' },
-  },
+  decorators: [WithLightBackground],
 };

@@ -17,7 +17,7 @@ function formatDate(dateStr: string, locale: 'ja' | 'en'): { display: string; da
   return { display, datetime }
 }
 
-export const Date = ({ publishedAt, updatedAt, locale = 'ja' }: TDateProps) => {
+export const PostDate = ({ publishedAt, updatedAt, locale = 'ja' }: TDateProps) => {
   const published = formatDate(publishedAt, locale)
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 

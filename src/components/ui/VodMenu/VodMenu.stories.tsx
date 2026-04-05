@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { useEffect } from 'react';
 import { VodMenu } from './VodMenu';
 import type { TVodMenuService } from './VodMenu.types';
 
@@ -8,12 +9,23 @@ const mockServices: TVodMenuService[] = [
   { service: 'unext', label: 'U-NEXT', status: false, href: '/vod/unext' },
 ];
 
+const WithNavigationBackground = (Story: React.ComponentType) => {
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('.sb-show-main')
+    if (el) el.style.background = 'var(--color-navigation)'
+    return () => {
+      if (el) el.style.background = ''
+    }
+  }, [])
+  return <Story />
+}
+
 const meta: Meta<typeof VodMenu> = {
   title: 'UI/VodMenu',
   component: VodMenu,
+  decorators: [WithNavigationBackground],
   parameters: {
     layout: 'centered',
-    backgrounds: { default: 'dark' },
   },
   args: {
     services: mockServices,
