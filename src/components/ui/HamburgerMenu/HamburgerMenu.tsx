@@ -1,4 +1,5 @@
 import { clickHamburgerMenu } from '@/hooks/useHamburgerMenu';
+import './HamburgerMenu.scss';
 
 type THamburgerMenuProps = {
   label: string;

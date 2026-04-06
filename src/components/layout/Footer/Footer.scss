@@ -1,0 +1,86 @@
+/* Catchcopy — Serif・余韻の一文 */
+.footer-catchcopy {
+  font-family: var(--font-ja-heading);
+  letter-spacing: 0.14em;
+  color: rgba(var(--color-white-rgb), 0.6);
+  line-height: 1;
+}
+
+/* Site name — Sans・wide tracking・ブランドの核 */
+.footer-sitename {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.35em;
+  color: rgba(var(--color-white-rgb), 0.9);
+  line-height: 1;
+}
+
+/* Divider — 極細・極短 */
+.footer-divider {
+  background-color: rgba(var(--color-white-rgb), 0.15);
+}
+
+/* Category link — 主導線 */
+.footer-category-link {
+  font-family: var(--font-ja-body);
+  letter-spacing: 0.1em;
+  color: rgba(var(--color-white-rgb), 0.8);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-category-link:hover {
+  color: var(--color-text-inverse);
+  opacity: 1;
+}
+
+/* VOD link — 補助情報・uppercase */
+.footer-vod-link {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.18em;
+  color: rgba(var(--color-white-rgb), 0.5);
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+}
+.footer-vod-link:hover {
+  color: rgba(var(--color-white-rgb), 0.75);
+  opacity: 1;
+}
+
+/* SNS link — アイコンのみ・scale */
+.footer-sns-link {
+  color: rgba(var(--color-white-rgb), 0.6);
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.footer-sns-link:hover {
+  color: var(--color-text-inverse);
+  opacity: 1;
+  transform: scale(1.1);
+}
+.footer-sns-link svg {
+  fill: currentColor;
+  display: block;
+}
+
+/* Meta link — 法的・補助・最小 */
+.footer-meta-link {
+  font-family: var(--font-ja-body);
+  letter-spacing: 0.06em;
+  color: rgba(var(--color-white-rgb), 0.4);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.footer-meta-link:hover {
+  color: rgba(var(--color-white-rgb), 0.7);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: rgba(var(--color-white-rgb), 0.3);
+  opacity: 1;
+}
+
+/* Copyright — 最薄・最小・ページの終端 */
+.footer-copyright {
+  font-family: var(--font-en-base);
+  letter-spacing: 0.1em;
+  color: rgba(var(--color-white-rgb), 0.2);
+  line-height: 1;
+}

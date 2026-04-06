@@ -47,7 +47,7 @@
     background: var(--color-category);
     padding: 9px 22px;
     transform: skew(-8deg);
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui-pc);
     line-height: 1.25rem;
     text-decoration: none;
     transition: opacity 0.15s;
@@ -71,7 +71,7 @@
 
   // 英語サブタイトル
   &__subtitle {
-    font-size: 15px;
+    font-size: var(--font-size-body-sp);
     color: rgba(var(--color-white-rgb), 0.75);
     margin: 0 0 12px;
     text-align: center;
@@ -91,7 +91,7 @@
   }
 
   &__date {
-    font-size: 13px;
+    font-size: var(--font-size-ui-sp);
     color: rgba(var(--color-white-rgb), 0.8);
   }
 

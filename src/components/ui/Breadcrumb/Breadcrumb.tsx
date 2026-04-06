@@ -1,3 +1,7 @@
+import { useLocale } from '@/i18n/provider'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
+
 export type TBreadcrumbItem = {
   label: string
   href?: string
@@ -8,11 +12,12 @@ export type TBreadcrumbProps = {
 }
 
 export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
+  const locale = useLocale()
   if (!items.length) return null
 
   return (
-    <nav aria-label='Breadcrumb'>
-      <ol className='flex flex-wrap items-center gap-1 p-0 m-0 text-[13px]'>
+    <nav aria-label={t(messages, ['nav', 'label'], locale)}>
+      <ol className='flex flex-wrap items-center gap-1 p-0 m-0 text-[var(--font-size-ui-sp)]'>
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (

@@ -2,7 +2,7 @@
   margin-top: 32px;
 
   &__heading {
-    font-size: 18px;
+    font-size: var(--font-size-h3-sp);
     font-weight: var(--font-weight-bold);
     margin-bottom: 16px;
     color: var(--color-text-primary);

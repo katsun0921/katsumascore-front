@@ -1,3 +1,4 @@
+import './ListHeader.scss';
 
 type TLinkHeader = {
   label: string;

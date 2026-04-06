@@ -2,7 +2,7 @@
   margin: 0;
 
   &__label {
-    font-size: 18px;
+    font-size: var(--font-size-h3-sp);
     font-weight: var(--font-weight-bold);
     margin-bottom: 12px;
     color: var(--color-text-primary);
@@ -20,7 +20,7 @@
   }
 
   &__character {
-    font-size: 15px;
+    font-size: var(--font-size-body-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin-bottom: 4px;
@@ -40,12 +40,12 @@
   }
 
   &__description {
-    font-size: 14px;
+    font-size: var(--font-size-ui-pc);
     color: var(--color-text-secondary);
   }
 
   &__other-label {
-    font-size: 13px;
+    font-size: var(--font-size-ui-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-secondary);
   }
@@ -56,7 +56,7 @@
     margin: 4px 0 0;
 
     li {
-      font-size: 13px;
+      font-size: var(--font-size-ui-sp);
       line-height: 1.6;
 
       a {

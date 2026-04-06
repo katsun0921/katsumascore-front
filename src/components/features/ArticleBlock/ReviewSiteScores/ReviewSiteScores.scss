@@ -3,7 +3,7 @@
 
   &__heading {
     font-family: var(--font-ja-heading), serif;
-    font-size: 1.25rem;
+    font-size: var(--font-size-h2-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-secondary);
     padding-bottom: 12px;
@@ -57,18 +57,18 @@
   &__site-name {
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    font-size: 0.9375rem;
+    font-size: var(--font-size-body-sp);
     min-width: 120px;
   }
 
   &__score {
-    font-size: 1rem;
+    font-size: var(--font-size-body-pc);
     font-weight: var(--font-weight-bold);
     color: var(--color-category);
   }
 
   &__audience {
-    font-size: 13px;
+    font-size: var(--font-size-ui-sp);
     color: var(--color-text-secondary);
     margin-left: 8px;
   }
@@ -89,7 +89,7 @@
 
   &__average {
     margin-top: 1rem;
-    font-size: 0.9375rem;
+    font-size: var(--font-size-body-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     text-align: right;
@@ -97,7 +97,7 @@
 
   &__note {
     margin-top: 8px;
-    font-size: 12px;
+    font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
     line-height: 1.6;
   }

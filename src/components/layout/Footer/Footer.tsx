@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import './Footer.scss';
 
 const CATEGORIES = [
   { name: '映画', href: '/category/movie' },

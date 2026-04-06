@@ -6,7 +6,7 @@
     font-family: var(--font-ja-heading), serif;
     font-style: italic;
     text-transform: uppercase;
-    font-size: 1.5rem;
+    font-size: var(--font-size-h1-sp);
     line-height: 2rem;
     color: var(--color-secondary);
     padding-bottom: 15px;
@@ -27,7 +27,7 @@
   }
 
   &__description {
-    font-size: 0.9375rem;
+    font-size: var(--font-size-body-sp);
     color: var(--color-text-secondary);
     margin-bottom: 1rem;
     line-height: 1.6;
@@ -79,12 +79,12 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: 0.75rem;
+    font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
   }
 
   &__title {
-    font-size: 0.875rem;
+    font-size: var(--font-size-ui-pc);
     line-height: 1.5;
     font-weight: var(--font-weight-medium);
   }

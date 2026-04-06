@@ -1,4 +1,5 @@
 import { useRef, useEffect, useId } from 'react';
+import './Search.scss';
 import { useSearch } from './useSearch';
 import { SearchResultItem } from './SearchResultItem';
 

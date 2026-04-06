@@ -1,0 +1,44 @@
+.link__social {
+  position: relative;
+  display: block;
+  height: 50px;
+  color: var(--color-text-inverse);
+  font-size: 14px;
+  line-height: 50px;
+  text-align: center;
+  text-transform: uppercase;
+}
+.link__social:hover {
+  color: rgba(var(--color-white-rgb), 0.6);
+  opacity: 0.8;
+}
+
+.link__socialText {
+  position: relative;
+}
+.link__socialText::before {
+  position: absolute;
+  top: 0;
+  left: -28px;
+  display: block;
+  width: 21px;
+  height: 21px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  content: '';
+}
+
+.link__twitter {
+  background: var(--color-twitter);
+}
+.link__twitter .link__socialText::before {
+  background-image: url('https://katsumascore.blog/images/logo-twitter-white.png');
+}
+
+.link__facebook {
+  background: var(--color-facebook);
+}
+.link__facebook .link__socialText::before {
+  background-image: url('https://katsumascore.blog/images/logo-facebook.png');
+}

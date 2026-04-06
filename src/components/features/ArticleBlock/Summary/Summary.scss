@@ -4,7 +4,7 @@
   // c-heading__related 風の見出し
   &__heading {
     font-family: var(--font-ja-heading), serif;
-    font-size: 1.25rem;
+    font-size: var(--font-size-h2-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-secondary);
     padding-bottom: 12px;
@@ -34,12 +34,12 @@
       margin: 0 0 12px;
       line-height: 1.8;
       color: var(--color-text-primary);
-      font-size: 0.9375rem;
+      font-size: var(--font-size-body-sp);
     }
 
     cite {
       display: block;
-      font-size: 13px;
+      font-size: var(--font-size-ui-sp);
       color: var(--color-text-secondary);
       font-style: normal;
 

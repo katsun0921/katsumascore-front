@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './Link.scss';
 
 type TLinkProps = {
   backgroundColor?: string;

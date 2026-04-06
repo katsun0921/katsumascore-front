@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './Typography.scss';
 
 type TypographyVariant = 'overview' | 'palette' | 'fonts' | 'font-sizes';
 
@@ -24,9 +25,14 @@ type FontEntry = {
 
 const brandColors: Swatch[] = [
   { name: 'Primary', token: '--color-primary', value: '#2563eb', textColor: '#ffffff' },
+  { name: 'Primary Dark', token: '--color-primary-dark', value: '#1e40af', textColor: '#ffffff' },
   { name: 'Secondary', token: '--color-secondary', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Accent', token: '--color-accent', value: '#6d28d9', textColor: '#ffffff' },
   { name: 'Category', token: '--color-category', value: '#5c39f2', textColor: '#ffffff' },
+  { name: 'Category Hover', token: '--color-category-hover', value: '#1e1b4b', textColor: '#ffffff' },
+  { name: 'Header', token: '--color-header', value: '#1e1b4b', textColor: '#ffffff' },
+  { name: 'Navigation', token: '--color-navigation', value: '#1e1b4b', textColor: '#ffffff' },
+  { name: 'Footer', token: '--color-footer', value: '#0e011c', textColor: '#ffffff' },
 ];
 
 const surfaceColors: Swatch[] = [
@@ -34,11 +40,22 @@ const surfaceColors: Swatch[] = [
   { name: 'Background Muted', token: '--color-bg-muted', value: '#f3f4f6' },
   { name: 'Surface Muted', token: '--color-surface-muted', value: '#f7f7f7' },
   { name: 'Border Muted', token: '--color-border-muted', value: '#e0e0e0' },
+  { name: 'Border', token: '--color-border', value: '#d1d5db' },
+  { name: 'Border Soft', token: '--color-border-soft', value: 'rgba(0,0,0,0.1)' },
+  { name: 'Highlight BG', token: '--color-highlight-bg', value: '#fefce8' },
+  { name: 'Highlight Mark', token: '--color-highlight-mark', value: '#fef08a' },
+  { name: 'BG Code', token: '--color-bg-code', value: '#111827', textColor: '#ffffff' },
 ];
 
 const textAndFeatureColors: Swatch[] = [
   { name: 'Text Primary', token: '--color-text-primary', value: '#111827', textColor: '#ffffff' },
   { name: 'Text Secondary', token: '--color-text-secondary', value: '#6b7280', textColor: '#ffffff' },
+  { name: 'Text Body', token: '--color-text-body', value: '#374151', textColor: '#ffffff' },
+  { name: 'Text Muted', token: '--color-text-muted', value: '#616161', textColor: '#ffffff' },
+  { name: 'Text Dark', token: '--color-text-dark', value: '#2f2f2f', textColor: '#ffffff' },
+  { name: 'Text Inverse', token: '--color-text-inverse', value: '#ffffff' },
+  { name: 'Black', token: '--color-black', value: '#000000', textColor: '#ffffff' },
+  { name: 'Accent Yellow', token: '--color-accent-yellow', value: '#eab308' },
   { name: 'Score BG', token: '--color-score-bg', value: '#14082e', textColor: '#ffffff' },
   { name: 'Score Border', token: '--color-score-border', value: '#ff2dfc' },
 ];
@@ -46,10 +63,22 @@ const textAndFeatureColors: Swatch[] = [
 const serviceColors: Swatch[] = [
   { name: 'Netflix', token: '--color-netflix', value: '#e50914', textColor: '#ffffff' },
   { name: 'Amazon', token: '--color-amazon', value: '#00a8e1' },
+  { name: 'Amazon Shopping', token: '--color-amazon-shopping', value: '#ff9900' },
+  { name: 'Rakuten', token: '--color-rakuten', value: '#bf0000', textColor: '#ffffff' },
   { name: 'U-NEXT', token: '--color-unext', value: '#1a1a1a', textColor: '#ffffff' },
+  { name: 'Disney+', token: '--color-disney', value: '#113ccf', textColor: '#ffffff' },
+  { name: 'DMMTV', token: '--color-dmmtv', value: '#ff4b00', textColor: '#ffffff' },
+  { name: 'Abema', token: '--color-abema', value: '#00bcd4' },
+  { name: 'AppleTV+', token: '--color-appletv', value: '#555555', textColor: '#ffffff' },
+  { name: 'YouTube', token: '--color-youtube', value: '#ff0000', textColor: '#ffffff' },
   { name: 'Twitter', token: '--color-twitter', value: '#1da1f2' },
+  { name: 'X', token: '--color-x', value: '#000000', textColor: '#ffffff' },
   { name: 'Facebook', token: '--color-facebook', value: '#1877f2', textColor: '#ffffff' },
+  { name: 'Instagram', token: '--color-instagram', value: '#e1306c', textColor: '#ffffff' },
+  { name: 'LINE', token: '--color-line', value: '#06c755' },
   { name: 'RSS', token: '--color-rss', value: '#ec7c1c' },
+  { name: 'TSUTAYA', token: '--color-tsutaya', value: '#003087', textColor: '#ffffff' },
+  { name: 'GEO', token: '--color-geo', value: '#0066cc', textColor: '#ffffff' },
 ];
 
 const fontEntries: FontEntry[] = [
@@ -152,7 +181,7 @@ const fontSizeEntries: FontSizeEntry[] = [
     tokenPc: '--font-size-body-pc',
     valuePc: '16px',
     tokenSp: '--font-size-body-sp',
-    valueSp: '14px',
+    valueSp: '15px',
     sampleText: '本文テキストの基準サイズです。読みやすさを最優先にしています。',
   },
   {
@@ -160,7 +189,7 @@ const fontSizeEntries: FontSizeEntry[] = [
     tokenPc: '--font-size-ui-pc',
     valuePc: '14px',
     tokenSp: '--font-size-ui-sp',
-    valueSp: '12px',
+    valueSp: '13px',
     sampleText: 'ボタン・ラベル・ナビゲーション',
   },
   {
@@ -168,7 +197,7 @@ const fontSizeEntries: FontSizeEntry[] = [
     tokenPc: '--font-size-caption-pc',
     valuePc: '12px',
     tokenSp: '--font-size-caption-sp',
-    valueSp: '10px',
+    valueSp: '11px',
     sampleText: '補足・メタ情報・キャプション',
   },
 ];

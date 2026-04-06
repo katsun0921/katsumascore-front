@@ -43,7 +43,7 @@
     border: 1px solid color-mix(in srgb, var(--color-text-inverse) 28%, transparent);
     border-radius: 999px;
     font-family: var(--font-ui);
-    font-size: 0.75rem;
+    font-size: var(--font-size-caption-pc);
     font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -58,7 +58,7 @@
   &__date {
     color: var(--color-text-secondary);
     font-family: var(--font-ui);
-    font-size: 0.8rem;
+    font-size: var(--font-size-caption-pc);
     line-height: 1.2;
   }
 
@@ -66,7 +66,7 @@
     display: -webkit-box;
     overflow: hidden;
     color: var(--color-text-primary);
-    font-size: 1.25rem;
+    font-size: var(--font-size-h2-sp);
     line-height: 1.5;
     word-break: break-word;
     -webkit-box-orient: vertical;
@@ -77,7 +77,7 @@
     display: -webkit-box;
     overflow: hidden;
     color: var(--color-text-secondary);
-    font-size: 0.9375rem;
+    font-size: var(--font-size-body-sp);
     line-height: 1.7;
     word-break: break-word;
     -webkit-box-orient: vertical;

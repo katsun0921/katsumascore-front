@@ -58,7 +58,7 @@
   }
 
   &__excerpt {
-    font-size: 0.9375rem;
+    font-size: var(--font-size-body-sp);
     line-height: 1.7;
     color: var(--color-text-secondary);
     margin-bottom: 1.5rem;

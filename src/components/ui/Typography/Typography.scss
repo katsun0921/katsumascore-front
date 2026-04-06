@@ -1,0 +1,195 @@
+.sb-typography-page {
+  min-height: 100vh;
+  padding: 40px 24px 80px;
+  background:
+    radial-gradient(circle at top left, rgba(var(--color-primary-rgb), 0.12), transparent 32%),
+    linear-gradient(180deg, var(--color-surface-muted) 0%, var(--color-bg) 100%);
+  color: var(--color-text-primary);
+}
+.sb-typography-shell {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+.sb-typography-hero {
+  margin-bottom: 32px;
+  padding: 32px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 24px;
+  background: rgba(var(--color-white-rgb), 0.92);
+  box-shadow: 0 24px 80px rgba(var(--color-text-primary-rgb), 0.08);
+}
+.sb-typography-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(var(--color-primary-rgb), 0.1);
+  color: var(--color-primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sb-typography-lead {
+  max-width: 64ch;
+  margin-top: 16px;
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
+}
+.sb-typography-grid {
+  display: grid;
+  gap: 24px;
+}
+.sb-typography-card {
+  padding: 28px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 20px;
+  background: rgba(var(--color-white-rgb), 0.94);
+  box-shadow: 0 14px 48px rgba(var(--color-text-primary-rgb), 0.06);
+}
+.sb-typography-card h2 {
+  margin-bottom: 16px;
+  color: var(--color-secondary);
+  font-size: 1.5rem;
+}
+.sb-typography-card h3 {
+  margin-bottom: 12px;
+  font-size: 1.125rem;
+}
+.sb-typography-stack {
+  display: grid;
+  gap: 16px;
+}
+.sb-typography-stack a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: rgba(var(--color-primary-rgb), 0.35);
+  text-underline-offset: 0.18em;
+}
+.sb-typography-divider {
+  width: 72px;
+  height: 4px;
+  margin: 20px 0;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+}
+.sb-typography-muted {
+  color: var(--color-text-secondary);
+}
+.sb-typography-code {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: var(--color-bg-muted);
+  color: var(--color-secondary);
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85rem;
+}
+.sb-typography-specimens {
+  display: grid;
+  gap: 16px;
+}
+.sb-typography-specimen {
+  padding: 20px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 16px;
+  background: linear-gradient(180deg, var(--color-bg) 0%, rgba(var(--color-bg-muted-rgb), 0.45) 100%);
+}
+.sb-typography-specimen-label {
+  margin-bottom: 12px;
+  color: var(--color-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.sb-typography-palette {
+  display: grid;
+  gap: 24px;
+}
+.sb-typography-swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+.sb-typography-swatch {
+  overflow: hidden;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 18px;
+  background: var(--color-bg);
+}
+.sb-typography-swatch-chip {
+  min-height: 120px;
+  padding: 16px;
+}
+.sb-typography-swatch-body {
+  display: grid;
+  gap: 6px;
+  padding: 16px;
+}
+.sb-typography-swatch-body strong {
+  font-size: 0.98rem;
+}
+.sb-typography-token {
+  color: var(--color-text-secondary);
+  font-size: 0.8rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+.sb-typography-font-list {
+  display: grid;
+  gap: 18px;
+}
+.sb-typography-font-guidelines {
+  display: grid;
+  gap: 16px;
+}
+.sb-typography-rule-card {
+  padding: 20px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--color-bg) 0%, rgba(var(--color-bg-muted-rgb), 0.6) 100%);
+}
+.sb-typography-rule-card h2 {
+  margin-bottom: 12px;
+}
+.sb-typography-rule-list {
+  display: grid;
+  gap: 10px;
+  padding-left: 1.25rem;
+  color: var(--color-text-primary);
+}
+.sb-typography-rule-list li {
+  line-height: 1.7;
+}
+.sb-typography-font-card {
+  padding: 20px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 18px;
+  background: linear-gradient(180deg, var(--color-bg) 0%, var(--color-surface-muted) 100%);
+}
+.sb-typography-font-meta {
+  margin-bottom: 12px;
+}
+.sb-typography-font-sample {
+  line-height: 1.6;
+}
+.sb-typography-font-sample--body { font-family: var(--font-body), sans-serif; }
+.sb-typography-font-sample--heading { font-family: var(--font-ja-heading), serif; }
+.sb-typography-font-sample--accent-strong { font-family: var(--font-accent-strong); }
+.sb-typography-font-sample--accent-soft { font-family: var(--font-accent-soft); }
+.sb-typography-font-sample--en-base { font-family: var(--font-en-base), sans-serif; }
+.sb-typography-note {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--color-primary);
+  border-radius: 0 12px 12px 0;
+  background: rgba(var(--color-primary-rgb), 0.08);
+  color: var(--color-text-secondary);
+}
+@media (min-width: 900px) {
+  .sb-typography-grid { grid-template-columns: 1.2fr 0.8fr; }
+  .sb-typography-specimens { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sb-typography-font-guidelines { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

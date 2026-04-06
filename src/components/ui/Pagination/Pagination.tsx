@@ -1,15 +1,20 @@
+import { useLocale } from '@/i18n/provider'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
+
 export type TPaginationProps = {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
 }
 
-const btnBase = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[14px] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
-const btnCurrent = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] text-[var(--color-text-inverse)] text-[14px] font-bold cursor-default'
-const btnNav = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[13px] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
-const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] text-[var(--color-text-secondary)] text-[14px]'
+const btnBase = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[var(--font-size-ui-pc)] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
+const btnCurrent = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] text-[var(--color-text-inverse)] text-[var(--font-size-ui-pc)] font-bold cursor-default'
+const btnNav = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[var(--font-size-ui-sp)] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] text-[var(--color-text-secondary)] text-[var(--font-size-ui-pc)]'
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
+  const locale = useLocale()
   if (totalPages <= 1) return null
 
   const midSize = 3
@@ -28,12 +33,12 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
   }
 
   return (
-    <nav className='mt-8' aria-label='Page Navigation'>
+    <nav className='mt-8' aria-label={t(messages, ['nav', 'label'], locale)}>
       <ul className='flex flex-wrap items-center justify-center gap-1 p-0 m-0'>
         {currentPage > 1 && (
           <li>
-            <button className={btnNav} onClick={() => onPageChange(currentPage - 1)} aria-label='Previous page'>
-              « Prev
+            <button className={btnNav} onClick={() => onPageChange(currentPage - 1)} aria-label={t(messages, ['prev', 'label'], locale)}>
+              {t(messages, ['prev', 'text'], locale)}
             </button>
           </li>
         )}
@@ -56,8 +61,8 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
         )}
         {currentPage < totalPages && (
           <li>
-            <button className={btnNav} onClick={() => onPageChange(currentPage + 1)} aria-label='Next page'>
-              Next »
+            <button className={btnNav} onClick={() => onPageChange(currentPage + 1)} aria-label={t(messages, ['next', 'label'], locale)}>
+              {t(messages, ['next', 'text'], locale)}
             </button>
           </li>
         )}

@@ -7,7 +7,7 @@
 
 本ドキュメントは以下を統合した唯一の正規仕様である：
 
-- WordPress → Next.js 移行ガイド
+- WordPress → Next.js移行ガイド
 - フロントエンド設計規約
 - Storybook設計ルール
 
@@ -176,11 +176,12 @@ src/
 - `padding` / `margin` / `text-align` / `display` / `gap` / `flex` / `grid` 等のレイアウト・余白はTailwindで記述する
 - カラーは必ずCSS変数経由で指定する（例: `bg-[var(--color-footer)]`）
 - Tailwindのデフォルトカラークラス（`bg-blue-500` など）は使用禁止
+- CSS変数の色値はHEXで定義する（例: `#2563eb`）。透明度が必要な場合のみ `rgba()` を許可する
 
 ### SCSSの使用範囲（features のみ）
 
 - `font-family` / `font-size` / `letter-spacing` / `line-height` などタイポグラフィ
-- `color`（`rgba` による透明度階層管理）
+- `color`（値はHEX。透明度が必要な場合のみ `rgba(var(--color-xxx-rgb), 0.x)` を使用）
 - `transition` / `transform` などアニメーション
 - `:hover` / `:focus` などインタラクション
 - `@media` によるレスポンシブ（gapの調整など細粒度のもの）
@@ -189,7 +190,7 @@ src/
 
 - ブレークポイントの値は `globals.css` の `@theme` で一元管理する
 - コンポーネント（TSX / SCSS）に `@media (max-width: 480px)` などの値を直接書かない
-- レスポンシブは Tailwind のプレフィックス（`sm:` / `md:` / `lg:`）で表現する
+- レスポンシブはTailwindのプレフィックス（`sm:` / `md:` / `lg:`）で表現する
 
 ```css
 /* globals.css — ブレークポイント定義 */
@@ -207,9 +208,20 @@ src/
 
 ### 混在禁止
 
-❌ layout・templates・ui のコンポーネントに `.scss` ファイルを作成しない
-❌ features のコンポーネントで Tailwind の余白・レイアウトクラスを使用しない。ビジネスロジックや複雑なレイアウトが多々あるためscssファイルのみで運用をする
-❌ コンポーネントの TSX / SCSS に `@media` のブレークポイント値を直書きしない
+❌ layout・templates・uiのコンポーネントに`.scss`ファイルを作成しない
+❌ featuresのコンポーネントでTailwindの余白・レイアウトクラスを使用しない。ビジネスロジックや複雑なレイアウトが多々あるためscssファイルのみで運用をする
+❌ コンポーネントのTSX / SCSSに`@media`のブレークポイント値を直書きしない
+❌ `globals.css`にクラスセレクター（`.foo { }`）を書かない → コンポーネントのSCSSに書く
+
+### Typography同期ルール（必須）
+
+`globals.css`の以下のトークンを追加・削除・変更したら、`src/components/ui/Typography/Typography.tsx`の対応するデータ配列を必ず同期する。
+
+| 変更したトークン | 更新する配列 |
+|---|---|
+| `--color-*` | `brandColors` / `surfaceColors` / `textAndFeatureColors` / `serviceColors` |
+| `--font-*` | `fontEntries` |
+| `--font-size-*` | `fontSizeEntries` |
 
 ---
 
@@ -321,7 +333,7 @@ export const messages = {
 
 - `as const` 必須
 - keyはUI構造ベース（`logo.alt`、`cta.watch` など）
-- ja / en の両キー必須
+- ja / enの両キー必須
 
 ### コンポーネントでの使い方
 
@@ -349,7 +361,7 @@ const label = “OK”
 ### Storybook検証
 
 - `I18nProvider` は `.storybook/preview.ts` のdecoratorで全Storyに適用済み
-- toolbar（globeアイコン）で ja / en をリアルタイム切替可能
+- toolbar（globeアイコン）でja / enをリアルタイム切替可能
 - 翻訳漏れは `console.warn` で検知する
 - locale固定のStoryは `globals: { locale: 'en' }` で指定する
 

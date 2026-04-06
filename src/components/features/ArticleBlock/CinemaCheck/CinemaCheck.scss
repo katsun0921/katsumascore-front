@@ -14,14 +14,14 @@
     border-radius: 4px;
     background: var(--color-category);
     color: var(--color-text-inverse);
-    font-size: 12px;
+    font-size: var(--font-size-caption-pc);
     font-weight: var(--font-weight-bold);
     white-space: nowrap;
   }
 
   &__message {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--font-size-ui-pc);
     color: var(--color-text-primary);
   }
 }

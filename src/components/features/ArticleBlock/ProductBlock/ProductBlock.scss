@@ -30,7 +30,7 @@
 
   &__type {
     display: inline-block;
-    font-size: 11px;
+    font-size: var(--font-size-caption-sp);
     font-weight: var(--font-weight-bold);
     padding: 2px 8px;
     border-radius: 3px;
@@ -40,14 +40,14 @@
   }
 
   &__title {
-    font-size: 15px;
+    font-size: var(--font-size-body-sp);
     font-weight: var(--font-weight-bold);
     margin: 0 0 6px;
     color: var(--color-text-primary);
   }
 
   &__desc {
-    font-size: 13px;
+    font-size: var(--font-size-ui-sp);
     color: var(--color-text-secondary);
     margin: 0 0 10px;
   }
@@ -63,7 +63,7 @@
 
   &__btn {
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--font-size-caption-pc);
     padding: 7px 10px;
     color: var(--color-text-inverse);
     text-decoration: none;

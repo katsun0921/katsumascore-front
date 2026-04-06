@@ -8,7 +8,7 @@
   }
 
   &__label {
-    font-size: 14px;
+    font-size: var(--font-size-ui-pc);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     padding-left: 4px;
@@ -16,7 +16,7 @@
 
   &__value {
     padding-left: 16px;
-    font-size: 14px;
+    font-size: var(--font-size-ui-pc);
     color: var(--color-text-primary);
     word-break: break-all;
   }
@@ -29,7 +29,7 @@
   }
 
   &__copyright {
-    font-size: 12px;
+    font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
     margin: 4px 0 0;
   }

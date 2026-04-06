@@ -1,0 +1,14 @@
+/* .change-line state は useHamburgerMenu hook が classList.toggle('change-line') で適用。
+   Base styles は HamburgerMenu.tsx の Tailwind クラスで定義。 */
+.change-line .hamburgerMenu__line:nth-child(1) {
+  top: 50%;
+  transform: translateY(-50%) rotate(-45deg);
+}
+.change-line .hamburgerMenu__line:nth-child(2) {
+  opacity: 0;
+}
+.change-line .hamburgerMenu__line:nth-child(3) {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%) rotate(45deg);
+}

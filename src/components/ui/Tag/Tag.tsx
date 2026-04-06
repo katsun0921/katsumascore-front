@@ -1,3 +1,4 @@
+import './Tag.scss';
 
 export type TTagsProps = {
   labels: string[];

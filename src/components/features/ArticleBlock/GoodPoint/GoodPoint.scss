@@ -7,7 +7,7 @@
 
   &__heading {
     font-family: var(--font-accent-soft), var(--font-ja-body), sans-serif;
-    font-size: 1.125rem;
+    font-size: var(--font-size-h3-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-category);
     margin-bottom: 1rem;
@@ -23,7 +23,7 @@
   }
 
   &__item {
-    font-size: 1rem;
+    font-size: var(--font-size-body-pc);
     line-height: 1.7;
     color: var(--color-text-primary);
     padding-left: 1.5rem;

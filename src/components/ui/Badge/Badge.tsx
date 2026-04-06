@@ -16,7 +16,7 @@ const variantClasses: Record<TBadgeVariant, string> = {
 
 export const Badge = ({ label, variant = 'default' }: TBadgeProps) => {
   return (
-    <span className={`inline-block px-[10px] py-[3px] rounded-[3px] text-[12px] font-bold leading-[1.4] ${variantClasses[variant]}`}>
+    <span className={`inline-block px-[10px] py-[3px] rounded-[3px] text-[var(--font-size-caption-pc)] font-bold leading-[1.4] ${variantClasses[variant]}`}>
       {label}
     </span>
   )

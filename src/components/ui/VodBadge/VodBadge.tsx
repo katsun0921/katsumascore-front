@@ -1,4 +1,8 @@
-const itemBase = 'inline-block px-3 py-1 rounded text-[var(--color-text-inverse)] text-[12px] font-bold'
+import { useLocale } from '@/i18n/provider'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
+
+const itemBase = 'inline-block px-3 py-1 rounded text-[var(--color-text-inverse)] text-[var(--font-size-caption-pc)] font-bold'
 
 const variantClasses = {
   netflix: `${itemBase} bg-[var(--color-netflix)]`,
@@ -15,11 +19,11 @@ interface VodBadgeProps {
 }
 
 export const VodBadge = ({ netflix, amazon, unext, isCinema }: VodBadgeProps) => {
+  const locale = useLocale()
   if (isCinema) {
     return (
       <div className='flex flex-wrap gap-2'>
-        {/* eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n */}
-        <span className={variantClasses.cinema}>劇場公開中</span>
+        <span className={variantClasses.cinema}>{t(messages, ['cinema', 'label'], locale)}</span>
       </div>
     )
   }
