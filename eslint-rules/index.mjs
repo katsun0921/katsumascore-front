@@ -12,6 +12,7 @@ import noPostSectionDirectPostCard from './no-postsection-direct-postcard.mjs'
 import noPostListSectionTitle from './no-postlist-section-title.mjs'
 import noHardcodedFontFamily from './no-hardcoded-font-family.mjs'
 import noHardcodedI18n from './no-hardcoded-i18n.mjs'
+import noDirectFontSize from './no-direct-font-size.mjs'
 
 /** @type {import('eslint').ESLint.Plugin} */
 const plugin = {
@@ -27,6 +28,7 @@ const plugin = {
     'no-postlist-section-title': noPostListSectionTitle,
     'no-hardcoded-font-family': noHardcodedFontFamily,
     'no-hardcoded-i18n': noHardcodedI18n,
+    'no-direct-font-size': noDirectFontSize,
   },
 }
 

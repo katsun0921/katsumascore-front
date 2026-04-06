@@ -1,11 +1,13 @@
-import React from 'react'
-import './Pagination.scss'
-
 export type TPaginationProps = {
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
 }
+
+const btnBase = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[14px] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
+const btnCurrent = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] text-[var(--color-text-inverse)] text-[14px] font-bold cursor-default'
+const btnNav = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[13px] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] text-[var(--color-text-secondary)] text-[14px]'
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
   if (totalPages <= 1) return null
@@ -26,15 +28,11 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
   }
 
   return (
-    <nav className='pagination' aria-label='Page Navigation'>
-      <ul className='pagination__list'>
+    <nav className='mt-8' aria-label='Page Navigation'>
+      <ul className='flex flex-wrap items-center justify-center gap-1 p-0 m-0'>
         {currentPage > 1 && (
           <li>
-            <button
-              className='pagination__btn pagination__btn--prev'
-              onClick={() => onPageChange(currentPage - 1)}
-              aria-label='Previous page'
-            >
+            <button className={btnNav} onClick={() => onPageChange(currentPage - 1)} aria-label='Previous page'>
               « Prev
             </button>
           </li>
@@ -42,19 +40,14 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
         {pages.map((page, i) =>
           page === '...' ? (
             <li key={`ellipsis-${i}`}>
-              <span className='pagination__ellipsis'>...</span>
+              <span className={ellipsis}>...</span>
             </li>
           ) : (
             <li key={page}>
               {page === currentPage ? (
-                <span className='pagination__btn pagination__btn--current' aria-current='page'>
-                  {page}
-                </span>
+                <span className={btnCurrent} aria-current='page'>{page}</span>
               ) : (
-                <button
-                  className='pagination__btn'
-                  onClick={() => onPageChange(page)}
-                >
+                <button className={btnBase} onClick={() => onPageChange(page as number)}>
                   {page}
                 </button>
               )}
@@ -63,11 +56,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
         )}
         {currentPage < totalPages && (
           <li>
-            <button
-              className='pagination__btn pagination__btn--next'
-              onClick={() => onPageChange(currentPage + 1)}
-              aria-label='Next page'
-            >
+            <button className={btnNav} onClick={() => onPageChange(currentPage + 1)} aria-label='Next page'>
               Next »
             </button>
           </li>

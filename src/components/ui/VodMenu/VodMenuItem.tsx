@@ -1,4 +1,3 @@
-import React from 'react';
 import type { TVodMenuService } from './VodMenu.types';
 
 type TVodMenuItemProps = {
@@ -10,13 +9,13 @@ export const VodMenuItem = ({ item }: TVodMenuItemProps) => {
     <li>
       <a
         href={item.href}
-        className={`vodMenu__item vodMenu__item--${item.service}`}
+        className='flex items-center justify-between px-4 py-[10px] text-[var(--color-text-primary)] text-[0.875rem] transition-[background-color] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)] hover:opacity-100'
         target='_blank'
         rel='noopener noreferrer'
       >
-        <span className='vodMenu__itemLabel'>{item.label}</span>
+        <span>{item.label}</span>
         <span
-          className='vodMenu__itemStatus'
+          className='text-[0.75rem] text-[var(--color-text-muted)]'
           aria-label={item.status ? '配信中' : '配信なし'}
         >
           {item.status ? '✔' : '✖'}

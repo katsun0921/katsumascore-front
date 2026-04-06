@@ -1,6 +1,3 @@
-import React from 'react'
-import './Date.scss'
-
 export type TDateProps = {
   publishedAt: string
   updatedAt?: string
@@ -22,16 +19,16 @@ export const PostDate = ({ publishedAt, updatedAt, locale = 'ja' }: TDateProps) 
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 
   return (
-    <div className='date'>
+    <div className='flex flex-col gap-1 text-[13px] text-[var(--color-text-secondary)]'>
       {updated && (
         <p>
-          <time dateTime={updated.datetime}>
+          <time className='inline-block' dateTime={updated.datetime}>
             {locale === 'en' ? `Last update: ${updated.display}` : `最終更新日: ${updated.display}`}
           </time>
         </p>
       )}
       <p>
-        <time dateTime={published.datetime}>
+        <time className='inline-block' dateTime={published.datetime}>
           {locale === 'en' ? `Publication date: ${published.display}` : `公開日: ${published.display}`}
         </time>
       </p>

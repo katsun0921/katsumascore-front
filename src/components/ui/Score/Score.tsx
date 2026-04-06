@@ -1,5 +1,3 @@
-import './Score.scss'
-
 export type ScoreProps = {
   value: number
   max?: number
@@ -9,9 +7,11 @@ export const Score = ({ value, max }: ScoreProps) => {
   const display = max != null ? `${value}/${max}` : value.toFixed(1)
 
   return (
-    <div className='score'>
-      <div className='score__bg'>
-        <span className='score__value'>{display}</span>
+    <div className='inline-flex items-center justify-center w-[88px] h-[88px] bg-[var(--color-score-border)] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] [filter:drop-shadow(0_0_10px_var(--color-score-border))]'>
+      <div className='inline-flex items-center justify-center w-[80px] h-[80px] bg-[var(--color-score-bg)] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)]'>
+        <span className='text-[22px] font-bold leading-none font-[var(--font-ui)] italic text-[var(--color-text-inverse)]'>
+          {display}
+        </span>
       </div>
     </div>
   )

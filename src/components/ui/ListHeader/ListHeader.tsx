@@ -1,5 +1,3 @@
-import React from 'react';
-import './ListHeader.scss';
 
 type TLinkHeader = {
   label: string;

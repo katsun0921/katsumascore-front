@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import './DesignRules.stories.scss';
 
 type RuleGroup = {
   title: string;

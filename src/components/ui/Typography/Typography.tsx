@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
-import './Typography.stories.scss';
 
-type TypographyVariant = 'overview' | 'palette' | 'fonts';
+type TypographyVariant = 'overview' | 'palette' | 'fonts' | 'font-sizes';
 
 type TypographyProps = {
   variant?: TypographyVariant;
@@ -114,10 +113,137 @@ const weightRules = [
   'Serif 600〜700: 見出し',
 ];
 
+type FontSizeEntry = {
+  role: string;
+  tokenPc: string;
+  valuePc: string;
+  tokenSp: string;
+  valueSp: string;
+  sampleText: string;
+};
+
+const fontSizeEntries: FontSizeEntry[] = [
+  {
+    role: 'H1',
+    tokenPc: '--font-size-h1-pc',
+    valuePc: '32px',
+    tokenSp: '--font-size-h1-sp',
+    valueSp: '24px',
+    sampleText: '映画レビューの見出し',
+  },
+  {
+    role: 'H2',
+    tokenPc: '--font-size-h2-pc',
+    valuePc: '24px',
+    tokenSp: '--font-size-h2-sp',
+    valueSp: '20px',
+    sampleText: 'セクション見出し',
+  },
+  {
+    role: 'H3',
+    tokenPc: '--font-size-h3-pc',
+    valuePc: '20px',
+    tokenSp: '--font-size-h3-sp',
+    valueSp: '18px',
+    sampleText: 'サブセクション見出し',
+  },
+  {
+    role: 'Body',
+    tokenPc: '--font-size-body-pc',
+    valuePc: '16px',
+    tokenSp: '--font-size-body-sp',
+    valueSp: '14px',
+    sampleText: '本文テキストの基準サイズです。読みやすさを最優先にしています。',
+  },
+  {
+    role: 'UI',
+    tokenPc: '--font-size-ui-pc',
+    valuePc: '14px',
+    tokenSp: '--font-size-ui-sp',
+    valueSp: '12px',
+    sampleText: 'ボタン・ラベル・ナビゲーション',
+  },
+  {
+    role: 'Caption',
+    tokenPc: '--font-size-caption-pc',
+    valuePc: '12px',
+    tokenSp: '--font-size-caption-sp',
+    valueSp: '10px',
+    sampleText: '補足・メタ情報・キャプション',
+  },
+];
+
+const fontSizeRules = [
+  'font-size は必ず CSS token (var(--font-size-*)) 経由で指定する。',
+  'PC と SP で別 token を使い分ける（--font-size-*-pc / --font-size-*-sp）。',
+  'style prop に直接 px 値・rem 値を書かない。',
+  'Tailwind の任意値 text-[16px] は禁止。text-body / text-h1 などの token クラスを使う。',
+  'ESLint ルール katsumascore-ui/no-direct-font-size が違反を error として検出する。',
+];
+
 const Page = ({ children }: { children: ReactNode }) => (
   <div className='sb-typography-page'>
     <div className='sb-typography-shell'>{children}</div>
   </div>
+);
+
+const FontSizeSection = () => (
+  <Page>
+    <section className='sb-typography-hero'>
+      <div className='sb-typography-eyebrow'>Font Size Tokens</div>
+      <h1>font-size の一覧</h1>
+      <p className='sb-typography-lead'>
+        PC / SP 別に定義された font-size token の一覧です。コンポーネントはこの token を必ず経由し、直接値の記述を禁止しています。
+      </p>
+    </section>
+
+    <div className='sb-typography-card sb-typography-font-list'>
+      <section className='sb-typography-font-guidelines'>
+        <article className='sb-typography-rule-card'>
+          <h2>Usage Rules</h2>
+          <ul className='sb-typography-rule-list'>
+            {fontSizeRules.map((rule) => (
+              <li key={rule}>{rule}</li>
+            ))}
+          </ul>
+        </article>
+      </section>
+
+      <div className='sb-typography-font-size-table'>
+        <div className='sb-typography-font-size-header'>
+          <span>Role</span>
+          <span>PC Token</span>
+          <span>PC Value</span>
+          <span>SP Token</span>
+          <span>SP Value</span>
+          <span>Sample</span>
+        </div>
+        {fontSizeEntries.map((entry) => (
+          <article className='sb-typography-font-size-row' key={entry.role}>
+            <span className='sb-typography-font-size-role'>{entry.role}</span>
+            <span className='sb-typography-token'>{entry.tokenPc}</span>
+            <span className='sb-typography-font-size-value'>{entry.valuePc}</span>
+            <span className='sb-typography-token'>{entry.tokenSp}</span>
+            <span className='sb-typography-font-size-value'>{entry.valueSp}</span>
+            <span
+              className='sb-typography-font-size-sample'
+              style={{ fontSize: `var(${entry.tokenPc})` }}
+            >
+              {entry.sampleText}
+            </span>
+          </article>
+        ))}
+      </div>
+
+      <div className='sb-typography-note'>
+        token は <span className='sb-typography-code'>src/styles/globals.css</span> の{' '}
+        <span className='sb-typography-code'>:root</span> で一元管理しています。
+        Tailwind の <span className='sb-typography-code'>@theme inline</span> でも{' '}
+        <span className='sb-typography-code'>text-body</span> / <span className='sb-typography-code'>text-h1</span>{' '}
+        等のクラスとして使えます。
+      </div>
+    </div>
+  </Page>
 );
 
 const ColorSection = ({
@@ -324,6 +450,10 @@ export const Typography = ({ variant = 'overview' }: TypographyProps) => {
 
   if (variant === 'fonts') {
     return <FontSection />;
+  }
+
+  if (variant === 'font-sizes') {
+    return <FontSizeSection />;
   }
 
   return <OverviewSection />;

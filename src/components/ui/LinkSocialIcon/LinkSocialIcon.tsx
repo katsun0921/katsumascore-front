@@ -1,16 +1,11 @@
-import React from 'react';
 import type { ReactNode } from 'react';
-import './LinkSocialIcon.scss';
 
 type TLinkSocialProps = {
   backgroundColor?: string;
   children: ReactNode;
 };
 
-export const LinkSocialIcon = ({
-  children,
-  backgroundColor,
-}: TLinkSocialProps) => {
+export const LinkSocialIcon = ({ children, backgroundColor }: TLinkSocialProps) => {
   return <div style={{ backgroundColor }}>{children}</div>;
 };
 
@@ -19,7 +14,7 @@ export const LinkFacebookIcon = ({}) => {
     <a
       href='https://www.facebook.com/people/Katsumascore/100072246676709/'
       target='_blank'
-      className='icon__circle'
+      className='relative block w-[50px] h-[50px] rounded-full bg-[rgba(var(--color-white-rgb),0.12)] hover:bg-[rgba(var(--color-white-rgb),0.2)] hover:opacity-100'
       rel='noreferrer'
     >
       <img
@@ -27,6 +22,7 @@ export const LinkFacebookIcon = ({}) => {
         alt='facebook'
         width={50}
         height={50}
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
       />
     </a>
   );
@@ -37,7 +33,7 @@ export const LinkTwitterIcon = ({}) => {
     <a
       href='https://twitter.com/Katsun0921'
       target='_blank'
-      className='icon__circle'
+      className='relative block w-[50px] h-[50px] rounded-full bg-[rgba(var(--color-white-rgb),0.12)] hover:bg-[rgba(var(--color-white-rgb),0.2)] hover:opacity-100'
       rel='noreferrer'
     >
       <img
@@ -45,6 +41,7 @@ export const LinkTwitterIcon = ({}) => {
         alt='twitter'
         width={50}
         height={50}
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
       />
     </a>
   );
@@ -55,7 +52,7 @@ export const LinkRssIcon = ({}) => {
     <a
       href='https://katsumascore.blog/feed/'
       target='_blank'
-      className='icon__rss icon__circle'
+      className='relative block w-[50px] h-[50px] rounded-full bg-[var(--color-rss)] hover:bg-[rgba(var(--color-white-rgb),0.2)] hover:opacity-100'
       rel='noreferrer'
     >
       <img
@@ -63,6 +60,7 @@ export const LinkRssIcon = ({}) => {
         alt='rss'
         width={30}
         height={30}
+        className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'
       />
     </a>
   );

@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useId } from 'react';
+import { useRef, useEffect, useId } from 'react';
 import { useSearch } from './useSearch';
 import { SearchResultItem } from './SearchResultItem';
-import './Search.scss';
 
 type Props = {
   onNavigate?: (href: string) => void;
@@ -57,25 +56,30 @@ export const Search = ({ onNavigate, className }: Props) => {
   const showDropdown = isOpen && results.length > 0;
 
   return (
-    <div className={`search${className ? ` ${className}` : ''}`} ref={containerRef}>
+    <div className={`relative${className ? ` ${className}` : ''}`} ref={containerRef}>
       <input
         ref={inputRef}
-        type="search"
-        className="search__input"
-        placeholder="タイトルで検索..."
+        type='search'
+        // search__input クラスは globals.css の .header-search-pc/.header-search-sp セレクタ用に保持
+        className='search__input w-[240px] py-[7px] px-4 text-[0.875rem] font-[var(--font-ui)] text-[var(--color-text-primary)] bg-[var(--color-bg)] border-2 border-transparent rounded-[20px] outline-none transition-[border-color,box-shadow] duration-200 ease-[ease] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)]'
+        placeholder='タイトルで検索...'
         value={query}
         onChange={e => setQuery(e.target.value)}
         onKeyDown={handleKeyDown}
-        role="combobox"
+        role='combobox'
         aria-expanded={showDropdown}
-        aria-autocomplete="list"
+        aria-autocomplete='list'
         aria-controls={listboxId}
         aria-activedescendant={activeIndex >= 0 ? getItemId(activeIndex) : undefined}
-        autoComplete="off"
+        autoComplete='off'
         spellCheck={false}
       />
       {showDropdown && (
-        <ul id={listboxId} className="search__results" role="listbox">
+        <ul
+          id={listboxId}
+          className='absolute top-[calc(100%+6px)] left-0 right-0 min-w-[280px] bg-[var(--color-bg)] border border-[var(--color-border-muted)] rounded-[10px] shadow-[0_8px_24px_rgba(0,0,0,0.12)] max-h-[320px] overflow-y-auto z-[200] list-none m-0 py-1'
+          role='listbox'
+        >
           {results.map((result, index) => (
             <SearchResultItem
               key={result.id}

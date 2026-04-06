@@ -1,5 +1,3 @@
-import React from 'react';
-import './Tag.scss';
 
 export type TTagsProps = {
   labels: string[];

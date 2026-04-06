@@ -56,6 +56,9 @@ const eslintConfig = defineConfig([
       // UI text must go through i18n.ts — no hardcoded Japanese or English words
       // Phase 1: warn (will be promoted to error once coverage is sufficient)
       'katsumascore-ui/no-hardcoded-i18n': 'warn',
+
+      // No direct font-size values — use design tokens (var(--font-size-*))
+      'katsumascore-ui/no-direct-font-size': 'error',
     },
   },
 ])

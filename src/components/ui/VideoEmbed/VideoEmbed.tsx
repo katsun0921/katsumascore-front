@@ -1,6 +1,3 @@
-import React from 'react'
-import './VideoEmbed.scss'
-
 export type TVideoEmbedProps = {
   embedCode?: string
   videoUrl?: string
@@ -11,15 +8,15 @@ export const VideoEmbed = ({ embedCode, videoUrl, title = 'Video' }: TVideoEmbed
   if (!embedCode && !videoUrl) return null
 
   return (
-    <div className='video-embed'>
+    <div className='relative w-full mt-4 pt-[56.25%]'>
       {embedCode ? (
         <div
-          className='video-embed__iframe'
+          className='absolute inset-0 w-full h-full border-none'
           dangerouslySetInnerHTML={{ __html: embedCode }}
         />
       ) : (
         <iframe
-          className='video-embed__iframe'
+          className='absolute inset-0 w-full h-full border-none'
           src={videoUrl}
           title={title}
           allowFullScreen

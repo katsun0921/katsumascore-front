@@ -1,6 +1,3 @@
-import React from 'react'
-import './VodItem.scss'
-
 export type TVodService =
   | 'netflix'
   | 'amazon'
@@ -32,6 +29,17 @@ const SERVICE_LABELS: Record<TVodService, string> = {
   abema: 'ABEMA',
 }
 
+const serviceTopBorder: Record<TVodService, string> = {
+  netflix: '[border-top:3px_solid_var(--color-netflix)]',
+  amazon: '[border-top:3px_solid_var(--color-amazon)]',
+  unext: '[border-top:3px_solid_var(--color-unext)]',
+  disney: '[border-top:3px_solid_var(--color-disney)]',
+  dmmtv: '[border-top:3px_solid_var(--color-dmmtv)]',
+  youtube: '[border-top:3px_solid_var(--color-youtube)]',
+  appletv: '[border-top:3px_solid_var(--color-appletv)]',
+  abema: '[border-top:3px_solid_var(--color-abema)]',
+}
+
 export const VodItem = ({
   service,
   streamingUrl,
@@ -54,18 +62,18 @@ export const VodItem = ({
       : '未登録の方はこちらから登録できます。')
 
   return (
-    <div className={['vod-item', `vod-item--${service}`].join(' ')}>
+    <div className={`flex flex-col gap-2 p-4 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] ${serviceTopBorder[service]}`}>
       {isPaid && (
-        <em className='vod-item__paid'>
+        <em className='block text-[12px] text-[var(--color-text-secondary)] italic'>
           {locale === 'en' ? 'This distribution is paid.' : 'この配信は有料になります。'}
         </em>
       )}
-      <div className='vod-item__logo-wrap'>
-        <span className='vod-item__service-name'>{label}</span>
+      <div className='flex items-center gap-2'>
+        <span className='text-[15px] font-bold'>{label}</span>
       </div>
       {signupUrl && (
         <a
-          className='vod-item__signup'
+          className='block text-[13px] text-[var(--color-text-secondary)] hover:underline hover:opacity-100'
           href={signupUrl}
           target='_blank'
           rel='noopener noreferrer'
@@ -74,7 +82,7 @@ export const VodItem = ({
         </a>
       )}
       <a
-        className='vod-item__watch'
+        className='inline-block px-4 py-2 rounded text-[14px] font-bold text-center bg-[var(--color-primary)] text-[var(--color-text-inverse)] transition-opacity duration-150 hover:opacity-[0.85]'
         href={streamingUrl}
         target='_blank'
         rel='noopener noreferrer'

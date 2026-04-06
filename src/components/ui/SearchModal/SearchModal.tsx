@@ -2,7 +2,6 @@ import { useEffect, useRef, useId } from 'react';
 import { useRouter } from 'next/router';
 import { useSearch } from '@/components/ui/Search/useSearch';
 import { SearchResultItem } from '@/components/ui/Search/SearchResultItem';
-import './SearchModal.scss';
 
 type Props = {
   onClose: () => void;
@@ -69,58 +68,63 @@ export const SearchModal = ({ onClose }: Props) => {
 
   return (
     <div
-      className="search-modal"
-      role="dialog"
-      aria-modal="true"
-      aria-label="検索"
+      className='fixed inset-0 bg-[rgba(var(--color-black-rgb),0.7)] z-[300] flex flex-col items-stretch'
+      role='dialog'
+      aria-modal='true'
+      aria-label='検索'
       onClick={handleOverlayClick}
     >
-      <div className="search-modal__inner">
-        <div className="search-modal__field">
+      <div className='bg-[var(--color-bg)] px-4 py-3'>
+        <div className='flex items-center gap-[10px]'>
           <svg
-            className="search-modal__icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
+            className='block shrink-0 text-[var(--color-text-muted)]'
+            xmlns='http://www.w3.org/2000/svg'
+            width='20'
+            height='20'
+            viewBox='0 0 24 24'
+            fill='none'
+            stroke='currentColor'
+            strokeWidth='2'
+            strokeLinecap='round'
+            strokeLinejoin='round'
+            aria-hidden='true'
           >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
+            <circle cx='11' cy='11' r='8' />
+            <path d='m21 21-4.35-4.35' />
           </svg>
           <input
             ref={inputRef}
-            type="search"
-            className="search-modal__input"
-            placeholder="タイトルで検索..."
+            type='search'
+            className='flex-1 h-[44px] px-3 text-[1rem] font-[var(--font-ui)] text-[var(--color-text-primary)] bg-transparent border-none outline-none placeholder:text-[var(--color-text-muted)]'
+            placeholder='タイトルで検索...'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onKeyDown={handleKeyDown}
-            role="combobox"
+            role='combobox'
             aria-expanded={showDropdown}
-            aria-autocomplete="list"
+            aria-autocomplete='list'
             aria-controls={listboxId}
             aria-activedescendant={activeIndex >= 0 ? getItemId(activeIndex) : undefined}
-            autoComplete="off"
+            autoComplete='off'
             spellCheck={false}
           />
           <button
-            type="button"
-            className="search-modal__close"
+            type='button'
+            className='shrink-0 font-[var(--font-ui)] text-[0.875rem] font-medium text-[var(--color-primary)] py-1 whitespace-nowrap transition-opacity duration-150 ease-[ease] hover:opacity-70'
             onClick={onClose}
-            aria-label="検索を閉じる"
+            aria-label='検索を閉じる'
           >
+            {/* eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n */}
             キャンセル
           </button>
         </div>
 
         {showDropdown && (
-          <ul id={listboxId} className="search-modal__results" role="listbox">
+          <ul
+            id={listboxId}
+            className='list-none m-0 py-1 bg-[var(--color-bg)] border-t border-[var(--color-border-muted)] max-h-[60vh] overflow-y-auto'
+            role='listbox'
+          >
             {results.map((result, index) => (
               <SearchResultItem
                 key={result.id}

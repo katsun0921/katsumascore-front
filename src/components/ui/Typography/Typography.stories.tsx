@@ -30,3 +30,9 @@ export const FontFamilies: Story = {
     variant: 'fonts',
   },
 }
+
+export const FontSizes: Story = {
+  args: {
+    variant: 'font-sizes',
+  },
+}

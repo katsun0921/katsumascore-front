@@ -1,6 +1,3 @@
-import React from 'react'
-import './Breadcrumb.scss'
-
 export type TBreadcrumbItem = {
   label: string
   href?: string
@@ -14,22 +11,25 @@ export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
   if (!items.length) return null
 
   return (
-    <nav className='breadcrumb' aria-label='Breadcrumb'>
-      <ol className='breadcrumb__list'>
+    <nav aria-label='Breadcrumb'>
+      <ol className='flex flex-wrap items-center gap-1 p-0 m-0 text-[13px]'>
         {items.map((item, index) => {
           const isLast = index === items.length - 1
           return (
-            <li key={index} className='breadcrumb__item'>
+            <li key={index} className='flex items-center gap-1'>
               {!isLast && item.href ? (
-                <a className='breadcrumb__link' href={item.href}>
+                <a className='text-[var(--color-primary)] hover:underline' href={item.href}>
                   {item.label}
                 </a>
               ) : (
-                <span className='breadcrumb__current' aria-current={isLast ? 'page' : undefined}>
+                <span
+                  className='text-[var(--color-text-secondary)] max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap'
+                  aria-current={isLast ? 'page' : undefined}
+                >
                   {item.label}
                 </span>
               )}
-              {!isLast && <span className='breadcrumb__separator' aria-hidden='true'>/</span>}
+              {!isLast && <span className='text-[var(--color-text-secondary)]' aria-hidden='true'>/</span>}
             </li>
           )
         })}
