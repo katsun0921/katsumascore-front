@@ -1,4 +1,4 @@
-import type { WPPost, WPCategory } from "@/types/wordpress";
+import type { WPPost, WPCategory, WPTag } from "@/types/wordpress";
 import type { Post } from "@/components/features/post/types/post";
 
 // Strip HTML tags and decode basic entities — used to clean WP excerpt
@@ -84,4 +84,10 @@ export async function searchPosts(query: string, lang?: string): Promise<WPPost[
   const params: Record<string, string | number> = { search: query };
   if (lang) params.lang = lang;
   return (await wpFetch<WPPost[]>("/posts", params)) ?? [];
+}
+
+export async function getTags(lang?: string): Promise<WPTag[]> {
+  const params: Record<string, string | number> = { per_page: 100 };
+  if (lang) params.lang = lang;
+  return (await wpFetch<WPTag[]>("/tags", params)) ?? [];
 }

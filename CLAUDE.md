@@ -107,6 +107,34 @@ components/
 
 ---
 
+### 7. ディレクトリ単一コンポーネントルール（厳守）
+
+**1ディレクトリに配置するコンポーネントは1つのみ。**
+
+あるコンポーネントの子コンポーネントは、同じディレクトリに置かず `features/` または `ui/` に移動する。
+このルールは layout / features / ui / templates すべてのレイヤーに適用する。
+
+```
+❌ 禁止
+components/layout/Sidebar/
+├── Sidebar.tsx
+├── Profile/        ← 子コンポーネントを同階層に置くのは禁止
+└── WorkInfo/
+
+✅ 正しい
+components/layout/Sidebar/
+└── Sidebar.tsx     ← Sidebar のみ
+
+components/features/sidebar/
+├── Profile/
+└── WorkInfo/
+```
+
+- ドメインロジックや状態を持つ子コンポーネント → `features/`
+- 汎用的でドメイン非依存な子コンポーネント → `ui/`
+
+---
+
 ### 6. Lintによる設計強制
 
 本プロジェクトでは以下を自動検出する:

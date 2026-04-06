@@ -1,0 +1,100 @@
+.sidebar-related {
+  padding: 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  // ── 見出し「関連記事」──
+  &__heading {
+    font-size: var(--font-size-ui-pc);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-text-primary);
+    margin-bottom: 10px;
+  }
+
+  // ── リスト ──
+  &__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  // ── 各アイテム ──
+  &__item {
+    border-top: 1px solid var(--color-border-muted);
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  // ── リンク（サムネイル + テキストの横並び）──
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.75;
+    }
+  }
+
+  // ── サムネイル ──
+  &__thumb {
+    flex-shrink: 0;
+    width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    overflow: hidden;
+    background-color: var(--color-surface-muted);
+  }
+
+  &__thumb-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  &__thumb-fallback {
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-muted);
+  }
+
+  // ── テキスト ──
+  &__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__title {
+    font-size: var(--font-size-caption-pc);
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--color-text-primary);
+
+    // 2行でクランプ
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  // ── スコアアイコン ──
+  &__rank {
+    flex-shrink: 0;
+    align-self: flex-start;
+  }
+}

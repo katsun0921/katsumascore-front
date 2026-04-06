@@ -1,0 +1,71 @@
+.sidebar-genre-nav {
+  padding: 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  // ── 見出し「ジャンル」──
+  &__heading {
+    font-size: var(--font-size-ui-pc);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-text-primary);
+    margin-bottom: 10px;
+  }
+
+  // ── グリッド（2列固定）──
+  &__grid {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  &__cell {
+    min-width: 0;
+  }
+
+  // ── 各リンク ──
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 8px;
+    border-radius: 6px;
+    background-color: var(--color-surface-muted);
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+
+    &:hover {
+      background-color: var(--color-bg-muted);
+    }
+
+    // アクティブ（現在のタグアーカイブページ）
+    &--active {
+      background-color: var(--color-primary);
+
+      .sidebar-genre-nav__label {
+        color: var(--color-text-inverse);
+      }
+    }
+  }
+
+  // ── アイコン ──
+  &__icon {
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  // ── ラベル ──
+  &__label {
+    font-size: var(--font-size-caption-pc);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}

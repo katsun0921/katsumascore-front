@@ -10,6 +10,4 @@ export { PostListRow } from '@/components/features/PostList/PostListRow/PostList
 export type { PostListProps } from '@/components/features/PostList/PostList.types';
 export { PostContent } from '@/components/features/PostContent/PostContent';
 export { PostSection } from '@/components/features/PostSection/PostSection';
-export { PostDetail } from '@/components/features/PostDetail/PostDetail';
-export type { PostDetailProps } from '@/components/features/PostDetail/PostDetail.types';
 export { PostSEO } from '@/components/features/PostSEO/PostSEO';

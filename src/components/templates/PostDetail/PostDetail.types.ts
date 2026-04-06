@@ -1,4 +1,5 @@
 import type { Post } from '@/components/features/post/types/post'
+import type { TocItem } from '@/lib/toc'
 import type { TBasicInfoProps, TCreditEntry } from '@/components/features/BasicInfo/BasicInfo'
 import type { TActor } from '@/components/features/ArticleBlock/ActorsInfo/ActorsInfo'
 import type { TReviewSite } from '@/components/features/ArticleBlock/ReviewSiteScores/ReviewSiteScores'
@@ -39,6 +40,11 @@ export type PostDetailData = Post & {
   // VOD紹介（post-introduce-vod.php 相当）
   vodIntroduction?: Omit<TVodIntroductionProps, 'locale'>
 
+  // サイドバー用
+  toc?: TocItem[]
+  pickupPosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+  highScorePosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+
   // aside ブロック群
   isCinemaShowing?: boolean
   streamingVods?: TStreamingVodEntry[]
@@ -58,4 +64,5 @@ export type PostDetailData = Post & {
 export type PostDetailProps = {
   post: PostDetailData
   locale?: 'ja' | 'en'
+  genres?: import('@/components/features/sidebar/GenreNav/GenreNav').GenreNavTag[]
 }

@@ -37,6 +37,13 @@ export interface WPCategory {
   parent: number;
 }
 
+export interface WPTag {
+  id: number;
+  slug: string;
+  name: string;
+  count: number;
+}
+
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 
 export function getScoreRank(score: 1 | 2 | 3 | 4 | 5): ScoreRank {

@@ -9,21 +9,17 @@ import { Summary } from '@/components/features/ArticleBlock/Summary/Summary'
 import { PostContent } from '@/components/features/PostContent/PostContent'
 import { ReviewSiteScores } from '@/components/features/ArticleBlock/ReviewSiteScores/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
-import { RelationPost } from '@/components/features/ArticleBlock/RelationPost/RelationPost'
-import { StreamingVod } from '@/components/features/ArticleBlock/StreamingVod/StreamingVod'
-import { AdRental } from '@/components/features/ArticleBlock/AdRental/AdRental'
-import { PostsGroup } from '@/components/features/PostsGroup/PostsGroup'
 import { ShareButtons } from '@/components/features/ShareButtons/ShareButtons'
+import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
-import './PostDetail.scss'
 
-export const PostDetail = ({ post, locale = 'ja' }: PostDetailProps) => {
+export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
   const categories = post.category
     ? [{ label: post.category, href: `/category/${post.category}` }]
     : []
 
   return (
-    <div className='p-postDetail'>
+    <div>
 
       {/* ── title.php 相当：ヒーロー画像＋タイトル＋カテゴリ ── */}
       <ArticleHeader
@@ -36,8 +32,11 @@ export const PostDetail = ({ post, locale = 'ja' }: PostDetailProps) => {
         locale={locale}
       />
 
-      <div className='p-postDetail__body'>
-        <div className='p-postDetail__main'>
+      {/* body: 最大幅・中央・flex（md以上） */}
+      <div className='w-[90%] max-w-[1200px] mx-auto mt-8 relative md:flex md:justify-between md:gap-12'>
+
+        {/* main: メインカラム */}
+        <div className='w-full min-w-0 md:w-[72%]'>
 
           {/* ── date.php 相当：公開日・更新日 ── */}
           <ArticleMeta
@@ -50,21 +49,23 @@ export const PostDetail = ({ post, locale = 'ja' }: PostDetailProps) => {
           />
 
           {/* ── post-single.php → post-review.php 相当 ── */}
-          <section className='p-postDetail__info'>
+          <section className='relative border-4 border-b-[14px] border-black/10 px-[35px] pt-[90px] pb-[35px] mt-6 mb-8'>
 
-            {/* スコア（large） */}
+            {/* スコア（large）: 中央上部に突き出し */}
             {post.score !== undefined && (
-              <div className='p-postDetail__score'>
+              <div className='absolute left-1/2 top-5 -translate-x-1/2 -translate-y-1/2'>
                 <ScoreWithRank value={post.score} />
               </div>
             )}
 
             {/* 抜粋 */}
             {post.excerpt && (
-              <p className='p-postDetail__excerpt'>{post.excerpt}</p>
+              <p className='text-[length:var(--font-size-body-sp)] leading-[1.7] text-[var(--color-text-secondary)] mb-6'>
+                {post.excerpt}
+              </p>
             )}
 
-            {/* 基本情報（原題・公式サイト・上映日・制作会社・配給会社・スタッフ） */}
+            {/* 基本情報 */}
             {(post.basicInfo || (post.credits && post.credits.length > 0)) && (
               <BasicInfo {...post.basicInfo} credits={post.credits} locale={locale} />
             )}
@@ -96,7 +97,7 @@ export const PostDetail = ({ post, locale = 'ja' }: PostDetailProps) => {
           )}
 
           {/* ── the_content() 相当 ── */}
-          <article className='p-postDetail__content'>
+          <article className='my-8'>
             <PostContent content={post.content} />
           </article>
 
@@ -115,38 +116,35 @@ export const PostDetail = ({ post, locale = 'ja' }: PostDetailProps) => {
           )}
         </div>
 
-        {/* ── aside ブロック群 ── */}
-        <aside className='p-postDetail__aside'>
-
-          {/* acf-relation-by-post-id.php 相当 */}
-          {post.relationPosts && post.relationPosts.length > 0 && (
-            <RelationPost posts={post.relationPosts} locale={locale} />
-          )}
-
-          {/* acf-streaming-vod.php 相当（劇場公開中は非表示） */}
-          {!post.isCinemaShowing && post.streamingVods && post.streamingVods.length > 0 && (
-            <StreamingVod
-              titleJp={post.title}
-              titleEn={post.titleEn}
-              services={post.streamingVods}
-              locale={locale}
-            />
-          )}
-
-          {/* ad-rental.php 相当（劇場公開中・英語は非表示） */}
-          {!post.isCinemaShowing && locale !== 'en' && post.rentalServices && post.rentalServices.length > 0 && (
-            <AdRental
-              titleJp={post.title}
-              services={post.rentalServices}
-              locale={locale}
-            />
-          )}
-
-          {/* RelatedPostGroups / SeriesPosts / CategoryPosts / TagPosts 相当 */}
-          {post.postsGroups && post.postsGroups.length > 0 && (
-            <PostsGroup groups={post.postsGroups} />
-          )}
-        </aside>
+        {/* ── サイドバー ── */}
+        <Sidebar
+          locale={locale}
+          toc={post.toc}
+          pickupPosts={post.pickupPosts}
+          highScorePosts={post.highScorePosts}
+          workInfo={post.score !== undefined ? {
+            score: post.score,
+            title: locale === 'en' && post.titleEn ? post.titleEn : post.title,
+            isCinema: post.isCinemaShowing,
+            vod: post.streamingVods ? {
+              unext:   post.streamingVods.some((v) => v.service === 'unext'),
+              amazon:  post.streamingVods.some((v) => v.service === 'amazon'),
+              hulu:    post.streamingVods.some((v) => v.service === 'hulu'),
+              netflix: post.streamingVods.some((v) => v.service === 'netflix'),
+              disney:  post.streamingVods.some((v) => v.service === 'disney'),
+            } : undefined,
+          } : undefined}
+          officialSnsUrl={post.basicInfo?.officialSns?.x?.link}
+          officialYoutubeUrl={post.basicInfo?.officialSns?.youtube_channel?.link}
+          relationPosts={post.relationPosts}
+          isCinemaShowing={post.isCinemaShowing}
+          titleJp={post.title}
+          titleEn={post.titleEn}
+          streamingVods={post.streamingVods}
+          rentalServices={post.rentalServices}
+          postsGroups={post.postsGroups}
+          genres={genres}
+        />
       </div>
 
       {/* ── sharing.php 相当 ── */}

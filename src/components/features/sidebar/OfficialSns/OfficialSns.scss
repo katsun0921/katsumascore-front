@@ -1,0 +1,56 @@
+.sidebar-official-sns {
+  padding: 16px;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+
+  // ── 見出し「公式」──
+  &__heading {
+    font-size: var(--font-size-ui-pc);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--color-text-primary);
+    margin-bottom: 12px;
+  }
+
+  // ── embed ラッパー ──
+  &__embed {
+    width: 100%;
+    overflow: hidden;
+    border-radius: 4px;
+  }
+
+  // ── プレースホルダー ──
+  &__placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    background-color: var(--color-surface-muted);
+    border-radius: 4px;
+  }
+
+  &__placeholder-text {
+    font-size: var(--font-size-caption-pc);
+    color: var(--color-text-secondary);
+  }
+
+  // ── iframe 共通 ──
+  &__iframe {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+
+    // X タイムライン：高さを固定して3件分を表示
+    &--x {
+      height: 360px;
+    }
+
+    // YouTube：16:9 アスペクト比
+    &--youtube {
+      aspect-ratio: 16 / 9;
+      height: auto;
+    }
+  }
+}
