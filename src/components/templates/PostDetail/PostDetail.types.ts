@@ -34,6 +34,7 @@ export type PostDetailData = Post & {
   // 本文後ブロック
   reviewSiteScores?: {
     sites: TReviewSite[]
+    updatedAt?: string
     publishedDate?: string
   }
 

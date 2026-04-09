@@ -62,11 +62,43 @@ const basePost: PostDetailData = {
   ],
   reviewSiteScores: {
     sites: [
-      { label: 'Filmarks', score: 3.9, maxScore: 5, url: 'https://filmarks.com' },
-      { label: 'Yahoo!映画', score: 4.1, maxScore: 5, url: 'https://movies.yahoo.co.jp' },
-      { label: 'Rotten Tomatoes', score: 85, maxScore: 100, url: 'https://rottentomatoes.com', audienceScore: 90 },
+      {
+        siteId: 'imdb',
+        label: 'IMDb',
+        score: 7.3,
+        summary: '主演の存在感と完成度に安定した支持が集まっている',
+        url: 'https://www.imdb.com/title/tt0455944/',
+      },
+      {
+        siteId: 'rt-critics',
+        label: 'RT 批評家',
+        score: 61,
+        summary: 'スタイリッシュさは評価される一方、深みに欠けるという声もある',
+        url: 'https://www.rottentomatoes.com/m/the_equalizer_2013',
+      },
+      {
+        siteId: 'rt-audience',
+        label: 'RT 観客',
+        score: 44,
+        summary: '批評家と比べて温度差があり、一般評価の割れが大きい',
+        url: 'https://www.rottentomatoes.com/m/the_equalizer_2013',
+      },
+      {
+        siteId: 'filmarks',
+        label: 'Filmarks',
+        score: 3.9,
+        summary: '日本では繰り返し観たくなる作品として好意的に受け止められている',
+        url: 'https://filmarks.com/movies/56537',
+      },
+      {
+        siteId: 'eiga-com',
+        label: '映画.com',
+        score: 4.1,
+        summary: '爽快感への支持が強い一方で、ご都合主義を気にする声もある',
+        url: 'https://eiga.com/movie/78782/',
+      },
     ],
-    publishedDate: '2026-04-01',
+    updatedAt: '2026-04-01',
   },
   vodIntroduction: {
     titleJp: '花束みたいな恋をした',
@@ -111,7 +143,7 @@ const meta = {
   parameters: { layout: 'fullscreen' },
   decorators: [
     (Story: React.ComponentType) => (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 1.5rem' }}>
+      <div className='mx-auto w-full px-6'>
         <Story />
       </div>
     ),

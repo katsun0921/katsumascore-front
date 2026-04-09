@@ -105,6 +105,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
           {post.reviewSiteScores && (
             <ReviewSiteScores
               sites={post.reviewSiteScores.sites}
+              updatedAt={post.reviewSiteScores.updatedAt}
               publishedDate={post.reviewSiteScores.publishedDate}
               locale={locale}
             />
