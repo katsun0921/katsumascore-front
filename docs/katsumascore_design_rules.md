@@ -372,6 +372,15 @@ TailwindとDesign Tokenは責務を明確に分離する。
 - size（width / height）
 - border-radius
 
+### ■ Tailwind spacing ルール
+
+- TailwindのspacingはDesign Tokenに定義された値のみ使用する
+- 使用可能な値は `0 / 1 / 2 / 3 / 4 / 5 / 6 / 8 / 10 / 12`
+- 対象は `p-*` / `px-*` / `py-*` / `pt-*` / `pb-*` / `pl-*` / `pr-*` / `m-*` / `gap-*` 系すべて
+- デザイン指定の値がTokenに存在しない場合は、最も近いtokenへ寄せて実装する
+- 例: `6px` は `2`、`14px` は `3`、`18px` は `4`、`28px` は `6`、`36px` は `8`
+- `p-[14px]` や `gap-[18px]` のような arbitrary value は禁止
+
 ---
 
 ## ■ Design Tokenの責務
@@ -386,12 +395,17 @@ TailwindとDesign Tokenは責務を明確に分離する。
 
 すべての視覚表現はToken経由でTailwindに流す。
 
+- spacingも例外ではなく、必ずDesign Tokenに揃える
+- Tokenにないspacing値は「近い値へ丸める」が原則であり、新しい中間値をその場で増やさない
+- breakpointは `globals.css` の token を唯一の参照元とする
+- Media QueryはSPファーストで `min-width` を使う
+
 ---
 
 ## ■ 使用例
 
 ```tsx
-<div className="p-4 bg-primary text-text-primary rounded-md">
+<div className="p-4 gap-3 bg-[var(--color-bg)] text-[var(--color-text-primary)] rounded-[8px]">
 ```
 
 ---
@@ -400,6 +414,10 @@ TailwindとDesign Tokenは責務を明確に分離する。
 
 - Tailwindで色を直接指定する
 - SCSSでspacingを定義する
+- TailwindでToken外のspacingを使う
+- Tailwind arbitrary spacingで値を直書きする
+- breakpoint値をTSX / SCSSへ直書きする
+- `max-width` ベースのMedia Queryを書く
 - Tokenを使わずにスタイルを書く
 
 ---

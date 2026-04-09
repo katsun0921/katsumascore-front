@@ -202,6 +202,11 @@ src/
 ### Tailwind使用ルール
 
 - `padding` / `margin` / `text-align` / `display` / `gap` / `flex` / `grid` 等のレイアウト・余白はTailwindで記述する
+- TailwindのspacingはDesign Tokenに定義された値のみ使用する
+- 使用可能なspacingは `0 / 1 / 2 / 3 / 4 / 5 / 6 / 8 / 10 / 12` のみとする
+- デザイン指定の値がTokenに存在しない場合は、最も近いspacing tokenへ丸めて実装する
+- 例: `14px` は `p-3`、`18px` は `p-4`、`28px` は `p-6`、`36px` は `p-8` を使う
+- `p-[14px]` / `gap-[18px]` のような arbitrary value は使用禁止
 - カラーは必ずCSS変数経由で指定する（例: `bg-[var(--color-footer)]`）
 - Tailwindのデフォルトカラークラス（`bg-blue-500` など）は使用禁止
 - CSS変数の色値はHEXで定義する（例: `#2563eb`）。透明度が必要な場合のみ `rgba()` を許可する
@@ -217,21 +222,23 @@ src/
 ### @media クエリの管理（重要）
 
 - ブレークポイントの値は `globals.css` の `@theme` で一元管理する
-- コンポーネント（TSX / SCSS）に `@media (max-width: 480px)` などの値を直接書かない
+- コンポーネント（TSX / SCSS）に `@media (max-width: 480px)` や `@media (min-width: 1024px)` などの値を直接書かない
 - レスポンシブはTailwindのプレフィックス（`sm:` / `md:` / `lg:`）で表現する
+- SPファーストを原則とし、Media Queryは `min-width` を使用する
 
 ```css
 /* globals.css — ブレークポイント定義 */
 @theme inline {
-  --breakpoint-sm: 480px;
+  --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
 }
 ```
 
 ```tsx
 {/* コンポーネント — Tailwind プレフィックスで使用 */}
-<ul className='flex gap-9 sm:gap-6'>
+<ul className='flex gap-3 sm:gap-4 lg:gap-6'>
 ```
 
 ### 混在禁止
@@ -239,6 +246,8 @@ src/
 ❌ layout・templates・uiのコンポーネントに`.scss`ファイルを作成しない
 ❌ featuresのコンポーネントでTailwindの余白・レイアウトクラスを使用しない。ビジネスロジックや複雑なレイアウトが多々あるためscssファイルのみで運用をする
 ❌ コンポーネントのTSX / SCSSに`@media`のブレークポイント値を直書きしない
+❌ TailwindのspacingにDesign Token外の値を使わない
+❌ Tokenにない値を arbitrary value で逃がさない
 ❌ `globals.css`にクラスセレクター（`.foo { }`）を書かない → コンポーネントのSCSSに書く
 
 ### Typography同期ルール（必須）
