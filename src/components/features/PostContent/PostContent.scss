@@ -629,6 +629,7 @@
   // -- Columns block --
   .wp-block-columns {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     gap: 1.5em;
     margin: 1.5em 0;
@@ -722,15 +723,15 @@
 
   // WordPress align クラス
   .alignleft {
-    float: left;
-    max-width: 50%;
-    margin: 0 1.5em 1em 0;
+    float: none;
+    width: min(100%, 50%);
+    margin: 1em 0;
   }
 
   .alignright {
-    float: right;
-    max-width: 50%;
-    margin: 0 0 1em 1.5em;
+    float: none;
+    width: min(100%, 50%);
+    margin: 1em 0;
   }
 
   .aligncenter {
@@ -977,40 +978,69 @@
   // 11. Responsive
   // ─────────────────────────────────────────────
 
-  @media screen and (width <= 768px) {
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  h3 {
+    font-size: 1.35rem;
+  }
+
+  h4 {
+    font-size: 1.15rem;
+  }
+
+  @media (min-width: var(--breakpoint-md)) {
     h1 {
-      font-size: 2rem;
+      font-size: 2.4rem;
     }
 
     h2 {
-      font-size: 1.6rem;
+      font-size: 1.9rem;
     }
 
     h3 {
-      font-size: 1.35rem;
+      font-size: 1.55rem;
     }
 
     h4 {
-      font-size: 1.15rem;
+      font-size: 1.25rem;
     }
 
     .wp-block-columns {
-      flex-direction: column;
+      flex-direction: row;
     }
 
-    .alignleft,
+    .alignleft {
+      float: left;
+      margin: 0 1.5em 1em 0;
+    }
+
     .alignright {
-      float: none;
-      max-width: 100%;
-      margin: 1em 0;
+      float: right;
+      margin: 0 0 1em 1.5em;
     }
+  }
 
+  blockquote {
+    padding: 1.2em;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  @media (min-width: var(--breakpoint-md)) {
     blockquote {
-      padding: 1.2em;
+      padding: 1.4em 1.6em;
     }
 
     table {
-      font-size: 0.9em;
+      font-size: 1em;
     }
   }
 

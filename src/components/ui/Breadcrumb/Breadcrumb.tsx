@@ -28,7 +28,7 @@ export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
                 </a>
               ) : (
                 <span
-                  className='text-[var(--color-text-secondary)] max-w-[240px] overflow-hidden text-ellipsis whitespace-nowrap'
+                  className='inline-block w-[min(100%,15rem)] overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-text-secondary)]'
                   aria-current={isLast ? 'page' : undefined}
                 >
                   {item.label}

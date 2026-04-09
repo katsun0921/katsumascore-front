@@ -1,7 +1,9 @@
 export const changeClassWhenResizeOnNavigation = () => {
   const navigation = document.querySelector('.l-navigation');
   const navigationList = document.querySelector('.l-navigation__list');
-  const mediaQuery = window.matchMedia('(min-width: 1024px)');
+  const breakpointLg =
+    getComputedStyle(document.documentElement).getPropertyValue('--breakpoint-lg').trim() || '1024px';
+  const mediaQuery = window.matchMedia(`(min-width: ${breakpointLg})`);
 
   if (!navigation || !navigationList) return;
   const showDesktop = () => {

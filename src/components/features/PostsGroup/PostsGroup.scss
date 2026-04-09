@@ -1,5 +1,5 @@
 .p-posts-group {
-  margin-top: 1.5rem;
+  margin-top: var(--space-6);
 
   // c-heading__related 相当
   &__heading {
@@ -9,8 +9,8 @@
     font-size: var(--font-size-h1-sp);
     line-height: 2rem;
     color: var(--color-secondary);
-    padding-bottom: 15px;
-    margin-bottom: 1rem;
+    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-4);
     position: relative;
 
     // 下線アクセント（::before）
@@ -29,7 +29,7 @@
   &__description {
     font-size: var(--font-size-body-sp);
     color: var(--color-text-secondary);
-    margin-bottom: 1rem;
+    margin-bottom: var(--space-4);
     line-height: 1.6;
   }
 
@@ -40,12 +40,12 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-2);
 
-    @media (min-width: 768px) {
+    @media (min-width: var(--breakpoint-md)) {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 1rem;
+      gap: var(--space-4);
     }
   }
 
@@ -54,7 +54,7 @@
   &__link {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-2);
     text-decoration: none;
     color: var(--color-text-primary);
     transition: opacity 0.2s;

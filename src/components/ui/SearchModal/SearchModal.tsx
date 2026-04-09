@@ -75,7 +75,7 @@ export const SearchModal = ({ onClose }: Props) => {
       onClick={handleOverlayClick}
     >
       <div className='bg-[var(--color-bg)] px-4 py-3'>
-        <div className='flex items-center gap-[10px]'>
+        <div className='flex items-center gap-2'>
           <svg
             className='block shrink-0 text-[var(--color-text-muted)]'
             xmlns='http://www.w3.org/2000/svg'
@@ -95,7 +95,7 @@ export const SearchModal = ({ onClose }: Props) => {
           <input
             ref={inputRef}
             type='search'
-            className='flex-1 h-[44px] px-3 text-[1rem] font-[var(--font-ui)] text-[var(--color-text-primary)] bg-transparent border-none outline-none placeholder:text-[var(--color-text-muted)]'
+            className='h-11 flex-1 bg-transparent px-3 text-[var(--font-size-body-pc)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)]'
             placeholder='タイトルで検索...'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -110,11 +110,10 @@ export const SearchModal = ({ onClose }: Props) => {
           />
           <button
             type='button'
-            className='shrink-0 font-[var(--font-ui)] text-[0.875rem] font-medium text-[var(--color-primary)] py-1 whitespace-nowrap transition-opacity duration-150 ease-[ease] hover:opacity-70'
+            className='shrink-0 py-1 font-[var(--font-ui)] text-[var(--font-size-ui-pc)] font-medium whitespace-nowrap text-[var(--color-primary)] transition-opacity duration-150 ease-[ease] hover:opacity-70'
             onClick={onClose}
             aria-label='検索を閉じる'
           >
-            {/* eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n */}
             キャンセル
           </button>
         </div>

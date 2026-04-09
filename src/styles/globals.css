@@ -17,18 +17,23 @@
    コンポーネント側には直接 @media を書かない。
    ブレークポイントはここで一元管理し、Tailwind の sm/md/lg を使う。
    ──────────────────────────────────────────────────────────────
-   sm:  480px  （モバイル横向き・小型端末）
+   sm:  640px  （モバイル横向き・小型端末）
    md:  768px  （タブレット）
    lg:  1024px （デスクトップ）
    xl:  1280px （ワイドデスクトップ）
    ─────────────────────────────────────────────────────────────── */
 @theme inline {
-  --breakpoint-sm: 480px;
+  --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
 }
 
 :root {
+  --layout-width-sm: 640px;
+  --layout-width-md: 768px;
+  --layout-width-xl: 1200px;
+  --measure-readable: 40rem;
   --color-primary: #2563eb;
   --color-secondary: #1e1b4b;
   --color-accent: #6d28d9;
@@ -87,6 +92,21 @@
   --color-surface-muted-rgb: 247, 247, 247;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
+
+  /* ─── Spacing Tokens ───────────────────────────────────────────────
+     コンポーネントは必ずこのtokenを使う。
+     直接値（padding: 16px, p-[16px]など）の使用は禁止。
+     ─────────────────────────────────────────────────────────────── */
+  --space-0: 0px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
 
   /* ─── Font Size Tokens ─────────────────────────────────────────
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
@@ -158,6 +178,18 @@
   --color-bg-code: var(--color-bg-code);
   --font-body: var(--font-body), sans-serif;
   --font-heading: var(--font-heading), serif;
+
+  /* Spacing — Tailwind p-*, m-*, gap-* で参照 */
+  --spacing-0: var(--space-0);
+  --spacing-1: var(--space-1);
+  --spacing-2: var(--space-2);
+  --spacing-3: var(--space-3);
+  --spacing-4: var(--space-4);
+  --spacing-5: var(--space-5);
+  --spacing-6: var(--space-6);
+  --spacing-8: var(--space-8);
+  --spacing-10: var(--space-10);
+  --spacing-12: var(--space-12);
 
   /* Font Size — PC base (Tailwind クラス text-h1, text-body 等で参照) */
   --font-size-h1: var(--font-size-h1-pc);
@@ -291,4 +323,3 @@ button,
 nav {
   font-family: var(--font-ui);
 }
-

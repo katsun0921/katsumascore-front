@@ -16,7 +16,7 @@ export const HomeTemplate = ({ posts, isLoading = false }: HomeTemplateProps) =>
                 <h1 className='text-3xl leading-tight md:text-5xl'>
                   映画とドラマを深く読むためのレビュー一覧
                 </h1>
-                <p className='max-w-3xl text-[var(--color-text-secondary)]'>
+                <p className='w-[min(100%,var(--measure-readable))] text-[var(--color-text-secondary)]'>
                   新作レビュー、配信作品の感想、長編考察をまとめて読めるホームフィードです。作品の空気が伝わるカード一覧から、気になる記事へそのまま進めます。
                 </p>
               </div>

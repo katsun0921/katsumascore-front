@@ -18,13 +18,13 @@ export const SearchResultItem = ({ result, isActive, id, onClick }: Props) => {
     >
       <Link
         href={result.href}
-        className='flex items-center justify-between px-[14px] py-[10px] gap-3 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)] hover:opacity-100'
+        className='flex items-center justify-between gap-3 px-3 py-2 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-muted)] hover:opacity-100'
         onClick={onClick}
       >
-        <span className='text-[0.875rem] font-medium flex-1 min-w-0 whitespace-nowrap overflow-hidden text-ellipsis'>
+        <span className='min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[var(--font-size-ui-pc)] font-medium'>
           {result.title}
         </span>
-        <span className='text-[0.75rem] font-[var(--font-ui)] text-[var(--color-text-secondary)] bg-[var(--color-surface-muted)] px-2 py-[2px] rounded shrink-0 whitespace-nowrap'>
+        <span className='shrink-0 whitespace-nowrap rounded bg-[var(--color-surface-muted)] px-2 py-1 font-[var(--font-ui)] text-[var(--font-size-caption-pc)] text-[var(--color-text-secondary)]'>
           {result.type}
         </span>
       </Link>

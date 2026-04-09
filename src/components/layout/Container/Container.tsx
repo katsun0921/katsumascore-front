@@ -10,10 +10,10 @@ export type TContainerProps = {
 }
 
 const sizeClasses: Record<TContainerSize, string> = {
-  sm:   'max-w-[640px]',
-  md:   'max-w-[768px]',
-  xl:   'max-w-[1200px]',
-  full: 'max-w-none',
+  sm:   'w-[min(100%,var(--layout-width-sm))]',
+  md:   'w-[min(100%,var(--layout-width-md))]',
+  xl:   'w-[min(100%,var(--layout-width-xl))]',
+  full: 'w-full',
 }
 
 export const Container = ({ children, size = 'xl', className = '' }: TContainerProps) => {

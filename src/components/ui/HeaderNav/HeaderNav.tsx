@@ -16,7 +16,7 @@ export const HeaderNav = ({ layout }: Props) => {
   const isPC = layout === 'pc';
 
   const listClasses = isPC
-    ? 'flex gap-[28px]'
+    ? 'flex gap-6'
     : 'flex justify-around py-2'
 
   return (
@@ -30,7 +30,7 @@ export const HeaderNav = ({ layout }: Props) => {
             : [
                 'block px-2 py-1 font-[var(--font-ui)] text-[0.875rem] font-medium tracking-[0.06em] transition-colors duration-150 ease-[ease]',
                 isActive
-                  ? 'text-[var(--color-text-inverse)] border-b-2 border-[var(--color-primary)] pb-[2px]'
+                  ? 'border-b-2 border-[var(--color-primary)] pb-1 text-[var(--color-text-inverse)]'
                   : 'text-[rgba(var(--color-white-rgb),0.6)] hover:text-[rgba(var(--color-white-rgb),0.9)] hover:opacity-100',
               ].join(' ')
 

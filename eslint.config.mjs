@@ -59,6 +59,9 @@ const eslintConfig = defineConfig([
 
       // No direct font-size values — use design tokens (var(--font-size-*))
       'katsumascore-ui/no-direct-font-size': 'error',
+
+      // No arbitrary spacing, hardcoded breakpoints, max-width, or inline spacing props
+      'katsumascore-ui/no-design-violation': 'error',
     },
   },
 ])

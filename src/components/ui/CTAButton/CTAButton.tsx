@@ -12,8 +12,8 @@ export const CTAButton = ({ href, fullWidth = false }: Props) => {
   const locale = useLocale();
 
   const className = fullWidth
-    ? 'flex justify-center items-center gap-[6px] w-full h-[44px] px-4 bg-[var(--color-primary)] text-[var(--color-text-inverse)] rounded-[8px] text-[0.9375rem] font-medium tracking-[0.04em] whitespace-nowrap hover:opacity-[0.85]'
-    : 'inline-flex items-center gap-[6px] px-4 py-2 bg-[var(--color-primary)] text-[var(--color-text-inverse)] rounded-[6px] text-[0.875rem] font-medium tracking-[0.04em] whitespace-nowrap hover:opacity-[0.85]'
+    ? 'flex h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[var(--color-primary)] px-4 text-[var(--font-size-body-sp)] font-medium tracking-[0.04em] whitespace-nowrap text-[var(--color-text-inverse)] hover:opacity-[0.85]'
+    : 'inline-flex items-center gap-2 rounded-[6px] bg-[var(--color-primary)] px-4 py-2 text-[var(--font-size-ui-pc)] font-medium tracking-[0.04em] whitespace-nowrap text-[var(--color-text-inverse)] hover:opacity-[0.85]'
 
   return (
     <Link href={href} className={className}>

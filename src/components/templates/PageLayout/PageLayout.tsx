@@ -9,7 +9,7 @@ type PageLayoutProps = {
 export const PageLayout = ({ children }: PageLayoutProps) => (
   <>
     <Header />
-    <main className='relative mx-auto w-[90%] max-w-[1200px] p-0'>
+    <main className='relative mx-auto w-[min(90%,var(--layout-width-xl))] p-0'>
       {children}
     </main>
     <Footer />
