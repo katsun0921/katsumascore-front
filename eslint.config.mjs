@@ -14,6 +14,10 @@ const eslintConfig = defineConfig([
     'build/**',
     'storybook-static/**',
     'next-env.d.ts',
+    'node_modules/**',
+    'katsumascore_design_system/**',
+    'katsumascore_wordpress_theme/**',
+    'docs/**',
   ]),
 
   // ─────────────────────────────────────────────────────────────────────────────
@@ -29,6 +33,7 @@ const eslintConfig = defineConfig([
     },
 
     files: ['src/components/**/*.tsx', 'src/components/**/*.ts'],
+    ignores: ['**/*.stories.tsx', '**/*.stories.ts'],
 
     rules: {
       // Components must not call fetch() — data belongs in lib/ or page props

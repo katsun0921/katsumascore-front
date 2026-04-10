@@ -47,6 +47,7 @@
   --color-netflix: #e50914;
   --color-amazon: #00a8e1;
   --color-amazon-shopping: #ff9900;
+  --color-hulu: #1ce783;
   --color-rakuten: #bf0000;
   --color-unext: #1a1a1a;
   --color-disney: #113ccf;
@@ -82,6 +83,12 @@
   --color-highlight-bg: #fefce8;
   --color-highlight-mark: #fef08a;
   --color-accent-yellow: #eab308;
+  --color-heading-gradient-start: #667eea;
+  --color-heading-gradient-end: #764ba2;
+  --color-heading-gold-start: #ffd700;
+  --color-heading-gold-end: #ffed4e;
+  --color-product-vod: #4caf50;
+  --color-product-shopping: #ff9800;
   --color-black: #000000;
   --color-bg-code: #111827;
   /* RGB channel variables for alpha color compositions */
@@ -148,6 +155,7 @@
   --color-amazon: var(--color-amazon);
   --color-amazon-shopping: var(--color-amazon-shopping);
   --color-rakuten: var(--color-rakuten);
+  --color-hulu: var(--color-hulu);
   --color-unext: var(--color-unext);
   --color-disney: var(--color-disney);
   --color-dmmtv: var(--color-dmmtv);
@@ -182,6 +190,12 @@
   --color-highlight-bg: var(--color-highlight-bg);
   --color-highlight-mark: var(--color-highlight-mark);
   --color-accent-yellow: var(--color-accent-yellow);
+  --color-heading-gradient-start: var(--color-heading-gradient-start);
+  --color-heading-gradient-end: var(--color-heading-gradient-end);
+  --color-heading-gold-start: var(--color-heading-gold-start);
+  --color-heading-gold-end: var(--color-heading-gold-end);
+  --color-product-vod: var(--color-product-vod);
+  --color-product-shopping: var(--color-product-shopping);
   --color-black: var(--color-black);
   --color-bg-code: var(--color-bg-code);
   --font-body: var(--font-body), sans-serif;

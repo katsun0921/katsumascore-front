@@ -21,17 +21,17 @@
     transition: background-color 0.15s ease, color 0.15s ease;
 
     // 非アクティブ
-    background-color: #f3f4f6;
-    color: #6b7280;
+    background-color: var(--color-bg-muted);
+    color: var(--color-text-secondary);
 
     // アクティブ
     &--active {
-      background-color: #111827;
-      color: #ffffff;
+      background-color: var(--color-text-primary);
+      color: var(--color-text-inverse);
     }
 
     &:not(&--active):hover {
-      background-color: #e5e7eb;
+      background-color: var(--color-border);
     }
   }
 

@@ -89,12 +89,12 @@
 
     &--x {
       background-color: var(--color-x);
-      color: #ffffff;
+      color: var(--color-text-inverse);
     }
 
     &--instagram {
       background-color: var(--color-instagram);
-      color: #ffffff;
+      color: var(--color-text-inverse);
     }
   }
 

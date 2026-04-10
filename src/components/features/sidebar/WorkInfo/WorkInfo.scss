@@ -81,9 +81,9 @@
     }
 
     // サービスカラー
-    &--unext   { background-color: var(--color-unext);   color: #ffffff; border: 1px solid var(--color-border-muted); }
+    &--unext   { background-color: var(--color-unext);   color: var(--color-text-inverse); border: 1px solid var(--color-border-muted); }
     &--amazon  { background-color: var(--color-amazon);  }
-    &--hulu    { background-color: #1ce783;               color: #111827; }
+    &--hulu    { background-color: var(--color-hulu);     color: var(--color-text-primary); }
     &--netflix { background-color: var(--color-netflix);  }
     &--disney  { background-color: var(--color-disney);   }
 

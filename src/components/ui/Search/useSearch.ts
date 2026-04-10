@@ -34,13 +34,18 @@ export const useSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
 
-  useEffect(() => {
-    if (query.length === 0) {
+  const updateQuery = useCallback((nextQuery: string) => {
+    setQuery(nextQuery);
+
+    if (nextQuery.length === 0) {
       setResults([]);
       setIsOpen(false);
       setActiveIndex(-1);
-      return;
     }
+  }, []);
+
+  useEffect(() => {
+    if (query.length === 0) return;
 
     const timer = setTimeout(async () => {
       const data = await searchMock(query);
@@ -69,7 +74,7 @@ export const useSearch = () => {
 
   return {
     query,
-    setQuery,
+    setQuery: updateQuery,
     results,
     isOpen,
     activeIndex,
