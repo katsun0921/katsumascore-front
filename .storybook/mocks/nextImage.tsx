@@ -1,3 +1,5 @@
+import { publicAssetUrl } from '@/lib/publicAssetUrl'
+
 type Props = {
   src: string;
   alt: string;
@@ -11,7 +13,7 @@ type Props = {
 
 const normalizeImageSrc = (src: string): string => {
   if (src.startsWith('/') && !src.startsWith('//')) {
-    return `.${src}`
+    return publicAssetUrl(src)
   }
   return src
 }

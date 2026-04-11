@@ -5,6 +5,9 @@ import type { StorybookConfig } from '@storybook/react-vite'
 const srcDir = resolve(__dirname, '../src')
 const publicDir = resolve(__dirname, '../public')
 
+/** GitHub Pages などサブパス配信時は `STORYBOOK_BASE_PATH=/repo-name/` を CI で渡す */
+const storybookBase = process.env.STORYBOOK_BASE_PATH?.trim() || '/'
+
 const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
@@ -20,6 +23,7 @@ const config: StorybookConfig = {
     options: {},
   },
   viteFinal: async (config) => {
+    config.base = storybookBase
     config.plugins = [...(config.plugins ?? []), tailwindcss()]
     config.resolve = config.resolve ?? {}
     config.resolve.alias = {
