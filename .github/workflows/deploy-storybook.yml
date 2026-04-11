@@ -36,6 +36,8 @@ jobs:
         run: npm run lint:scss
 
       - name: Build Storybook
+        env:
+          STORYBOOK_BASE_PATH: /katsumascore-front/
         run: npm run build-storybook
 
       - name: Setup Pages

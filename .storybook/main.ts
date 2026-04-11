@@ -1,6 +1,11 @@
-import { resolve } from 'path'
+// This file has been automatically migrated to valid ESM format by Storybook.
+import { fileURLToPath } from "node:url";
+import { resolve, dirname } from 'path';
 import tailwindcss from '@tailwindcss/vite'
 import type { StorybookConfig } from '@storybook/react-vite'
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const srcDir = resolve(__dirname, '../src')
 const publicDir = resolve(__dirname, '../public')
