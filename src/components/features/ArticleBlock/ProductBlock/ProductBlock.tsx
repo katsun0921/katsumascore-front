@@ -1,4 +1,5 @@
 import React from 'react'
+import { publicAssetUrl } from '@/lib/publicAssetUrl'
 import './ProductBlock.scss'
 
 export type TProductType = 'vod' | 'shopping'
@@ -43,7 +44,7 @@ export const ProductBlock = ({
       <div className='product__inner'>
         {imageUrl && (
           <div className='product__image'>
-            <img src={imageUrl} alt={imageAlt || title} width={110} height='auto' />
+            <img src={publicAssetUrl(imageUrl)} alt={imageAlt || title} width={110} height='auto' />
           </div>
         )}
         <div className='product__body'>

@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { publicAssetUrl } from '@/lib/publicAssetUrl'
 import './ArticleHeader.scss'
 
 export type TArticleHeaderProps = {
@@ -36,7 +37,7 @@ export const ArticleHeader = ({
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 
   const bgStyle = imageUrl
-    ? { backgroundImage: `url('${imageUrl}')` }
+    ? { backgroundImage: `url('${publicAssetUrl(imageUrl)}')` }
     : undefined
 
   return (

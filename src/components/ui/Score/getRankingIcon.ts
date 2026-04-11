@@ -1,3 +1,5 @@
+import { publicAssetUrl } from '@/lib/publicAssetUrl'
+
 /**
  * スコア値に基づいてランキングアイコンのパスを返す
  * 参照: katsumascore_wordpress_theme/inc/get-ranking-icon.php
@@ -32,12 +34,12 @@ const ICONS_BASE_PATH = '/images/icons/'
 export function getRankingIcon(value: number): { src: string; label: RankLabel } | null {
   for (const range of RANK_MAP) {
     if (value >= range.min && value < range.max) {
-      return { src: `${ICONS_BASE_PATH}${range.icon}`, label: range.label }
+      return { src: publicAssetUrl(`${ICONS_BASE_PATH}${range.icon}`), label: range.label }
     }
   }
   // 最大値 5.0 の場合
   if (value === 5.0) {
-    return { src: `${ICONS_BASE_PATH}icon-rank-ss.png`, label: 'SS' }
+    return { src: publicAssetUrl(`${ICONS_BASE_PATH}icon-rank-ss.png`), label: 'SS' }
   }
   return null
 }

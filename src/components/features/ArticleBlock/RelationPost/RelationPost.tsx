@@ -1,4 +1,5 @@
 import React from 'react'
+import { publicAssetUrl } from '@/lib/publicAssetUrl'
 import './RelationPost.scss'
 
 export type TRelationPostItem = {
@@ -30,7 +31,7 @@ export const RelationPost = ({ posts, locale = 'ja' }: TRelationPostProps) => {
             <a className='p-relation-post__link' href={post.href}>
               {post.imageUrl && (
                 <div className='p-relation-post__thumb'>
-                  <img src={post.imageUrl} alt={post.imageAlt || post.title} />
+                  <img src={publicAssetUrl(post.imageUrl)} alt={post.imageAlt || post.title} />
                 </div>
               )}
               <span className='p-relation-post__title'>{post.title}</span>
