@@ -1,10 +1,11 @@
 export type ScoreProps = {
   value: number
-  max?: number
+  max: number
 }
 
 export const Score = ({ value, max }: ScoreProps) => {
-  const display = max != null ? `${value}/${max}` : value.toFixed(1)
+  const valueStr = Number.isInteger(value) ? String(value) : value.toFixed(1)
+  const display = `${valueStr}/${max}`
 
   return (
     <div className='inline-flex items-center justify-center w-[88px] h-[88px] bg-[var(--color-score-border)] [clip-path:polygon(50%_0%,100%_25%,100%_75%,50%_100%,0%_75%,0%_25%)] [filter:drop-shadow(0_0_10px_var(--color-score-border))]'>

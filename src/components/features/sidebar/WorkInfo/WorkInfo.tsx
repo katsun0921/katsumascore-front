@@ -1,4 +1,5 @@
 import { Score } from '@/components/ui/Score/Score'
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { getRankingIcon } from '@/components/ui/Score/getRankingIcon'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
@@ -57,7 +58,7 @@ export const WorkInfo = ({
     <div className='sidebar-work-info'>
       {/* スコア + ランク */}
       <div className='sidebar-work-info__score-block'>
-        <Score value={score} />
+        <Score value={score} max={SCORE_DISPLAY_MAX} />
         {rank && (
           <img
             src={rank.src}

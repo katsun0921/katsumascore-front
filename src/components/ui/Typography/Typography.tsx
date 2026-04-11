@@ -58,6 +58,16 @@ const textAndFeatureColors: Swatch[] = [
   { name: 'Accent Yellow', token: '--color-accent-yellow', value: '#eab308' },
   { name: 'Score BG', token: '--color-score-bg', value: '#14082e', textColor: '#ffffff' },
   { name: 'Score Border', token: '--color-score-border', value: '#ff2dfc' },
+  { name: 'Score Rank C Text', token: '--color-score-rank-c-text', value: '#64748b' },
+  { name: 'Score Rank B Text', token: '--color-score-rank-b-text', value: '#0f766e' },
+  { name: 'Score Rank A Text', token: '--color-score-rank-a-text', value: '#2563eb' },
+  { name: 'Score Rank S Text', token: '--color-score-rank-s-text', value: '#c026d3' },
+  { name: 'Score Rank SS Text', token: '--color-score-rank-ss-text', value: '#ff2dfc' },
+  {
+    name: 'Score Hero Text Halo',
+    token: '--color-score-hero-text-halo',
+    value: '#ffffff',
+  },
 ];
 
 const serviceColors: Swatch[] = [
@@ -199,6 +209,22 @@ const fontSizeEntries: FontSizeEntry[] = [
     tokenSp: '--font-size-caption-sp',
     valueSp: '11px',
     sampleText: '補足・メタ情報・キャプション',
+  },
+  {
+    role: 'Score Hero Int',
+    tokenPc: '--font-size-score-hero-int-pc',
+    valuePc: '120px',
+    tokenSp: '--font-size-score-hero-int-sp',
+    valueSp: '72px',
+    sampleText: '4',
+  },
+  {
+    role: 'Score Hero Decimal',
+    tokenPc: '--font-size-score-hero-decimal-pc',
+    valuePc: '60px',
+    tokenSp: '--font-size-score-hero-decimal-sp',
+    valueSp: '36px',
+    sampleText: '.3',
   },
 ];
 

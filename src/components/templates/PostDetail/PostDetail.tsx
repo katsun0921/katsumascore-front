@@ -1,5 +1,6 @@
 import { ArticleHeader } from '@/components/features/ArticleHeader/ArticleHeader'
 import { ArticleMeta } from '@/components/features/ArticleMeta/ArticleMeta'
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
 import { BasicInfo } from '@/components/features/BasicInfo/BasicInfo'
 import { ActorsInfo } from '@/components/features/ArticleBlock/ActorsInfo/ActorsInfo'
@@ -49,12 +50,14 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
           />
 
           {/* ── post-single.php → post-review.php 相当 ── */}
-          <section className='relative mt-6 mb-8 border-4 border-b-[14px] border-black/10 px-8 pt-12 pb-8'>
+          <section
+            className={`relative mt-6 mb-8 border-4 border-b-[14px] border-black/10 px-8 pb-8 ${post.score !== undefined ? 'pt-8' : 'pt-12'}`}
+          >
 
-            {/* スコア（large）: 中央上部に突き出し */}
+            {/* スコア（感情系ヒーロー: フロー配置で本文と干渉しない） */}
             {post.score !== undefined && (
-              <div className='absolute left-1/2 top-5 -translate-x-1/2 -translate-y-1/2'>
-                <ScoreWithRank value={post.score} />
+              <div className='mb-8 flex justify-center'>
+                <ScoreWithRank value={post.score} max={SCORE_DISPLAY_MAX} />
               </div>
             )}
 

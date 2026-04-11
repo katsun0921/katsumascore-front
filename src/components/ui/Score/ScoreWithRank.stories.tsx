@@ -1,9 +1,13 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { ScoreWithRank } from './ScoreWithRank'
 
 const meta: Meta<typeof ScoreWithRank> = {
   title: 'ui/ScoreWithRank',
   component: ScoreWithRank,
+  args: {
+    max: SCORE_DISPLAY_MAX,
+  },
 }
 
 export default meta
@@ -40,12 +44,17 @@ export const MaxScore: Story = {
   args: { value: 5.0 },
 }
 
-// 範囲外（アイコンなし）
+// 範囲外（アイコンなし・数値のみ）
 export const OutOfRange: Story = {
   args: { value: 0.5 },
 }
 
-// max指定あり（scoreは非表示のためvalueのみ使用）
-export const WithMax: Story = {
-  args: { value: 4 },
+// 暗背景でランク色の確認
+export const OnDarkBackground: Story = {
+  render: (args) => (
+    <div className='flex min-h-[280px] items-center justify-center bg-[var(--color-score-bg)] p-8'>
+      <ScoreWithRank {...args} />
+    </div>
+  ),
+  args: { value: 4.3 },
 }
