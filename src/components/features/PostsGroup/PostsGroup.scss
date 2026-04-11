@@ -1,5 +1,5 @@
 .p-posts-group {
-  margin-top: var(--space-6);
+  margin-top: var(--space-24);
 
   // c-heading__related 相当
   &__heading {
@@ -9,8 +9,8 @@
     font-size: var(--font-size-h1-sp);
     line-height: 2rem;
     color: var(--color-secondary);
-    padding-bottom: var(--space-4);
-    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-16);
+    margin-bottom: var(--space-16);
     position: relative;
 
     // 下線アクセント（::before）
@@ -29,7 +29,7 @@
   &__description {
     font-size: var(--font-size-body-sp);
     color: var(--color-text-secondary);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-16);
     line-height: 1.6;
   }
 
@@ -40,19 +40,19 @@
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-8);
 
     @media (min-width: var(--breakpoint-md)) {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--space-4);
+      gap: var(--space-16);
     }
   }
 
   &__link {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: var(--space-8);
     text-decoration: none;
     color: var(--color-text-primary);
     transition: opacity 0.2s;

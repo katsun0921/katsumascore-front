@@ -2,7 +2,7 @@ import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 
-const itemBase = 'inline-block px-3 py-1 rounded text-[var(--color-text-inverse)] text-[var(--font-size-caption-pc)] font-bold'
+const itemBase = 'inline-block px-3 py-1 rounded text-white text-[var(--font-size-caption-pc)] font-bold'
 
 const variantClasses = {
   netflix: `${itemBase} bg-[var(--color-netflix)]`,

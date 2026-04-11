@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Kaisei+Tokumin:wght@400;500;700&family=Rampart+One&family=Yusei+Magic&display=swap");
 @import "tailwindcss";
+@import "./reset.css" layer(base);
 
 /* ─── globals.css 運用ルール ─────────────────────────────────────
    このファイルに書いてよいもの:
@@ -105,19 +106,19 @@
   --font-weight-bold: 700;
 
   /* ─── Spacing Tokens ───────────────────────────────────────────────
-     コンポーネントは必ずこのtokenを使う。
+     名前は実寸（px）に対応。コンポーネントは必ずこの token を使う。
      直接値（padding: 16px, p-[16px]など）の使用は禁止。
      ─────────────────────────────────────────────────────────────── */
   --space-0: 0px;
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 20px;
-  --space-6: 24px;
-  --space-8: 32px;
-  --space-10: 40px;
-  --space-12: 48px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
 
   /* ─── Font Size Tokens ─────────────────────────────────────────
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
@@ -133,9 +134,9 @@
   --font-size-h1-sp: 24px;
   --font-size-h2-sp: 20px;
   --font-size-h3-sp: 18px;
-  --font-size-body-sp: 15px;
-  --font-size-ui-sp: 13px;
-  --font-size-caption-sp: 11px;
+  --font-size-body-sp: 14px;
+  --font-size-ui-sp: 12px;
+  --font-size-caption-sp: 10px;
 }
 
 @theme inline {
@@ -201,17 +202,17 @@
   --font-body: var(--font-body), sans-serif;
   --font-heading: var(--font-heading), serif;
 
-  /* Spacing — Tailwind p-*, m-*, gap-* で参照 */
+  /* Spacing — Tailwind p-*, m-*, gap-* で参照（数値はスケール、p-* の実寸は左の --space-{px}） */
   --spacing-0: var(--space-0);
-  --spacing-1: var(--space-1);
-  --spacing-2: var(--space-2);
-  --spacing-3: var(--space-3);
-  --spacing-4: var(--space-4);
-  --spacing-5: var(--space-5);
-  --spacing-6: var(--space-6);
-  --spacing-8: var(--space-8);
-  --spacing-10: var(--space-10);
-  --spacing-12: var(--space-12);
+  --spacing-1: var(--space-4);
+  --spacing-2: var(--space-8);
+  --spacing-3: var(--space-12);
+  --spacing-4: var(--space-16);
+  --spacing-5: var(--space-20);
+  --spacing-6: var(--space-24);
+  --spacing-8: var(--space-32);
+  --spacing-10: var(--space-40);
+  --spacing-12: var(--space-48);
 
   /* Font Size — PC base (Tailwind クラス text-h1, text-body 等で参照) */
   --font-size-h1: var(--font-size-h1-pc);
@@ -222,48 +223,10 @@
   --font-size-caption: var(--font-size-caption-pc);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-html,
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-ul,
-ol,
-dl,
-li,
-dt,
-dd,
-p,
-figure,
-fieldset,
-legend,
-blockquote,
-th,
-td {
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-}
-
 body {
   background: var(--color-bg);
   color: var(--color-text-primary);
   font-family: var(--font-body);
-  font-weight: 400;
-  line-height: 1.4;
 }
 
 h1,
@@ -273,36 +236,6 @@ h4,
 h5,
 h6 {
   font-family: var(--font-heading);
-  font-weight: 700;
-  line-height: 1.4;
-}
-
-ul,
-ol {
-  list-style: none;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
-}
-
-a:hover {
-  opacity: 0.8;
-}
-
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  padding: 0;
-}
-
-input,
-textarea,
-select {
-  font: inherit;
 }
 
 :root {

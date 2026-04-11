@@ -56,7 +56,7 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
 
       {isOpen && (
         <ul
-          className='absolute right-0 top-[calc(100%+var(--space-2))] z-[100] min-w-[180px] m-0 list-none rounded-[6px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-2 shadow-[0_4px_12px_var(--color-border-soft)]'
+          className='absolute right-0 top-[calc(100%+var(--space-8))] z-[100] min-w-[180px] m-0 list-none rounded-[6px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-2 shadow-[0_4px_12px_var(--color-border-soft)]'
           role='listbox'
           aria-label='配信サービス一覧'
         >

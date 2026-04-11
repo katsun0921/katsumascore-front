@@ -78,7 +78,7 @@ export const Search = ({ onNavigate, className }: Props) => {
       {showDropdown && (
         <ul
           id={listboxId}
-          className='absolute left-0 right-0 top-[calc(100%+var(--space-2))] z-[200] m-0 min-w-[280px] list-none rounded-[10px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] max-h-[320px] overflow-y-auto'
+          className='absolute left-0 right-0 top-[calc(100%+var(--space-8))] z-[200] m-0 min-w-[280px] list-none rounded-[10px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] max-h-[320px] overflow-y-auto'
           role='listbox'
         >
           {results.map((result, index) => (

@@ -16,7 +16,7 @@
  *
  * Good:
  *   <div className="p-4 gap-2" />
- *   <div style={{ padding: 'var(--space-4)' }} />
+ *   <div style={{ padding: 'var(--space-16)' }} />
  */
 
 // Tailwind arbitrary spacing: p-[...], m-[...], gap-[...], px-[...], py-[...] etc.

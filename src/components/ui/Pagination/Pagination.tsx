@@ -8,10 +8,13 @@ export type TPaginationProps = {
   onPageChange: (page: number) => void
 }
 
-const btnBase = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[var(--font-size-ui-pc)] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
-const btnCurrent = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] text-[var(--color-text-inverse)] text-[var(--font-size-ui-pc)] font-bold cursor-default'
-const btnNav = 'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-border-muted)] rounded bg-[var(--color-bg)] text-[var(--color-text-primary)] text-[var(--font-size-ui-sp)] cursor-pointer transition-[background] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)]'
-const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] text-[var(--color-text-secondary)] text-[var(--font-size-ui-pc)]'
+const btnBase =
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-pc)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]'
+const btnCurrent =
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] [font-size:var(--font-size-ui-pc)] font-bold text-[var(--color-text-inverse)] cursor-default'
+const btnNav =
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-sp)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]'
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-pc)] text-[var(--color-primary)]'
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
   const locale = useLocale()
