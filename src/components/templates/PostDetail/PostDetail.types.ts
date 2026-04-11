@@ -15,6 +15,14 @@ export type PostDetailData = Post & {
   titleEn?: string
   updatedAt?: string
 
+  // PostHeader 用メタ情報
+  rating?: string
+
+  // PostHero 用
+  trailerYoutubeId?: string
+  trailerEmbedCode?: string
+  authorComment?: string
+
   // p-info ブロック（post-review.php 相当）
   videoCode?: string
   goodPoints?: string[]

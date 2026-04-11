@@ -1,0 +1,24 @@
+.post-hero-score {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+}
+
+.post-hero-score__value {
+  display: flex;
+}
+
+.post-hero-score__comment {
+  font-family: var(--font-ja-body);
+  font-size: var(--font-size-body-sp);
+  color: var(--color-text-body);
+  line-height: 1.7;
+  letter-spacing: 0.03em;
+  border-left: 3px solid var(--color-accent);
+  padding-left: var(--space-12);
+  margin: 0;
+
+  @media (min-width: var(--breakpoint-md)) {
+    font-size: var(--font-size-body-pc);
+  }
+}

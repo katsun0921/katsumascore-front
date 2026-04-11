@@ -1,5 +1,5 @@
-import { ArticleHeader } from '@/components/features/ArticleHeader/ArticleHeader'
-import { ArticleMeta } from '@/components/features/ArticleMeta/ArticleMeta'
+import { PostHeader } from '@/components/features/post/PostHeader/PostHeader'
+import { PostHero } from '@/components/features/post/PostHero/PostHero'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
 import { BasicInfo } from '@/components/features/BasicInfo/BasicInfo'
@@ -15,39 +15,40 @@ import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 
 export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
-  const categories = post.category
-    ? [{ label: post.category, href: `/category/${post.category}` }]
-    : []
-
   return (
     <div>
 
-      {/* ── title.php 相当：ヒーロー画像＋タイトル＋カテゴリ ── */}
-      <ArticleHeader
-        titleJp={post.title}
+      {/* ── title.php 相当：タイトル・カテゴリ・メタ情報 ── */}
+      <PostHeader
+        category={post.category ?? ''}
+        titleJa={post.title}
         titleEn={post.titleEn}
-        publishedAt={post.publishedAt}
-        updatedAt={post.updatedAt}
-        categories={categories}
-        imageUrl={post.image ?? undefined}
-        locale={locale}
+        filmStudios={post.basicInfo?.filmStudios}
+        productionStudios={post.basicInfo?.productionStudios}
+        releaseDate={post.basicInfo?.releaseDate}
+        rating={post.rating}
+        copyright={post.basicInfo?.copyright}
       />
+
+      {/* ── PostHero：ポスター・トレーラー・スコア ── */}
+      {post.score !== undefined && post.authorComment && (
+        <PostHero
+          titleJa={post.title}
+          trailerYoutubeId={post.trailerYoutubeId}
+          trailerEmbedCode={post.trailerEmbedCode}
+          posterUrl={post.image ?? ''}
+          description={post.excerpt}
+          score={post.score}
+          scoreMax={SCORE_DISPLAY_MAX}
+          authorComment={post.authorComment}
+        />
+      )}
 
       {/* body: 最大幅・中央・flex（md以上） */}
       <div className='relative mx-auto mt-8 w-[min(90%,var(--layout-width-xl))] md:flex md:justify-between md:gap-12'>
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 md:w-[72%]'>
-
-          {/* ── date.php 相当：公開日・更新日 ── */}
-          <ArticleMeta
-            releaseDate={post.basicInfo?.releaseDate}
-            officialUrl={post.basicInfo?.officialUrl}
-            copyright={post.basicInfo?.copyright}
-            titleEn={post.titleEn}
-            officialSns={post.basicInfo?.officialSns}
-            locale={locale}
-          />
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section
