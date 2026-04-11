@@ -11,6 +11,14 @@ export type TCreditEntry = {
   names: string[]
 }
 
+export type TActor = {
+  character?: string
+  actorName: string
+  actorUrl?: string
+  description?: string
+  otherWorks?: { title: string; href: string; character?: string }[]
+}
+
 export type TBasicInfoProps = {
   titleEn?: string
   officialUrl?: string
@@ -20,6 +28,7 @@ export type TBasicInfoProps = {
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
+  actors?: TActor[]
   locale?: 'ja' | 'en'
 }
 
@@ -33,7 +42,6 @@ const SNS_LABELS: Record<string, string> = {
 }
 
 export const BasicInfo = ({
-  titleEn,
   officialUrl,
   copyright,
   releaseDate,
@@ -41,6 +49,7 @@ export const BasicInfo = ({
   filmStudios,
   productionStudios,
   credits,
+  actors,
   locale = 'ja',
 }: TBasicInfoProps) => {
   let parsedDate: string | null = null
@@ -58,12 +67,6 @@ export const BasicInfo = ({
 
   return (
     <dl className='p-basic-info'>
-      {titleEn && (
-        <>
-          <dt className='p-basic-info__term'>{locale === 'en' ? 'Title' : '原題'}</dt>
-          <dd className='p-basic-info__desc'>{titleEn}</dd>
-        </>
-      )}
       {officialUrl && (
         <>
           <dt className='p-basic-info__term'>{locale === 'en' ? 'Official Site' : '公式サイト'}</dt>
@@ -93,60 +96,58 @@ export const BasicInfo = ({
           </dd>
         </>
       )}
-      {parsedDate && (
-        <>
-          <dt className='p-basic-info__term'>
-            {locale === 'en' ? 'Screening / Release Date' : '上映日・配信日'}
-          </dt>
-          <dd className='p-basic-info__desc'>{parsedDate}</dd>
-        </>
-      )}
-      {filmStudios && filmStudios.length > 0 && (
-        <>
-          <dt className='p-basic-info__term'>
-            {locale === 'en' ? 'Distributed by' : '配給会社'}
-          </dt>
-          <dd className='p-basic-info__desc'>
-            <ul className='p-basic-info__studio-list'>
-              {filmStudios.map((s, i) => (
-                <li key={i}>
-                  {s.href ? (
-                    <a href={s.href} className='p-basic-info__link'>{s.name}</a>
-                  ) : (
-                    s.name
-                  )}
-                </li>
-              ))}
-            </ul>
-          </dd>
-        </>
-      )}
-      {productionStudios && productionStudios.length > 0 && (
-        <>
-          <dt className='p-basic-info__term'>
-            {locale === 'en' ? 'Production Companies' : '制作会社'}
-          </dt>
-          <dd className='p-basic-info__desc'>
-            <ul className='p-basic-info__studio-list'>
-              {productionStudios.map((s, i) => (
-                <li key={i}>
-                  {s.href ? (
-                    <a href={s.href} className='p-basic-info__link'>{s.name}</a>
-                  ) : (
-                    s.name
-                  )}
-                </li>
-              ))}
-            </ul>
-          </dd>
-        </>
-      )}
       {credits && credits.length > 0 && credits.map((entry, i) => (
         <React.Fragment key={i}>
           <dt className='p-basic-info__term'>{entry.role}</dt>
           <dd className='p-basic-info__desc'>{entry.names.join(' / ')}</dd>
         </React.Fragment>
       ))}
+      {actors && actors.length > 0 && (
+        <>
+          <dt className='p-basic-info__term'>{locale === 'en' ? 'Cast' : '登場人物'}</dt>
+          <dd className='p-basic-info__desc p-basic-info__actors'>
+            {actors.map((actor, i) => (
+              <dl key={i} className='p-basic-info__actor-entry'>
+                {actor.character && (
+                  <dt className='p-basic-info__actor-character'>{actor.character}</dt>
+                )}
+                <dd className='p-basic-info__actor-detail'>
+                  <p>
+                    {locale === 'en' ? 'Actor: ' : '俳優: '}
+                    {actor.actorUrl ? (
+                      <a href={actor.actorUrl} className='p-basic-info__link'>
+                        {actor.actorName}
+                      </a>
+                    ) : (
+                      actor.actorName
+                    )}
+                  </p>
+                  {actor.description && (
+                    <p className='p-basic-info__actor-description'>{actor.description}</p>
+                  )}
+                  {actor.otherWorks && actor.otherWorks.length > 0 && (
+                    <>
+                      <p className='p-basic-info__actor-other-label'>
+                        {locale === 'en' ? 'Other Works:' : '他の作品:'}
+                      </p>
+                      <ul className='p-basic-info__actor-other-list'>
+                        {actor.otherWorks.map((work, j) => (
+                          <li key={j}>
+                            <a href={work.href} className='p-basic-info__link'>
+                              {work.title}
+                              {work.character && ` (${work.character})`}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+                </dd>
+              </dl>
+            ))}
+          </dd>
+        </>
+      )}
     </dl>
   )
 }

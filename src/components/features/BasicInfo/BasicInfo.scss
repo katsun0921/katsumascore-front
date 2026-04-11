@@ -52,4 +52,51 @@
     flex-wrap: wrap;
     gap: 4px;
   }
+
+  &__actors {
+    padding-left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__actor-entry {
+    margin: 0;
+    padding-left: 16px;
+  }
+
+  &__actor-character {
+    font-size: var(--font-size-body-sp);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    margin-bottom: 4px;
+  }
+
+  &__actor-detail {
+    padding-left: 16px;
+
+    p { margin: 0 0 4px; line-height: 1.6; }
+  }
+
+  &__actor-description {
+    font-size: var(--font-size-ui-pc);
+    color: var(--color-text-secondary);
+  }
+
+  &__actor-other-label {
+    font-size: var(--font-size-ui-sp);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-secondary);
+  }
+
+  &__actor-other-list {
+    list-style: disc;
+    padding-left: 16px;
+    margin: 4px 0 0;
+
+    li {
+      font-size: var(--font-size-ui-sp);
+      line-height: 1.6;
+    }
+  }
 }

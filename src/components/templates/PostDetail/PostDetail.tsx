@@ -3,7 +3,6 @@ import { PostHero } from '@/components/features/post/PostHero/PostHero'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
 import { BasicInfo } from '@/components/features/BasicInfo/BasicInfo'
-import { ActorsInfo } from '@/components/features/ArticleBlock/ActorsInfo/ActorsInfo'
 import { VideoEmbed } from '@/components/features/VideoEmbed/VideoEmbed'
 import { GoodPoint } from '@/components/features/ArticleBlock/GoodPoint/GoodPoint'
 import { Summary } from '@/components/features/ArticleBlock/Summary/Summary'
@@ -55,33 +54,9 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
             className={`relative mt-6 mb-8 border-4 border-b-[14px] border-black/10 px-8 pb-8 ${post.score !== undefined ? 'pt-8' : 'pt-12'}`}
           >
 
-            {/* スコア（感情系ヒーロー: フロー配置で本文と干渉しない） */}
-            {post.score !== undefined && (
-              <div className='mb-8 flex justify-center'>
-                <ScoreWithRank value={post.score} max={SCORE_DISPLAY_MAX} />
-              </div>
-            )}
-
-            {/* 抜粋 */}
-            {post.excerpt && (
-              <p className='text-[length:var(--font-size-body-sp)] leading-[1.7] text-[var(--color-text-secondary)] mb-6'>
-                {post.excerpt}
-              </p>
-            )}
-
-            {/* 基本情報 */}
-            {(post.basicInfo || (post.credits && post.credits.length > 0)) && (
-              <BasicInfo {...post.basicInfo} credits={post.credits} locale={locale} />
-            )}
-
-            {/* キャスト情報 */}
-            {post.actors && post.actors.length > 0 && (
-              <ActorsInfo actors={post.actors} locale={locale} />
-            )}
-
-            {/* 動画埋め込み */}
-            {post.videoCode && (
-              <VideoEmbed embedCode={post.videoCode} />
+            {/* 基本情報・キャスト情報 */}
+            {(post.basicInfo || (post.credits && post.credits.length > 0) || (post.actors && post.actors.length > 0)) && (
+              <BasicInfo {...post.basicInfo} credits={post.credits} actors={post.actors} locale={locale} />
             )}
           </section>
 

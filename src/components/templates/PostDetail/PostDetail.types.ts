@@ -1,7 +1,6 @@
 import type { Post } from '@/components/features/post/types/post'
 import type { TocItem } from '@/lib/toc'
-import type { TBasicInfoProps, TCreditEntry } from '@/components/features/BasicInfo/BasicInfo'
-import type { TActor } from '@/components/features/ArticleBlock/ActorsInfo/ActorsInfo'
+import type { TBasicInfoProps, TCreditEntry, TActor } from '@/components/features/BasicInfo/BasicInfo'
 import type { TReviewSite } from '@/components/features/ArticleBlock/ReviewSiteScores/ReviewSiteScores'
 import type { TStreamingVodEntry } from '@/components/features/ArticleBlock/StreamingVod/StreamingVod'
 import type { TRentalService } from '@/components/features/ArticleBlock/AdRental/AdRental'
