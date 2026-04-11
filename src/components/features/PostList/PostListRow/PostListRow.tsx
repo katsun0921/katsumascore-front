@@ -10,7 +10,7 @@ export const PostListRow = ({ posts, isLoading = false }: PostListProps) => {
   if (!isLoading && posts.length === 0) {
     return (
       <section className={styles.empty} aria-live='polite'>
-        <h2 className={styles.emptyTitle}>記事がまだありません</h2>
+        <p className={styles.emptyTitle}>記事がまだありません</p>
         <p className={styles.emptyText}>
           公開された記事がここに表示されます。しばらくしてからもう一度ご確認ください。
         </p>

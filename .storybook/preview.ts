@@ -43,6 +43,34 @@ const preview: Preview = {
   ],
 
   parameters: {
+    options: {
+      storySort: (a, b) => {
+        const titleA = a.title
+        const titleB = b.title
+
+        if (titleA === titleB) {
+          return 0
+        }
+
+        if (titleA === 'Docs/Overview') {
+          return -1
+        }
+
+        if (titleB === 'Docs/Overview') {
+          return 1
+        }
+
+        if (titleA.startsWith('Docs/') && !titleB.startsWith('Docs/')) {
+          return -1
+        }
+
+        if (!titleA.startsWith('Docs/') && titleB.startsWith('Docs/')) {
+          return 1
+        }
+
+        return titleA.localeCompare(titleB, 'ja')
+      },
+    },
     backgrounds: {
       default: 'light',
       values: [

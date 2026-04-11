@@ -1,7 +1,7 @@
 .list {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 1rem;
+  gap: var(--space-4);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -17,9 +17,9 @@
 
 .empty {
   display: grid;
-  gap: 0.75rem;
+  gap: var(--space-3);
   place-items: center;
-  padding: 3rem 1.5rem;
+  padding: var(--space-8) var(--space-4);
   border: 1px solid var(--color-border-soft);
   border-radius: 24px;
   background: linear-gradient(180deg, var(--color-bg), var(--color-surface-muted));
@@ -32,13 +32,13 @@
 }
 
 .emptyText {
-  max-width: 40rem;
+  width: min(100%, var(--measure-readable));
   color: var(--color-text-secondary);
   line-height: 1.8;
 }
 
-@media (max-width: 767px) {
+@media (min-width: var(--breakpoint-md)) {
   .empty {
-    padding: 2rem 1rem;
+    padding: var(--space-12) var(--space-6);
   }
 }
