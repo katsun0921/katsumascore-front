@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Category } from './Category';
 
 const meta: Meta<typeof Category> = {
-  title: 'Components/Category',
+  title: 'ui/Category',
   component: Category,
   parameters: {
     layout: 'fullscreen',

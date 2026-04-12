@@ -1,7 +1,7 @@
 import '@/styles/globals.css'
 import { createElement } from 'react'
 import type { CSSProperties } from 'react'
-import type { Preview } from '@storybook/react'
+import type { Preview } from '@storybook/react-vite'
 import { I18nProvider } from '@/i18n/provider'
 import type { Locale } from '@/i18n/t'
 

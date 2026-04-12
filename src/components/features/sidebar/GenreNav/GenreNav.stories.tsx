@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GenreNav } from './GenreNav'
 
 const meta: Meta<typeof GenreNav> = {

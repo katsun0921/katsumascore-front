@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ReviewSiteScores } from './ReviewSiteScores'
 import type { TReviewSite } from './ReviewSiteScores'
 
