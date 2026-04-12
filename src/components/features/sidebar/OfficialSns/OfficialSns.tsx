@@ -84,10 +84,6 @@ export const OfficialSns = ({ snsUrl, youtubeUrl }: OfficialSnsProps) => {
 
   return (
     <div className='sidebar-official-sns'>
-      <p className='sidebar-official-sns__heading'>
-        {t(messages, ['heading', 'label'], locale)}
-      </p>
-
       <div className='sidebar-official-sns__embed' ref={containerRef}>
         {!isVisible ? (
           // プレースホルダー（ビューポートに入るまで表示）

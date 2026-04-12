@@ -22,11 +22,7 @@ export type SidebarProps = {
   // ❹ 広告バナー（VOD CTA）
   adBanner?: AdBannerProps
 
-  // ❺ 公式SNS
-  officialSnsUrl?: string
-  officialYoutubeUrl?: string
-
-  // ❻ 関連記事（サイドバー専用リスト）
+  // ❺ 関連記事（サイドバー専用リスト）
   relatedPosts?: import('@/components/features/sidebar/RelatedPosts/RelatedPosts').RelatedPostItem[]
 
   // ❼ PICK UP / HIGH SCORE

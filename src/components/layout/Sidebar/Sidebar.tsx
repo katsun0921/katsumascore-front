@@ -2,7 +2,6 @@ import { Profile } from '@/components/features/sidebar/Profile/Profile'
 import { WorkInfo } from '@/components/features/sidebar/WorkInfo/WorkInfo'
 import { TableOfContents } from '@/components/ui/TableOfContents/TableOfContents'
 import { AdBanner } from '@/components/features/sidebar/AdBanner/AdBanner'
-import { OfficialSns } from '@/components/features/sidebar/OfficialSns/OfficialSns'
 import { RelatedPosts } from '@/components/features/sidebar/RelatedPosts/RelatedPosts'
 import { PickUpAndScore } from '@/components/features/sidebar/PickUpAndScore/PickUpAndScore'
 import { GenreNav } from '@/components/features/sidebar/GenreNav/GenreNav'
@@ -19,8 +18,6 @@ export const Sidebar = ({
   workInfo,
   toc,
   adBanner,
-  officialSnsUrl,
-  officialYoutubeUrl,
   relatedPosts,
   pickupPosts = [],
   highScorePosts = [],
@@ -49,10 +46,7 @@ export const Sidebar = ({
       {/* ❹ 広告バナー（VOD CTA） */}
       {adBanner && <AdBanner {...adBanner} />}
 
-      {/* ❺ 公式SNS */}
-      <OfficialSns snsUrl={officialSnsUrl} youtubeUrl={officialYoutubeUrl} />
-
-      {/* ❻ 関連記事（サイドバー専用リスト） */}
+      {/* ❺ 関連記事（サイドバー専用リスト） */}
       {relatedPosts && relatedPosts.length > 0 && (
         <RelatedPosts posts={relatedPosts} />
       )}

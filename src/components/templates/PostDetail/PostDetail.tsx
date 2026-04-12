@@ -44,14 +44,14 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
       )}
 
       {/* body: 最大幅・中央・flex（md以上） */}
-      <div className='relative mx-auto mt-8 w-[min(90%,var(--layout-width-xl))] md:flex md:justify-between md:gap-12'>
+      <div className='relative mx-auto mt-8 md:flex md:justify-between md:gap-12'>
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 md:w-[72%]'>
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section
-            className={`relative mt-6 mb-8 border-4 border-b-[14px] border-black/10 px-8 pb-8 ${post.score !== undefined ? 'pt-8' : 'pt-12'}`}
+            className='relative mt-6 mb-8 border-3 border-b-[14px] border-black/10 p-4'
           >
 
             {/* 基本情報・キャスト情報 */}
@@ -114,8 +114,6 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
               disney:  post.streamingVods.some((v) => v.service === 'disney'),
             } : undefined,
           } : undefined}
-          officialSnsUrl={post.basicInfo?.officialSns?.x?.link}
-          officialYoutubeUrl={post.basicInfo?.officialSns?.youtube_channel?.link}
           relationPosts={post.relationPosts}
           isCinemaShowing={post.isCinemaShowing}
           titleJp={post.title}

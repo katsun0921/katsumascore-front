@@ -1,4 +1,7 @@
 import React from 'react'
+import { OfficialSns } from '@/components/features/sidebar/OfficialSns/OfficialSns'
+import { t } from '@/i18n/t'
+import { messages } from './i18n'
 import './BasicInfo.scss'
 
 export type TStudioEntry = {
@@ -32,22 +35,11 @@ export type TBasicInfoProps = {
   locale?: 'ja' | 'en'
 }
 
-const SNS_LABELS: Record<string, string> = {
-  x: 'X（旧Twitter）',
-  instagram: 'Instagram',
-  youtube_channel: 'YouTube Channel',
-  tiktok: 'TikTok',
-  facebook: 'Facebook',
-  line: 'LINE',
-}
-
 export const BasicInfo = ({
   officialUrl,
   copyright,
   releaseDate,
   officialSns,
-  filmStudios,
-  productionStudios,
   credits,
   actors,
   locale = 'ja',
@@ -60,16 +52,21 @@ export const BasicInfo = ({
     parsedDate =
       locale === 'en'
         ? new Date(`${y}-${m}-${d}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-        : `${y}年${parseInt(m)}月${parseInt(d)}日`
+        : `${y}${t(messages, ['date', 'yearSuffix'], locale)}${parseInt(m)}${t(messages, ['date', 'monthSuffix'], locale)}${parseInt(d)}${t(messages, ['date', 'daySuffix'], locale)}`
   }
 
   const hasSns = officialSns && Object.values(officialSns).some((v) => v?.link)
+
+  const snsPlatformLabel = (platform: string) =>
+    platform in messages.snsPlatform
+      ? t(messages, ['snsPlatform', platform], locale)
+      : platform
 
   return (
     <dl className='p-basic-info'>
       {officialUrl && (
         <>
-          <dt className='p-basic-info__term'>{locale === 'en' ? 'Official Site' : '公式サイト'}</dt>
+          <dt className='p-basic-info__term'>{t(messages, ['terms', 'officialSite'], locale)}</dt>
           <dd className='p-basic-info__desc p-basic-info__desc--break'>
             <a href={officialUrl} target='_blank' rel='noopener noreferrer' className='p-basic-info__link'>
               {officialUrl}
@@ -80,19 +77,23 @@ export const BasicInfo = ({
       )}
       {hasSns && (
         <>
-          <dt className='p-basic-info__term'>{locale === 'en' ? 'Official SNS' : '公式サイトSNS'}</dt>
+          <dt className='p-basic-info__term'>{t(messages, ['terms', 'officialSns'], locale)}</dt>
           <dd className='p-basic-info__desc'>
             <ul className='p-basic-info__sns-list'>
               {Object.entries(officialSns!).map(([platform, data]) =>
                 data?.link ? (
                   <li key={platform} className='p-basic-info__sns-item'>
                     <a href={data.link} target='_blank' rel='noopener noreferrer' className='p-basic-info__link'>
-                      {SNS_LABELS[platform] || platform}
+                      {snsPlatformLabel(platform)}
                     </a>
                   </li>
                 ) : null
               )}
             </ul>
+            <OfficialSns
+              snsUrl={officialSns?.x?.link}
+              youtubeUrl={officialSns?.youtube_channel?.link}
+            />
           </dd>
         </>
       )}
@@ -104,7 +105,7 @@ export const BasicInfo = ({
       ))}
       {actors && actors.length > 0 && (
         <>
-          <dt className='p-basic-info__term'>{locale === 'en' ? 'Cast' : '登場人物'}</dt>
+          <dt className='p-basic-info__term'>{t(messages, ['terms', 'cast'], locale)}</dt>
           <dd className='p-basic-info__desc p-basic-info__actors'>
             {actors.map((actor, i) => (
               <dl key={i} className='p-basic-info__actor-entry'>
@@ -113,7 +114,7 @@ export const BasicInfo = ({
                 )}
                 <dd className='p-basic-info__actor-detail'>
                   <p>
-                    {locale === 'en' ? 'Actor: ' : '俳優: '}
+                    {t(messages, ['actor', 'labelPrefix'], locale)}
                     {actor.actorUrl ? (
                       <a href={actor.actorUrl} className='p-basic-info__link'>
                         {actor.actorName}
@@ -128,7 +129,7 @@ export const BasicInfo = ({
                   {actor.otherWorks && actor.otherWorks.length > 0 && (
                     <>
                       <p className='p-basic-info__actor-other-label'>
-                        {locale === 'en' ? 'Other Works:' : '他の作品:'}
+                        {t(messages, ['actor', 'otherWorks'], locale)}
                       </p>
                       <ul className='p-basic-info__actor-other-list'>
                         {actor.otherWorks.map((work, j) => (
