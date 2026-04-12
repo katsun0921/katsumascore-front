@@ -22,7 +22,7 @@ type CtaVariant = {
 export type AdBannerProps = BannerVariant | CtaVariant
 
 export const AdBanner = (props: AdBannerProps) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+   
   const locale = useLocale()
 
   if (props.type === 'banner') {
