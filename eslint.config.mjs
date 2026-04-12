@@ -77,6 +77,27 @@ const eslintConfig = defineConfig([
       },
   },
   // ─────────────────────────────────────────────────────────────────────────────
+  // Arrow functions only — no function declarations or named function expressions
+  // Applies to all src/ TS/TSX files (stories excluded)
+  // ─────────────────────────────────────────────────────────────────────────────
+  {
+    files: ['src/**/*.ts', 'src/**/*.tsx'],
+    ignores: ['**/*.stories.tsx', '**/*.stories.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: 'FunctionDeclaration',
+          message: 'Use arrow functions instead of function declarations.',
+        },
+        {
+          selector: 'FunctionExpression:not([async]):not([generator])',
+          message: 'Use arrow functions instead of function expressions.',
+        },
+      ],
+    },
+  },
+  // ─────────────────────────────────────────────────────────────────────────────
   // unused-imports: Auto-fixable unused import detection
   // ─────────────────────────────────────────────────────────────────────────────
   {
