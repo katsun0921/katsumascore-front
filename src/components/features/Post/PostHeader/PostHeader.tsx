@@ -1,3 +1,5 @@
+import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
@@ -13,6 +15,10 @@ export type PostHeaderProps = {
   releaseDate?: string  // 'YYYYMMDD'
   rating?: string
   copyright?: string
+  // PostHeroScore から移動
+  score?: number
+  scoreMax?: number
+  comment?: string
 }
 
 export function PostHeader({
@@ -24,6 +30,9 @@ export function PostHeader({
   releaseDate,
   rating,
   copyright,
+  score,
+  scoreMax = SCORE_DISPLAY_MAX,
+  comment,
 }: PostHeaderProps) {
   const locale = useLocale()
   const sep = t(messages, ['meta', 'sep'], locale)
@@ -36,20 +45,32 @@ export function PostHeader({
 
   return (
     <div className='post-header'>
-      <p className='post-header__category'>{category}</p>
-      <h1 className='post-header__title-ja'>{titleJa}</h1>
-      {titleEn && <p className='post-header__title-en'>{titleEn}</p>}
-      {metaParts.length > 0 && (
-        <p className='post-header__meta'>
-          {metaParts.map((part, i) => (
-            <span key={i}>
-              {i > 0 && <span className='post-header__meta-sep'>{sep}</span>}
-              {part}
-            </span>
-          ))}
-        </p>
-      )}
-      {copyright && <p className='post-header__copyright'>{copyright}</p>}
+      <div className='post-header__inner'>
+        <div className='post-header__grid'>
+          <hgroup>
+            <p className='post-header__category'>{category}</p>
+            <h1 className='post-header__title-main'>{titleJa}</h1>
+          </hgroup>
+          {titleEn && <p className='post-header__title-sub'>{titleEn}</p>}
+          {comment && <p className='post-header__comment'>{comment}</p>}
+          {metaParts.length > 0 && (
+            <p className='post-header__meta'>
+              {metaParts.map((part, i) => (
+                <span key={i}>
+                  {i > 0 && <span className='post-header__meta-sep'>{sep}</span>}
+                  {part}
+                </span>
+              ))}
+            </p>
+          )}
+          {copyright && <p className='post-header__copyright'>{copyright}</p>}
+      </div>
+        {score !== undefined && (
+          <div className='post-header__rank'>
+            <ScoreWithRank value={score} max={scoreMax} />
+          </div>
+        )}
+      </div>
     </div>
   )
 }

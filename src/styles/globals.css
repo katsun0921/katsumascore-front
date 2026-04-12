@@ -295,13 +295,6 @@ h4 {
   font-family: var(--font-ja-body);
 }
 
-:lang(en) h1,
-:lang(en) h2,
-:lang(en) h3,
-:lang(en) h4 {
-  font-family: var(--font-en-base);
-}
-
 button,
 nav {
   font-family: var(--font-ui);

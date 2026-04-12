@@ -1,6 +1,5 @@
 import { PostHeader } from '@/components/features/Post/PostHeader/PostHeader'
 import { PostHero } from '@/components/features/Post/PostHero/PostHero'
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { TitleMeta } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
 import { PostContent } from '@/components/features/Post/PostContent/PostContent'
@@ -14,7 +13,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
   return (
     <div>
 
-      {/* ── title.php 相当：タイトル・カテゴリ・メタ情報 ── */}
+      {/* ── title.php 相当 ── */}
       <PostHeader
         category={post.category ?? ''}
         titleJa={post.title}
@@ -24,21 +23,18 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         releaseDate={post.TitleMeta?.releaseDate}
         rating={post.rating}
         copyright={post.TitleMeta?.copyright}
+        score={post.score}
+        comment={post.authorComment}
       />
 
-      {/* ── PostHero：ポスター・トレーラー・スコア ── */}
-      {post.score !== undefined && post.authorComment && (
-        <PostHero
-          titleJa={post.title}
-          trailerYoutubeId={post.trailerYoutubeId}
-          trailerEmbedCode={post.trailerEmbedCode}
-          posterUrl={post.image ?? ''}
-          description={post.excerpt}
-          score={post.score}
-          scoreMax={SCORE_DISPLAY_MAX}
-          authorComment={post.authorComment}
-        />
-      )}
+      {/* ── PostHero：ポスター・トレーラー ── */}
+      <PostHero
+        titleJa={post.title}
+        trailerYoutubeId={post.trailerYoutubeId}
+        trailerEmbedCode={post.trailerEmbedCode}
+        posterUrl={post.image ?? ''}
+        description={post.excerpt}
+      />
 
       {/* body: 最大幅・中央・flex（md以上） */}
       <div className='relative mx-auto mt-8 md:flex md:justify-between md:gap-12'>

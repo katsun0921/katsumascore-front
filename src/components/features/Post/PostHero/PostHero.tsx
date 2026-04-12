@@ -1,6 +1,5 @@
 import { VideoEmbed } from '@/components/ui/VideoEmbed/VideoEmbed'
 import { PostHeroSummary } from '@/components/features/Post/PostHeroSummary/PostHeroSummary'
-import { PostHeroScore } from '@/components/features/Post/PostHeroScore/PostHeroScore'
 import './PostHero.scss'
 
 export type PostHeroProps = {
@@ -11,10 +10,6 @@ export type PostHeroProps = {
 
   posterUrl: string
   description: string
-
-  score: number
-  scoreMax?: number
-  authorComment: string
 }
 
 export function PostHero(props: PostHeroProps) {
@@ -32,11 +27,6 @@ export function PostHero(props: PostHeroProps) {
         />
       )}
       <PostHeroSummary posterUrl={props.posterUrl} text={props.description} />
-      <PostHeroScore
-        score={props.score}
-        scoreMax={props.scoreMax}
-        comment={props.authorComment}
-      />
     </section>
   )
 }

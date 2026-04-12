@@ -4,6 +4,51 @@
   gap: var(--space-4);
 }
 
+// ── comment を全幅・最上部に、残りは左=テキスト群 / 右=rank ──
+.post-header__inner {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-4) var(--space-12);
+  align-items: start;
+}
+
+// display: contents で子要素を .post-header__inner グリッドの直接アイテムに昇格
+.post-header__grid {
+  display: contents;
+
+  > hgroup,
+  > .post-header__title-sub,
+  > .post-header__meta,
+  > .post-header__copyright {
+    grid-column: 1;
+  }
+}
+
+// comment: row 1 に固定・両カラムスパンで全幅
+.post-header__comment {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  width: 100%;
+  font-family: var(--font-accent-strong);
+  font-size: var(--font-size-h2-sp);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: 0.03em;
+  text-shadow: -1px 1px 2px rgba(var(--color-black-rgb), 0.2);
+  margin: var(--space-0);
+
+  @media (min-width: var(--breakpoint-md)) {
+    font-size: var(--font-size-h2-pc);
+  }
+}
+
+// rank: row 2 以降をスパン・上下中央
+.post-header__rank {
+  grid-column: 2;
+  grid-row: 2 / span 10;
+  align-self: center;
+}
+
 .post-header__category {
   font-family: var(--font-ja-body);
   font-size: var(--font-size-label-sp);
@@ -16,7 +61,7 @@
   }
 }
 
-.post-header__title-ja {
+.post-header__title-main {
   font-family: var(--font-ja-heading);
   font-size: var(--font-size-h1-sp);
   color: var(--color-text-primary);
@@ -29,7 +74,7 @@
   }
 }
 
-.post-header__title-en {
+.post-header__title-sub {
   font-family: var(--font-en-heading);
   font-size: var(--font-size-body-sp);
   color: var(--color-text-secondary);
@@ -43,7 +88,7 @@
 
 .post-header__meta {
   font-family: var(--font-ja-body);
-  font-size: var(--font-size-label-sp);
+  font-size: var(--font-size-body-sp);
   color: var(--color-text-muted);
   letter-spacing: 0.04em;
   margin: var(--space-0);
@@ -59,7 +104,7 @@
 
 .post-header__copyright {
   font-family: var(--font-ja-body);
-  font-size: var(--font-size-label-sp);
+  font-size: var(--font-size-caption-sp);
   color: var(--color-text-muted);
   letter-spacing: 0.03em;
   margin: var(--space-0);
