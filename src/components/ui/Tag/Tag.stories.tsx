@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Tags } from './Tag';
 
 export default {
-  title: 'Components/Tag',
+  title: 'ui/Tag',
   component: Tags,
   argTypes: {},
 } satisfies Meta<typeof Tags>;

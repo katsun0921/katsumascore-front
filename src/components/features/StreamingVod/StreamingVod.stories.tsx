@@ -8,7 +8,7 @@ const mockServices = [
 ]
 
 const meta: Meta<typeof StreamingVod> = {
-  title: 'features/ArticleBlock/StreamingVod',
+  title: 'features/StreamingVod',
   component: StreamingVod,
   tags: ['autodocs'],
   args: {

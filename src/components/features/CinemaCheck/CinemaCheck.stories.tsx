@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { CinemaCheck } from './CinemaCheck'
 
 const meta: Meta<typeof CinemaCheck> = {
-  title: 'features/ArticleBlock/CinemaCheck',
+  title: 'features/CinemaCheck',
   component: CinemaCheck,
   tags: ['autodocs'],
   args: {

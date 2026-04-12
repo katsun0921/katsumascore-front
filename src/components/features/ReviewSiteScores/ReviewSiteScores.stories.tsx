@@ -41,7 +41,7 @@ const defaultSites: TReviewSite[] = [
 ]
 
 const meta: Meta<typeof ReviewSiteScores> = {
-  title: 'features/ArticleBlock/ReviewSiteScores',
+  title: 'features/ReviewSiteScores',
   component: ReviewSiteScores,
   tags: ['autodocs'],
   args: {

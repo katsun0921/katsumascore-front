@@ -8,7 +8,7 @@ const mockPosts = [
 ]
 
 const meta: Meta<typeof RelationPost> = {
-  title: 'features/ArticleBlock/RelationPost',
+  title: 'features/RelationPost',
   component: RelationPost,
   tags: ['autodocs'],
   args: { posts: mockPosts, locale: 'ja' },

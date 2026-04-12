@@ -5,7 +5,7 @@ import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
 import { BasicInfo } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import { VideoEmbed } from '@/components/ui/VideoEmbed/VideoEmbed'
 import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
-import { Summary } from '@/components/features/Summary/Summary'
+import { PostHeroSummary } from '@/components/features/Post/PostHeroSummary/PostHeroSummary'
 import { PostContent } from '@/components/features/Post/PostContent/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
@@ -67,7 +67,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
 
           {/* ── acf-summary.php 相当 ── */}
           {post.summary && (
-            <Summary
+            <PostHeroSummary
               text={post.summary.text}
               refUrl={post.summary.refUrl}
               refLabel={post.summary.refLabel}

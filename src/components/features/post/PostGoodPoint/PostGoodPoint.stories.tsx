@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GoodPoint } from './PostGoodPoint'
 
 const meta: Meta<typeof GoodPoint> = {
-  title: 'features/ArticleBlock/GoodPoint',
+  title: 'features/GoodPoint',
   component: GoodPoint,
   tags: ['autodocs'],
   args: {

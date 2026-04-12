@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { AdRental } from './AdRental'
 
 const meta: Meta<typeof AdRental> = {
-  title: 'features/ArticleBlock/AdRental',
+  title: 'features/AdRental',
   component: AdRental,
   tags: ['autodocs'],
   args: {

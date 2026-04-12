@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ProductBlock } from './ProductBlock'
 
 const meta: Meta<typeof ProductBlock> = {
-  title: 'features/ArticleBlock/ProductBlock',
+  title: 'features/ProductBlock',
   component: ProductBlock,
   tags: ['autodocs'],
 }

@@ -20,7 +20,7 @@
 components/
 ├── features/
 │   └── PostCard, PostList, VodPanel, ...
-└── features/ArticleBlock/
+└── features/
     └── Summary, GoodPoint, ...
 
 - すべてのドメインロジックはcomponents/featuresに集約する
@@ -33,7 +33,7 @@ components/
 | レイヤー | 役割 |
 |----------|------|
 | components/features | 機能コンポーネント（PostCard, ArticleBlock等） |
-| components/features/ArticleBlock | ACFコンポーネント群 |
+| components/features/ | ACFコンポーネント群 |
 | components/ui | 純粋UI（Score, Heading, Badge等） |
 | components/layout | 構造（Header, Footer, Sidebar等） |
 | pages | 組み立て |
