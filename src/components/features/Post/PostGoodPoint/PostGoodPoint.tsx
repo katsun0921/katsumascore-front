@@ -1,5 +1,5 @@
 import React from 'react'
-import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
+import { ScoreWithRank } from '@/components/features/Score/ScoreWithRank/ScoreWithRank'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import './PostGoodPoint.scss'
 

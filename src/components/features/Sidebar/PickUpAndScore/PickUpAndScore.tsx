@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { getRankingIcon } from '@/components/ui/Score/getRankingIcon'
+import { getRankingIcon } from '@/components/features/Score/ScoreWithRank/getRankingIcon'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'

@@ -1,0 +1,92 @@
+.score-with-rank {
+  display: inline-flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: stretch;
+  isolation: isolate;
+}
+
+.score-with-rank__inner {
+  position: relative;
+}
+
+.score-with-rank__badge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  transform: translateY(-10%);
+}
+
+.score-with-rank__badge-img,
+.score-with-rank__badge-img--standalone {
+  width: var(--size-score-rank-badge-sp);
+  height: var(--size-score-rank-badge-sp);
+
+  @media (min-width: 768px) {
+    width: var(--size-score-rank-badge-pc);
+    height: var(--size-score-rank-badge-pc);
+  }
+}
+
+.score-with-rank__badge-img--standalone {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+}
+
+.score-with-rank__text {
+  position: relative;
+  z-index: 2;
+  transform: translateY(var(--offset-score-hero-text-y));
+  text-shadow: var(--shadow-score-hero-text);
+  font-family: var(--font-accent-strong);
+  font-weight: bold;
+  line-height: 1;
+  letter-spacing: var(--letter-spacing-score-hero);
+  font-size: var(--font-size-score-hero-int-sp);
+
+  @media (min-width: 768px) {
+    font-size: var(--font-size-score-hero-int-pc);
+  }
+
+  &--rank-c  { color: var(--color-score-rank-c-text); }
+  &--rank-b  { color: var(--color-score-rank-b-text); }
+  &--rank-a  { color: var(--color-score-rank-a-text); }
+  &--rank-s  { color: var(--color-score-rank-s-text); }
+  &--rank-ss { color: var(--color-score-rank-ss-text); }
+  &--rank-none { color: var(--color-text-primary); }
+}
+
+.score-with-rank__value-wrap {
+  position: relative;
+  display: inline-block;
+  padding-bottom: 0.5em;
+}
+
+.score-with-rank__slash {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 30%;
+  clip-path: polygon(100% 0, 0 35%, 20% 100%);
+
+  &--rank-c  { background-color: var(--color-score-rank-c-text); }
+  &--rank-b  { background-color: var(--color-score-rank-b-text); }
+  &--rank-a  { background-color: var(--color-score-rank-a-text); }
+  &--rank-s  { background-color: var(--color-score-rank-s-text); }
+  &--rank-ss { background-color: var(--color-score-rank-ss-text); }
+  &--rank-none { background-color: var(--color-text-primary); }
+}
+
+.score-with-rank__value-inner {
+  position: relative;
+}
+
+.score-with-rank__decimal {
+  margin-left: var(--space-4);
+  font-size: var(--font-size-score-hero-decimal-sp);
+
+  @media (min-width: 768px) {
+    font-size: var(--font-size-score-hero-decimal-pc);
+  }
+}
