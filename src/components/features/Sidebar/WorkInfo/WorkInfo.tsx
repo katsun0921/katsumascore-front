@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { Score } from '@/components/ui/Score/Score'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { getRankingIcon } from '@/components/ui/Score/getRankingIcon'
@@ -61,7 +60,7 @@ export const WorkInfo = ({
       <div className='sidebar-work-info__score-block'>
         <Score value={score} max={SCORE_DISPLAY_MAX} />
         {rank && (
-          <Image
+          <img
             src={rank.src}
             alt={`rank ${rank.label}`}
             width={32}
