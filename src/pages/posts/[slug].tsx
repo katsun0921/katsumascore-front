@@ -3,13 +3,13 @@ import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wor
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import { PostDetail } from '@/components/templates/PostDetail/PostDetail';
-import { PostSEO } from '@/components/features/PostSEO/PostSEO';
+import { PostSEO } from '@/components/features/Post/PostSEO/PostSEO';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 
 type Props = {
   post: PostDetailProps['post'];
   locale: string;
-  genres: import('@/components/features/sidebar/GenreNav/GenreNav').GenreNavTag[];
+  genres: import('@/components/features/Sidebar/GenreNav/GenreNav').GenreNavTag[];
 };
 
 export default function PostPage({ post, locale, genres }: Props) {

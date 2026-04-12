@@ -1,29 +1,29 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { VideoEmbed } from './VideoEmbed'
 
-const meta: Meta<typeof VideoEmbed> = {
-  title: 'ui/VideoEmbed',
+const meta = {
+  title: 'Features/VideoEmbed',
   component: VideoEmbed,
-  tags: ['autodocs'],
-}
+  parameters: { layout: 'padded' },
+} satisfies Meta<typeof VideoEmbed>
+
 export default meta
+type Story = StoryObj<typeof meta>
 
-type Story = StoryObj<typeof VideoEmbed>
-
-export const YouTubeUrl: Story = {
+// ---------------------------------------------------------------------------
+// YouTube embed
+// ---------------------------------------------------------------------------
+export const YouTube: Story = {
   args: {
-    videoUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-    title: 'Sample Video',
+    embedCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>',
   },
 }
 
-export const EmbedCode: Story = {
+// ---------------------------------------------------------------------------
+// NoEmbed — embedCode が空の場合は何も表示しない
+// ---------------------------------------------------------------------------
+export const NoEmbed: Story = {
   args: {
-    embedCode:
-      '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allowfullscreen></iframe>',
+    embedCode: '',
   },
-}
-
-export const Empty: Story = {
-  args: {},
 }

@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PostList } from './PostList';
 import { mockPosts } from '@/components/features/Post/mocks/post';
-import { HomeTemplate } from './HomeTemplate';
 
-const meta: Meta<typeof HomeTemplate> = {
-  title: 'Templates/HomeTemplate',
-  component: HomeTemplate,
+const meta = {
+  title: 'Features/Post/PostList',
+  component: PostList,
   parameters: {
     layout: 'fullscreen',
   },
-};
+} satisfies Meta<typeof PostList>;
 
 export default meta;
 
@@ -17,6 +17,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     posts: mockPosts,
+    variant: 'grid',
   },
 };
 

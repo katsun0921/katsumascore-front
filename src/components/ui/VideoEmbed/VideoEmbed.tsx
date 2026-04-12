@@ -1,28 +1,15 @@
-export type TVideoEmbedProps = {
-  embedCode?: string
-  videoUrl?: string
-  title?: string
+import { VideoEmbed as VideoEmbedUI } from '@/components/ui/VideoEmbed/VideoEmbed'
+import './VideoEmbed.scss'
+
+export type TFeatureVideoEmbedProps = {
+  embedCode: string
+  locale?: 'ja' | 'en'
 }
 
-export const VideoEmbed = ({ embedCode, videoUrl, title = 'Video' }: TVideoEmbedProps) => {
-  if (!embedCode && !videoUrl) return null
-
+export const VideoEmbed = ({ embedCode }: TFeatureVideoEmbedProps) => {
   return (
-    <div className='relative w-full mt-4 pt-[56.25%]'>
-      {embedCode ? (
-        <div
-          className='absolute inset-0 w-full h-full border-none'
-          dangerouslySetInnerHTML={{ __html: embedCode }}
-        />
-      ) : (
-        <iframe
-          className='absolute inset-0 w-full h-full border-none'
-          src={videoUrl}
-          title={title}
-          allowFullScreen
-          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-        />
-      )}
+    <div className='p-video-embed'>
+      <VideoEmbedUI embedCode={embedCode} />
     </div>
   )
 }

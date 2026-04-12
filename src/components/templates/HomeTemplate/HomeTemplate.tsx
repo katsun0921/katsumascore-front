@@ -1,5 +1,5 @@
 import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
-import { PostList } from '@/components/features/PostList/PostList';
+import { PostList } from '@/components/features/Post/PostList/PostList';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 
 export const HomeTemplate = ({ posts, isLoading = false }: HomeTemplateProps) => {

@@ -12,7 +12,7 @@
  * If the UI survives this, it is production-ready.
  */
 
-import type { Post } from '@/components/features/post/types/post';
+import type { Post } from '@/components/features/Post/types/post';
 
 export const chaosPosts: Post[] = [
   // 1. Normal post — baseline for comparison within chaos context

@@ -1,6 +1,6 @@
 import { VideoEmbed } from '@/components/ui/VideoEmbed/VideoEmbed'
-import { PostHeroSummary } from '@/components/features/post/PostHeroSummary/PostHeroSummary'
-import { PostHeroScore } from '@/components/features/post/PostHeroScore/PostHeroScore'
+import { PostHeroSummary } from '@/components/features/Post/PostHeroSummary/PostHeroSummary'
+import { PostHeroScore } from '@/components/features/Post/PostHeroScore/PostHeroScore'
 import './PostHero.scss'
 
 export type PostHeroProps = {

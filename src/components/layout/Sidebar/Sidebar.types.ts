@@ -1,10 +1,10 @@
-import type { TRelationPostItem } from '@/components/features/ArticleBlock/RelationPost/RelationPost'
-import type { TStreamingVodEntry } from '@/components/features/ArticleBlock/StreamingVod/StreamingVod'
-import type { TRentalService } from '@/components/features/ArticleBlock/AdRental/AdRental'
-import type { TPostsGroupItem } from '@/components/features/PostsGroup/PostsGroup'
-import type { ProfileProps } from '@/components/features/sidebar/Profile/Profile'
-import type { WorkInfoProps } from '@/components/features/sidebar/WorkInfo/WorkInfo'
-import type { AdBannerProps } from '@/components/features/sidebar/AdBanner/AdBanner'
+import type { TRelationPostItem } from '@/components/features/RelationPost/RelationPost'
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
+import type { TRentalService } from '@/components/features/AdRental/AdRental'
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
+import type { ProfileProps } from '@/components/features/Sidebar/Profile/Profile'
+import type { WorkInfoProps } from '@/components/features/Sidebar/WorkInfo/WorkInfo'
+import type { AdBannerProps } from '@/components/features/Sidebar/AdBanner/AdBanner'
 import type { TocItem } from '@/lib/toc'
 
 export type SidebarProps = {
@@ -23,14 +23,14 @@ export type SidebarProps = {
   adBanner?: AdBannerProps
 
   // ❺ 関連記事（サイドバー専用リスト）
-  relatedPosts?: import('@/components/features/sidebar/RelatedPosts/RelatedPosts').RelatedPostItem[]
+  relatedPosts?: import('@/components/features/Sidebar/RelatedPosts/RelatedPosts').RelatedPostItem[]
 
   // ❼ PICK UP / HIGH SCORE
-  pickupPosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
-  highScorePosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+  pickupPosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+  highScorePosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
 
   // ❽ ジャンルナビ
-  genres?: import('@/components/features/sidebar/GenreNav/GenreNav').GenreNavTag[]
+  genres?: import('@/components/features/Sidebar/GenreNav/GenreNav').GenreNavTag[]
   activeGenreSlug?: string
 
   // 関連記事（acf-relation-by-post-id.php 相当）

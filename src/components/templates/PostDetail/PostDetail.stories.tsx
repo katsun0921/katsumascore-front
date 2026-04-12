@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { PostDetail } from './PostDetail'
-import { mockPost, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/post/mocks/post'
+import { mockPost, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/Post/mocks/post'
 import type { PostDetailData } from './PostDetail.types'
 
 // ---------------------------------------------------------------------------

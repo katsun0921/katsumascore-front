@@ -1,11 +1,11 @@
-import type { Post } from '@/components/features/post/types/post'
+import type { Post } from '@/components/features/Post/types/post'
 import type { TocItem } from '@/lib/toc'
-import type { TBasicInfoProps, TCreditEntry, TActor } from '@/components/features/TitleMeta/TitleMeta'
-import type { TReviewSite } from '@/components/features/ArticleBlock/ReviewSiteScores/ReviewSiteScores'
-import type { TStreamingVodEntry } from '@/components/features/ArticleBlock/StreamingVod/StreamingVod'
-import type { TRentalService } from '@/components/features/ArticleBlock/AdRental/AdRental'
-import type { TRelationPostItem } from '@/components/features/ArticleBlock/RelationPost/RelationPost'
-import type { TPostsGroupItem } from '@/components/features/PostsGroup/PostsGroup'
+import type { TBasicInfoProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
+import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
+import type { TRentalService } from '@/components/features/AdRental/AdRental'
+import type { TRelationPostItem } from '@/components/features/RelationPost/RelationPost'
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
 import type { TVodIntroductionProps } from '@/components/features/VodIntroduction/VodIntroduction'
 
 export type PostDetailData = Post & {
@@ -50,8 +50,8 @@ export type PostDetailData = Post & {
 
   // サイドバー用
   toc?: TocItem[]
-  pickupPosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
-  highScorePosts?: import('@/components/features/sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+  pickupPosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
+  highScorePosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
 
   // aside ブロック群
   isCinemaShowing?: boolean
@@ -72,5 +72,5 @@ export type PostDetailData = Post & {
 export type PostDetailProps = {
   post: PostDetailData
   locale?: 'ja' | 'en'
-  genres?: import('@/components/features/sidebar/GenreNav/GenreNav').GenreNavTag[]
+  genres?: import('@/components/features/Sidebar/GenreNav/GenreNav').GenreNavTag[]
 }

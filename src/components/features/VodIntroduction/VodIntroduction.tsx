@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import type { Post } from '@/components/features/post/types/post'
+import type { Post } from '@/components/features/Post/types/post'
 import './VodIntroduction.scss'
 
 // どちらで執筆されたか
