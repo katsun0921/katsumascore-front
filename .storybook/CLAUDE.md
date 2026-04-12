@@ -65,7 +65,7 @@ components/
 │   ├── VodPanel
 │   ├── ArticleHeader
 │   ├── ArticleMeta
-│   ├── BasicInfo
+│   ├── TitleMeta
 │   ├── CreditInfo
 │   ├── ShareButtons
 │   ├── Carousel
