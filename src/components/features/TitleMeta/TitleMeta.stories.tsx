@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { BasicInfo } from './BasicInfo'
+import { BasicInfo } from './TitleMeta'
 
 const meta: Meta<typeof BasicInfo> = {
   title: 'features/BasicInfo',

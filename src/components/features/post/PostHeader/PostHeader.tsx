@@ -1,7 +1,7 @@
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import type { TStudioEntry } from '@/components/features/BasicInfo/BasicInfo'
+import type { TStudioEntry } from '@/components/features/TitleMeta/TitleMeta'
 import './PostHeader.scss'
 
 export type PostHeaderProps = {
