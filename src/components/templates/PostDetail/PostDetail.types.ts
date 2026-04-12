@@ -7,6 +7,7 @@ import type { TRentalService } from '@/components/features/AdRental/AdRental'
 import type { TRelationPostItem } from '@/components/features/RelationPost/RelationPost'
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
 import type { TVodIntroductionProps } from '@/components/features/VodIntroduction/VodIntroduction'
+import type { ProfileProps } from '@/components/features/Sidebar/Profile/Profile'
 
 export type PostDetailData = Post & {
   // コンテンツ
@@ -49,6 +50,7 @@ export type PostDetailData = Post & {
   vodIntroduction?: Omit<TVodIntroductionProps, 'locale'>
 
   // サイドバー用
+  profile?: ProfileProps
   toc?: TocItem[]
   pickupPosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]
   highScorePosts?: import('@/components/features/Sidebar/PickUpAndScore/PickUpAndScore').PickUpPost[]

@@ -86,6 +86,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         {/* ── サイドバー ── */}
         <Sidebar
           locale={locale}
+          profile={post.profile}
           toc={post.toc}
           pickupPosts={post.pickupPosts}
           highScorePosts={post.highScorePosts}
