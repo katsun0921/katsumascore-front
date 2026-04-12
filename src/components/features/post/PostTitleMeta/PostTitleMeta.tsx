@@ -24,7 +24,7 @@ export type TActor = {
   otherWorks?: { title: string; href: string; character?: string }[]
 }
 
-export type TBasicInfoProps = {
+export type TTitleMetaProps = {
   titleEn?: string
   officialUrl?: string
   copyright?: string
@@ -37,7 +37,7 @@ export type TBasicInfoProps = {
   locale?: 'ja' | 'en'
 }
 
-export const BasicInfo = ({
+export const TitleMeta = ({
   officialUrl,
   copyright,
   releaseDate,
@@ -45,7 +45,7 @@ export const BasicInfo = ({
   credits,
   actors,
   locale = 'ja',
-}: TBasicInfoProps) => {
+}: TTitleMetaProps) => {
   let parsedDate: string | null = null
   if (releaseDate && releaseDate.length === 8) {
     const y = releaseDate.slice(0, 4)

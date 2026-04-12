@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { BasicInfo } from './PostTitleMeta'
+import { TitleMeta } from './PostTitleMeta'
 
-const meta: Meta<typeof BasicInfo> = {
-  title: 'features/BasicInfo',
-  component: BasicInfo,
+const meta: Meta<typeof TitleMeta> = {
+  title: 'features/TitleMeta',
+  component: TitleMeta,
   tags: ['autodocs'],
   args: {
     titleEn: 'Demon Slayer: Kimetsu no Yaiba',
@@ -20,7 +20,7 @@ const meta: Meta<typeof BasicInfo> = {
 }
 export default meta
 
-type Story = StoryObj<typeof BasicInfo>
+type Story = StoryObj<typeof TitleMeta>
 
 export const Japanese: Story = { args: { locale: 'ja' } }
 export const English: Story = { args: { locale: 'en' } }

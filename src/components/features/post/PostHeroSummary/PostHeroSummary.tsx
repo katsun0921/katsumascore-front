@@ -4,51 +4,18 @@ import type { Locale } from '@/i18n/t'
 import { messages } from './i18n'
 import './PostHeroSummary.scss'
 
-export type PostHeroSummaryProps =
-  | {
-      posterUrl: string
-      description: string
-    }
-  | {
-      text: string
-      refUrl?: string
-      refLabel?: string
-      locale?: Locale
-    }
-
-function isArticleSummary(
-  props: PostHeroSummaryProps,
-): props is Extract<PostHeroSummaryProps, { text: string }> {
-  return 'text' in props
+export type PostHeroSummaryProps = {
+  posterUrl: string
+  text: string
+  refUrl?: string
+  refLabel?: string
+  locale?: Locale
 }
 
 export function PostHeroSummary(props: PostHeroSummaryProps) {
-  if (isArticleSummary(props)) {
-    const { text, refUrl, refLabel, locale = 'ja' } = props
-    return (
-      <section className='p-summary'>
-        <h2 className='p-summary__heading'>{t(messages, ['heading'], locale)}</h2>
-        <blockquote className='p-summary__quote'>
-          <p>{text}</p>
-          {(refUrl || refLabel) && (
-            <cite>
-              {refUrl ? (
-                <a href={refUrl} target='_blank' rel='noopener noreferrer'>
-                  {refLabel || refUrl}
-                </a>
-              ) : (
-                refLabel
-              )}
-            </cite>
-          )}
-        </blockquote>
-      </section>
-    )
-  }
-
-  const { posterUrl, description } = props
+  const { posterUrl, text, refUrl, refLabel, locale = 'ja' } = props
   return (
-    <div className='post-hero-summary'>
+    <section className='post-hero-summary'>
       <div className='post-hero-summary__poster'>
         {posterUrl ? (
           <Image
@@ -62,7 +29,23 @@ export function PostHeroSummary(props: PostHeroSummaryProps) {
           <div className='post-hero-summary__poster-placeholder' aria-hidden />
         )}
       </div>
-      <p className='post-hero-summary__description'>{description}</p>
-    </div>
+      <div>
+        <h2 className='post-hero-summary__heading'>{t(messages, ['heading'], locale)}</h2>
+          <blockquote className='post-hero-summary__quote'>
+            <p className='post-hero-summary__quote-text'>{text}</p>
+            {(refUrl || refLabel) && (
+              <cite className='post-hero-summary__cite'>
+                {refUrl ? (
+                  <a href={refUrl} target='_blank' rel='noopener noreferrer'>
+                    {refLabel || refUrl}
+                  </a>
+                ) : (
+                  refLabel
+                )}
+              </cite>
+            )}
+          </blockquote>
+      </div>
+    </section>
   )
 }

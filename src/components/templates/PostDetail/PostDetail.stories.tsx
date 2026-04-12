@@ -27,7 +27,7 @@ const basePost: PostDetailData = {
     refUrl: 'https://example.com',
     refLabel: '公式サイト',
   },
-  basicInfo: {
+  TitleMeta: {
     titleEn: 'A Bouquet of Clumsy Words',
     officialUrl: 'https://hanataba-movie.com',
     copyright: '©2021「花束みたいな恋をした」製作委員会',

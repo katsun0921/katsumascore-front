@@ -31,7 +31,7 @@ export function PostHero(props: PostHeroProps) {
           title={props.titleJa}
         />
       )}
-      <PostHeroSummary posterUrl={props.posterUrl} description={props.description} />
+      <PostHeroSummary posterUrl={props.posterUrl} text={props.description} />
       <PostHeroScore
         score={props.score}
         scoreMax={props.scoreMax}

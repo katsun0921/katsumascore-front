@@ -1,6 +1,6 @@
 import type { Post } from '@/components/features/Post/types/post'
 import type { TocItem } from '@/lib/toc'
-import type { TBasicInfoProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
+import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
 import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
 import type { TRentalService } from '@/components/features/AdRental/AdRental'
@@ -32,7 +32,7 @@ export type PostDetailData = Post & {
   }
 
   // 基本情報（basic-info + studio-info の統合）
-  basicInfo?: Omit<TBasicInfoProps, 'locale'>
+  TitleMeta?: Omit<TTitleMetaProps, 'locale'>
 
   // スタッフ・キャスト（director-info + actors-info）
   credits?: TCreditEntry[]

@@ -1,11 +1,8 @@
 import { PostHeader } from '@/components/features/Post/PostHeader/PostHeader'
 import { PostHero } from '@/components/features/Post/PostHero/PostHero'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
-import { ScoreWithRank } from '@/components/ui/Score/ScoreWithRank'
-import { BasicInfo } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
-import { VideoEmbed } from '@/components/ui/VideoEmbed/VideoEmbed'
+import { TitleMeta } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
-import { PostHeroSummary } from '@/components/features/Post/PostHeroSummary/PostHeroSummary'
 import { PostContent } from '@/components/features/Post/PostContent/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
@@ -22,11 +19,11 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         category={post.category ?? ''}
         titleJa={post.title}
         titleEn={post.titleEn}
-        filmStudios={post.basicInfo?.filmStudios}
-        productionStudios={post.basicInfo?.productionStudios}
-        releaseDate={post.basicInfo?.releaseDate}
+        filmStudios={post.TitleMeta?.filmStudios}
+        productionStudios={post.TitleMeta?.productionStudios}
+        releaseDate={post.TitleMeta?.releaseDate}
         rating={post.rating}
-        copyright={post.basicInfo?.copyright}
+        copyright={post.TitleMeta?.copyright}
       />
 
       {/* ── PostHero：ポスター・トレーラー・スコア ── */}
@@ -55,24 +52,14 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
           >
 
             {/* 基本情報・キャスト情報 */}
-            {(post.basicInfo || (post.credits && post.credits.length > 0) || (post.actors && post.actors.length > 0)) && (
-              <BasicInfo {...post.basicInfo} credits={post.credits} actors={post.actors} locale={locale} />
+            {(post.TitleMeta || (post.credits && post.credits.length > 0) || (post.actors && post.actors.length > 0)) && (
+              <TitleMeta {...post.TitleMeta} credits={post.credits} actors={post.actors} locale={locale} />
             )}
           </section>
 
           {/* ── acf-good-point.php 相当 ── */}
           {post.goodPoints && post.goodPoints.length > 0 && (
             <GoodPoint points={post.goodPoints} locale={locale} />
-          )}
-
-          {/* ── acf-summary.php 相当 ── */}
-          {post.summary && (
-            <PostHeroSummary
-              text={post.summary.text}
-              refUrl={post.summary.refUrl}
-              refLabel={post.summary.refLabel}
-              locale={locale}
-            />
           )}
 
           {/* ── the_content() 相当 ── */}
