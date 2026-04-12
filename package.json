@@ -42,21 +42,22 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@vitest/browser-playwright": "^4.1.4",
+    "@vitest/coverage-v8": "^4.1.4",
     "chromatic": "^13.2.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.1",
     "eslint-plugin-storybook": "10.3.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
     "lint-staged": "^16.2.4",
+    "playwright": "^1.59.1",
     "sass": "^1.98.0",
     "storybook": "^10.3.5",
     "stylelint": "^16.25.0",
     "stylelint-config-standard-scss": "^16.0.0",
     "tailwindcss": "^4",
     "typescript": "^5",
-    "vitest": "^4.1.4",
-    "playwright": "^1.59.1",
-    "@vitest/browser-playwright": "^4.1.4",
-    "@vitest/coverage-v8": "^4.1.4"
+    "vitest": "^4.1.4"
   }
 }

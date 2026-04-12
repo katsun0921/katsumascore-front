@@ -1,4 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { extractToc } from '@/lib/toc'
+import { mockPostContentFull } from '@/components/features/Post/mocks/post'
 import { Sidebar } from './Sidebar'
 
 const meta: Meta<typeof Sidebar> = {
@@ -37,6 +39,8 @@ const mockPostsGroups = [
   },
 ]
 
+const mockToc = extractToc(mockPostContentFull.content)
+
 const mockProfile = {
   name: 'Katsuma',
   description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
@@ -54,6 +58,7 @@ export const Default: Story = {
   args: {
     locale: 'ja',
     profile: mockProfile,
+    toc: mockToc,
     titleJp: 'インターステラー',
     titleEn: 'Interstellar',
     isCinemaShowing: false,

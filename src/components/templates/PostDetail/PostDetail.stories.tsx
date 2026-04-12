@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { PostDetail } from './PostDetail'
 import { mockPost, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/Post/mocks/post'
+import { extractToc } from '@/lib/toc'
 import type { PostDetailData } from './PostDetail.types'
 
 // ---------------------------------------------------------------------------
@@ -15,6 +16,7 @@ const basePost: PostDetailData = {
   trailerYoutubeId: 'hLRMHi73BzQ',
   updatedAt: '2026-04-03',
   content: mockPostContent.content,
+  toc: extractToc(mockPostContent.content),
   excerpt: '登場人物の距離感や東京の空気を追いながら、恋愛映画としての切なさと現代性を丁寧に読み解くためのレビューです。',
   videoCode: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allowfullscreen></iframe>',
   goodPoints: [

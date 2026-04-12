@@ -86,18 +86,6 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
           toc={post.toc}
           pickupPosts={post.pickupPosts}
           highScorePosts={post.highScorePosts}
-          workInfo={post.score !== undefined ? {
-            score: post.score,
-            title: locale === 'en' && post.titleEn ? post.titleEn : post.title,
-            isCinema: post.isCinemaShowing,
-            vod: post.streamingVods ? {
-              unext:   post.streamingVods.some((v) => v.service === 'unext'),
-              amazon:  post.streamingVods.some((v) => v.service === 'amazon'),
-              hulu:    post.streamingVods.some((v) => v.service === 'hulu'),
-              netflix: post.streamingVods.some((v) => v.service === 'netflix'),
-              disney:  post.streamingVods.some((v) => v.service === 'disney'),
-            } : undefined,
-          } : undefined}
           relationPosts={post.relationPosts}
           isCinemaShowing={post.isCinemaShowing}
           titleJp={post.title}
