@@ -112,12 +112,12 @@ components/
 │   ├── VodPanel
 │   ├── ArticleHeader
 │   ├── ArticleMeta
-│   ├── BasicInfo
+│   ├── TitleMeta
 │   ├── CreditInfo
 │   ├── ShareButtons
 │   ├── Carousel
 │
-├── features/ArticleBlock/
+├── features/
 │   ├── Summary
 │   ├── GoodPoint
 │   ├── ReviewSiteScores
@@ -174,7 +174,7 @@ components/
 |---|---|
 | template-parts/components | ui / features |
 | template-parts/post | features |
-| template-parts/plugins/acf | features/ArticleBlock |
+| template-parts/plugins/acf | features/ |
 | template-parts/plugins/acf/vod | ui/VodItem |
 
 ---

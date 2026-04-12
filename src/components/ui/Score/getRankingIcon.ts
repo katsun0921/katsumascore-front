@@ -44,15 +44,22 @@ export function getRankingIcon(value: number): { src: string; label: RankLabel }
   return null
 }
 
-/** ScoreWithRank の数字色（ランク別）。範囲外は本文色。 */
-export function getRankScoreTextColorClass(rank: RankLabel | null): string {
-  if (!rank) return 'text-[var(--color-text-primary)]'
-  const map: Record<RankLabel, string> = {
-    C: 'text-[var(--color-score-rank-c-text)]',
-    B: 'text-[var(--color-score-rank-b-text)]',
-    A: 'text-[var(--color-score-rank-a-text)]',
-    S: 'text-[var(--color-score-rank-s-text)]',
-    SS: 'text-[var(--color-score-rank-ss-text)]',
+type RankColorClasses = { text: string; bg: string }
+
+/** ScoreWithRank のランク別カラークラス（text / bg）。範囲外は本文色。 */
+export function getRankScoreColorClasses(rank: RankLabel | null): RankColorClasses {
+  if (!rank) {
+    return {
+      text: 'text-[var(--color-text-primary)]',
+      bg: 'bg-[var(--color-text-primary)]',
+    }
+  }
+  const map: Record<RankLabel, RankColorClasses> = {
+    C:  { text: 'text-[var(--color-score-rank-c-text)]',  bg: 'bg-[var(--color-score-rank-c-text)]'  },
+    B:  { text: 'text-[var(--color-score-rank-b-text)]',  bg: 'bg-[var(--color-score-rank-b-text)]'  },
+    A:  { text: 'text-[var(--color-score-rank-a-text)]',  bg: 'bg-[var(--color-score-rank-a-text)]'  },
+    S:  { text: 'text-[var(--color-score-rank-s-text)]',  bg: 'bg-[var(--color-score-rank-s-text)]'  },
+    SS: { text: 'text-[var(--color-score-rank-ss-text)]', bg: 'bg-[var(--color-score-rank-ss-text)]' },
   }
   return map[rank]
 }
