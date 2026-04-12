@@ -57,9 +57,20 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, lo
     count: tag.count,
   }));
 
+  const profile = {
+    name: 'Katsuma',
+    description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
+    avatarUrl: '/images/mock-avatar.webp',
+    aboutUrl: '/about',
+    social: {
+      x: 'https://x.com/Katsun0921',
+      instagram: 'https://instagram.com/katsumascore',
+    },
+  };
+
   return {
     props: {
-      post: { ...post, toc, highScorePosts },
+      post: { ...post, toc, highScorePosts, profile },
       locale: locale ?? 'ja',
       genres,
     },
