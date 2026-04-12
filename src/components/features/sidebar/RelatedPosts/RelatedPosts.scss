@@ -1,5 +1,5 @@
 .sidebar-related {
-  padding: 16px;
+  padding: var(--space-16);
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -10,17 +10,17 @@
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--color-text-primary);
-    margin-bottom: 10px;
+    margin-bottom: var(--space-12);
   }
 
   // ── リスト ──
   &__list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: var(--space-0);
   }
 
   // ── 各アイテム ──
@@ -36,8 +36,8 @@
   &__link {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px 0;
+    gap: var(--space-12);
+    padding: var(--space-12) var(--space-0);
     text-decoration: none;
     color: inherit;
     transition: opacity 0.2s ease;
@@ -76,7 +76,7 @@
     min-width: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-4);
   }
 
   &__title {

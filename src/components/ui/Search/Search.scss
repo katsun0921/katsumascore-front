@@ -26,7 +26,7 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 360px;
   height: 40px;
   border-radius: 9999px;
-  padding: 0 16px 0 40px;
+  padding: var(--space-0) var(--space-16) var(--space-0) var(--space-40);
 }
 
 .header-search-sp {
@@ -36,5 +36,5 @@ input[type="search"]::-webkit-search-cancel-button {
   width: 100%;
   height: 36px;
   border-radius: 9999px;
-  padding: 0 16px;
+  padding: var(--space-0) var(--space-16);
 }

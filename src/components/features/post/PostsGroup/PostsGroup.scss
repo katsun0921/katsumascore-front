@@ -36,8 +36,8 @@
   // l-postRelated__3columns 相当
   &__list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
     display: flex;
     flex-direction: column;
     gap: var(--space-8);

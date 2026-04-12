@@ -1,6 +1,6 @@
 .heading__title {
   display: inline-block;
-  margin: 0 auto;
+  margin: var(--space-0) auto;
   color: var(--color-text-inverse);
   font-size: clamp(32px, 5vw, 68px);
   font-weight: 500;
@@ -25,7 +25,7 @@
 
 .heading__related {
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: var(--space-16);
   color: var(--color-secondary);
   font-family: var(--font-accent-soft);
   font-size: clamp(1.5rem, 2vw, 2rem);
@@ -62,7 +62,7 @@
 
 .heading__ribbon {
   position: relative;
-  padding: 15px 30px;
+  padding: var(--space-16) var(--space-32);
   background-color: var(--color-primary);
   color: var(--color-text-inverse);
   font-size: clamp(1.5rem, 2vw, 2rem);
@@ -79,7 +79,7 @@
 
 .heading__bg-wrap {
   position: relative;
-  padding: 20px 40px 20px 20px;
+  padding: var(--space-20) var(--space-40) var(--space-20) var(--space-20);
   border-radius: 8px;
   background: linear-gradient(135deg, var(--color-heading-gradient-start) 0%, var(--color-heading-gradient-end) 100%);
   color: var(--color-text-inverse);
@@ -101,7 +101,7 @@
 
 .heading__quote {
   position: relative;
-  padding: 20px 40px;
+  padding: var(--space-20) var(--space-40);
   color: var(--color-text-dark);
   font-size: clamp(1.5rem, 2vw, 2rem);
 }

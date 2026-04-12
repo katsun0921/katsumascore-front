@@ -9,7 +9,7 @@
   font-size: var(--font-size-label-sp);
   color: var(--color-accent);
   letter-spacing: 0.08em;
-  margin: 0;
+  margin: var(--space-0);
 
   @media (min-width: var(--breakpoint-md)) {
     font-size: var(--font-size-label-pc);
@@ -22,7 +22,7 @@
   color: var(--color-text-primary);
   line-height: 1.3;
   letter-spacing: 0.02em;
-  margin: 0;
+  margin: var(--space-0);
 
   @media (min-width: var(--breakpoint-md)) {
     font-size: var(--font-size-h1-pc);
@@ -34,7 +34,7 @@
   font-size: var(--font-size-body-sp);
   color: var(--color-text-secondary);
   letter-spacing: 0.04em;
-  margin: 0;
+  margin: var(--space-0);
 
   @media (min-width: var(--breakpoint-md)) {
     font-size: var(--font-size-body-pc);
@@ -46,7 +46,7 @@
   font-size: var(--font-size-label-sp);
   color: var(--color-text-muted);
   letter-spacing: 0.04em;
-  margin: 0;
+  margin: var(--space-0);
 
   @media (min-width: var(--breakpoint-md)) {
     font-size: var(--font-size-label-pc);
@@ -54,7 +54,7 @@
 }
 
 .post-header__meta-sep {
-  margin: 0 var(--space-2);
+  margin: var(--space-0) var(--space-8);
 }
 
 .post-header__copyright {
@@ -62,5 +62,5 @@
   font-size: var(--font-size-label-sp);
   color: var(--color-text-muted);
   letter-spacing: 0.03em;
-  margin: 0;
+  margin: var(--space-0);
 }

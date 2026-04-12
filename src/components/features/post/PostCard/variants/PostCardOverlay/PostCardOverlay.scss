@@ -19,8 +19,8 @@
     right: 0;
     bottom: 0;
     left: 0;
-    gap: 0.5rem;
-    padding: 1.25rem;
+    gap: var(--space-8);
+    padding: var(--space-20);
     background:
       linear-gradient(180deg, transparent 0%, color-mix(in srgb, var(--color-secondary) 82%, transparent) 100%);
   }

@@ -1,7 +1,7 @@
 .post-hero-summary {
   display: flex;
   align-items: stretch;
-  margin-top: 2rem;
+  margin-top: var(--space-32);
   gap: var(--space-16);
 
   &__heading {
@@ -9,8 +9,8 @@
     font-size: var(--font-size-h2-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-secondary);
-    padding-bottom: 12px;
-    margin-bottom: 1rem;
+    padding-bottom: var(--space-12);
+    margin-bottom: var(--space-16);
     position: relative;
 
     &::before {
@@ -26,14 +26,14 @@
   }
 
   &__quote {
-    margin: 0;
+    margin: var(--space-0);
     border-left: 4px solid var(--color-category);
-    padding-left: 30px;
+    padding-left: var(--space-12);
     outline: none;
   }
 
   &__quote-text {
-    margin: 0 0 12px;
+    margin: var(--space-0) var(--space-0) var(--space-12);
     line-height: 1.8;
     color: var(--color-text-primary);
     font-size: var(--font-size-body-sp);

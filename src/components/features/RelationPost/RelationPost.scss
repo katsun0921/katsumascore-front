@@ -2,17 +2,17 @@
   &__heading {
     font-size: var(--font-size-h3-pc);
     font-weight: var(--font-weight-bold);
-    margin-bottom: 16px;
+    margin-bottom: var(--space-16);
     color: var(--color-text-primary);
   }
 
   &__list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
     display: grid;
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: var(--space-16);
 
     @media (min-width: 480px) {
       grid-template-columns: repeat(2, 1fr);
@@ -54,7 +54,7 @@
 
   &__title {
     display: block;
-    padding: 10px 12px;
+    padding: var(--space-12) var(--space-12);
     font-size: var(--font-size-ui-pc);
     font-weight: var(--font-weight-bold);
     line-height: 1.5;

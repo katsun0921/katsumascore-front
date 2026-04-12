@@ -1,29 +1,29 @@
 .p-share-buttons {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--space-12);
   flex-wrap: wrap;
 
   &__label {
     font-size: var(--font-size-ui-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-secondary);
-    margin: 0;
+    margin: var(--space-0);
   }
 
   &__list {
     display: flex;
-    gap: 8px;
+    gap: var(--space-8);
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
   }
 
   &__btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 14px;
+    padding: var(--space-8) var(--space-12);
     border-radius: 4px;
     font-size: var(--font-size-ui-sp);
     font-weight: var(--font-weight-bold);

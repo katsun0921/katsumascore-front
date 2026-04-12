@@ -2,13 +2,13 @@
   // ── タブリスト ──
   &__tablist {
     display: flex;
-    gap: 4px;
-    margin-bottom: 8px;
+    gap: var(--space-4);
+    margin-bottom: var(--space-8);
   }
 
   &__tab {
     flex: 1;
-    padding: 6px 8px;
+    padding: var(--space-8) var(--space-8);
     font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
     background: var(--color-surface-muted);

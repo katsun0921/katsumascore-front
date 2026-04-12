@@ -1,5 +1,5 @@
 .sidebar-profile {
-  padding: 20px 16px;
+  padding: var(--space-20) var(--space-16);
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -8,8 +8,8 @@
   &__header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
   }
 
   &__avatar {
@@ -30,12 +30,12 @@
     font-size: var(--font-size-caption-pc);
     line-height: 1.7;
     color: var(--color-text-secondary);
-    margin-bottom: 14px;
+    margin-bottom: var(--space-12);
   }
 
   // ── 管理者の一言コメント ──
   &__comment {
-    margin-bottom: 14px;
+    margin-bottom: var(--space-12);
   }
 
   &__comment-bubble {
@@ -46,7 +46,7 @@
     color: var(--color-text-body);
     background-color: var(--color-surface-muted);
     border-radius: 0 8px 8px 8px;
-    padding: 10px 12px;
+    padding: var(--space-12) var(--space-12);
 
     // 吹き出し三角
     &::before {
@@ -63,8 +63,8 @@
   // ── SNSリンク ──
   &__social {
     display: flex;
-    gap: 8px;
-    margin-bottom: 14px;
+    gap: var(--space-8);
+    margin-bottom: var(--space-12);
   }
 
   &__social-link {

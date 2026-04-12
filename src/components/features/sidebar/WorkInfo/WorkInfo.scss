@@ -1,5 +1,5 @@
 .sidebar-work-info {
-  padding: 20px 16px;
+  padding: var(--space-20) var(--space-16);
   background-color: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 8px;
@@ -8,8 +8,8 @@
   &__score-block {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: var(--space-12);
+    margin-bottom: var(--space-12);
   }
 
   &__rank-icon {
@@ -22,17 +22,17 @@
     font-weight: 700;
     line-height: 1.5;
     color: var(--color-text-primary);
-    margin-bottom: 6px;
+    margin-bottom: var(--space-8);
   }
 
   // ── メタ情報（年 / ジャンル）──
   &__meta {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--space-8);
     font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
-    margin-bottom: 14px;
+    margin-bottom: var(--space-12);
   }
 
   &__meta-sep {
@@ -42,8 +42,8 @@
   // ── VOD セクション ──
   &__vod {
     border-top: 1px solid var(--color-border-muted);
-    padding-top: 12px;
-    margin-top: 4px;
+    padding-top: var(--space-12);
+    margin-top: var(--space-4);
   }
 
   &__vod-heading {
@@ -51,19 +51,19 @@
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--color-text-secondary);
-    margin-bottom: 8px;
+    margin-bottom: var(--space-8);
   }
 
   &__badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: var(--space-8);
   }
 
   // ── バッジ共通 ──
   &__badge {
     display: inline-block;
-    padding: 3px 10px;
+    padding: var(--space-4) var(--space-12);
     border-radius: 4px;
     font-size: var(--font-size-caption-pc);
     font-weight: 700;

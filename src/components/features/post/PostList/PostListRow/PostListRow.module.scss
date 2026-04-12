@@ -2,8 +2,8 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-16);
-  margin: 0;
-  padding: 0;
+  margin: var(--space-0);
+  padding: var(--space-0);
   list-style: none;
 }
 

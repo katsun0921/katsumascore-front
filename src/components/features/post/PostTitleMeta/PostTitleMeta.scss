@@ -1,11 +1,11 @@
 .p-basic-info {
-  margin: 0;
+  margin: var(--space-0);
   border-top: 1px solid var(--color-border-muted);
 
   dt, dd {
-    padding: 12px 0;
+    padding: var(--space-12) var(--space-0);
     border-bottom: 1px solid var(--color-border-muted);
-    margin: 0;
+    margin: var(--space-0);
   }
 
   &__term {
@@ -15,7 +15,7 @@
   }
 
   &__desc {
-    padding-left: 16px;
+    padding-left: var(--space-16);
     font-size: var(--font-size-ui-pc);
     color: var(--color-text-primary);
 
@@ -32,54 +32,54 @@
   &__copyright {
     font-size: var(--font-size-caption-pc);
     color: var(--color-text-secondary);
-    margin: 4px 0 0;
+    margin: var(--space-4) var(--space-0) var(--space-0);
   }
 
   &__sns-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: var(--space-4);
   }
 
   &__desc .official-sns {
-    margin-top: 16px;
+    margin-top: var(--space-16);
   }
 
   &__studio-list {
     list-style: none;
-    padding: 0;
-    margin: 0;
+    padding: var(--space-0);
+    margin: var(--space-0);
     display: flex;
     flex-wrap: wrap;
-    gap: 4px;
+    gap: var(--space-4);
   }
 
   &__actors {
-    padding-left: 0;
+    padding-left: var(--space-0);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--space-20);
   }
 
   &__actor-entry {
-    margin: 0;
-    padding-left: 16px;
+    margin: var(--space-0);
+    padding-left: var(--space-16);
   }
 
   &__actor-character {
     font-size: var(--font-size-body-sp);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
-    margin-bottom: 4px;
+    margin-bottom: var(--space-4);
   }
 
   &__actor-detail {
-    padding-left: 16px;
+    padding-left: var(--space-16);
 
-    p { margin: 0 0 4px; line-height: 1.6; }
+    p { margin: var(--space-0) var(--space-0) var(--space-4); line-height: 1.6; }
   }
 
   &__actor-description {
@@ -95,8 +95,8 @@
 
   &__actor-other-list {
     list-style: disc;
-    padding-left: 16px;
-    margin: 4px 0 0;
+    padding-left: var(--space-16);
+    margin: var(--space-4) var(--space-0) var(--space-0);
 
     li {
       font-size: var(--font-size-ui-sp);
