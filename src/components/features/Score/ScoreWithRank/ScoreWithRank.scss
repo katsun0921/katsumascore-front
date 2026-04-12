@@ -90,3 +90,35 @@
     font-size: var(--font-size-score-hero-decimal-pc);
   }
 }
+
+// ── ホバー ──────────────────────────────────────────
+// スコアテキストとスラッシュ背景は CSS transition で制御
+// バッジは GSAP が transform を持つため、filter のみで演出
+.score-with-rank__text {
+  transition: transform 0.2s ease-out, filter 0.2s ease-out;
+}
+
+.score-with-rank__slash {
+  transition: opacity 0.2s ease-out, height 0.2s ease-out;
+}
+
+.score-with-rank__badge-img {
+  transition: filter 0.25s ease-out, transform 0.25s ease-out;
+}
+
+.score-with-rank__inner:hover {
+  .score-with-rank__text {
+    transform: translateY(var(--offset-score-hero-text-y)) scale(1.05);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  .score-with-rank__slash {
+    opacity: 0.9;
+    height: 35%;
+  }
+
+  .score-with-rank__badge-img {
+    transform: scale(1.08) rotate(-2deg);
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  }
+}

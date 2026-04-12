@@ -24,7 +24,7 @@ export type OfficialSnsProps = {
 }
 
 // X アカウント URL からスクリーンネームを抽出
-function extractXScreenName(url: string): string | null {
+const extractXScreenName = (url: string): string | null => {
   try {
     const pathname = new URL(url).pathname
     const name = pathname.replace(/^\//, '').split('/')[0]
@@ -35,7 +35,7 @@ function extractXScreenName(url: string): string | null {
 }
 
 // YouTube の通常 URL / 短縮 URL から embed URL を生成
-function toYoutubeEmbedUrl(url: string): string | null {
+const toYoutubeEmbedUrl = (url: string): string | null => {
   try {
     const parsed = new URL(url)
     let videoId: string | null = null
@@ -55,7 +55,7 @@ function toYoutubeEmbedUrl(url: string): string | null {
 }
 
 // Instagram アカウント URL からユーザー名を抽出
-function extractInstagramUsername(url: string): string | null {
+const extractInstagramUsername = (url: string): string | null => {
   try {
     const pathname = new URL(url).pathname
     const name = pathname.replace(/^\//, '').split('/')[0]

@@ -31,7 +31,7 @@ const RANK_MAP: RankRange[] = [
 
 const ICONS_BASE_PATH = '/images/icons/'
 
-export function getRankingIcon(value: number): { src: string; label: RankLabel } | null {
+export const getRankingIcon = (value: number): { src: string; label: RankLabel } | null => {
   for (const range of RANK_MAP) {
     if (value >= range.min && value < range.max) {
       return { src: publicAssetUrl(`${ICONS_BASE_PATH}${range.icon}`), label: range.label }
@@ -47,7 +47,7 @@ export function getRankingIcon(value: number): { src: string; label: RankLabel }
 type RankColorClasses = { text: string; bg: string }
 
 /** ScoreWithRank のランク別カラークラス（text / bg）。範囲外は本文色。 */
-export function getRankScoreColorClasses(rank: RankLabel | null): RankColorClasses {
+export const getRankScoreColorClasses = (rank: RankLabel | null): RankColorClasses => {
   if (!rank) {
     return {
       text: 'text-[var(--color-text-primary)]',

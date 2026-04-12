@@ -8,7 +8,7 @@ export type PostHeroScoreProps = {
   comment: string
 }
 
-export function PostHeroScore({ score, scoreMax = SCORE_DISPLAY_MAX, comment }: PostHeroScoreProps) {
+export const PostHeroScore = ({ score, scoreMax = SCORE_DISPLAY_MAX, comment }: PostHeroScoreProps) => {
   return (
     <section className='post-hero-score'>
       <p className='post-hero-score__comment'>{comment}</p>

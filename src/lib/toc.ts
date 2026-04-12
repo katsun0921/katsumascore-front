@@ -14,7 +14,7 @@ export type TocItem = {
   level: 2 | 3
 }
 
-export function extractToc(html: string): TocItem[] {
+export const extractToc = (html: string): TocItem[] => {
   const dom = parseDocument(html)
   const headings = findAll(
     (node) => node.type === 'tag' && (node.name === 'h2' || node.name === 'h3'),

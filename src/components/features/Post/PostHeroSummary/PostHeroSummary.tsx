@@ -12,7 +12,7 @@ export type PostHeroSummaryProps = {
   locale?: Locale
 }
 
-export function PostHeroSummary(props: PostHeroSummaryProps) {
+export const PostHeroSummary = (props: PostHeroSummaryProps) => {
   const { posterUrl, text, refUrl, refLabel, locale = 'ja' } = props
   return (
     <section className='post-hero-summary'>

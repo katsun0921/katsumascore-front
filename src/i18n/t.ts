@@ -16,15 +16,14 @@ export type Locale = 'ja' | 'en'
 type LeafNode = { ja: string; en: string }
 type MessageTree = { [key: string]: MessageTree | LeafNode }
 
-function isLeaf(node: MessageTree | LeafNode): node is LeafNode {
-  return typeof (node as LeafNode).ja === 'string'
-}
+const isLeaf = (node: MessageTree | LeafNode): node is LeafNode =>
+  typeof (node as LeafNode).ja === 'string'
 
-export function t(
+export const t = (
   messages: MessageTree,
   path: string[],
   locale: Locale = 'ja',
-): string {
+): string => {
   let current: MessageTree | LeafNode = messages
 
   for (const key of path) {

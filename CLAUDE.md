@@ -104,6 +104,7 @@ components/
 - `<a href="...">` によるページ遷移 → `<Link>` from `next/link` を使用
 - `<img>` タグの使用 → `<Image>` from `next/image` を使用
 - `style` propの直接使用 → featuresからのpropsとして受け取る場合のみ許可
+- `function` キーワードによる関数宣言 → Arrow関数のみ使用する（`.tsx` / `.ts` すべてに適用）
 
 ---
 

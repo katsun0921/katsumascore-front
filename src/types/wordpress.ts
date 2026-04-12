@@ -46,7 +46,7 @@ export interface WPTag {
 
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 
-export function getScoreRank(score: 1 | 2 | 3 | 4 | 5): ScoreRank {
+export const getScoreRank = (score: 1 | 2 | 3 | 4 | 5): ScoreRank => {
   if (score === 5) return "SS";
   if (score === 4) return "S";
   if (score === 3) return "A";

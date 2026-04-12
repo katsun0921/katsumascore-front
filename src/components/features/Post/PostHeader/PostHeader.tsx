@@ -21,7 +21,7 @@ export type PostHeaderProps = {
   comment?: string
 }
 
-export function PostHeader({
+export const PostHeader = ({
   category,
   titleJa,
   titleEn,
@@ -33,7 +33,7 @@ export function PostHeader({
   score,
   scoreMax = SCORE_DISPLAY_MAX,
   comment,
-}: PostHeaderProps) {
+}: PostHeaderProps) => {
   const locale = useLocale()
   const sep = t(messages, ['meta', 'sep'], locale)
 

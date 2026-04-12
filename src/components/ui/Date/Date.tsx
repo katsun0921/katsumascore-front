@@ -4,7 +4,7 @@ export type TDateProps = {
   locale?: 'ja' | 'en'
 }
 
-function formatDate(dateStr: string, locale: 'ja' | 'en'): { display: string; datetime: string } {
+const formatDate = (dateStr: string, locale: 'ja' | 'en'): { display: string; datetime: string } => {
   const date = new Date(dateStr)
   const datetime = date.toISOString().split('T')[0]
   const display =

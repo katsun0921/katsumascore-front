@@ -22,6 +22,5 @@ export const GENRE_ICON_MAP: Record<string, string> = {
 
 export const DEFAULT_ICON = '🎞️'
 
-export function getGenreIcon(slug: string): string {
-  return GENRE_ICON_MAP[slug] ?? DEFAULT_ICON
-}
+export const getGenreIcon = (slug: string): string =>
+  GENRE_ICON_MAP[slug] ?? DEFAULT_ICON

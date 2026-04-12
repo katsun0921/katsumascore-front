@@ -12,7 +12,7 @@ export type PostHeroProps = {
   description: string
 }
 
-export function PostHero(props: PostHeroProps) {
+export const PostHero = (props: PostHeroProps) => {
   const videoUrl = props.trailerYoutubeId
     ? `https://www.youtube.com/embed/${props.trailerYoutubeId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`
     : undefined

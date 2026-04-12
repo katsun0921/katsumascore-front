@@ -2,7 +2,7 @@ import type { Post } from '@/components/features/Post/types/post';
 import type { WPPost } from '@/types/wordpress';
 import { publicAssetUrl } from '@/lib/publicAssetUrl';
 
-export function normalizePost(post: WPPost, locale: string = 'ja'): Post {
+export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
   const title =
     locale === 'ja'
       ? post.acf?.title_jp || post.title.rendered || ''
@@ -20,6 +20,5 @@ export function normalizePost(post: WPPost, locale: string = 'ja'): Post {
   };
 }
 
-export function normalizePosts(posts: WPPost[], locale: string = 'ja'): Post[] {
-  return posts.map((post) => normalizePost(post, locale));
-}
+export const normalizePosts = (posts: WPPost[], locale: string = 'ja'): Post[] =>
+  posts.map((post) => normalizePost(post, locale));

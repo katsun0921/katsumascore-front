@@ -4,7 +4,7 @@
  * Next.js（ドメイン直下）では通常 `/images/...` のまま。
  * http(s) の絶対URLはそのまま返す。
  */
-function viteBaseUrl(): string {
+const viteBaseUrl = (): string => {
   try {
     const env = (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env
     const base = env?.BASE_URL
@@ -15,7 +15,7 @@ function viteBaseUrl(): string {
   return '/'
 }
 
-export function publicAssetUrl(path: string): string {
+export const publicAssetUrl = (path: string): string => {
   if (/^https?:\/\//i.test(path)) {
     return path
   }
