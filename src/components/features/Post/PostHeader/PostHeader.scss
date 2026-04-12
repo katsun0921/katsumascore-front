@@ -4,30 +4,8 @@
   gap: var(--space-4);
 }
 
-// ── comment を全幅・最上部に、残りは左=テキスト群 / 右=rank ──
-.post-header__inner {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: var(--space-4) var(--space-12);
-  align-items: start;
-}
-
-// display: contents で子要素を .post-header__inner グリッドの直接アイテムに昇格
-.post-header__grid {
-  display: contents;
-
-  > hgroup,
-  > .post-header__title-sub,
-  > .post-header__meta,
-  > .post-header__copyright {
-    grid-column: 1;
-  }
-}
-
-// comment: row 1 に固定・両カラムスパンで全幅
+// comment: 全幅・最上部
 .post-header__comment {
-  grid-column: 1 / -1;
-  grid-row: 1;
   width: 100%;
   font-family: var(--font-accent-strong);
   font-size: var(--font-size-h2-sp);
@@ -42,36 +20,39 @@
   }
 }
 
-// rank: row 2 以降をスパン・上下中央
-.post-header__rank {
-  grid-column: 2;
-  grid-row: 2 / span 10;
-  align-self: center;
-}
-
-.post-header__category {
-  font-family: var(--font-ja-body);
-  font-size: var(--font-size-label-sp);
-  color: var(--color-accent);
-  letter-spacing: 0.08em;
-  margin: var(--space-0);
-
-  @media (min-width: var(--breakpoint-md)) {
-    font-size: var(--font-size-label-pc);
-  }
-}
-
+// title: 全幅
 .post-header__title-main {
+  width: 100%;
   font-family: var(--font-ja-heading);
-  font-size: var(--font-size-h1-sp);
+  font-size: var(--font-size-title-sp);
   color: var(--color-text-primary);
-  line-height: 1.3;
-  letter-spacing: 0.02em;
+  line-height: 1.2;
+  letter-spacing: 0.01em;
   margin: var(--space-0);
 
   @media (min-width: var(--breakpoint-md)) {
-    font-size: var(--font-size-h1-pc);
+    font-size: var(--font-size-title-pc);
   }
+}
+
+// lower: メタ情報（左）とrank（右）の2カラム
+.post-header__lower {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.post-header__meta-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  flex: 1;
+  min-width: 0;
+}
+
+.post-header__rank {
+  flex-shrink: 0;
 }
 
 .post-header__title-sub {

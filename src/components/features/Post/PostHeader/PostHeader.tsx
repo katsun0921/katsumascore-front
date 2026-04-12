@@ -45,14 +45,11 @@ export function PostHeader({
 
   return (
     <div className='post-header'>
-      <div className='post-header__inner'>
-        <div className='post-header__grid'>
-          <hgroup>
-            <p className='post-header__category'>{category}</p>
-            <h1 className='post-header__title-main'>{titleJa}</h1>
-          </hgroup>
+      {comment && <p className='post-header__comment'>{comment}</p>}
+      <h1 className='post-header__title-main'>{titleJa}</h1>
+      <div className='post-header__lower'>
+        <div className='post-header__meta-group'>
           {titleEn && <p className='post-header__title-sub'>{titleEn}</p>}
-          {comment && <p className='post-header__comment'>{comment}</p>}
           {metaParts.length > 0 && (
             <p className='post-header__meta'>
               {metaParts.map((part, i) => (
@@ -64,7 +61,7 @@ export function PostHeader({
             </p>
           )}
           {copyright && <p className='post-header__copyright'>{copyright}</p>}
-      </div>
+        </div>
         {score !== undefined && (
           <div className='post-header__rank'>
             <ScoreWithRank value={score} max={scoreMax} />

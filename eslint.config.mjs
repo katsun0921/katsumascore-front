@@ -5,6 +5,7 @@ import { defineConfig, globalIgnores } from 'eslint/config'
 import nextVitals from 'eslint-config-next/core-web-vitals'
 import nextTs from 'eslint-config-next/typescript'
 import uiPlugin from './eslint-rules/index.mjs'
+import unusedImports from 'eslint-plugin-unused-imports'
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -74,6 +75,17 @@ const eslintConfig = defineConfig([
       rules: {
         'katsumascore-ui/no-hardcoded-i18n': 'off',
       },
+  },
+  // ─────────────────────────────────────────────────────────────────────────────
+  // unused-imports: Auto-fixable unused import detection
+  // ─────────────────────────────────────────────────────────────────────────────
+  {
+    plugins: {
+      'unused-imports': unusedImports,
+    },
+    rules: {
+      'unused-imports/no-unused-imports': 'error',
+    },
   },
   ...storybook.configs["flat/recommended"]
 ])

@@ -45,6 +45,7 @@
   --color-category-hover: var(--color-secondary);
   --color-score-bg: #14082e;
   --color-score-border: #ff2dfc;
+
   /* ScoreWithRank: ランク別スコア数字色（C→SS で段階的に強調） */
   --color-score-rank-c-text: #64748b;
   --color-score-rank-b-text: #0f766e;
@@ -98,6 +99,7 @@
   --color-product-shopping: #ff9800;
   --color-black: #000000;
   --color-bg-code: #111827;
+
   /* RGB channel variables for alpha color compositions */
   --color-primary-rgb: 37, 99, 235;
   --color-secondary-rgb: 30, 27, 75;
@@ -130,12 +132,20 @@
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
      直接値（font-size: 16px, text-[16px]など）の使用は禁止。
      ─────────────────────────────────────────────────────────────── */
+  --font-size-title-pc: 48px;
+  --font-size-title-sp: 32px;
   --font-size-h1-pc: 32px;
+  --font-size-h1-sp: 24px;
   --font-size-h2-pc: 24px;
+  --font-size-h2-sp: 20px;
   --font-size-h3-pc: 20px;
+  --font-size-h3-sp: 18px;
   --font-size-body-pc: 16px;
+  --font-size-body-sp: 14px;
   --font-size-ui-pc: 14px;
+  --font-size-ui-sp: 12px;
   --font-size-caption-pc: 12px;
+  --font-size-caption-sp: 10px;
 
   /* ScoreWithRank ヒーロー（ランク数字・画像重なり） */
   --font-size-score-hero-int-pc: 120px;
@@ -145,20 +155,16 @@
   --letter-spacing-score-hero: -0.02em;
   --size-score-rank-badge-pc: 96px;
   --size-score-rank-badge-sp: 72px;
+
   /* ランク画像と重なる数字の縁取り（ページ地色と揃え、必要なら上書き） */
   --color-score-hero-text-halo: var(--color-bg);
+
   /* 白系の二重 shadow（トークン化: white / rgb(255,255,255) に相当） */
   --shadow-score-hero-text: 1px 1px 2px var(--color-score-hero-text-halo),
     1px 1px 4px var(--color-score-hero-text-halo);
+
   /* ScoreWithRank: スコア数字を若干下へ */
   --offset-score-hero-text-y: var(--space-16);
-
-  --font-size-h1-sp: 24px;
-  --font-size-h2-sp: 20px;
-  --font-size-h3-sp: 18px;
-  --font-size-body-sp: 14px;
-  --font-size-ui-sp: 12px;
-  --font-size-caption-sp: 10px;
 }
 
 @theme inline {
@@ -269,12 +275,9 @@ h6 {
 :root {
   --font-ja-body: "Noto Sans JP", system-ui, sans-serif;
   --font-ja-heading: "Kaisei Tokumin", serif;
-
   --font-accent-strong: "Rampart One", sans-serif;
   --font-accent-soft: "Yusei Magic", sans-serif;
-
   --font-en-base: "Inter", system-ui, sans-serif;
-
   --font-body: var(--font-ja-body);
   --font-heading: var(--font-ja-heading);
   --font-ui: var(--font-en-base);

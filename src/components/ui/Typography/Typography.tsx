@@ -163,6 +163,14 @@ type FontSizeEntry = {
 
 const fontSizeEntries: FontSizeEntry[] = [
   {
+    role: 'Title',
+    tokenPc: '--font-size-title-pc',
+    valuePc: '48px',
+    tokenSp: '--font-size-title-sp',
+    valueSp: '32px',
+    sampleText: '作品タイトル（PostHeader）',
+  },
+  {
     role: 'H1',
     tokenPc: '--font-size-h1-pc',
     valuePc: '32px',
