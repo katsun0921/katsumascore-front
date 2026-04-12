@@ -49,6 +49,16 @@ export const OutOfRange: Story = {
   args: { value: 0.5 },
 }
 
+// imageOnly: ランクバッジ画像のみ表示
+export const ImageOnly: Story = {
+  args: { value: 4.3, imageOnly: true },
+}
+
+// imageOnly + アイコンなしスコア（null返却の確認）
+export const ImageOnlyOutOfRange: Story = {
+  args: { value: 0.5, imageOnly: true },
+}
+
 // 暗背景でランク色の確認
 export const OnDarkBackground: Story = {
   render: (args) => (

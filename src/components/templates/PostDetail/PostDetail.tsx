@@ -55,7 +55,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
 
           {/* ── acf-good-point.php 相当 ── */}
           {post.goodPoints && post.goodPoints.length > 0 && (
-            <GoodPoint points={post.goodPoints} locale={locale} />
+            <GoodPoint points={post.goodPoints} locale={locale} score={post.score} />
           )}
 
           {/* ── the_content() 相当 ── */}

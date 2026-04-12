@@ -33,3 +33,15 @@ export const SinglePoint: Story = {
     locale: 'ja',
   },
 }
+
+export const WithRankBadge: Story = {
+  args: {
+    score: 4.3,
+  },
+}
+
+export const WithRankBadgeNoRank: Story = {
+  args: {
+    score: 0.5,
+  },
+}

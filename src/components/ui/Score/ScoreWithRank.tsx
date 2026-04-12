@@ -16,12 +16,25 @@ function formatScoreValueMaxParts(
 export type ScoreWithRankProps = {
   value: number
   max: number
+  imageOnly?: boolean
 }
 
-function ScoreWithRankInner({ value, max }: ScoreWithRankProps) {
+function ScoreWithRankInner({ value, max, imageOnly = false }: ScoreWithRankProps) {
   const rank = getRankingIcon(value)
   const { main, sub } = formatScoreValueMaxParts(value, max)
   const { text: textColorClass, bg: bgColorClass } = getRankScoreColorClasses(rank?.label ?? null)
+
+  if (imageOnly) {
+    return rank ? (
+      <img
+        src={rank.src}
+        alt={`rank ${rank.label}`}
+        width={96}
+        height={96}
+        className='h-[var(--size-score-rank-badge-sp)] w-[var(--size-score-rank-badge-sp)] md:h-[var(--size-score-rank-badge-pc)] md:w-[var(--size-score-rank-badge-pc)] [filter:drop-shadow(0_2px_6px_rgba(0,0,0,0.6))]'
+      />
+    ) : null
+  }
 
   return (
     <div className='relative'>
