@@ -3,7 +3,6 @@ import type { TStreamingVodEntry } from '@/components/features/StreamingVod/Stre
 import type { TRentalService } from '@/components/features/AdRental/AdRental'
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
 import type { ProfileProps } from '@/components/features/Sidebar/Profile/Profile'
-import type { WorkInfoProps } from '@/components/features/Sidebar/WorkInfo/WorkInfo'
 import type { AdBannerProps } from '@/components/features/Sidebar/AdBanner/AdBanner'
 import type { TocItem } from '@/lib/toc'
 
@@ -12,9 +11,6 @@ export type SidebarProps = {
 
   // ❶ プロフィールカード
   profile?: ProfileProps
-
-  // ❷ 作品スコア・基本情報 + VODバッジ
-  workInfo?: WorkInfoProps
 
   // ❸ 目次
   toc?: TocItem[]

@@ -1,5 +1,4 @@
 import { Profile } from '@/components/features/Sidebar/Profile/Profile'
-import { WorkInfo } from '@/components/features/Sidebar/WorkInfo/WorkInfo'
 import { TableOfContents } from '@/components/ui/TableOfContents/TableOfContents'
 import { AdBanner } from '@/components/features/Sidebar/AdBanner/AdBanner'
 import { RelatedPosts } from '@/components/features/Sidebar/RelatedPosts/RelatedPosts'
@@ -15,7 +14,6 @@ import type { SidebarProps } from './Sidebar.types'
 export const Sidebar = ({
   locale = 'ja',
   profile,
-  workInfo,
   toc,
   adBanner,
   relatedPosts,
@@ -37,11 +35,27 @@ export const Sidebar = ({
       {/* ❶ プロフィールカード */}
       {profile && <Profile {...profile} />}
 
-      {/* ❷ 作品スコア・基本情報 + VODバッジ */}
-      {workInfo && <WorkInfo {...workInfo} />}
-
       {/* ❸ 目次（sticky） */}
       {toc && toc.length > 0 && <TableOfContents items={toc} />}
+
+      {/* ❷ VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
+      {!isCinemaShowing && streamingVods && streamingVods.length > 0 && (
+        <StreamingVod
+          titleJp={titleJp ?? ''}
+          titleEn={titleEn}
+          services={streamingVods}
+          locale={locale}
+        />
+      )}
+
+      {/* ❹ レンタル広告（ad-rental.php 相当・劇場公開中・英語は非表示） */}
+      {!isCinemaShowing && locale !== 'en' && rentalServices && rentalServices.length > 0 && (
+        <AdRental
+          titleJp={titleJp ?? ''}
+          services={rentalServices}
+          locale={locale}
+        />
+      )}
 
       {/* ❹ 広告バナー（VOD CTA） */}
       {adBanner && <AdBanner {...adBanner} />}
@@ -65,25 +79,6 @@ export const Sidebar = ({
       {/* 既存：acf-relation-by-post-id.php 相当（記事本文内グリッド形式） */}
       {relationPosts && relationPosts.length > 0 && (
         <RelationPost posts={relationPosts} locale={locale} />
-      )}
-
-      {/* ❷ VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
-      {!isCinemaShowing && streamingVods && streamingVods.length > 0 && (
-        <StreamingVod
-          titleJp={titleJp ?? ''}
-          titleEn={titleEn}
-          services={streamingVods}
-          locale={locale}
-        />
-      )}
-
-      {/* ❹ レンタル広告（ad-rental.php 相当・劇場公開中・英語は非表示） */}
-      {!isCinemaShowing && locale !== 'en' && rentalServices && rentalServices.length > 0 && (
-        <AdRental
-          titleJp={titleJp ?? ''}
-          services={rentalServices}
-          locale={locale}
-        />
       )}
 
       {/* ❼ 関連投稿グループ（PostsGroup 相当） */}
