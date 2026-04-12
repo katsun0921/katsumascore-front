@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import { getRankingIcon, getRankScoreTextColorClass } from './getRankingIcon'
 
 /** value/max 表記用: 整数部（大）と小数＋/max（小）に分割 */
@@ -28,7 +27,7 @@ function ScoreWithRankInner({ value, max }: ScoreWithRankProps) {
     <div className='relative'>
       {rank ? (
         <div className='absolute right-0 top-1/2 z-[1] -translate-y-1/2'>
-          <Image
+          <img
             src={rank.src}
             alt={`rank ${rank.label}`}
             width={96}
