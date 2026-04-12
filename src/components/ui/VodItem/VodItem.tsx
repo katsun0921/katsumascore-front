@@ -59,16 +59,16 @@ export const VodItem = ({
   return (
     <div className={`flex flex-col gap-2 p-4 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] ${serviceTopBorder[service]}`}>
       {isPaid && (
-        <em className='block text-[var(--font-size-caption-pc)] text-[var(--color-text-secondary)] italic'>
+        <em className='block [font-size:var(--font-size-caption-pc)] text-[var(--color-text-secondary)] italic'>
           {t(messages, ['paid', 'notice'], locale)}
         </em>
       )}
       <div className='flex items-center gap-2'>
-        <span className='text-[var(--font-size-body-sp)] font-bold'>{label}</span>
+        <span className='[font-size:var(--font-size-body-sp)] font-bold'>{label}</span>
       </div>
       {signupUrl && (
         <a
-          className='block text-[var(--font-size-ui-sp)] text-[var(--color-text-secondary)] hover:underline hover:opacity-100'
+          className='block [font-size:var(--font-size-ui-sp)] text-[var(--color-text-inverse)] hover:underline hover:opacity-100'
           href={signupUrl}
           target='_blank'
           rel='noopener noreferrer'
@@ -77,7 +77,7 @@ export const VodItem = ({
         </a>
       )}
       <a
-        className='inline-block px-4 py-2 rounded text-[var(--font-size-ui-pc)] font-bold text-center bg-[var(--color-primary)] text-[var(--color-text-inverse)] transition-opacity duration-150 hover:opacity-[0.85]'
+        className='inline-block px-4 py-2 rounded [font-size:var(--font-size-ui-pc)] font-bold text-center bg-[var(--color-primary)] text-[var(--color-text-inverse)] transition-opacity duration-150 hover:opacity-[0.85]'
         href={streamingUrl}
         target='_blank'
         rel='noopener noreferrer'
