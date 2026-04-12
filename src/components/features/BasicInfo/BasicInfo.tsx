@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { OfficialSns } from '@/components/features/sidebar/OfficialSns/OfficialSns'
 import { t } from '@/i18n/t'
@@ -93,6 +95,8 @@ export const BasicInfo = ({
             <OfficialSns
               snsUrl={officialSns?.x?.link}
               youtubeUrl={officialSns?.youtube_channel?.link}
+              instagramUrl={officialSns?.instagram?.link}
+              forceVisible
             />
           </dd>
         </>

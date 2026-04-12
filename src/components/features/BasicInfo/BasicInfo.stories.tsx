@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react-vite'
 import { BasicInfo } from './BasicInfo'
 
 const meta: Meta<typeof BasicInfo> = {
@@ -11,7 +11,8 @@ const meta: Meta<typeof BasicInfo> = {
     officialUrl: 'https://kimetsu.com',
     officialSns: {
       x: { link: 'https://x.com/kimetsu_off' },
-      youtube_channel: { link: 'https://youtube.com/@kimetsu' },
+      youtube_channel: { link: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ' },
+      instagram: { link: 'https://www.instagram.com/kimetsu_off' },
     },
     copyright: '© 吾峠呼世晴/集英社・アニプレックス・ufotable',
     locale: 'ja',

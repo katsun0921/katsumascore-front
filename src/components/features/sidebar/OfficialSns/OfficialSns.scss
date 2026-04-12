@@ -1,12 +1,53 @@
 .sidebar-official-sns {
-  // ── embed ラッパー ──
-  &__embed {
+  // ── タブリスト ──
+  &__tablist {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+
+  &__tab {
+    flex: 1;
+    padding: 6px 8px;
+    font-size: var(--font-size-caption-pc);
+    color: var(--color-text-secondary);
+    background: var(--color-surface-muted);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.15s, background-color 0.15s, border-color 0.15s;
+
+    &:hover {
+      color: var(--color-text-primary);
+      background: var(--color-surface-hover);
+    }
+
+    &--active {
+      color: var(--color-text-primary);
+      background: var(--color-surface-base);
+      border-color: var(--color-border-default);
+      font-weight: 600;
+    }
+  }
+
+  // ── パネル ──
+  &__panel {
+    position: relative;
     width: 100%;
     overflow: hidden;
     border-radius: 4px;
   }
 
-  // ── プレースホルダー ──
+  // ── Skeleton ──
+  &__skeleton {
+    width: 100%;
+    height: 360px;
+    background: var(--color-surface-muted);
+    border-radius: 4px;
+    animation: sidebar-official-sns-pulse 1.5s ease-in-out infinite;
+  }
+
+  // ── プレースホルダー（ビューポート外） ──
   &__placeholder {
     display: flex;
     align-items: center;
@@ -28,15 +69,23 @@
     border: none;
     border-radius: 4px;
 
-    // X タイムライン：高さを固定して3件分を表示
     &--x {
       height: 360px;
     }
 
-    // YouTube：16:9 アスペクト比
     &--youtube {
       aspect-ratio: 16 / 9;
       height: auto;
     }
+
+    &--instagram {
+      height: 480px;
+    }
   }
+}
+
+@keyframes sidebar-official-sns-pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
 }

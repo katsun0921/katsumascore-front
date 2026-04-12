@@ -69,6 +69,11 @@ const eslintConfig = defineConfig([
       // No arbitrary spacing, hardcoded breakpoints, max-width, or inline spacing props
       'katsumascore-ui/no-design-violation': 'error',
     },
+    // ■ i18nファイルだけ例外
+      files: ['**/i18n*.ts'],
+      rules: {
+        'katsumascore-ui/no-hardcoded-i18n': 'off',
+      },
   },
   ...storybook.configs["flat/recommended"]
 ])

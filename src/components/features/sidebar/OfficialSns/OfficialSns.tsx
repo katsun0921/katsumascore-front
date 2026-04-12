@@ -6,18 +6,27 @@ import { t } from '@/i18n/t'
 import { messages } from './i18n'
 import './OfficialSns.scss'
 
+export type TabId = 'x' | 'youtube' | 'instagram'
+
 export type OfficialSnsProps = {
   /** X（Twitter）公式アカウント URL。例: "https://x.com/MovieOfficial" */
   snsUrl?: string
-  /** YouTube 予告編 URL（snsUrl がない場合のフォールバック）。例: "https://www.youtube.com/watch?v=xxxx" */
+  /** YouTube 予告編 URL。例: "https://www.youtube.com/watch?v=xxxx" */
   youtubeUrl?: string
+  /** Instagram 公式アカウント URL。例: "https://www.instagram.com/MovieOfficial" */
+  instagramUrl?: string
+  /** 初期表示タブ（Storybook / テスト用） */
+  initialTab?: TabId
+  /** IntersectionObserver をスキップして即座に表示（Storybook用） */
+  forceVisible?: boolean
+  /** Skeleton を強制表示（Storybook用） */
+  forceLoading?: boolean
 }
 
 // X アカウント URL からスクリーンネームを抽出
 function extractXScreenName(url: string): string | null {
   try {
     const pathname = new URL(url).pathname
-    // "/MovieOfficial" → "MovieOfficial"
     const name = pathname.replace(/^\//, '').split('/')[0]
     return name || null
   } catch {
@@ -45,26 +54,58 @@ function toYoutubeEmbedUrl(url: string): string | null {
   }
 }
 
-type EmbedMode = 'x' | 'youtube' | 'none'
+// Instagram アカウント URL からユーザー名を抽出
+function extractInstagramUsername(url: string): string | null {
+  try {
+    const pathname = new URL(url).pathname
+    const name = pathname.replace(/^\//, '').split('/')[0]
+    return name || null
+  } catch {
+    return null
+  }
+}
 
-export const OfficialSns = ({ snsUrl, youtubeUrl }: OfficialSnsProps) => {
+export const OfficialSns = ({
+  snsUrl,
+  youtubeUrl,
+  instagramUrl,
+  initialTab,
+  forceVisible = false,
+  forceLoading = false,
+}: OfficialSnsProps) => {
   const locale = useLocale()
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
+  const [isVisible, setIsVisible] = useState(forceVisible)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // どのモードで表示するか決定
+  // 利用可能なタブを導出
   const xScreenName = snsUrl ? extractXScreenName(snsUrl) : null
   const youtubeEmbedUrl = youtubeUrl ? toYoutubeEmbedUrl(youtubeUrl) : null
+  const instagramUsername = instagramUrl ? extractInstagramUsername(instagramUrl) : null
 
-  const mode: EmbedMode = xScreenName
-    ? 'x'
-    : youtubeEmbedUrl
-      ? 'youtube'
-      : 'none'
+  const availableTabs: TabId[] = [
+    ...(xScreenName ? (['x'] as TabId[]) : []),
+    ...(youtubeEmbedUrl ? (['youtube'] as TabId[]) : []),
+    ...(instagramUsername ? (['instagram'] as TabId[]) : []),
+  ]
+
+  const defaultTab: TabId =
+    initialTab && availableTabs.includes(initialTab)
+      ? initialTab
+      : availableTabs[0] ?? 'x'
+
+  const [activeTab, setActiveTab] = useState<TabId>(defaultTab)
+
+  // タブ切替時に Skeleton をリセット
+  const handleTabChange = (tab: TabId) => {
+    if (tab === activeTab) return
+    setActiveTab(tab)
+    setIsLoading(true)
+  }
 
   // IntersectionObserver で遅延読み込み
   useEffect(() => {
-    if (mode === 'none') return
+    if (forceVisible || availableTabs.length === 0) return
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -78,39 +119,110 @@ export const OfficialSns = ({ snsUrl, youtubeUrl }: OfficialSnsProps) => {
 
     if (containerRef.current) observer.observe(containerRef.current)
     return () => observer.disconnect()
-  }, [mode])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
-  if (mode === 'none') return null
+  if (availableTabs.length === 0) return null
+
+  const showSkeleton = forceLoading || isLoading
 
   return (
-    <div className='sidebar-official-sns'>
-      <div className='sidebar-official-sns__embed' ref={containerRef}>
+    <div className='sidebar-official-sns' ref={containerRef}>
+      {/* タブリスト */}
+      {availableTabs.length > 1 && (
+        <div className='sidebar-official-sns__tablist' role='tablist' aria-label={t(messages, ['tabs', 'label'], locale)}>
+          {availableTabs.includes('x') && (
+            <button
+              role='tab'
+              aria-selected={activeTab === 'x'}
+              className={`sidebar-official-sns__tab${activeTab === 'x' ? ' sidebar-official-sns__tab--active' : ''}`}
+              onClick={() => handleTabChange('x')}
+            >
+              {t(messages, ['tabs', 'x'], locale)}
+            </button>
+          )}
+          {availableTabs.includes('youtube') && (
+            <button
+              role='tab'
+              aria-selected={activeTab === 'youtube'}
+              className={`sidebar-official-sns__tab${activeTab === 'youtube' ? ' sidebar-official-sns__tab--active' : ''}`}
+              onClick={() => handleTabChange('youtube')}
+            >
+              {t(messages, ['tabs', 'youtube'], locale)}
+            </button>
+          )}
+          {availableTabs.includes('instagram') && (
+            <button
+              role='tab'
+              aria-selected={activeTab === 'instagram'}
+              className={`sidebar-official-sns__tab${activeTab === 'instagram' ? ' sidebar-official-sns__tab--active' : ''}`}
+              onClick={() => handleTabChange('instagram')}
+            >
+              {t(messages, ['tabs', 'instagram'], locale)}
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* コンテンツエリア */}
+      <div
+        role='tabpanel'
+        aria-label={t(messages, ['tabs', activeTab], locale)}
+        className='sidebar-official-sns__panel'
+      >
         {!isVisible ? (
-          // プレースホルダー（ビューポートに入るまで表示）
+          // ビューポートに入るまでプレースホルダー表示
           <div className='sidebar-official-sns__placeholder' aria-hidden='true'>
             <span className='sidebar-official-sns__placeholder-text'>
               {t(messages, ['placeholder', 'loading'], locale)}
             </span>
           </div>
-        ) : mode === 'x' ? (
-          // X タイムライン embed
-          <iframe
-            src={`https://syndication.twitter.com/srv/timeline-profile/screen-name/${xScreenName}?dnt=true&limit=3&chrome=noheader%20nofooter`}
-            className='sidebar-official-sns__iframe sidebar-official-sns__iframe--x'
-            title={`${xScreenName} on X`}
-            loading='lazy'
-            scrolling='no'
-          />
         ) : (
-          // YouTube embed
-          <iframe
-            src={youtubeEmbedUrl!}
-            className='sidebar-official-sns__iframe sidebar-official-sns__iframe--youtube'
-            title='Official YouTube'
-            loading='lazy'
-            allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-            allowFullScreen
-          />
+          <>
+            {/* Skeleton */}
+            {showSkeleton && (
+              <div className='sidebar-official-sns__skeleton' aria-hidden='true' />
+            )}
+
+            {/* X タイムライン */}
+            {activeTab === 'x' && xScreenName && (
+              <iframe
+                src={`https://syndication.twitter.com/srv/timeline-profile/screen-name/${xScreenName}?dnt=true&limit=3&chrome=noheader%20nofooter`}
+                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--x'
+                style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
+                title={`${xScreenName} on X`}
+                loading='lazy'
+                scrolling='no'
+                onLoad={() => setIsLoading(false)}
+              />
+            )}
+
+            {/* YouTube */}
+            {activeTab === 'youtube' && youtubeEmbedUrl && (
+              <iframe
+                src={youtubeEmbedUrl}
+                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--youtube'
+                style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
+                title={t(messages, ['iframe', 'youtubeTitle'], locale)}
+                loading='lazy'
+                allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                allowFullScreen
+                onLoad={() => setIsLoading(false)}
+              />
+            )}
+
+            {/* Instagram */}
+            {activeTab === 'instagram' && instagramUsername && (
+              <iframe
+                src={`https://www.instagram.com/${instagramUsername}/embed`}
+                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--instagram'
+                style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
+                title={`${instagramUsername} on Instagram`}
+                loading='lazy'
+                onLoad={() => setIsLoading(false)}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
