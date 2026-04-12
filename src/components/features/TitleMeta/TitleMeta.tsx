@@ -1,10 +1,10 @@
 'use client'
 
 import React from 'react'
-import { OfficialSns } from '@/components/features/sidebar/OfficialSns/OfficialSns'
+import { OfficialSns } from '@/components/features/OfficialSns/OfficialSns'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './BasicInfo.scss'
+import './TitleMeta.scss'
 
 export type TStudioEntry = {
   name: string

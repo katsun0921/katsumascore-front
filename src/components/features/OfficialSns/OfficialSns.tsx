@@ -127,15 +127,15 @@ export const OfficialSns = ({
   const showSkeleton = forceLoading || isLoading
 
   return (
-    <div className='sidebar-official-sns' ref={containerRef}>
+    <div className='official-sns' ref={containerRef}>
       {/* タブリスト */}
       {availableTabs.length > 1 && (
-        <div className='sidebar-official-sns__tablist' role='tablist' aria-label={t(messages, ['tabs', 'label'], locale)}>
+        <div className='official-sns__tablist' role='tablist' aria-label={t(messages, ['tabs', 'label'], locale)}>
           {availableTabs.includes('x') && (
             <button
               role='tab'
               aria-selected={activeTab === 'x'}
-              className={`sidebar-official-sns__tab${activeTab === 'x' ? ' sidebar-official-sns__tab--active' : ''}`}
+              className={`official-sns__tab${activeTab === 'x' ? ' official-sns__tab--active' : ''}`}
               onClick={() => handleTabChange('x')}
             >
               {t(messages, ['tabs', 'x'], locale)}
@@ -145,7 +145,7 @@ export const OfficialSns = ({
             <button
               role='tab'
               aria-selected={activeTab === 'youtube'}
-              className={`sidebar-official-sns__tab${activeTab === 'youtube' ? ' sidebar-official-sns__tab--active' : ''}`}
+              className={`official-sns__tab${activeTab === 'youtube' ? ' official-sns__tab--active' : ''}`}
               onClick={() => handleTabChange('youtube')}
             >
               {t(messages, ['tabs', 'youtube'], locale)}
@@ -155,7 +155,7 @@ export const OfficialSns = ({
             <button
               role='tab'
               aria-selected={activeTab === 'instagram'}
-              className={`sidebar-official-sns__tab${activeTab === 'instagram' ? ' sidebar-official-sns__tab--active' : ''}`}
+              className={`official-sns__tab${activeTab === 'instagram' ? ' official-sns__tab--active' : ''}`}
               onClick={() => handleTabChange('instagram')}
             >
               {t(messages, ['tabs', 'instagram'], locale)}
@@ -168,12 +168,12 @@ export const OfficialSns = ({
       <div
         role='tabpanel'
         aria-label={t(messages, ['tabs', activeTab], locale)}
-        className='sidebar-official-sns__panel'
+        className='official-sns__panel'
       >
         {!isVisible ? (
           // ビューポートに入るまでプレースホルダー表示
-          <div className='sidebar-official-sns__placeholder' aria-hidden='true'>
-            <span className='sidebar-official-sns__placeholder-text'>
+          <div className='official-sns__placeholder' aria-hidden='true'>
+            <span className='official-sns__placeholder-text'>
               {t(messages, ['placeholder', 'loading'], locale)}
             </span>
           </div>
@@ -181,14 +181,14 @@ export const OfficialSns = ({
           <>
             {/* Skeleton */}
             {showSkeleton && (
-              <div className='sidebar-official-sns__skeleton' aria-hidden='true' />
+              <div className='official-sns__skeleton' aria-hidden='true' />
             )}
 
             {/* X タイムライン */}
             {activeTab === 'x' && xScreenName && (
               <iframe
                 src={`https://syndication.twitter.com/srv/timeline-profile/screen-name/${xScreenName}?dnt=true&limit=3&chrome=noheader%20nofooter`}
-                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--x'
+                className='official-sns__iframe official-sns__iframe--x'
                 style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
                 title={`${xScreenName} on X`}
                 loading='lazy'
@@ -201,7 +201,7 @@ export const OfficialSns = ({
             {activeTab === 'youtube' && youtubeEmbedUrl && (
               <iframe
                 src={youtubeEmbedUrl}
-                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--youtube'
+                className='official-sns__iframe official-sns__iframe--youtube'
                 style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
                 title={t(messages, ['iframe', 'youtubeTitle'], locale)}
                 loading='lazy'
@@ -215,7 +215,7 @@ export const OfficialSns = ({
             {activeTab === 'instagram' && instagramUsername && (
               <iframe
                 src={`https://www.instagram.com/${instagramUsername}/embed`}
-                className='sidebar-official-sns__iframe sidebar-official-sns__iframe--instagram'
+                className='official-sns__iframe official-sns__iframe--instagram'
                 style={showSkeleton ? { visibility: 'hidden', position: 'absolute' } : undefined}
                 title={`${instagramUsername} on Instagram`}
                 loading='lazy'

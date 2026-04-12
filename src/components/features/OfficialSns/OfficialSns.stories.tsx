@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { OfficialSns } from './OfficialSns'
 
 const meta: Meta<typeof OfficialSns> = {
-  title: 'Layout/Sidebar/OfficialSns',
+  title: 'features/OfficialSns',
   component: OfficialSns,
   parameters: {
     layout: 'padded',

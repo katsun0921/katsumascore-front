@@ -1,4 +1,4 @@
-.sidebar-official-sns {
+.official-sns {
   // ── タブリスト ──
   &__tablist {
     display: flex;
@@ -44,7 +44,7 @@
     height: 360px;
     background: var(--color-surface-muted);
     border-radius: 4px;
-    animation: sidebar-official-sns-pulse 1.5s ease-in-out infinite;
+    animation: official-sns-pulse 1.5s ease-in-out infinite;
   }
 
   // ── プレースホルダー（ビューポート外） ──
@@ -84,7 +84,7 @@
   }
 }
 
-@keyframes sidebar-official-sns-pulse {
+@keyframes official-sns-pulse {
   0% { opacity: 0.6; }
   50% { opacity: 1; }
   100% { opacity: 0.6; }
