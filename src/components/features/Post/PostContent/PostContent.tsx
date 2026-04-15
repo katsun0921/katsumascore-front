@@ -9,11 +9,25 @@ const rewritePublicImageSrc = (html: string): string => {
   });
 }
 
+/** h2/h3/h4 に id がなければ heading-{i} を採番して付与する（extractToc と同一ロジック） */
+const injectHeadingIds = (html: string): string => {
+  let i = 0
+  return html.replace(/<(h[234])([^>]*)>/g, (match, tag: string, attrs: string) => {
+    if (/\bid=/.test(attrs)) {
+      i++
+      return match
+    }
+    const id = `heading-${i++}`
+    return `<${tag} id="${id}"${attrs}>`
+  })
+}
+
 export const PostContent = ({ content }: PostContentData) => {
+  const html = injectHeadingIds(rewritePublicImageSrc(content))
   return (
     <div
       className='p-content'
-      dangerouslySetInnerHTML={{ __html: rewritePublicImageSrc(content) }}
+      dangerouslySetInnerHTML={{ __html: html }}
     />
   );
 };

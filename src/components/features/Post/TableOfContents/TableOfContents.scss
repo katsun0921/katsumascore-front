@@ -1,47 +1,43 @@
 .toc {
-  padding-left: 16px;
-  border-left: 2px solid var(--color-border-subtle);
+  position: static;
+  z-index: 10;
+
+  &--sticky {
+    position: sticky;
+    top: 0;
+  }
+  padding: 12px 16px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-subtle);
 
   // スクロール進捗バー
   &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -2px;
-    width: 2px;
-    height: var(--toc-progress, 0%);
-    background: var(--color-primary);
-    transition: height 0.2s ease;
+    display: none;
   }
 
   &__heading {
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     font-weight: 600;
     color: var(--color-text-primary);
   }
 
   &__list {
     display: flex;
-    flex-direction: column;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 4px 8px;
     list-style: none;
     padding: 0;
     margin: 0;
-
-    // sentinel が viewport 上端を抜けたら追従開始
-    &--sticky {
-      position: sticky;
-      top: 80px;
-    }
-
-    // .p-content の bottom が viewport 上端を抜けたら追従終了
-    &--ended {
-      position: static;
-    }
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
   }
 
   &__item {
+    flex: 0 0 auto;
     position: relative;
-    padding: 6px 12px;
+    padding: 4px 8px;
     color: var(--color-text-secondary);
     transition: color 0.2s ease;
 
@@ -59,13 +55,11 @@
     }
 
     &--level-3 {
-      padding-left: 12px;
       font-size: 0.95em;
       opacity: 0.85;
     }
 
     &--level-4 {
-      padding-left: 20px;
       font-size: 0.9em;
       opacity: 0.7;
     }
@@ -77,66 +71,6 @@
 
       a {
         color: inherit;
-      }
-
-      &::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: -18px;
-        width: 6px;
-        height: 6px;
-        background: var(--color-primary);
-        border-radius: 50%;
-        transform: translateY(-50%);
-      }
-    }
-  }
-}
-
-// モバイル（md 未満：768px）
-// NOTE: CSS カスタムプロパティは @media 条件に使用不可のため、globals.css の --breakpoint-md(768px) に準拠した値を使用
-@media (max-width: 767px) {
-  .toc {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    padding: 12px 16px;
-    background: var(--color-bg);
-    border-left: none;
-    border-bottom: 1px solid var(--color-border-subtle);
-
-    &::before {
-      display: none;
-    }
-
-    &__heading {
-      margin-bottom: 8px;
-    }
-
-    &__list {
-      position: static;
-      flex-direction: row;
-      align-items: center;
-      gap: 8px;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-
-      &--ended {
-        position: static;
-      }
-    }
-
-    &__item {
-      flex: 0 0 auto;
-
-      &--active {
-        align-self: auto;
-
-        &::before {
-          display: none;
-        }
       }
     }
   }

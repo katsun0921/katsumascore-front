@@ -14,28 +14,10 @@ export type TableOfContentsProps = {
 export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const locale = useLocale()
   const [activeId, setActiveId] = useState<string>('')
-  const [isSticky, setIsSticky] = useState(false)
   const [isContentEnded, setIsContentEnded] = useState(false)
   const tocRef = useRef<HTMLElement>(null)
-  const sentinelRef = useRef<HTMLDivElement>(null)
 
-  // sentinel が viewport 上端を抜けたら sticky 開始
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSticky(!entry.isIntersecting)
-      },
-      {
-        rootMargin: '-80px 0px 0px 0px',
-        threshold: 0,
-      }
-    )
-
-    if (sentinelRef.current) observer.observe(sentinelRef.current)
-    return () => observer.disconnect()
-  }, [])
-
-  // .p-content の bottom が viewport 上端を抜けたら sticky 解除
+  // .p-content の bottom が viewport 上端を抜けたら sticky を解除する
   useEffect(() => {
     const content = document.querySelector('.p-content')
     if (!content) return
@@ -70,7 +52,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
   useEffect(() => {
     if (items.length === 0) return
 
-    const headings = items.map(({ id }) => document.getElementById(id)).filter(Boolean) as HTMLElement[]
+    const headings = Array.from(document.querySelectorAll<HTMLElement>('.p-content h2, .p-content h3, .p-content h4'))
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -95,46 +77,34 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   if (items.length === 0) return null
 
-  const listClassName = [
-    'toc__list',
-    isSticky && !isContentEnded ? 'toc__list--sticky' : '',
-    isContentEnded ? 'toc__list--ended' : '',
-  ]
-    .filter(Boolean)
-    .join(' ')
-
   return (
-    <>
-      <div ref={sentinelRef} />
-
-      <nav
-        ref={tocRef}
-        className='toc'
-        aria-label={t(messages, ['heading', 'label'], locale)}
-      >
-        <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
-        <ol className={listClassName}>
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className={[
-                'toc__item',
-                `toc__item--level-${item.level}`,
-                activeId === item.id ? 'toc__item--active' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
+    <nav
+      ref={tocRef}
+      className={['toc', !isContentEnded ? 'toc--sticky' : ''].filter(Boolean).join(' ')}
+      aria-label={t(messages, ['heading', 'label'], locale)}
+    >
+      <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
+      <ol className='toc__list'>
+        {items.map((item) => (
+          <li
+            key={item.id}
+            className={[
+              'toc__item',
+              `toc__item--level-${item.level}`,
+              activeId === item.id ? 'toc__item--active' : '',
+            ]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            <a
+              href={`#${item.id}`}
+              aria-current={activeId === item.id ? 'true' : undefined}
             >
-              <a
-                href={`#${item.id}`}
-                aria-current={activeId === item.id ? 'true' : undefined}
-              >
-                {item.text}
-              </a>
-            </li>
-          ))}
-        </ol>
-      </nav>
-    </>
+              {item.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
   )
 }

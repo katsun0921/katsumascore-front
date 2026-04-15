@@ -47,10 +47,10 @@ export const mockPosts: Post[] = [
 
 export const mockPostContent: PostContentData = {
   content: `
-    <h2>H2 WordPress 記事本文のサンプル</h2>
+    <h2 id="heading-0">H2 WordPress 記事本文のサンプル</h2>
     <p>これは WordPress 由来の HTML コンテンツを確認するためのサンプルです。</p>
     <p><strong>強調テキスト</strong>や<a href="https://example.com">リンク</a>の見え方も確認できます。</p>
-    <h3>H3 WordPress 見出しLevel3</h3>
+    <h3 id="heading-1">H3 WordPress 見出しLevel3</h3>
     <p>これは WordPress 由来の HTML コンテンツを確認するためのサンプルです。</p>
     <h4>H4 WordPress 見出しLevel4</h4>
     <blockquote>
