@@ -1,5 +1,4 @@
 import { Profile } from '@/components/features/Sidebar/Profile/Profile'
-import { TableOfContents } from '@/components/ui/TableOfContents/TableOfContents'
 import { AdBanner } from '@/components/features/Sidebar/AdBanner/AdBanner'
 import { RelatedPosts } from '@/components/features/Sidebar/RelatedPosts/RelatedPosts'
 import { PickUpAndScore } from '@/components/features/Sidebar/PickUpAndScore/PickUpAndScore'
@@ -14,7 +13,6 @@ import type { SidebarProps } from './Sidebar.types'
 export const Sidebar = ({
   locale = 'ja',
   profile,
-  toc,
   adBanner,
   relatedPosts,
   pickupPosts = [],
@@ -34,9 +32,6 @@ export const Sidebar = ({
 
       {/* ❶ プロフィールカード */}
       {profile && <Profile {...profile} />}
-
-      {/* ❸ 目次（sticky） */}
-      {toc && toc.length > 0 && <TableOfContents items={toc} />}
 
       {/* ❷ VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
       {!isCinemaShowing && streamingVods && streamingVods.length > 0 && (

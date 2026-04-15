@@ -3,7 +3,7 @@ import { TableOfContents } from './TableOfContents'
 import type { TocItem } from '@/lib/toc'
 
 const meta: Meta<typeof TableOfContents> = {
-  title: 'Layout/Sidebar/TableOfContents',
+  title: 'Features/Post/TableOfContents',
   component: TableOfContents,
   parameters: {
     layout: 'padded',
@@ -60,19 +60,6 @@ export const WithH3: Story = {
 // ── 10項目以上（スクロール表示確認）
 export const Long: Story = {
   args: { items: h2Items(12) },
-}
-
-// ── アクティブ状態（Storybook では activeId を直接操作できないため、
-//    CSS 確認用に item を少数にして説明を付与）
-export const ActiveState: Story = {
-  args: {
-    items: [
-      { id: 'h-0', text: '作品概要', level: 2 },
-      { id: 'h-1', text: 'あらすじ（← アクティブ想定）', level: 2 },
-      { id: 'h-2', text: '見どころ', level: 2 },
-      { id: 'h-3', text: '総評', level: 2 },
-    ],
-  },
 }
 
 // ── 英語ロケール（見出し「Contents」に変化）

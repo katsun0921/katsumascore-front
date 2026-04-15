@@ -4,16 +4,11 @@ import type { TRentalService } from '@/components/features/AdRental/AdRental'
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
 import type { ProfileProps } from '@/components/features/Sidebar/Profile/Profile'
 import type { AdBannerProps } from '@/components/features/Sidebar/AdBanner/AdBanner'
-import type { TocItem } from '@/lib/toc'
-
 export type SidebarProps = {
   locale?: 'ja' | 'en'
 
   // ❶ プロフィールカード
   profile?: ProfileProps
-
-  // ❸ 目次
-  toc?: TocItem[]
 
   // ❹ 広告バナー（VOD CTA）
   adBanner?: AdBannerProps

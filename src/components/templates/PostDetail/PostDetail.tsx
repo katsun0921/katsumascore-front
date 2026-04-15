@@ -2,10 +2,11 @@ import { PostHeader } from '@/components/features/Post/PostHeader/PostHeader'
 import { PostHero } from '@/components/features/Post/PostHero/PostHero'
 import { TitleMeta } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
+import { TableOfContents } from '@/components/features/Post/TableOfContents/TableOfContents'
 import { PostContent } from '@/components/features/Post/PostContent/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
-import { ShareButtons } from '@/components/features/ShareButtons/ShareButtons'
+import { ShareButtons } from '@/components/ui/ShareButtons/ShareButtons'
 import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 
@@ -58,6 +59,11 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
             <GoodPoint points={post.goodPoints} locale={locale} score={post.score} />
           )}
 
+          {/* ── 目次（GoodPointの直下） ── */}
+          {post.toc && post.toc.length > 0 && (
+            <TableOfContents items={post.toc} />
+          )}
+
           {/* ── the_content() 相当 ── */}
           <article className='my-8'>
             <PostContent content={post.content} />
@@ -83,7 +89,6 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         <Sidebar
           locale={locale}
           profile={post.profile}
-          toc={post.toc}
           pickupPosts={post.pickupPosts}
           highScorePosts={post.highScorePosts}
           relationPosts={post.relationPosts}
@@ -101,7 +106,6 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
       <ShareButtons
         url={post.shareUrl ?? post.slug}
         title={post.title}
-        locale={locale}
       />
     </div>
   )
