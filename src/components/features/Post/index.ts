@@ -11,3 +11,9 @@ export type { PostListProps } from '@/components/features/Post/PostList/PostList
 export { PostContent } from '@/components/features/Post/PostContent/PostContent';
 export { PostSection } from '@/components/features/Post/PostSection/PostSection';
 export { PostSEO } from '@/components/features/Post/PostSEO/PostSEO';
+export { PostFeatured } from '@/components/features/Post/PostFeatured/PostFeatured';
+export type { PostFeaturedProps } from '@/components/features/Post/PostFeatured/PostFeatured.types';
+export { PostRankingItem } from '@/components/features/Post/PostRankingItem/PostRankingItem';
+export type { PostRankingItemProps } from '@/components/features/Post/PostRankingItem/PostRankingItem.types';
+export { ListFilterBar } from '@/components/features/Post/ListFilterBar/ListFilterBar';
+export type { ListFilterBarProps, FilterOption } from '@/components/features/Post/ListFilterBar/ListFilterBar.types';

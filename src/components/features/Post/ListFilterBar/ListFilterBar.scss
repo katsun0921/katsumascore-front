@@ -1,0 +1,44 @@
+.listFilterBar {
+  display: flex;
+  gap: var(--space-8);
+  overflow-x: auto;
+  padding-bottom: var(--space-4);
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &__button {
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    padding: var(--space-8) var(--space-16);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--color-bg);
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: var(--font-size-caption-pc);
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+
+    &:hover {
+      border-color: var(--color-category);
+      color: var(--color-category);
+    }
+
+    &--active {
+      background: var(--color-category);
+      border-color: var(--color-category);
+      color: var(--color-text-inverse);
+
+      &:hover {
+        background: var(--color-category-hover);
+        border-color: var(--color-category-hover);
+        color: var(--color-text-inverse);
+      }
+    }
+  }
+}

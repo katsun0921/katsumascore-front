@@ -14,15 +14,16 @@ export type TableOfContentsProps = {
 export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const locale = useLocale()
   const [activeId, setActiveId] = useState<string>('')
-  const [isFixed, setIsFixed] = useState(false)
+  const [isSticky, setIsSticky] = useState(false)
+  const [isContentEnded, setIsContentEnded] = useState(false)
   const tocRef = useRef<HTMLElement>(null)
   const sentinelRef = useRef<HTMLDivElement>(null)
 
-  // 固定制御（sentinel が画面外に出たら fixed に切替）
+  // sentinel が viewport 上端を抜けたら sticky 開始
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsFixed(!entry.isIntersecting)
+        setIsSticky(!entry.isIntersecting)
       },
       {
         rootMargin: '-80px 0px 0px 0px',
@@ -31,7 +32,23 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     )
 
     if (sentinelRef.current) observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [])
 
+  // .p-content の bottom が viewport 上端を抜けたら sticky 解除
+  useEffect(() => {
+    const content = document.querySelector('.p-content')
+    if (!content) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const isPast = !entry.isIntersecting && entry.boundingClientRect.bottom < 0
+        setIsContentEnded(isPast)
+      },
+      { threshold: 0 }
+    )
+
+    observer.observe(content)
     return () => observer.disconnect()
   }, [])
 
@@ -78,17 +95,25 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   if (items.length === 0) return null
 
+  const listClassName = [
+    'toc__list',
+    isSticky && !isContentEnded ? 'toc__list--sticky' : '',
+    isContentEnded ? 'toc__list--ended' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+
   return (
     <>
       <div ref={sentinelRef} />
 
       <nav
         ref={tocRef}
-        className={['toc', isFixed ? 'toc--fixed is-visible' : ''].filter(Boolean).join(' ')}
+        className='toc'
         aria-label={t(messages, ['heading', 'label'], locale)}
       >
         <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
-        <ol className='toc__list'>
+        <ol className={listClassName}>
           {items.map((item) => (
             <li
               key={item.id}
