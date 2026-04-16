@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Search } from '@/components/ui/Search/Search';
 import { CTAButton } from '@/components/ui/CTAButton/CTAButton';
-import { HeaderNav } from '@/components/ui/HeaderNav/HeaderNav';
+import { HeaderNav } from '@/components/features/navigation/HeaderNav/HeaderNav';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
