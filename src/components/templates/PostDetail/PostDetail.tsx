@@ -7,7 +7,7 @@ import { PostContent } from '@/components/features/Post/PostContent/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
 import { ShareButtons } from '@/components/ui/ShareButtons/ShareButtons'
-import { Sidebar } from '@/components/layout/Sidebar/Sidebar'
+import { Sidebar } from '@/components/ui-layout/Sidebar/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 
 export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
