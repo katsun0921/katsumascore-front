@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { PostDate } from './Date'
 
 const meta: Meta<typeof PostDate> = {
-  title: 'ui/Date',
+  title: 'Features/Post/PostDate',
   component: PostDate,
   tags: ['autodocs'],
   args: {
