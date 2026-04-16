@@ -1,4 +1,4 @@
-import type { TVodService } from '@/components/ui/VodItem/VodItem';
+import type { VodService as TVodService } from '@/lib/vod';
 
 export type TVodMenuService = {
   service: TVodService;

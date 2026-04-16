@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { VodItem } from './VodItem'
 
 const meta: Meta<typeof VodItem> = {
-  title: 'ui/VodItem',
+  title: 'Features/Vod/VodItem',
   component: VodItem,
   tags: ['autodocs'],
   args: {

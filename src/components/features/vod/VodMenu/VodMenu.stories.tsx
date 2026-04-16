@@ -21,7 +21,7 @@ const WithNavigationBackground = (Story: React.ComponentType) => {
 }
 
 const meta: Meta<typeof VodMenu> = {
-  title: 'UI/VodMenu',
+  title: 'Features/Vod/VodMenu',
   component: VodMenu,
   decorators: [WithNavigationBackground],
   parameters: {
