@@ -1,7 +1,7 @@
 import { useEffect, useRef, useId } from 'react';
 import { useRouter } from 'next/router';
-import { useSearch } from '@/components/ui/Search/useSearch';
-import { SearchResultItem } from '@/components/ui/Search/SearchResultItem';
+import { useSearch } from '@/components/features/search/Search/useSearch';
+import { SearchResultItem } from '@/components/ui/SearchResultItem/SearchResultItem';
 
 type Props = {
   onClose: () => void;

@@ -1,12 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
+import type { SearchResult } from '../types';
 
-export type SearchResult = {
-  id: number;
-  title: string;
-  type: '映画' | 'ドラマ';
-  thumbnail?: string;
-  href: string;
-};
+export type { SearchResult };
 
 // Replace with WordPress REST API call later
 // e.g. GET /wp-json/wp/v2/posts?search={query}&per_page=5

@@ -25,7 +25,7 @@ const WithLightBackground = (Story: React.ComponentType) => {
 }
 
 const meta: Meta<typeof Search> = {
-  title: 'UI/Search',
+  title: 'Features/Search/Search',
   component: Search,
   decorators: [WithNavigationBackground],
   parameters: {
