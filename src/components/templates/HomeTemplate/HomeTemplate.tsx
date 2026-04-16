@@ -5,6 +5,7 @@ import { HomeVodFinder } from '@/components/features/home/HomeVodFinder/HomeVodF
 import { HomeSeasonReview } from '@/components/features/home/HomeSeasonReview/HomeSeasonReview';
 import { HomeRecommend } from '@/components/features/home/HomeRecommend/HomeRecommend';
 import { HomeFeatured } from '@/components/features/home/HomeFeatured/HomeFeatured';
+import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 import './HomeTemplate.scss';
 
@@ -31,6 +32,7 @@ export const HomeTemplate = ({
   featuredItems,
 }: HomeTemplateProps) => {
   return (
+    <PageLayout>
     <div className='homeTemplate'>
       <HomeHero {...hero} />
 
@@ -72,5 +74,6 @@ export const HomeTemplate = ({
         </section>
       </div>
     </div>
+    </PageLayout>
   );
 };

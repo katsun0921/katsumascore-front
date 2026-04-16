@@ -68,6 +68,9 @@ components/
 - PostSection：意味と余白 → ui-section/
 - Template：画面構造 → templates/
 
+✅ 必須:
+- すべてのTemplateは`PageLayout`でラップする（Header/Footerを含むため）
+
 ❌ 禁止:
 - variantによる分岐（variant="grid" など）
 - コンポーネント内でのデータ取得
