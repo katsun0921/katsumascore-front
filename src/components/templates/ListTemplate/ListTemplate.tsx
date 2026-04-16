@@ -1,7 +1,7 @@
 import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
 import { PostFeatured } from '@/components/features/Post/PostFeatured/PostFeatured';
 import { PostRankingItem } from '@/components/features/Post/PostRankingItem/PostRankingItem';
-import { PostList } from '@/components/features/Post/PostList/PostList';
+import { PostList } from '@/components/ui-section/PostList/PostList';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar/ListFilterBar';
 import type { ListTemplateProps } from './ListTemplate.types';
 

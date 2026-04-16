@@ -5,11 +5,11 @@ export type { PostCardProps } from '@/components/features/Post/PostCard/PostCard
 export { PostCardLeft } from '@/components/features/Post/PostCard/variants/PostCardLeft/PostCardLeft';
 export { PostCardTop } from '@/components/features/Post/PostCard/variants/PostCardTop/PostCardTop';
 export { PostCardOverlay } from '@/components/features/Post/PostCard/variants/PostCardOverlay/PostCardOverlay';
-export { PostList } from '@/components/features/Post/PostList/PostList';
-export { PostListRow } from '@/components/features/Post/PostList/PostListRow/PostListRow';
-export type { PostListProps } from '@/components/features/Post/PostList/PostList.types';
+export { PostList } from '@/components/ui-section/PostList/PostList';
+export { PostListRow } from '@/components/ui-section/PostListRow/PostListRow';
+export type { PostListProps } from '@/components/ui-section/PostList/PostList.types';
 export { PostContent } from '@/components/features/Post/PostContent/PostContent';
-export { PostSection } from '@/components/features/Post/PostSection/PostSection';
+export { PostSection } from '@/components/ui-section/PostSection/PostSection';
 export { PostSEO } from '@/components/features/Post/PostSEO/PostSEO';
 export { PostFeatured } from '@/components/features/Post/PostFeatured/PostFeatured';
 export type { PostFeaturedProps } from '@/components/features/Post/PostFeatured/PostFeatured.types';
