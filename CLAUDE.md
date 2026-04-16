@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v3.3 ― SPファーストDOM原則を追加
+> v4.0 ― ui-layout / ui-section レイヤー追加、コンポーネント責務再定義
 > 2026年4月16日
 
 ## ■ 本ドキュメントの位置付け
@@ -15,28 +15,39 @@
 
 ## ■ 最重要原則（必読）
 
-### 1. Feature First設計
+### 1. レイヤー構成
 
+```
 components/
-├── features/
-│   └── PostCard, PostList, VodPanel, ...
-└── features/
-    └── Summary, GoodPoint, ...
-
-- すべてのドメインロジックはcomponents/featuresに集約する
-- components/uiにビジネスロジックを書かない
+├── ui/              ← 純粋UI（最小単位）
+├── ui-layout/       ← 構造（配置・骨格）
+├── ui-section/      ← 意味を持つUIまとまり
+├── features/        ← ロジック（hooks / state / ドメイン知識）
+├── templates/       ← 画面構造
+├── docs/            ← Storybook専用ドキュメント
+└── typography/      ← タイポグラフィ仕様
+```
 
 ---
 
 ### 2. レイヤー責務
 
-| レイヤー | 役割 |
-|----------|------|
-| components/features | 機能コンポーネント（PostCard, ArticleBlock等） |
-| components/features/ | ACFコンポーネント群 |
-| components/ui | 純粋UI（Score, Heading, Badge等） |
-| components/layout | 構造（Header, Footer, Sidebar等） |
-| pages | 組み立て |
+| レイヤー | 役割 | ルール |
+|----------|------|--------|
+| components/ui | 純粋UI（Score, Heading, Badge等） | propsの値を表示するのみ。hooks/state禁止。i18nのみ許可 |
+| components/ui-layout | 構造（Header, Footer, Sidebar等） | ロジック禁止。データ依存禁止。childrenで構成 |
+| components/ui-section | 意味を持つUIまとまり（PostList, PostSection等） | ロジック禁止。データはpropsで受け取る。hooks禁止 |
+| components/features | 機能コンポーネント（PostCard, Search, VodItem等） | hooks/state使用可。ui/ui-sectionを組み合わせる |
+| components/templates | 画面構造（HomeTemplate, PostDetail等） | ページ単位の組み立て |
+| components/docs | Storybook専用（DesignRules等） | 設計・デザインルールの可視化 |
+| components/typography | タイポグラフィ仕様 | フォント・サイズトークンの可視化 |
+| pages | ルーティング・組み立て | |
+
+### 判断基準（コンポーネント配置のフローチャート）
+
+1. **Q1：ロジック（hooks / state）を持つか？** → YES：features / NO：次へ
+2. **Q2：意味を持つUIのまとまりか？** → YES：ui-section / NO：次へ
+3. **Q3：レイアウト（配置・骨格）か？** → YES：ui-layout / NO：ui
 
 ---
 
@@ -51,11 +62,11 @@ components/
 
 ### 1. コンポーネント責務分離（厳守）
 
-- PostCard：最小UI（データ表示のみ）
-- PostVariants：レイアウト差分（ラップのみ）
-- PostList：配置（レイアウトエンジン）
-- PostSection：意味と余白
-- Template：画面構造
+- PostCard：最小UI（データ表示のみ） → features/Post/
+- PostVariants：レイアウト差分（ラップのみ） → features/Post/
+- PostList：配置（レイアウトエンジン） → ui-section/
+- PostSection：意味と余白 → ui-section/
+- Template：画面構造 → templates/
 
 ❌ 禁止:
 - variantによる分岐（variant="grid" など）
@@ -134,26 +145,27 @@ components/
 
 **1ディレクトリに配置するコンポーネントは1つのみ。**
 
-あるコンポーネントの子コンポーネントは、同じディレクトリに置かず `features/` または `ui/` に移動する。
-このルールは layout / features / ui / templates すべてのレイヤーに適用する。
+あるコンポーネントの子コンポーネントは、同じディレクトリに置かず適切なレイヤーに移動する。
+このルールは ui / ui-layout / ui-section / features / templates すべてのレイヤーに適用する。
 
 ```
 ❌ 禁止
-components/layout/Sidebar/
+components/ui-layout/Sidebar/
 ├── Sidebar.tsx
 ├── Profile/        ← 子コンポーネントを同階層に置くのは禁止
 └── WorkInfo/
 
 ✅ 正しい
-components/layout/Sidebar/
+components/ui-layout/Sidebar/
 └── Sidebar.tsx     ← Sidebar のみ
 
-components/features/sidebar/
+components/features/Sidebar/
 ├── Profile/
 └── WorkInfo/
 ```
 
-- ドメインロジックや状態を持つ子コンポーネント → `features/`
+- ロジック（hooks/state）を持つ子コンポーネント → `features/`
+- 意味を持つUIまとまり → `ui-section/`
 - 汎用的でドメイン非依存な子コンポーネント → `ui/`
 
 ---
@@ -176,27 +188,66 @@ components/features/sidebar/
 ```
 src/
 ├── components/
-│   ├── ui/
-│   ├── layout/
-│   ├── templates/
-│   │   └── HomeTemplate/
+│   ├── ui/                    ← 純粋UI（props表示のみ）
+│   │   ├── Badge/
+│   │   ├── Breadcrumb/
+│   │   ├── CTAButton/
+│   │   ├── Category/
+│   │   ├── Heading/
+│   │   ├── Score/
+│   │   ├── SearchResultItem/
+│   │   ├── ShareButtons/
+│   │   ├── Tag/
+│   │   ├── VideoEmbed/
+│   │   ├── VodLink/
+│   │   └── VodMenuItem/
 │   │
-│   └── features/
-│       └── post/
-│           ├── PostCard/
-│           ├── PostLeftImage/
-│           ├── PostTopImage/
-│           ├── PostOverlay/
-│           ├── PostList/
-│           ├── PostSection/
-│           ├── PostContent/
-│           ├── PostDetail/
-│           │
-│           ├── types/
-│           ├── mocks/
-│           ├── hooks/
-│           ├── utils/
-│           └── index.ts
+│   ├── ui-layout/             ← 構造（配置・骨格）
+│   │   ├── Container/
+│   │   ├── Footer/
+│   │   ├── Grid/
+│   │   ├── Header/
+│   │   └── Sidebar/
+│   │
+│   ├── ui-section/            ← 意味を持つUIまとまり
+│   │   ├── PostList/
+│   │   ├── PostListRow/
+│   │   └── PostSection/
+│   │
+│   ├── templates/
+│   │   ├── HomeTemplate/
+│   │   ├── ListTemplate/
+│   │   ├── NotFoundTemplate/
+│   │   ├── PageLayout/
+│   │   └── PostDetail/
+│   │
+│   ├── features/
+│   │   ├── navigation/        ← ナビゲーション系
+│   │   │   ├── HeaderNav/
+│   │   │   └── HamburgerMenu/
+│   │   ├── search/            ← 検索系
+│   │   │   ├── Search/
+│   │   │   └── SearchModal/
+│   │   ├── vod/               ← VOD系
+│   │   │   ├── VodItem/
+│   │   │   ├── VodMenu/
+│   │   │   └── VodBadge/
+│   │   ├── pagination/        ← ページネーション
+│   │   │   └── Pagination/
+│   │   ├── Post/              ← 記事系
+│   │   │   ├── PostCard/
+│   │   │   ├── PostContent/
+│   │   │   ├── PostDate/
+│   │   │   ├── types/
+│   │   │   ├── mocks/
+│   │   │   └── index.ts
+│   │   └── ...
+│   │
+│   ├── docs/                  ← Storybook専用ドキュメント
+│   │   └── DesignRules/
+│   │
+│   └── typography/            ← タイポグラフィ仕様
+│       └── Typography/
 │
 ├── lib/
 │   └── api/
@@ -217,10 +268,11 @@ src/
 | 対象 | 技術 |
 |------|------|
 | pages | Tailwind |
-| components/layout | Tailwind |
+| components/ui | Tailwind 必須。SCSSは最小限のみ許可（装飾用途） |
+| components/ui-layout | Tailwind |
+| components/ui-section | SCSS（コンポーネントスコープ）※レイアウト系の複雑さを許容 |
 | components/templates | Tailwind |
 | components/features | SCSS（コンポーネントスコープ）※ドメインロジックに依存し複雑になるため許容 |
-| components/ui | Tailwind |
 
 ### Tailwind使用ルール
 
@@ -266,7 +318,7 @@ src/
 
 ### 混在禁止
 
-❌ layout・templates・uiのコンポーネントに`.scss`ファイルを作成しない
+❌ ui-layout・templatesのコンポーネントに`.scss`ファイルを作成しない
 ❌ featuresのコンポーネントでTailwindの余白・レイアウトクラスを使用しない。ビジネスロジックや複雑なレイアウトが多々あるためscssファイルのみで運用をする
 ❌ コンポーネントのTSX / SCSSに`@media`のブレークポイント値を直書きしない
 ❌ TailwindのspacingにDesign Token外の値を使わない
@@ -275,7 +327,7 @@ src/
 
 ### Typography同期ルール（必須）
 
-`globals.css`の以下のトークンを追加・削除・変更したら、`src/components/ui/Typography/Typography.tsx`の対応するデータ配列を必ず同期する。
+`globals.css`の以下のトークンを追加・削除・変更したら、`src/components/typography/Typography/Typography.tsx`の対応するデータ配列を必ず同期する。
 
 | 変更したトークン | 更新する配列 |
 |---|---|
@@ -303,11 +355,11 @@ type PostCardData = {
 
 ### ■ Post構造設計（重要）
 
-PostCard → UI最小単位  
-PostVariants → レイアウト  
-PostList → 配置  
-PostSection → 意味  
-Template → 画面
+PostCard → UI最小単位（features/Post/）  
+PostVariants → レイアウト差分（features/Post/）  
+PostList → 配置（ui-section/）  
+PostSection → 意味（ui-section/）  
+Template → 画面（templates/）
 
 👉 variantではなく構造で解決する
 
