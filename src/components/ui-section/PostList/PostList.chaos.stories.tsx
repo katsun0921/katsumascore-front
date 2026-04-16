@@ -14,7 +14,7 @@ import { PostList } from './PostList';
 import { chaosPosts } from '@/components/features/Post/mocks/chaosPosts';
 
 const meta = {
-  title: 'Features/Post/PostList/Chaos',
+  title: 'UI-Section/PostList/Chaos',
   component: PostList,
   parameters: {
     layout: 'fullscreen',

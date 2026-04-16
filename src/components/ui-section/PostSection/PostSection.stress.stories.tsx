@@ -14,12 +14,12 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
-import { PostList } from '@/components/features/Post/PostList/PostList';
-import { PostListRow } from '@/components/features/Post/PostList/PostListRow/PostListRow';
+import { PostList } from '@/components/ui-section/PostList/PostList';
+import { PostListRow } from '@/components/ui-section/PostListRow/PostListRow';
 import type { Post } from '@/components/features/Post/types/post';
 
 const meta = {
-  title: 'Features/Post/PostSection/Stress',
+  title: 'UI-Section/PostSection/Stress',
   component: PostSection,
   parameters: {
     layout: 'fullscreen',

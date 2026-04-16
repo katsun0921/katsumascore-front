@@ -3,7 +3,7 @@ import { PostList } from './PostList';
 import { mockPosts } from '@/components/features/Post/mocks/post';
 
 const meta = {
-  title: 'Features/Post/PostList',
+  title: 'UI-Section/PostList',
   component: PostList,
   parameters: {
     layout: 'fullscreen',

@@ -14,7 +14,7 @@ import { PostList } from './PostList';
 import type { Post } from '@/components/features/Post/types/post';
 
 const meta = {
-  title: 'Features/Post/PostList/Stress',
+  title: 'UI-Section/PostList/Stress',
   component: PostList,
   parameters: {
     layout: 'fullscreen',

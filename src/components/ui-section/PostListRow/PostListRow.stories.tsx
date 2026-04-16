@@ -3,7 +3,7 @@ import { PostListRow } from './PostListRow';
 import { mockPosts } from '@/components/features/Post/mocks/post';
 
 const meta: Meta<typeof PostListRow> = {
-  title: 'Features/Post/PostListRow',
+  title: 'UI-Section/PostListRow',
   component: PostListRow,
   tags: ['autodocs'],
 };

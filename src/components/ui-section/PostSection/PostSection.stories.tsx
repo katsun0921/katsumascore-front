@@ -1,11 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
-import { PostList } from '@/components/features/Post/PostList/PostList';
-import { PostListRow } from '@/components/features/Post/PostList/PostListRow/PostListRow';
+import { PostList } from '@/components/ui-section/PostList/PostList';
+import { PostListRow } from '@/components/ui-section/PostListRow/PostListRow';
 import { mockPosts } from '@/components/features/Post/mocks/post';
 
 const meta = {
-  title: 'Features/Post/PostSection',
+  title: 'UI-Section/PostSection',
   component: PostSection,
   parameters: {
     layout: 'fullscreen',
