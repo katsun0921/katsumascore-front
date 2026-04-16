@@ -1,0 +1,187 @@
+// =============================================================
+// Templates: PageList
+// 記事一覧ページテンプレート
+// BEM: .t-page-list
+// =============================================================
+
+.t-page-list {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px 64px;
+
+  // ページヘッダー（カテゴリー名など）
+  &__header {
+    margin-bottom: 32px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid $colorBorder;
+  }
+
+  &__title {
+    font-size: 22px;
+    font-weight: $fontWeightBold;
+    color: $colorText;
+    line-height: 1.4;
+  }
+
+  // 記事グリッド
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // 個別カード
+  &__card {
+    background: $colorBg;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    }
+
+    &-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    // サムネイル（1:1比率）
+    &-thumbnail {
+      position: relative;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      background-color: $colorBgLight;
+    }
+
+    &-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    &-no-image {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      color: $colorTextMuted;
+      background-color: $colorBgLight;
+    }
+
+    // スコアバッジ（六角形）
+    &-score {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: $scoreBackground;
+      border: 2px solid $scoreBackgroundBorder;
+      color: #fff;
+      font-weight: $fontWeightBold;
+      font-size: 15px;
+      clip-path: $blockClipPath;
+    }
+
+    // テキストエリア
+    &-body {
+      padding: 12px 14px 14px;
+    }
+
+    &-title {
+      font-size: 14px;
+      font-weight: $fontWeightBold;
+      color: $colorText;
+      line-height: 1.6;
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    &-date {
+      display: block;
+      font-size: 11px;
+      color: $colorTextMuted;
+    }
+  }
+
+  // 空状態
+  &__empty {
+    text-align: center;
+    padding: 80px 0;
+
+    &-message {
+      font-size: 15px;
+      color: $colorTextLight;
+    }
+  }
+
+  // ページネーション
+  &__pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 48px;
+
+    &-item {
+      min-width: 36px;
+      height: 36px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid $colorBorder;
+      border-radius: 4px;
+      font-size: 13px;
+      color: $colorText;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      user-select: none;
+
+      &:hover {
+        background-color: $colorBgLight;
+      }
+
+      &--active {
+        background-color: $scoreBackground;
+        color: #fff;
+        border-color: $scoreBackground;
+        pointer-events: none;
+
+        &:hover {
+          background-color: $scoreBackground;
+        }
+      }
+
+      &--prev,
+      &--next {
+        min-width: auto;
+        font-size: 12px;
+      }
+    }
+  }
+}
