@@ -1,29 +1,36 @@
 import Head from 'next/head';
-import type { GetServerSideProps } from 'next';
-import type { ComponentProps } from 'react';
 import { HomeTemplate } from '@/components/templates/HomeTemplate/HomeTemplate';
-import { normalizePosts } from '@/components/features/Post/utils/normalizePost';
-import { getPosts } from '@/lib/api/wordpress';
+import {
+  mockHeroData,
+  mockRankingPosts,
+  mockLatestPosts,
+  mockAnimePosts,
+  mockHighScorePosts,
+  mockRecommendBlocks,
+  mockVodFinderItems,
+  mockSeasonItems,
+  mockFeaturedItems,
+} from '@/components/features/home/mocks/home';
 
-type IndexProps = ComponentProps<typeof HomeTemplate>;
-
-export default function Home({ posts }: IndexProps) {
+const Home = () => {
   return (
     <>
       <Head>
         <title>KatsumaScore</title>
       </Head>
-      <HomeTemplate posts={posts} />
+      <HomeTemplate
+        hero={mockHeroData}
+        rankingPosts={mockRankingPosts}
+        latestPosts={mockLatestPosts}
+        animePosts={mockAnimePosts}
+        highScorePosts={mockHighScorePosts}
+        recommendBlocks={mockRecommendBlocks}
+        vodFinderItems={mockVodFinderItems}
+        seasonItems={mockSeasonItems}
+        featuredItems={mockFeaturedItems}
+      />
     </>
   );
-}
-
-export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
-  const currentLocale = locale ?? 'ja';
-  const posts = await getPosts({ per_page: 12, lang: currentLocale });
-  const normalizedPosts = normalizePosts(posts, currentLocale);
-
-  return {
-    props: { posts: normalizedPosts },
-  };
 };
+
+export default Home;

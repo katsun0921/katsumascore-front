@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v3.2 ― i18n設計ルール追加
-> 2026年4月5日
+> v3.3 ― SPファーストDOM原則を追加
+> 2026年4月16日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -70,6 +70,28 @@ components/
 - 子コンポーネントはmarginを持たない
 - 高さは「揃える / 崩す」を意図的に設計する
 - grid崩れを許容しない
+
+#### SPファーストDOM（厳守）
+
+**HTMLのDOM順はSP表示順に合わせる。PCレイアウトへの変更はCSSのみで行う。**
+
+- DOMの並び順 = SPで画面に表示される順序
+- PCで位置が変わる要素（サイドバー等）は `grid-column` / `grid-row` / `order` で再配置する
+- `display: none` で要素を切り替えるDOMの二重管理は禁止
+
+```tsx
+{/* ✅ 正しい — DOM順はSP基準、PCはCSSで右列へ移動 */}
+<div className='homeTemplate__body'>        {/* lg: grid 2カラム */}
+  <section>メインA</section>               {/* lg: grid-column: 1 */}
+  <section className='--sidebar'>サイド1</section>  {/* lg: grid-column: 2 */}
+  <section>メインB</section>               {/* lg: grid-column: 1 */}
+  <section className='--sidebar'>サイド2</section>  {/* lg: grid-column: 2 */}
+</div>
+
+{/* ❌ 禁止 — PCとSPで別DOMを用意する二重管理 */}
+<div className='hidden lg:block'><Sidebar /></div>
+<div className='lg:hidden'><Sidebar /></div>
+```
 
 ---
 

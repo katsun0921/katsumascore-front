@@ -1,46 +1,18 @@
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
+import { type VodService, VOD_LABEL, VOD_BORDER_CLASS } from '@/lib/vod'
 import { messages } from './i18n'
 
-export type TVodService =
-  | 'netflix'
-  | 'amazon'
-  | 'unext'
-  | 'disney'
-  | 'dmmtv'
-  | 'youtube'
-  | 'appletv'
-  | 'abema'
+/** @deprecated VodService を使用してください */
+export type TVodService = VodService
 
 export type TVodItemProps = {
-  service: TVodService
+  service: VodService
   streamingUrl: string
   signupUrl?: string
   streamingText?: string
   unregisteredText?: string
   isPaid?: boolean
-}
-
-const SERVICE_LABELS: Record<TVodService, string> = {
-  netflix: 'Netflix',
-  amazon: 'Amazon Prime Video',
-  unext: 'U-NEXT',
-  disney: 'Disney+',
-  dmmtv: 'DMM TV',
-  youtube: 'YouTube',
-  appletv: 'Apple TV+',
-  abema: 'ABEMA',
-}
-
-const serviceTopBorder: Record<TVodService, string> = {
-  netflix: '[border-top:3px_solid_var(--color-netflix)]',
-  amazon: '[border-top:3px_solid_var(--color-amazon)]',
-  unext: '[border-top:3px_solid_var(--color-unext)]',
-  disney: '[border-top:3px_solid_var(--color-disney)]',
-  dmmtv: '[border-top:3px_solid_var(--color-dmmtv)]',
-  youtube: '[border-top:3px_solid_var(--color-youtube)]',
-  appletv: '[border-top:3px_solid_var(--color-appletv)]',
-  abema: '[border-top:3px_solid_var(--color-abema)]',
 }
 
 export const VodItem = ({
@@ -52,12 +24,12 @@ export const VodItem = ({
   isPaid = false,
 }: TVodItemProps) => {
   const locale = useLocale()
-  const label = SERVICE_LABELS[service]
+  const label = VOD_LABEL[service]
   const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale)
   const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale)
 
   return (
-    <div className={`flex flex-col gap-2 p-4 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] ${serviceTopBorder[service]}`}>
+    <div className={`flex flex-col gap-2 p-4 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] ${VOD_BORDER_CLASS[service]}`}>
       {isPaid && (
         <em className='block [font-size:var(--font-size-caption-pc)] text-[var(--color-text-secondary)] italic'>
           {t(messages, ['paid', 'notice'], locale)}

@@ -1,0 +1,45 @@
+.homeTemplate {
+  background: var(--color-footer);
+  min-height: 100vh;
+  color: var(--color-text-inverse);
+
+  // ── SP: 縦積み ──
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    max-width: var(--layout-width-xl);
+    margin: 0 auto;
+    padding: 32px 16px;
+
+    @media (min-width: var(--breakpoint-md)) {
+      padding: 40px 32px;
+    }
+
+    // ── PC: 2カラム grid ──
+    // 左列（main）: 1fr　右列（sidebar）: 300px
+    // sidebar セクションは grid-column: 2 に配置し
+    // 左列セクションは自動的に grid-column: 1 に流し込む
+    @media (min-width: var(--breakpoint-lg)) {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      grid-auto-rows: auto;
+      align-items: start;
+      gap: 40px 40px;
+
+      // 通常セクションは左列へ
+      .homeTemplate__section {
+        grid-column: 1;
+      }
+
+      // サイドバーセクションは右列へ積み上げ
+      .homeTemplate__section--sidebar {
+        grid-column: 2;
+      }
+    }
+  }
+
+  &__section {
+    // セクション自体は余白を持たない（gap で管理）
+  }
+}

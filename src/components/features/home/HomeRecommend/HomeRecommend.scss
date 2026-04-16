@@ -1,0 +1,50 @@
+.homeRecommend {
+  &__title {
+    color: var(--color-text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3-sp);
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  &__blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__blockHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__tag {
+    display: inline-block;
+    padding: 4px 14px;
+    background: var(--color-score-bg);
+    border: 0.5px solid rgba(255, 45, 252, 0.18);
+    border-radius: 14px;
+    color: var(--color-score-border);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  &__seeAll {
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-score-border);
+    }
+  }
+}

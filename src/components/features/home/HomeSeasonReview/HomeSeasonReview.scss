@@ -1,0 +1,58 @@
+.homeSeasonReview {
+  &__title {
+    color: var(--color-text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3-sp);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  &__track {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.homeSeasonCard {
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  min-width: 120px;
+  padding: 12px 16px;
+  background: var(--color-score-bg);
+  border: 0.5px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  text-align: center;
+  transition: border-color 0.2s;
+
+  &:hover {
+    border-color: var(--color-score-rank-s-text);
+  }
+
+  &__label {
+    color: var(--color-score-rank-s-text);
+    font-family: var(--font-heading);
+    font-size: 18px;
+    font-weight: 700;
+    transition: color 0.2s;
+  }
+
+  &--current &__label {
+    color: var(--color-score-border);
+  }
+
+  &__period {
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 10px;
+  }
+}

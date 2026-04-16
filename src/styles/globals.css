@@ -46,6 +46,13 @@
   --color-score-bg: #14082e;
   --color-score-border: #ff2dfc;
 
+  /* Home: ダークテーマ専用カラー */
+  --color-home-bg: #0a0618;
+  --color-home-card: #1a1030;
+  --color-home-text: #e8e6f0;
+  --color-home-text-secondary: #9890b0;
+  --color-home-text-soft: #f0eef6;
+
   /* ScoreWithRank: ランク別スコア数字色（C→SS で段階的に強調） */
   --color-score-rank-c-text: #64748b;
   --color-score-rank-b-text: #0f766e;

@@ -1,3 +1,5 @@
+export type { VodService } from '@/lib/vod';
+
 export type Post = {
   id: string;
   slug: string;
@@ -7,6 +9,8 @@ export type Post = {
   publishedAt: string;
   category?: string;
   score?: number;
+  vods?: VodService[];
+  year?: number;
 };
 
 export type PostContentData = {

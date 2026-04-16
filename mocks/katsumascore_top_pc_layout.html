@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KatsumaScore TOP Page — PC Layout</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@600;700&family=Noto+Sans+JP:wght@400;500;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg-deep:#0a0618;--bg-card:#14082e;--bg-surface:#1a1030;--bg-elevated:#1e1b4b;
+--accent:#ff2dfc;--accent-soft:#c084fc;--text-primary:#f0eef6;--text-secondary:#9890b0;
+--netflix:#E50914;--amazon:#FF9900;--unext:#00B4ED;--hulu:#1CE783;
+--font-heading:'Noto Serif JP',serif;--font-body:'Noto Sans JP',sans-serif;--font-display:'Playfair Display',serif;
+--content-max:1200px;--sidebar-w:300px;
+}
+body{background:var(--bg-deep);font-family:var(--font-body);color:var(--text-primary);-webkit-font-smoothing:antialiased}
+
+/* ===== HEADER ===== */
+.site-header{border-bottom:0.5px solid #ffffff10;position:sticky;top:0;z-index:100;background:var(--bg-deep);backdrop-filter:blur(12px)}
+.header-inner{max-width:var(--content-max);margin:0 auto;padding:14px 32px;display:flex;justify-content:space-between;align-items:center}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.logo span{font-size:16px;font-weight:700;color:#fff;letter-spacing:.8px}
+.nav{display:flex;gap:28px;align-items:center}
+.nav a{font-size:13px;color:var(--text-secondary);text-decoration:none;transition:color .2s}
+.nav a:hover{color:var(--accent)}
+.nav-lang{font-size:11px;color:var(--text-secondary);border:0.5px solid #ffffff20;border-radius:4px;padding:3px 8px;cursor:pointer}
+
+/* ===== HERO ===== */
+.hero{background:var(--bg-card);position:relative;overflow:hidden}
+.hero-inner{max-width:var(--content-max);margin:0 auto;padding:60px 32px 80px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.hero-visual{display:flex;flex-direction:column;align-items:center;text-align:center}
+.hero-text{display:flex;flex-direction:column;justify-content:center}
+.hero-label{font-size:11px;color:var(--accent-soft);letter-spacing:4px;margin-bottom:8px}
+.hero-title{font-family:var(--font-heading);font-size:28px;font-weight:700;color:#fff;line-height:1.5;margin-bottom:12px}
+.hero-sub{font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:20px}
+.hero-vod{display:flex;gap:6px;margin-bottom:24px}
+.hero-vod span{color:#fff;font-size:10px;padding:3px 12px;border-radius:12px;font-weight:600}
+.hero-cta{border:1px solid var(--accent);color:var(--accent);font-size:13px;padding:10px 32px;border-radius:24px;background:transparent;cursor:pointer;font-weight:600;transition:background .2s;display:inline-block;text-align:center;width:fit-content}
+.hero-cta:hover{background:#ff2dfc15}
+.hero-fade{position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,var(--bg-deep))}
+
+/* ===== LAYOUT ===== */
+.main-layout{max-width:var(--content-max);margin:0 auto;padding:40px 32px;display:grid;grid-template-columns:1fr var(--sidebar-w);gap:40px}
+.main-content{min-width:0}
+.sidebar{display:flex;flex-direction:column;gap:24px}
+
+/* ===== SECTIONS ===== */
+.section{margin-bottom:40px}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.section-title{font-family:var(--font-heading);font-size:18px;font-weight:700;color:var(--text-primary)}
+.section-link{font-size:11px;color:var(--text-secondary);text-decoration:none;transition:color .2s}
+.section-link:hover{color:var(--accent)}
+
+/* ===== RANKING ===== */
+.ranking-badge{font-size:10px;color:var(--accent);letter-spacing:2.5px;margin-bottom:4px}
+.ranking-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rank-item{display:flex;align-items:center;gap:12px;background:var(--bg-card);border:0.5px solid #ffffff10;border-radius:10px;padding:10px 14px;cursor:pointer;transition:border-color .2s}
+.rank-item:first-child{grid-column:1/-1;border-color:#ff2dfc25;padding:14px 18px}
+.rank-item:hover{border-color:var(--accent-soft)}
+.rank-num{font-size:16px;font-weight:700;width:22px;text-align:center}
+.rank-item:first-child .rank-num{color:var(--accent);font-size:20px}
+.rank-item:nth-child(2) .rank-num,.rank-item:nth-child(3) .rank-num{color:var(--accent-soft)}
+.rank-item:nth-child(n+4) .rank-num{color:var(--text-secondary)}
+.rank-thumb{width:44px;height:44px;border-radius:6px;background:var(--bg-elevated);flex-shrink:0}
+.rank-item:first-child .rank-thumb{width:56px;height:56px;border-radius:8px}
+.rank-info{flex:1;min-width:0}
+.rank-title{font-size:12px;font-weight:600;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-item:first-child .rank-title{font-size:14px}
+.rank-cat{font-size:10px;color:var(--text-secondary);margin-top:1px}
+
+/* ===== CARDS ===== */
+.card-grid{display:flex;gap:14px;overflow-x:auto;padding-bottom:8px;scrollbar-width:none}
+.card-grid::-webkit-scrollbar{display:none}
+.card{min-width:160px;flex-shrink:0;cursor:pointer}
+.card-thumb{width:160px;height:218px;border-radius:10px;background:var(--bg-elevated);position:relative;overflow:hidden;transition:transform .2s}
+.card:hover .card-thumb{transform:scale(1.03)}
+.card-score{position:absolute;top:8px;left:8px}
+.card-vod{position:absolute;bottom:8px;right:8px;display:flex;gap:4px}
+.vod-dot{width:8px;height:8px;border-radius:50%;display:block}
+.card-title{font-size:12px;font-weight:600;color:var(--text-primary);margin-top:8px;line-height:1.4;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-meta{font-size:10px;color:var(--text-secondary);margin-top:2px}
+
+/* ===== RECOMMEND TAG ===== */
+.recommend-block{margin-bottom:24px}
+.recommend-label{display:inline-block;background:var(--bg-surface);border:0.5px solid #ff2dfc30;border-radius:14px;padding:4px 14px;font-size:11px;color:var(--accent);font-weight:500;margin-bottom:10px}
+
+/* ===== FEATURED ===== */
+.featured-card{background:var(--bg-elevated);border:0.5px solid #ff2dfc20;border-radius:10px;padding:18px;cursor:pointer;transition:border-color .2s;margin-bottom:10px}
+.featured-card:hover{border-color:var(--accent-soft)}
+.featured-card.secondary{border-color:#ffffff10}
+.featured-label{font-size:9px;letter-spacing:1.5px;margin-bottom:4px}
+.featured-label.primary{color:var(--accent)}
+.featured-label.sub{color:var(--accent-soft)}
+.featured-name{font-family:var(--font-heading);font-size:15px;font-weight:700;color:#fff;margin-bottom:4px}
+.featured-desc{font-size:11px;color:var(--text-secondary)}
+
+/* ===== AD ===== */
+.ad-banner{background:var(--bg-surface);border:1px dashed #ffffff20;border-radius:10px;height:250px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.ad-banner-label{font-size:9px;color:var(--text-secondary);letter-spacing:1px}
+.ad-banner-size{font-size:12px;color:var(--accent-soft)}
+.ad-cta{background:var(--bg-elevated);border:0.5px solid var(--accent);border-radius:10px;padding:14px 18px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:border-color .2s}
+.ad-cta:hover{border-color:#ff2dfc}
+.ad-cta-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.ad-cta-text{font-size:13px;font-weight:600;color:#fff}
+.ad-cta-sub{font-size:10px;color:var(--text-secondary)}
+.ad-cta-arrow{margin-left:auto;color:var(--accent);font-size:18px}
+
+/* ===== VOD GRID ===== */
+.vod-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.vod-item{background:var(--bg-surface);border:0.5px solid #ffffff10;border-radius:8px;padding:12px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .2s}
+.vod-item:hover{border-color:var(--accent-soft)}
+.vod-icon{width:26px;height:26px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.vod-name{font-size:12px;font-weight:600;color:#fff}
+.vod-count{font-size:10px;color:var(--text-secondary)}
+
+/* ===== SIDEBAR BOXES ===== */
+.sidebar-box{background:var(--bg-card);border:0.5px solid #ffffff10;border-radius:12px;padding:20px}
+.sidebar-box-title{font-family:var(--font-heading);font-size:14px;font-weight:700;color:var(--text-primary);margin-bottom:14px}
+.sidebar-profile{display:flex;flex-direction:column;align-items:center;text-align:center}
+.sidebar-avatar{width:64px;height:64px;border-radius:50%;background:var(--bg-elevated);margin-bottom:10px}
+.sidebar-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.sidebar-desc{font-size:11px;color:var(--text-secondary);line-height:1.5;margin-bottom:10px}
+.sidebar-social{display:flex;gap:10px}
+.sidebar-social a{width:28px;height:28px;border-radius:50%;background:var(--bg-surface);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-secondary);text-decoration:none;transition:background .2s}
+.sidebar-social a:hover{background:var(--accent);color:#fff}
+
+.sidebar-rank-list{display:flex;flex-direction:column;gap:10px}
+.sidebar-rank-item{display:flex;align-items:center;gap:10px;cursor:pointer}
+.sidebar-rank-item:hover .sidebar-rank-title{color:var(--accent)}
+.sidebar-rank-num{font-size:12px;font-weight:700;color:var(--accent-soft);width:16px}
+.sidebar-rank-thumb{width:36px;height:36px;border-radius:5px;background:var(--bg-elevated);flex-shrink:0}
+.sidebar-rank-title{font-size:11px;font-weight:500;color:#fff;transition:color .2s;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
+
+.sidebar-tags{display:flex;flex-wrap:wrap;gap:6px}
+.sidebar-tag{background:var(--bg-surface);border:0.5px solid #ffffff15;border-radius:14px;padding:5px 12px;font-size:10px;color:var(--accent-soft);cursor:pointer;transition:background .2s,border-color .2s}
+.sidebar-tag:hover{background:#ff2dfc12;border-color:#ff2dfc40}
+
+/* ===== FOOTER ===== */
+.site-footer{border-top:0.5px solid #ffffff10;margin-top:40px}
+.footer-inner{max-width:var(--content-max);margin:0 auto;padding:32px;display:flex;justify-content:space-between;align-items:center}
+.footer-copy{font-size:11px;color:var(--text-secondary)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:11px;color:var(--text-secondary);text-decoration:none}
+.footer-links a:hover{color:var(--accent)}
+
+/* ===== HEXAGON SVG HELPER ===== */
+.hex-score{display:inline-block;vertical-align:middle}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="site-header">
+  <div class="header-inner">
+    <a href="#" class="logo">
+      <svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="none" stroke="#ff2dfc" stroke-width="1.5"/><text x="12" y="17" text-anchor="middle" fill="#ff2dfc" font-size="9" font-weight="700">K</text></svg>
+      <span>KATSUMASCORE</span>
+    </a>
+    <nav class="nav">
+      <a href="#">映画</a>
+      <a href="#">アニメ</a>
+      <a href="#">ドラマ</a>
+      <a href="#">特集</a>
+      <span class="nav-lang">EN</span>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-visual">
+      <svg width="140" height="154" viewBox="0 0 100 110" style="margin-bottom:16px">
+        <polygon points="50,2 96,28 96,82 50,108 4,82 4,28" fill="#14082e" stroke="#ff2dfc" stroke-width="2"/>
+        <text x="50" y="56" text-anchor="middle" fill="#ff2dfc" font-size="28" font-weight="700">3.5</text>
+        <text x="50" y="76" text-anchor="middle" fill="#c084fc" font-size="11" font-weight="500">RANK A</text>
+      </svg>
+      <div class="hero-vod">
+        <span style="background:var(--netflix)">Netflix</span>
+        <span style="background:var(--amazon)">Prime Video</span>
+      </div>
+    </div>
+    <div class="hero-text">
+      <div class="hero-label">FEATURED REVIEW</div>
+      <div class="hero-title">ナイブズ・アウト：<br>ウェイク・アップ・デッドマン</div>
+      <div class="hero-sub">信仰と罪が交差する密室、名探偵は不可能を暴けるか。ライアン・ジョンソン監督が紡ぐ三部作の完結編。これは単なるミステリーではなく、人間の告白と赦しをめぐる、深く美しい問いかけです。</div>
+      <button class="hero-cta">レビューを読む</button>
+    </div>
+  </div>
+  <div class="hero-fade"></div>
+</section>
+
+<!-- ===== MAIN + SIDEBAR ===== -->
+<div class="main-layout">
+  <main class="main-content">
+
+    <!-- ❷ TOP 10 RANKING -->
+    <div class="section">
+      <div class="ranking-badge">KATSUMASCORE</div>
+      <div class="section-header">
+        <div class="section-title">TOP 10 ランキング</div>
+        <a href="#" class="section-link">すべて見る →</a>
+      </div>
+      <div class="ranking-grid">
+        <div class="rank-item"><div class="rank-num">1</div><div class="rank-thumb"></div><div class="rank-info"><div class="rank-title">KPOPガールズ! デーモン・ハンターズ</div><div class="rank-cat">アニメ ・ 2025</div></div><svg class="hex-score" width="34" height="36" viewBox="0 0 28 30"><polygon points="14,1 27,8 27,22 14,29 1,22 1,8" fill="#14082e" stroke="#ff2dfc" stroke-width="1"/><text x="14" y="18" text-anchor="middle" fill="#ff2dfc" font-size="10" font-weight="700">4.2</text></svg></div>
+        <div class="rank-item"><div class="rank-num">2</div><div class="rank-thumb"></div><div class="rank-info"><div class="rank-title">ワン・バトル・アフター・アナザー</div><div class="rank-cat">映画 ・ 2025</div></div><svg class="hex-score" width="30" height="32" viewBox="0 0 28 30"><polygon points="14,1 27,8 27,22 14,29 1,22 1,8" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="14" y="18" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">3.5</text></svg></div>
+        <div class="rank-item"><div class="rank-num">3</div><div class="rank-thumb"></div><div class="rank-info"><div class="rank-title">閃光のハサウェイ キルケーの魔女</div><div class="rank-cat">アニメ ・ 2025</div></div><svg class="hex-score" width="30" height="32" viewBox="0 0 28 30"><polygon points="14,1 27,8 27,22 14,29 1,22 1,8" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="14" y="18" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">3.4</text></svg></div>
+        <div class="rank-item"><div class="rank-num">4</div><div class="rank-thumb"></div><div class="rank-info"><div class="rank-title">イコライザー (2014)</div><div class="rank-cat">映画 ・ 2014</div></div><svg class="hex-score" width="30" height="32" viewBox="0 0 28 30"><polygon points="14,1 27,8 27,22 14,29 1,22 1,8" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="14" y="18" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">3.3</text></svg></div>
+        <div class="rank-item"><div class="rank-num">5</div><div class="rank-thumb"></div><div class="rank-info"><div class="rank-title">Netflix『トロール』</div><div class="rank-cat">映画 ・ 2022</div></div><svg class="hex-score" width="30" height="32" viewBox="0 0 28 30"><polygon points="14,1 27,8 27,22 14,29 1,22 1,8" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="14" y="18" text-anchor="middle" fill="#c084fc" font-size="10" font-weight="700">3.2</text></svg></div>
+      </div>
+    </div>
+
+    <!-- ❸ 最新レビュー -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">最新レビュー</div>
+        <a href="#" class="section-link">すべて見る →</a>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.3</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">イコライザー (2014)</div><div class="card-meta">映画</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.3</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">M3GAN／ミーガン 2.0</div><div class="card-meta">映画</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">2.8</text></svg></div></div><div class="card-title">トロール２ (2025)</div><div class="card-meta">映画</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.5</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">ナイブズ・アウト</div><div class="card-meta">映画</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.2</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span></div></div><div class="card-title">Netflix『トロール』</div><div class="card-meta">映画</div></div>
+      </div>
+    </div>
+
+    <!-- ❹ 高評価作品 -->
+    <div class="section">
+      <div class="section-header">
+        <div style="display:flex;align-items:center;gap:8px">
+          <svg width="14" height="14" viewBox="0 0 14 14"><polygon points="7,1 9,5 13,5.5 10,8.5 11,12.5 7,10.5 3,12.5 4,8.5 1,5.5 5,5" fill="#ff2dfc" opacity="0.7"/></svg>
+          <div class="section-title">高評価作品</div>
+        </div>
+        <span style="font-size:11px;color:var(--text-secondary)">スコア 3.5 以上 ランダム</span>
+      </div>
+      <div class="card-grid">
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">4.2</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span></div></div><div class="card-title">KPOPガールズ!</div><div class="card-meta">アニメ</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.8</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--amazon)"></span><span class="vod-dot" style="background:var(--unext)"></span></div></div><div class="card-title">超かぐや姫！</div><div class="card-meta">アニメ</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.5</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">ワン・バトル・アフター・アナザー</div><div class="card-meta">映画</div></div>
+        <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.5</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span></div></div><div class="card-title">閃光のハサウェイ</div><div class="card-meta">アニメ</div></div>
+      </div>
+    </div>
+
+    <!-- ❺ こちらもおすすめ（ランダム2タグ） -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">こちらもおすすめ</div>
+      </div>
+
+      <div class="recommend-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span class="recommend-label">SF</span>
+          <a href="#" class="section-link">すべて見る →</a>
+        </div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">2.5</text></svg></div></div><div class="card-title">ヴォイジャー</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.3</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">コンパニオン</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">3.0</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--netflix)"></span></div></div><div class="card-title">ウォー・マシーン</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">3.0</text></svg></div></div><div class="card-title">アバター</div><div class="card-meta">映画</div></div>
+        </div>
+      </div>
+
+      <div class="recommend-block">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <span class="recommend-label">ホラー</span>
+          <a href="#" class="section-link">すべて見る →</a>
+        </div>
+        <div class="card-grid">
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.5</text></svg></div></div><div class="card-title">REC レック (2007)</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="8" font-weight="700">3.3</text></svg></div><div class="card-vod"><span class="vod-dot" style="background:var(--amazon)"></span></div></div><div class="card-title">M3GAN／ミーガン 2.0</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">3.0</text></svg></div></div><div class="card-title">レック2 (2009)</div><div class="card-meta">映画</div></div>
+          <div class="card"><div class="card-thumb"><div class="card-score"><svg width="26" height="28" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082ecc" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="8" font-weight="700">2.5</text></svg></div></div><div class="card-title">グレイヴ・エンカウンターズ</div><div class="card-meta">映画</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ❻ 特集 -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">特集</div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="featured-card">
+          <div class="featured-label primary">SPECIAL</div>
+          <div class="featured-name">シーズンのアニメとドラマの一口レビュー</div>
+          <div class="featured-desc">2026年冬シーズン 最新更新</div>
+        </div>
+        <div class="featured-card secondary">
+          <div class="featured-label sub">SPECIAL</div>
+          <div class="featured-name">トロール シリーズ完全ガイド</div>
+          <div class="featured-desc">北欧神話 × 怪獣映画の世界</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ❼ VODで探す -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-title">VODで探す</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+        <div class="vod-item"><div class="vod-icon" style="background:var(--netflix)">N</div><div><div class="vod-name">Netflix</div><div class="vod-count">12作品</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--amazon)">P</div><div><div class="vod-name">Prime Video</div><div class="vod-count">8作品</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--unext)">U</div><div><div class="vod-name">U-NEXT</div><div class="vod-count">6作品</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--hulu)">H</div><div><div class="vod-name">Hulu</div><div class="vod-count">4作品</div></div></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar">
+
+    <!-- プロフィール -->
+    <div class="sidebar-box">
+      <div class="sidebar-profile">
+        <div class="sidebar-avatar"></div>
+        <div class="sidebar-name">KatsumaScore</div>
+        <div class="sidebar-desc">映画好きが独自スコアでレビューするブログ</div>
+        <div class="sidebar-social">
+          <a href="#">X</a>
+          <a href="#">Ig</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- アフィリエイトバナー -->
+    <div class="sidebar-box" style="padding:0;overflow:hidden;border:none">
+      <div class="ad-banner" style="border-radius:12px">
+        <div class="ad-banner-label">AD</div>
+        <div class="ad-banner-size">300 × 250</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="ad-cta">
+      <div class="ad-cta-icon" style="background:var(--unext)">U</div>
+      <div>
+        <div class="ad-cta-text">U-NEXTで31日間無料</div>
+        <div class="ad-cta-sub">31万本以上が見放題</div>
+      </div>
+      <div class="ad-cta-arrow">›</div>
+    </div>
+
+    <!-- HIGH SCORE -->
+    <div class="sidebar-box">
+      <div class="sidebar-box-title">HIGH SCORE</div>
+      <div class="sidebar-rank-list">
+        <div class="sidebar-rank-item"><div class="sidebar-rank-num">1</div><div class="sidebar-rank-thumb"></div><div class="sidebar-rank-title">KPOPガールズ!</div><svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082e" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="7" font-weight="700">4.2</text></svg></div>
+        <div class="sidebar-rank-item"><div class="sidebar-rank-num">2</div><div class="sidebar-rank-thumb"></div><div class="sidebar-rank-title">超かぐや姫！</div><svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082e" stroke="#ff2dfc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#ff2dfc" font-size="7" font-weight="700">3.8</text></svg></div>
+        <div class="sidebar-rank-item"><div class="sidebar-rank-num">3</div><div class="sidebar-rank-thumb"></div><div class="sidebar-rank-title">ワン・バトル・アフター・アナザー</div><svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="7" font-weight="700">3.5</text></svg></div>
+        <div class="sidebar-rank-item"><div class="sidebar-rank-num">4</div><div class="sidebar-rank-thumb"></div><div class="sidebar-rank-title">閃光のハサウェイ</div><svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="7" font-weight="700">3.5</text></svg></div>
+        <div class="sidebar-rank-item"><div class="sidebar-rank-num">5</div><div class="sidebar-rank-thumb"></div><div class="sidebar-rank-title">REC レック</div><svg width="22" height="24" viewBox="0 0 24 26"><polygon points="12,1 23,7 23,19 12,25 1,19 1,7" fill="#14082e" stroke="#c084fc" stroke-width="1"/><text x="12" y="16" text-anchor="middle" fill="#c084fc" font-size="7" font-weight="700">3.5</text></svg></div>
+      </div>
+    </div>
+
+    <!-- タグ -->
+    <div class="sidebar-box">
+      <div class="sidebar-box-title">ジャンル</div>
+      <div class="sidebar-tags">
+        <span class="sidebar-tag">SF</span>
+        <span class="sidebar-tag">アクション</span>
+        <span class="sidebar-tag">ホラー</span>
+        <span class="sidebar-tag">POV</span>
+        <span class="sidebar-tag">サスペンス</span>
+        <span class="sidebar-tag">ヒューマン</span>
+        <span class="sidebar-tag">コメディ</span>
+        <span class="sidebar-tag">ラブロマンス</span>
+        <span class="sidebar-tag">劇場版</span>
+      </div>
+    </div>
+
+    <!-- VODカテゴリ -->
+    <div class="sidebar-box">
+      <div class="sidebar-box-title">VODサービス</div>
+      <div class="vod-grid">
+        <div class="vod-item"><div class="vod-icon" style="background:var(--netflix)">N</div><div><div class="vod-name">Netflix</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--amazon)">P</div><div><div class="vod-name">Prime</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--unext)">U</div><div><div class="vod-name">U-NEXT</div></div></div>
+        <div class="vod-item"><div class="vod-icon" style="background:var(--hulu)">H</div><div><div class="vod-name">Hulu</div></div></div>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-copy">© KatsumaScore. All Rights Reserved.</div>
+    <div class="footer-links">
+      <a href="#">サイトについて</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">お問い合わせ</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-import { publicAssetUrl } from '@/lib/publicAssetUrl'
+const publicAssetUrl = (src: string): string => src;
 
 type Props = {
   src: string;
