@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KatsumaScore Mock v2</title>
+
+<style>
+body{margin:0;font-family:sans-serif;background:#f3f4f6;color:#111}
+.container{max-width:1100px;margin:auto;padding:20px}
+.hero{background:#1e1b4b;color:#fff;padding:40px 20px}
+.filter{display:flex;gap:10px;margin:20px 0}
+.filter button{padding:8px 12px;border:none;background:#ddd}
+
+.layout{display:flex;gap:20px}
+.main{flex:3}
+.sidebar{flex:1}
+
+.featured{background:#14082e;color:#fff;padding:20px;margin-bottom:20px}
+.score{color:#ff2dfc;font-size:28px;font-weight:bold}
+
+.ranking-item{display:flex;gap:15px;padding:15px 0;border-bottom:1px solid #ddd}
+.rank{font-weight:bold}
+
+.ad{background:#e5e7eb;padding:20px;text-align:center;margin:20px 0}
+
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
+.card{background:#fff;padding:15px;border:1px solid #ddd}
+
+.pagination{text-align:center;margin:30px 0}
+.pagination span{margin:0 5px;padding:6px 10px;background:#ddd}
+
+.sidebar-box{background:#fff;padding:15px;margin-bottom:20px}
+.footer{background:#1e1b4b;color:#fff;padding:20px;margin-top:40px;text-align:center}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+  <div class="container">
+    <h1>映画</h1>
+    <p>今観るべき作品を、スコアで選ぶ</p>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="filter">
+<button>評価順</button>
+<button>新着</button>
+<button>配信中</button>
+<button>Netflix</button>
+</div>
+
+<div class="layout">
+
+<div class="main">
+
+<div class="featured">
+<div class="score">4.3</div>
+<h2>イコライザー</h2>
+<p>“正義は、暴力を選ぶ”</p>
+</div>
+
+<div class="ranking">
+
+<div class="ranking-item">
+<div class="rank">1</div>
+<div>
+<div class="score">4.3</div>
+<div>イコライザー</div>
+<div>完成度の高い復讐劇</div>
+</div>
+</div>
+
+<div class="ranking-item">
+<div class="rank">2</div>
+<div>
+<div class="score">4.1</div>
+<div>M3GAN</div>
+<div>AIホラーの新境地</div>
+</div>
+</div>
+
+<div class="ranking-item">
+<div class="rank">3</div>
+<div>
+<div class="score">3.9</div>
+<div>トロール</div>
+<div>北欧神話×怪獣</div>
+</div>
+</div>
+
+</div>
+
+<div class="ad">広告エリア（記事間）</div>
+
+<div class="grid">
+<div class="card">ナイブズ・アウト</div>
+<div class="card">ワン・バトル・アフター・アザー</div>
+<div class="card">オイサマ</div>
+<div class="card">テル・トゥルース</div>
+</div>
+
+<div class="pagination">
+<span>1</span><span>2</span><span>3</span><span>Next</span>
+</div>
+
+</div>
+
+<div class="sidebar">
+
+<div class="sidebar-box">
+<h3>広告</h3>
+<div class="ad">300x250</div>
+</div>
+
+<div class="sidebar-box">
+<h3>VODランキング</h3>
+<p>1. イコライザー</p>
+<p>2. M3GAN</p>
+</div>
+
+<div class="sidebar-box">
+<h3>スコア別</h3>
+<p>4.0以上</p>
+<p>3.0〜3.9</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="footer">
+<p>© KatsumaScore</p>
+</div>
+
+</body>
+</html>
