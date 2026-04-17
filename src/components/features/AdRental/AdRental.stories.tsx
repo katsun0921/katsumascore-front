@@ -6,11 +6,7 @@ const meta: Meta<typeof AdRental> = {
   component: AdRental,
   tags: ['autodocs'],
   args: {
-    titleJp: '鬼滅の刃',
-    services: [
-      { service: 'tsutaya', url: 'https://tsutaya.tsite.jp/item/123' },
-      { service: 'geo', url: 'https://geo.jp/item/123' },
-    ],
+    title: '鬼滅の刃',
     locale: 'ja',
   },
 }
@@ -19,7 +15,4 @@ export default meta
 type Story = StoryObj<typeof AdRental>
 
 export const BothServices: Story = {}
-export const TsutayaOnly: Story = {
-  args: { services: [{ service: 'tsutaya', url: 'https://tsutaya.tsite.jp/item/123' }] },
-}
 export const English: Story = { args: { locale: 'en' } }
