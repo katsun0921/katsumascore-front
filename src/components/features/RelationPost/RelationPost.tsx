@@ -1,6 +1,5 @@
-import React from 'react'
-import { publicAssetUrl } from '@/lib/publicAssetUrl'
-import './RelationPost.scss'
+import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost/RelationPost'
+import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config'
 
 export type TRelationPostItem = {
   id: number
@@ -18,27 +17,7 @@ export type TRelationPostProps = {
 export const RelationPost = ({ posts, locale = 'ja' }: TRelationPostProps) => {
   if (!posts.length) return null
 
-  const layoutClass = posts.length === 3 ? 'p-relation-post__list--3col' : 'p-relation-post__list'
+  const layout = posts.length === 3 ? 'three-column' : 'default'
 
-  return (
-    <section className='p-relation-post'>
-      <h2 className='p-relation-post__heading'>
-        {locale === 'en' ? 'Related Posts' : '関連ページ'}
-      </h2>
-      <ul className={layoutClass}>
-        {posts.map((post) => (
-          <li key={post.id} className='p-relation-post__item'>
-            <a className='p-relation-post__link' href={post.href}>
-              {post.imageUrl && (
-                <div className='p-relation-post__thumb'>
-                  <img src={publicAssetUrl(post.imageUrl)} alt={post.imageAlt || post.title} />
-                </div>
-              )}
-              <span className='p-relation-post__title'>{post.title}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  )
+  return <RelationPostSection heading={relationPostConfig[locale].heading} posts={posts} layout={layout} />
 }

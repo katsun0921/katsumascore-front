@@ -7,11 +7,11 @@ export const AdRental = ({ heading }: AdRentalProps) => (
     <h2 className='mb-[var(--space-16)] text-[var(--font-size-h3-sp)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
       {heading}
     </h2>
-    <ul className='m-0 flex list-none flex-wrap justify-evenly gap-[var(--space-16)] p-0'>
-      <li className='basis-1/3'>
+    <ul className='m-0 flex list-none flex-col gap-[var(--space-16)] p-0'>
+      <li className='w-full'>
         <TsutayaAd />
       </li>
-      <li className='basis-1/3'>
+      <li className='w-full'>
         <GeoAd />
       </li>
     </ul>

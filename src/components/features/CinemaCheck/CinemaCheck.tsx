@@ -1,5 +1,5 @@
-import React from 'react'
-import './CinemaCheck.scss'
+import { CinemaCheck as CinemaCheckSection } from '@/components/ui-section/CinemaCheck/CinemaCheck'
+import { cinemaCheckConfig } from '@/components/ui-section/CinemaCheck/CinemaCheck.config'
 
 export type TCinemaCheckProps = {
   isCinemaShowing: boolean
@@ -10,17 +10,8 @@ export type TCinemaCheckProps = {
 export const CinemaCheck = ({ isCinemaShowing, titleJp, locale = 'ja' }: TCinemaCheckProps) => {
   if (!isCinemaShowing) return null
 
-  const message =
-    locale === 'en'
-      ? `${titleJp || 'This title'} is currently showing in theaters.`
-      : `${titleJp || 'この作品'}は現在劇場公開中です。`
+  const { badgeLabel, fallbackTitle, messageSuffix } = cinemaCheckConfig[locale]
+  const message = `${titleJp || fallbackTitle}${messageSuffix}`
 
-  return (
-    <div className='p-cinema-check'>
-      <span className='p-cinema-check__badge'>
-        {locale === 'en' ? 'Now in Theaters' : '劇場公開中'}
-      </span>
-      <p className='p-cinema-check__message'>{message}</p>
-    </div>
-  )
+  return <CinemaCheckSection badgeLabel={badgeLabel} message={message} />
 }
