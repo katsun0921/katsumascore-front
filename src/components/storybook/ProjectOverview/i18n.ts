@@ -1,4 +1,4 @@
-/* eslint-disable katsumascore-ui/no-hardcoded-i18n */
+ 
 export const messages = {
   meta: {
     docsDescription: {
