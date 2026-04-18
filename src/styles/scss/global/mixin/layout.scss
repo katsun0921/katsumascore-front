@@ -1,5 +1,5 @@
 @mixin layout-md {
-  @include layout-md {
+  @media (min-width: var(--breakpoint-md)) {
     @content;
   }
 }
