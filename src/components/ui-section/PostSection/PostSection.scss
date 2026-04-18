@@ -18,7 +18,7 @@
   }
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@include layout-md {
   .postSection {
     padding: var(--space-40) 0;
 

@@ -17,7 +17,7 @@
   padding-left: var(--space-12);
   margin: var(--space-0);
 
-  @media (min-width: var(--breakpoint-md)) {
+  @include layout-md {
     font-size: var(--font-size-h2-pc);
   }
 }

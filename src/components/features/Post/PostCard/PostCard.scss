@@ -141,7 +141,7 @@
   }
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@include layout-md {
   .postCard {
     &__body {
       padding: var(--space-20);

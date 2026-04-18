@@ -60,7 +60,7 @@
     overflow: hidden;
     border-radius: 4px;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       width: 140px;
     }
   }

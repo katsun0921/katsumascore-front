@@ -10,7 +10,7 @@
   &--gap-md { gap: var(--space-16); }
   &--gap-lg { gap: var(--space-32); }
 
-  @media (min-width: var(--breakpoint-md)) {
+  @include layout-md {
     &--md-cols-1 { grid-template-columns: repeat(1, 1fr); }
     &--md-cols-2 { grid-template-columns: repeat(2, 1fr); }
     &--md-cols-3 { grid-template-columns: repeat(3, 1fr); }

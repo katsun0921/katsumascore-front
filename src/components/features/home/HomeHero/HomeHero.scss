@@ -15,7 +15,7 @@
     padding: 60px 24px 80px;
     text-align: center;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       flex-direction: row;
       gap: 60px;
       text-align: left;
@@ -33,7 +33,7 @@
   &__hexScore {
     display: block;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       width: 140px;
       height: 154px;
     }
@@ -70,7 +70,7 @@
     flex-direction: column;
     gap: 12px;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       gap: 16px;
     }
   }
@@ -90,7 +90,7 @@
     font-weight: 700;
     line-height: 1.5;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       font-size: 28px;
     }
   }
@@ -100,7 +100,7 @@
     font-size: var(--font-size-body-sp);
     line-height: 1.7;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       font-size: var(--font-size-body-pc);
     }
   }
@@ -121,7 +121,7 @@
       background: rgba(255, 45, 252, 0.08);
     }
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       align-self: flex-start;
     }
   }

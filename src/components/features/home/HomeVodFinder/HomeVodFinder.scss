@@ -13,7 +13,7 @@
     gap: 8px;
     list-style: none;
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       grid-template-columns: repeat(4, 1fr);
     }
   }

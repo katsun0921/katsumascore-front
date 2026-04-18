@@ -42,7 +42,7 @@
     flex-direction: column;
     gap: var(--space-8);
 
-    @media (min-width: var(--breakpoint-md)) {
+    @include layout-md {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: var(--space-16);

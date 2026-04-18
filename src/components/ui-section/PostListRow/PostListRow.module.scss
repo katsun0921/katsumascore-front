@@ -37,7 +37,7 @@
   line-height: 1.8;
 }
 
-@media (min-width: var(--breakpoint-md)) {
+@include layout-md {
   .empty {
     padding: var(--space-48) var(--space-24);
   }

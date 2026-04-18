@@ -42,28 +42,28 @@ export const PostHeader = ({
   const productions = productionStudios?.map((s) => s.name).join(' / ')
 
   const metaParts = [distributors, productions, year, rating].filter(Boolean)
-
+  const prefix = 'post-header'
   return (
-    <div className='post-header'>
-      {comment && <p className='post-header__comment'>{comment}</p>}
-      <h1 className='post-header__title-main'>{titleJa}</h1>
-      <div className='post-header__lower'>
-        <div className='post-header__meta-group'>
-          {titleEn && <p className='post-header__title-sub'>{titleEn}</p>}
+    <div className={prefix}>
+      {comment && <p className={`${prefix}__comment`}>{comment}</p>}
+      <h1 className={`${prefix}__title-main`}>{titleJa}</h1>
+      <div className={`${prefix}__lower`}>
+        <div className={`${prefix}__meta-group`}>
+          {titleEn && <p className={`${prefix}__title-sub`}>{titleEn}</p>}
           {metaParts.length > 0 && (
-            <p className='post-header__meta'>
+            <p className={`${prefix}__meta`}>
               {metaParts.map((part, i) => (
                 <span key={i}>
-                  {i > 0 && <span className='post-header__meta-sep'>{sep}</span>}
+                  {i > 0 && <span className={`${prefix}__meta-sep`}>{sep}</span>}
                   {part}
                 </span>
               ))}
             </p>
           )}
-          {copyright && <p className='post-header__copyright'>{copyright}</p>}
+          {copyright && <p className={`${prefix}__copyright`}>{copyright}</p>}
         </div>
         {score !== undefined && (
-          <div className='post-header__rank'>
+          <div className={`${prefix}__rank`}>
             <ScoreWithRank value={score} max={scoreMax} />
           </div>
         )}
