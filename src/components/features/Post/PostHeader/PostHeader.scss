@@ -1,4 +1,5 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .post-header {
   display: flex;
@@ -24,16 +25,12 @@
   // title: 全幅
   &__title-main {
     width: 100%;
+    @include font-size-title;
     font-family: var(--font-ja-heading);
-    font-size: var(--font-size-title-sm);
     color: var(--color-text-primary);
     line-height: 1.2;
     letter-spacing: 0.01em;
     margin: var(--space-0);
-
-    @include layout-lg {
-      font-size: var(--font-size-title-lg);
-    }
   }
 
   // lower: メタ情報（左）とrank（右）の2カラム

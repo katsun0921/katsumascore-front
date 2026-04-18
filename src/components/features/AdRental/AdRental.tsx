@@ -1,8 +1,13 @@
 import { AdRental as AdRentalSection } from '@/components/ui-section/AdRental/AdRental'
 import { adRentalConfig } from './AdRental.config'
 
+export type TRentalService = {
+  service: string
+  url: string
+}
+
 type TAdRentalProps = {
-  title: string,
+  title: string
   locale?: 'ja' | 'en'
 }
 

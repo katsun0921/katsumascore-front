@@ -3,6 +3,10 @@
 @import "./reset.css" layer(base);
 @import "./generated/breakpoints.css";
 
+@theme inline {
+  --layout-width-lg: 768px;
+}
+
 /* ─── globals.css 運用ルール ─────────────────────────────────────
    このファイルに書いてよいもの:
      - @import / @theme
