@@ -1,8 +1,7 @@
-import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 
-const itemBase = 'inline-block px-3 py-1 rounded text-white text-[var(--font-size-caption-pc)] font-bold'
+const itemBase = 'inline-block rounded px-3 py-1 text-[var(--font-size-caption-pc)] font-bold text-white'
 
 const variantClasses = {
   netflix: `${itemBase} bg-[var(--color-netflix)]`,
@@ -16,10 +15,10 @@ interface VodBadgeProps {
   amazon?: boolean
   unext?: boolean
   isCinema?: boolean
+  locale?: 'ja' | 'en'
 }
 
-export const VodBadge = ({ netflix, amazon, unext, isCinema }: VodBadgeProps) => {
-  const locale = useLocale()
+export const VodBadge = ({ netflix, amazon, unext, isCinema, locale = 'ja' }: VodBadgeProps) => {
   if (isCinema) {
     return (
       <div className='flex flex-wrap gap-2'>

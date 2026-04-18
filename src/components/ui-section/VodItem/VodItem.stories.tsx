@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { VodItem } from './VodItem'
 
 const meta: Meta<typeof VodItem> = {
-  title: 'Features/Vod/VodItem',
+  title: 'UI-Section/VodItem',
   component: VodItem,
   tags: ['autodocs'],
   args: {
@@ -11,6 +11,7 @@ const meta: Meta<typeof VodItem> = {
     locale: 'ja',
   },
 }
+
 export default meta
 
 type Story = StoryObj<typeof VodItem>

@@ -1,9 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
+import type { Meta, StoryObj } from '@storybook/react-vite'
 
-import { VodBadge } from './VodBadge';
+import { VodBadge } from './VodBadge'
 
 const meta: Meta<typeof VodBadge> = {
-  title: 'Features/Vod/VodBadge',
+  title: 'UI/VodBadge',
   component: VodBadge,
   parameters: {
     layout: 'centered',
@@ -14,10 +14,10 @@ const meta: Meta<typeof VodBadge> = {
     unext: { control: 'boolean' },
     isCinema: { control: 'boolean' },
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const AllAvailable: Story = {
   args: {
@@ -25,31 +25,31 @@ export const AllAvailable: Story = {
     amazon: true,
     unext: true,
   },
-};
+}
 
 export const OnlyNetflix: Story = {
   args: {
     netflix: true,
   },
-};
+}
 
 export const OnlyAmazon: Story = {
   args: {
     amazon: true,
   },
-};
+}
 
 export const OnlyUnext: Story = {
   args: {
     unext: true,
   },
-};
+}
 
 export const Cinema: Story = {
   args: {
     isCinema: true,
   },
-};
+}
 
 export const NoneAvailable: Story = {
   args: {
@@ -57,4 +57,4 @@ export const NoneAvailable: Story = {
     amazon: false,
     unext: false,
   },
-};
+}

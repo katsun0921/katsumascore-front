@@ -1,4 +1,4 @@
-import type { TVodMenuService } from '@/components/features/Vod/VodMenu/VodMenu.types';
+import type { TVodMenuService } from '@/components/features/VodMenu/VodMenu.types';
 
 type TVodMenuItemProps = {
   item: TVodMenuService;

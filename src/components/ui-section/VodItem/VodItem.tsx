@@ -1,6 +1,5 @@
-import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
-import { type VodService, VOD_LABEL, VOD_BORDER_CLASS } from '@/lib/vod'
+import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/lib/vod'
 import { messages } from './i18n'
 
 /** @deprecated VodService を使用してください */
@@ -13,6 +12,7 @@ export type TVodItemProps = {
   streamingText?: string
   unregisteredText?: string
   isPaid?: boolean
+  locale?: 'ja' | 'en'
 }
 
 export const VodItem = ({
@@ -22,25 +22,27 @@ export const VodItem = ({
   streamingText,
   unregisteredText,
   isPaid = false,
+  locale = 'ja',
 }: TVodItemProps) => {
-  const locale = useLocale()
   const label = VOD_LABEL[service]
   const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale)
   const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale)
 
   return (
-    <div className={`flex flex-col gap-2 p-4 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] ${VOD_BORDER_CLASS[service]}`}>
+    <div
+      className={`flex flex-col gap-2 rounded-lg border border-[var(--color-border-muted)] bg-[var(--color-bg)] p-4 ${VOD_BORDER_CLASS[service]}`}
+    >
       {isPaid && (
-        <em className='block [font-size:var(--font-size-caption-pc)] text-[var(--color-text-secondary)] italic'>
+        <em className='block text-[var(--color-text-secondary)] [font-size:var(--font-size-caption-pc)] italic'>
           {t(messages, ['paid', 'notice'], locale)}
         </em>
       )}
       <div className='flex items-center gap-2'>
-        <span className='[font-size:var(--font-size-body-sp)] font-bold'>{label}</span>
+        <span className='font-bold [font-size:var(--font-size-body-sp)]'>{label}</span>
       </div>
       {signupUrl && (
         <a
-          className='block [font-size:var(--font-size-ui-sp)] text-[var(--color-text-inverse)] hover:underline hover:opacity-100'
+          className='block text-[var(--color-text-inverse)] [font-size:var(--font-size-ui-sp)] hover:opacity-100 hover:underline'
           href={signupUrl}
           target='_blank'
           rel='noopener noreferrer'
@@ -49,7 +51,7 @@ export const VodItem = ({
         </a>
       )}
       <a
-        className='inline-block px-4 py-2 rounded [font-size:var(--font-size-ui-pc)] font-bold text-center bg-[var(--color-primary)] text-[var(--color-text-inverse)] transition-opacity duration-150 hover:opacity-[0.85]'
+        className='inline-block rounded bg-[var(--color-primary)] px-4 py-2 text-center font-bold text-[var(--color-text-inverse)] [font-size:var(--font-size-ui-pc)] transition-opacity duration-150 hover:opacity-[0.85]'
         href={streamingUrl}
         target='_blank'
         rel='noopener noreferrer'

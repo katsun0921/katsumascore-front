@@ -1,6 +1,6 @@
-import { VodItem } from '@/components/features/Vod/VodItem/VodItem'
 import { VodPanel as VodPanelSection } from '@/components/ui-section/VodPanel/VodPanel'
 import { vodPanelConfig } from '@/components/ui-section/VodPanel/VodPanel.config'
+import { VodItem } from '@/components/ui-section/VodItem/VodItem'
 import type { VodService as TVodService } from '@/lib/vod'
 
 export type TVodPanelEntry = {
