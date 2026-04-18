@@ -6,113 +6,113 @@
   flex-direction: column;
   align-items: stretch;
   isolation: isolate;
-}
 
-.score-with-rank__inner {
-  position: relative;
-}
-
-.score-with-rank__badge {
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 1;
-  transform: translateY(-10%);
-}
-
-.score-with-rank__badge-img,
-.score-with-rank__badge-img--standalone {
-  width: var(--size-score-rank-badge-sm);
-  height: var(--size-score-rank-badge-sm);
-
-  @media (min-width: 768px) {
-    width: var(--size-score-rank-badge-lg);
-    height: var(--size-score-rank-badge-lg);
-  }
-}
-
-.score-with-rank__badge-img--standalone {
-  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
-}
-
-.score-with-rank__text {
-  position: relative;
-  z-index: 2;
-  transform: translateY(var(--offset-score-hero-text-y));
-  text-shadow: var(--shadow-score-hero-text);
-  font-family: var(--font-accent-strong);
-  font-weight: bold;
-  line-height: 1;
-  letter-spacing: 0.02em;
-  font-size: var(--font-size-score-hero-int);
-
-  &--rank-c  { color: var(--color-score-rank-c-text); }
-  &--rank-b  { color: var(--color-score-rank-b-text); }
-  &--rank-a  { color: var(--color-score-rank-a-text); }
-  &--rank-s  { color: var(--color-score-rank-s-text); }
-  &--rank-ss { color: var(--color-score-rank-ss-text); }
-  &--rank-none { color: var(--color-text-primary); }
-}
-
-.score-with-rank__value-wrap {
-  position: relative;
-  display: inline-block;
-  padding-bottom: 0.5em;
-}
-
-.score-with-rank__slash {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 30%;
-  clip-path: polygon(100% 0, 0 35%, 20% 100%);
-
-  &--rank-c  { background-color: var(--color-score-rank-c-text); }
-  &--rank-b  { background-color: var(--color-score-rank-b-text); }
-  &--rank-a  { background-color: var(--color-score-rank-a-text); }
-  &--rank-s  { background-color: var(--color-score-rank-s-text); }
-  &--rank-ss { background-color: var(--color-score-rank-ss-text); }
-  &--rank-none { background-color: var(--color-text-primary); }
-}
-
-.score-with-rank__value-inner {
-  position: relative;
-}
-
-.score-with-rank__decimal {
-  margin-left: var(--space-4);
-  font-size: var(--font-size-score-hero-decimal);
-}
-
-// ── ホバー ──────────────────────────────────────────
-// スコアテキストとスラッシュ背景は CSS transition で制御
-// バッジは GSAP が transform を持つため、filter のみで演出
-.score-with-rank__text {
-  transition: transform 0.2s ease-out, filter 0.2s ease-out;
-}
-
-.score-with-rank__slash {
-  transition: opacity 0.2s ease-out, height 0.2s ease-out;
-}
-
-.score-with-rank__badge-img {
-  transition: filter 0.25s ease-out, transform 0.25s ease-out;
-}
-
-.score-with-rank__inner:hover {
-  .score-with-rank__text {
-    transform: translateY(var(--offset-score-hero-text-y)) scale(1.05);
-    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  &__inner {
+    position: relative;
   }
 
-  .score-with-rank__slash {
-    opacity: 0.9;
-    height: 35%;
+  &__badge {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 1;
+    transform: translateY(-10%);
   }
 
-  .score-with-rank__badge-img {
-    transform: scale(1.08) rotate(-2deg);
-    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+  &__badge-img,
+  &__badge-img--standalone {
+    width: var(--size-score-rank-badge);
+    height: var(--size-score-rank-badge);
+
+    @media (min-width: 768px) {
+      width: var(--size-score-rank-badge);
+      height: var(--size-score-rank-badge);
+    }
+  }
+
+  &__badge-img--standalone {
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.6));
+  }
+
+  &__text {
+    position: relative;
+    z-index: 2;
+    transform: translateY(var(--offset-score-hero-text-y));
+    text-shadow: var(--shadow-score-hero-text);
+    font-family: var(--font-accent-strong);
+    font-weight: bold;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    font-size: var(--font-size-score-hero-int);
+
+    &--rank-c  { color: var(--color-score-rank-c-text); }
+    &--rank-b  { color: var(--color-score-rank-b-text); }
+    &--rank-a  { color: var(--color-score-rank-a-text); }
+    &--rank-s  { color: var(--color-score-rank-s-text); }
+    &--rank-ss { color: var(--color-score-rank-ss-text); }
+    &--rank-none { color: var(--color-text-primary); }
+  }
+
+  &__value-wrap {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.5em;
+  }
+
+  &__slash {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30%;
+    clip-path: polygon(100% 0, 0 35%, 20% 100%);
+
+    &--rank-c  { background-color: var(--color-score-rank-c-text); }
+    &--rank-b  { background-color: var(--color-score-rank-b-text); }
+    &--rank-a  { background-color: var(--color-score-rank-a-text); }
+    &--rank-s  { background-color: var(--color-score-rank-s-text); }
+    &--rank-ss { background-color: var(--color-score-rank-ss-text); }
+    &--rank-none { background-color: var(--color-text-primary); }
+  }
+
+  &__value-inner {
+    position: relative;
+  }
+
+  &__decimal {
+    margin-left: var(--space-4);
+    font-size: var(--font-size-score-hero-decimal);
+  }
+
+  // ── ホバー ──────────────────────────────────────────
+  // スコアテキストとスラッシュ背景は CSS transition で制御
+  // バッジは GSAP が transform を持つため、filter のみで演出
+  &__text {
+    transition: transform 0.2s ease-out, filter 0.2s ease-out;
+  }
+
+  &__slash {
+    transition: opacity 0.2s ease-out, height 0.2s ease-out;
+  }
+
+  &__badge-img {
+    transition: filter 0.25s ease-out, transform 0.25s ease-out;
+  }
+
+  &__inner:hover {
+    .score-with-rank__text {
+      transform: translateY(var(--offset-score-hero-text-y)) scale(1.05);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+    }
+
+    .score-with-rank__slash {
+      opacity: 0.9;
+      height: 35%;
+    }
+
+    .score-with-rank__badge-img {
+      transform: scale(1.08) rotate(-2deg);
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.4));
+    }
   }
 }

@@ -18,6 +18,7 @@ export type ScoreWithRankProps = {
   max: number
   imageOnly?: boolean
 }
+const prefixClassName = 'score-with-rank'
 
 const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProps) => {
   const rank = getRankingIcon(value)
@@ -129,27 +130,27 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
   }
 
   return (
-    <div ref={rootRef} className='score-with-rank__inner'>
+    <div ref={rootRef} className={`${prefixClassName}__inner`}>
       {rank ? (
-        <div ref={badgeRef} className='score-with-rank__badge'>
+        <div ref={badgeRef} className={`${prefixClassName}__badge`}>
           <img
             src={rank.src}
             alt={`rank ${rank.label}`}
             width={96}
             height={96}
-            className='score-with-rank__badge-img'
+            className={`${prefixClassName}__badge-img`}
           />
         </div>
       ) : null}
-      <div ref={textRef} className={`score-with-rank__text score-with-rank__text--${modifier}`}>
-        <span className='score-with-rank__value-wrap'>
+      <div ref={textRef} className={`${prefixClassName}__text ${prefixClassName}__text--${modifier}`}>
+        <span className={`${prefixClassName}__value-wrap`}>
           <span
             ref={slashRef}
-            className={`score-with-rank__slash score-with-rank__slash--${modifier}`}
+            className={`${prefixClassName}__slash ${prefixClassName}__slash--${modifier}`}
           ></span>
-          <span className='score-with-rank__value-inner'>
+          <span className={`${prefixClassName}__value-inner`}>
             <span ref={countRef}>{displayInt}</span>
-            <span ref={decimalRef} className='score-with-rank__decimal'>
+            <span ref={decimalRef} className={`${prefixClassName}__decimal`}>
               {displayDecimal}{sub}
             </span>
           </span>
@@ -162,7 +163,7 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
 export const ScoreWithRank = (props: ScoreWithRankProps) => {
   return (
     <div
-      className='score-with-rank notranslate'
+      className={`${prefixClassName} notranslate`}
       data-score-with-rank-root
     >
       <ScoreWithRankInner {...props} />
