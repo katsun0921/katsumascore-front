@@ -1,24 +1,33 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
 
-.post-hero-summary {
-  display: flex;
-  align-items: stretch;
-  gap: var(--space-16);
-
-  &--column {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .post-hero-summary__poster {
-      width: 100%;
-      aspect-ratio: 16 / 9;
-    }
+.post-hero {
+  display: grid;
+    gap: var(--space-16);
+    grid-template-areas:
+      "trailer trailer"
+      "poster summary";
+    grid-template-columns: 30% 1fr;
+  @include layout-lg {
+    gap: var(--space-16);
+    grid-template-areas:
+      "trailer poster"
+      "summary summary";
+    grid-template-columns: 1fr 30%;
   }
+
+  &__trailer {
+    grid-area: trailer;
+  };
+
+  &__summary {
+    grid-area: summary;
+  }
+
 
   &__heading {
     font-size: var(--font-size-h2);
     font-weight: var(--font-weight-bold);
-    color: var(--color-secondary);
+    color: var(--color-home-text);
     padding-bottom: var(--space-12);
     margin-bottom: var(--space-16);
     position: relative;
@@ -26,7 +35,7 @@
     &::before {
       content: '';
       display: block;
-      background-color: var(--color-category);
+      background-color: var(--color-score-border);
       position: absolute;
       bottom: 0;
       left: 0;
@@ -37,7 +46,7 @@
 
   &__quote {
     margin: var(--space-0);
-    border-left: 4px solid var(--color-category);
+    border-left: 4px solid var(--color-score-border);
     padding-left: var(--space-12);
     outline: none;
   }
@@ -45,14 +54,14 @@
   &__quote-text {
     margin: var(--space-0) var(--space-0) var(--space-12);
     line-height: 1.8;
-    color: var(--color-text-primary);
+    color: var(--color-home-text);
     font-size: var(--font-size-body);
   }
 
   &__cite {
     display: block;
     font-size: var(--font-size-ui);
-    color: var(--color-text-secondary);
+    color: var(--color-home-text-secondary);
     font-style: normal;
 
     a {
@@ -64,16 +73,9 @@
   }
 
   &__poster {
+    grid-area: poster;
     position: relative;
-    flex-shrink: 0;
-    width: 100px;
-    aspect-ratio: 2 / 3;
-    overflow: hidden;
     border-radius: 4px;
-
-    @include layout-lg {
-      width: 140px;
-    }
   }
 
   &__poster-img {

@@ -13,30 +13,30 @@ import type { PostDetailProps } from './PostDetail.types'
 export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
   return (
     <div>
+      <div className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-score-bg))] pb-4'>
+        {/* ── title.php 相当 ── */}
+        <PostHeader
+          category={post.category ?? ''}
+          titleOfficial={post.title}
+          titleOriginal={post.titleEn}
+          filmStudios={post.TitleMeta?.filmStudios}
+          productionStudios={post.TitleMeta?.productionStudios}
+          releaseDate={post.TitleMeta?.releaseDate}
+          rating={post.rating}
+          copyright={post.TitleMeta?.copyright}
+          score={post.score}
+          comment={post.authorComment}
+        />
 
-      {/* ── title.php 相当 ── */}
-      <PostHeader
-        category={post.category ?? ''}
-        titleOfficial={post.title}
-        titleOriginal={post.titleEn}
-        filmStudios={post.TitleMeta?.filmStudios}
-        productionStudios={post.TitleMeta?.productionStudios}
-        releaseDate={post.TitleMeta?.releaseDate}
-        rating={post.rating}
-        copyright={post.TitleMeta?.copyright}
-        score={post.score}
-        comment={post.authorComment}
-      />
-
-      {/* ── PostHero：ポスター・トレーラー ── */}
-      <PostHero
-        titleJa={post.title}
-        trailerYoutubeId={post.trailerYoutubeId}
-        trailerEmbedCode={post.trailerEmbedCode}
-        posterUrl={post.image ?? ''}
-        description={post.excerpt}
-      />
-
+        {/* ── PostHero：ポスター・トレーラー ── */}
+        <PostHero
+          title={post.title}
+          trailerYoutubeId={post.trailerYoutubeId}
+          trailerEmbedCode={post.trailerEmbedCode}
+          posterUrl={post.image ?? ''}
+          description={post.summary?.text ?? ''}
+        />
+      </div>
       {/* body: 最大幅・中央・flex（md以上） */}
       <div className='relative mx-auto mt-8 md:flex md:justify-between md:gap-12'>
 
