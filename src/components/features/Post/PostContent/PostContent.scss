@@ -974,7 +974,7 @@
     font-size: 1.15rem;
   }
 
-  @include layout-md {
+  @include layout-lg {
     h1 {
       font-size: 2.4rem;
     }
@@ -1014,7 +1014,7 @@
     font-size: 0.9em;
   }
 
-  @include layout-md {
+  @include layout-lg {
     blockquote {
       padding: 1.4em 1.6em;
     }

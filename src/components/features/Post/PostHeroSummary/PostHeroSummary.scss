@@ -62,7 +62,7 @@
     overflow: hidden;
     border-radius: 4px;
 
-    @include layout-md {
+    @include layout-lg {
       width: 140px;
     }
   }

@@ -1,6 +1,6 @@
 @use "../variable/breakpoints" as *;
 
-@mixin layout-md {
+@mixin layout-lg {
   @media (min-width: $breakpoint-lg) {
     @content;
   }

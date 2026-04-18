@@ -85,7 +85,7 @@
   &__image img { width: min(100%, 160px); }
   &__links { flex-wrap: wrap; }
 
-  @include layout-md {
+  @include layout-lg {
     &__inner { flex-direction: row; }
     &__image img { width: 100%; }
     &__links { flex-wrap: wrap; }

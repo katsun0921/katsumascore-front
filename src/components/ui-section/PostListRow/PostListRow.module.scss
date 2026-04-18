@@ -39,7 +39,7 @@
   line-height: 1.8;
 }
 
-@include layout-md {
+@include layout-lg {
   .empty {
     padding: var(--space-48) var(--space-24);
   }
