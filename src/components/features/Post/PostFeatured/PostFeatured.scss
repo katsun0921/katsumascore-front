@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .postFeatured {
   position: relative;
   display: block;
@@ -30,7 +32,7 @@
     background: linear-gradient(135deg, var(--color-secondary), var(--color-category));
     color: var(--color-text-inverse);
     font-family: var(--font-ui);
-    font-size: var(--font-size-body-lg);
+    @include font-size-body;
   }
 
   &__overlay {
@@ -49,20 +51,20 @@
   &__score {
     color: var(--color-score-border);
     font-family: var(--font-ui);
-    font-size: var(--font-size-h2-lg);
+    @include font-size-h2;
     font-weight: var(--font-weight-bold);
     line-height: 1;
   }
 
   &__title {
-    font-size: var(--font-size-h3-lg);
+    @include font-size-h3;
     font-weight: var(--font-weight-bold);
     line-height: 1.3;
     color: var(--color-text-inverse);
   }
 
   &__excerpt {
-    font-size: var(--font-size-body-lg);
+    @include font-size-body;
     color: rgba(255, 255, 255, 0.75);
     line-height: 1.5;
     overflow: hidden;

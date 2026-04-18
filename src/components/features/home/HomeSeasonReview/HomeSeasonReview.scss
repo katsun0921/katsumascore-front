@@ -1,8 +1,10 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .homeSeasonReview {
   &__title {
     color: var(--color-text-inverse);
     font-family: var(--font-heading);
-    font-size: var(--font-size-h3-sm);
+    @include font-size-h3;
     font-weight: 700;
     margin-bottom: 12px;
   }

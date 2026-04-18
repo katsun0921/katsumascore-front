@@ -1,4 +1,5 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .list {
   display: grid;
@@ -39,7 +40,7 @@
 
 .emptyTitle {
   color: var(--color-text-primary);
-  font-size: var(--font-size-h1-sm);
+  @include font-size-h1;
 }
 
 .emptyText {

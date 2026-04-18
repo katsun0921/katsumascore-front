@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .good-point {
   position: relative;
   margin-top: var(--space-32);
@@ -13,7 +15,7 @@
 
   &__heading {
     font-family: var(--font-accent-soft), var(--font-ja-body), sans-serif;
-    font-size: var(--font-size-h3-sm);
+    @include font-size-h3;
     font-weight: var(--font-weight-bold);
     letter-spacing: 0.03em;
     color: var(--color-text-inverse);
@@ -37,7 +39,7 @@
   }
 
   &__item {
-    font-size: var(--font-size-body-lg);
+    @include font-size-body;
     line-height: 1.7;
     color: var(--color-text-inverse);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);

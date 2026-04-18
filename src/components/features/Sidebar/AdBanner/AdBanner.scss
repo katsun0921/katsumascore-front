@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .sidebar-ad {
 
   // ── バナー型 ──
@@ -44,14 +46,14 @@
   }
 
   &__cta-label {
-    font-size: var(--font-size-ui-lg);
+    @include font-size-ui;
     font-weight: 700;
     letter-spacing: 0.04em;
     line-height: 1.4;
   }
 
   &__cta-arrow {
-    font-size: var(--font-size-body-lg);
+    @include font-size-body;
     flex-shrink: 0;
   }
 }

@@ -44,7 +44,7 @@ export const PostHeader = ({
   const prefix = 'post-header'
   return (
     <div className={prefix}>
-      <hgroup>
+      <hgroup className={`${prefix}__hgroup`}>
         {comment && <p className={`${prefix}__comment`}>{comment}</p>}
         <h1 className={`${prefix}__title-main`}>{titleOfficial}</h1>
       </hgroup>

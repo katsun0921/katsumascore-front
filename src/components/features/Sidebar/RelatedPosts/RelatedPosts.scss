@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .sidebar-related {
   padding: var(--space-16);
   background-color: var(--color-bg);
@@ -6,7 +8,7 @@
 
   // ── 見出し「関連記事」──
   &__heading {
-    font-size: var(--font-size-ui-lg);
+    @include font-size-ui;
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--color-text-primary);
@@ -80,7 +82,7 @@
   }
 
   &__title {
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     font-weight: 600;
     line-height: 1.5;
     color: var(--color-text-primary);

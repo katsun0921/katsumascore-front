@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .sidebar-profile {
   padding: var(--space-20) var(--space-16);
   background-color: var(--color-bg);
@@ -19,7 +21,7 @@
   }
 
   &__name {
-    font-size: var(--font-size-ui-lg);
+    @include font-size-ui;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: var(--color-text-primary);
@@ -27,7 +29,7 @@
 
   // ── 説明文 ──
   &__description {
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     line-height: 1.7;
     color: var(--color-text-secondary);
     margin-bottom: var(--space-12);
@@ -41,7 +43,7 @@
   &__comment-bubble {
     display: block;
     position: relative;
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     line-height: 1.65;
     color: var(--color-text-body);
     background-color: var(--color-surface-muted);
@@ -101,7 +103,7 @@
   // ── プロフィールリンク ──
   &__about-link {
     display: inline-block;
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     color: var(--color-primary);
     text-decoration: none;
     transition: opacity 0.2s ease;

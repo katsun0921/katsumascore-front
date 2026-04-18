@@ -1,4 +1,5 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .postCard {
   width: 100%;
@@ -45,7 +46,7 @@
     border: 1px solid color-mix(in srgb, var(--color-text-inverse) 28%, transparent);
     border-radius: 999px;
     font-family: var(--font-ui);
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     font-weight: var(--font-weight-medium);
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -60,7 +61,7 @@
   &__date {
     color: var(--color-text-secondary);
     font-family: var(--font-ui);
-    font-size: var(--font-size-caption-lg);
+    @include font-size-caption;
     line-height: 1.2;
   }
 
@@ -68,7 +69,7 @@
     display: -webkit-box;
     overflow: hidden;
     color: var(--color-text-primary);
-    font-size: var(--font-size-h2-sm);
+    @include font-size-h2;
     line-height: 1.5;
     word-break: break-word;
     -webkit-box-orient: vertical;
@@ -79,7 +80,7 @@
     display: -webkit-box;
     overflow: hidden;
     color: var(--color-text-secondary);
-    font-size: var(--font-size-body-sm);
+    @include font-size-body;
     line-height: 1.7;
     word-break: break-word;
     -webkit-box-orient: vertical;

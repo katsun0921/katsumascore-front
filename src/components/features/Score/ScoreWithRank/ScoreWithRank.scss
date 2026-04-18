@@ -1,3 +1,6 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+@use "@/styles/scss/global/mixin/fontSize.scss" as *;
+
 .score-with-rank {
   display: inline-flex;
   min-width: 0;
@@ -42,11 +45,7 @@
   font-weight: bold;
   line-height: 1;
   letter-spacing: 0.02em;
-  font-size: var(--font-size-score-hero-int-sm);
-
-  @media (min-width: 768px) {
-    font-size: var(--font-size-score-hero-int-lg);
-  }
+  @include font-size-score-hero-int;
 
   &--rank-c  { color: var(--color-score-rank-c-text); }
   &--rank-b  { color: var(--color-score-rank-b-text); }
@@ -84,11 +83,7 @@
 
 .score-with-rank__decimal {
   margin-left: var(--space-4);
-  font-size: var(--font-size-score-hero-decimal-sm);
-
-  @media (min-width: 768px) {
-    font-size: var(--font-size-score-hero-decimal-lg);
-  }
+  @include font-size-score-hero-decimal;
 }
 
 // ── ホバー ──────────────────────────────────────────
