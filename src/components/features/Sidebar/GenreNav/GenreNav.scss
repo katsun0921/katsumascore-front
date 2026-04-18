@@ -6,7 +6,7 @@
 
   // ── 見出し「ジャンル」──
   &__heading {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--color-text-primary);
@@ -61,7 +61,7 @@
 
   // ── ラベル ──
   &__label {
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     font-weight: 600;
     color: var(--color-text-primary);
     white-space: nowrap;

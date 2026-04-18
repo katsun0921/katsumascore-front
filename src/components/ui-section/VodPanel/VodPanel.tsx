@@ -4,10 +4,10 @@ export const VodPanel = (props: VodPanelProps) => {
   if (props.variant === 'cinema') {
     return (
       <div className='mt-[var(--space-32)] flex items-center gap-[var(--space-12)] rounded-[6px] border-l-[4px] border-l-[var(--color-category)] bg-[var(--color-bg-muted)] px-[var(--space-16)] py-[var(--space-12)]'>
-        <span className='shrink-0 rounded-[4px] bg-[var(--color-category)] px-[var(--space-12)] py-[var(--space-4)] text-[var(--font-size-caption-pc)] font-[var(--font-weight-bold)] text-[var(--color-text-inverse)]'>
+        <span className='shrink-0 rounded-[4px] bg-[var(--color-category)] px-[var(--space-12)] py-[var(--space-4)] text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-inverse)]'>
           {props.badgeLabel}
         </span>
-        <p className='m-0 text-[var(--font-size-ui-pc)] text-[var(--color-text-secondary)]'>{props.note}</p>
+        <p className='m-0 text-[var(--font-size-ui-lg)] text-[var(--color-text-secondary)]'>{props.note}</p>
       </div>
     )
   }
@@ -15,7 +15,7 @@ export const VodPanel = (props: VodPanelProps) => {
   return (
     <div className='mt-[var(--space-32)]'>
       {props.heading && (
-        <h2 className='mb-[var(--space-16)] text-[var(--font-size-h3-sp)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
+        <h2 className='mb-[var(--space-16)] text-[var(--font-size-h3-sm)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
           {props.heading}
         </h2>
       )}

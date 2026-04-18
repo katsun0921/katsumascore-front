@@ -13,7 +13,7 @@
 
   &__heading {
     font-family: var(--font-accent-soft), var(--font-ja-body), sans-serif;
-    font-size: var(--font-size-h3-sp);
+    font-size: var(--font-size-h3-sm);
     font-weight: var(--font-weight-bold);
     letter-spacing: 0.03em;
     color: var(--color-text-inverse);
@@ -37,7 +37,7 @@
   }
 
   &__item {
-    font-size: var(--font-size-body-pc);
+    font-size: var(--font-size-body-lg);
     line-height: 1.7;
     color: var(--color-text-inverse);
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);

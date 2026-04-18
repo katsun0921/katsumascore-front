@@ -9,14 +9,14 @@
   }
 
   &__term {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
   }
 
   &__desc {
     padding-left: var(--space-16);
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     color: var(--color-text-primary);
 
     &--break { word-break: break-all; }
@@ -30,7 +30,7 @@
   }
 
   &__copyright {
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     color: var(--color-text-secondary);
     margin: var(--space-4) var(--space-0) var(--space-0);
   }
@@ -70,7 +70,7 @@
   }
 
   &__actor-character {
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin-bottom: var(--space-4);
@@ -83,12 +83,12 @@
   }
 
   &__actor-description {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     color: var(--color-text-secondary);
   }
 
   &__actor-other-label {
-    font-size: var(--font-size-ui-sp);
+    font-size: var(--font-size-ui-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-secondary);
   }
@@ -99,7 +99,7 @@
     margin: var(--space-4) var(--space-0) var(--space-0);
 
     li {
-      font-size: var(--font-size-ui-sp);
+      font-size: var(--font-size-ui-sm);
       line-height: 1.6;
     }
   }

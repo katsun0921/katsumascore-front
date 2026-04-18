@@ -44,14 +44,14 @@
   }
 
   &__cta-label {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     font-weight: 700;
     letter-spacing: 0.04em;
     line-height: 1.4;
   }
 
   &__cta-arrow {
-    font-size: var(--font-size-body-pc);
+    font-size: var(--font-size-body-lg);
     flex-shrink: 0;
   }
 }

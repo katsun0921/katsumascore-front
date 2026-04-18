@@ -1,7 +1,7 @@
 .p-vod-intro {
   &__heading {
     font-family: var(--font-heading);
-    font-size: var(--font-size-h3-sp);
+    font-size: var(--font-size-h3-sm);
     font-weight: var(--font-weight-bold);
     line-height: 1.5;
     color: var(--color-text-primary);
@@ -9,7 +9,7 @@
   }
 
   &__body {
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     line-height: 1.7;
     color: var(--color-text-primary);
     margin-bottom: var(--space-16);
@@ -43,7 +43,7 @@
   }
 
   &__vod-name {
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     font-weight: var(--font-weight-medium);
   }
 
@@ -53,7 +53,7 @@
 
   &__related-heading {
     font-family: var(--font-heading);
-    font-size: var(--font-size-body-pc);
+    font-size: var(--font-size-body-lg);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin-bottom: var(--space-12);
@@ -92,12 +92,12 @@
   }
 
   &__related-title {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     line-height: 1.5;
   }
 
   &__note {
-    font-size: var(--font-size-ui-sp);
+    font-size: var(--font-size-ui-sm);
     color: var(--color-text-secondary);
     margin-top: var(--space-16);
     font-weight: var(--font-weight-bold);

@@ -9,7 +9,7 @@
   &__tab {
     flex: 1;
     padding: var(--space-8) var(--space-8);
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     color: var(--color-text-secondary);
     background: var(--color-surface-muted);
     border: 1px solid transparent;
@@ -58,7 +58,7 @@
   }
 
   &__placeholder-text {
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     color: var(--color-text-secondary);
   }
 

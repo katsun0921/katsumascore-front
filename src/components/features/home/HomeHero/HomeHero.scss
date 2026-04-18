@@ -88,7 +88,7 @@
   &__title {
     color: var(--color-text-inverse);
     font-family: var(--font-heading);
-    font-size: var(--font-size-h2-sp);
+    font-size: var(--font-size-h2-sm);
     font-weight: 700;
     line-height: 1.5;
 
@@ -99,11 +99,11 @@
 
   &__subtitle {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     line-height: 1.7;
 
     @include layout-md {
-      font-size: var(--font-size-body-pc);
+      font-size: var(--font-size-body-lg);
     }
   }
 

@@ -8,7 +8,7 @@
     font-family: var(--font-ja-heading), serif;
     font-style: italic;
     text-transform: uppercase;
-    font-size: var(--font-size-h1-sp);
+    font-size: var(--font-size-h1-sm);
     line-height: 2rem;
     color: var(--color-secondary);
     padding-bottom: var(--space-16);
@@ -29,7 +29,7 @@
   }
 
   &__description {
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     color: var(--color-text-secondary);
     margin-bottom: var(--space-16);
     line-height: 1.6;
@@ -79,12 +79,12 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     color: var(--color-text-secondary);
   }
 
   &__title {
-    font-size: var(--font-size-ui-pc);
+    font-size: var(--font-size-ui-lg);
     line-height: 1.5;
     font-weight: var(--font-weight-medium);
   }

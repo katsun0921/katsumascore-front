@@ -9,7 +9,7 @@ export const RelationPost = ({ heading, posts, layout = 'default' }: RelationPos
 
   return (
     <section>
-      <h2 className='mb-[var(--space-16)] text-[var(--font-size-h3-pc)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
+      <h2 className='mb-[var(--space-16)] text-[var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
         {heading}
       </h2>
       <ul className={listClassName}>
@@ -28,7 +28,7 @@ export const RelationPost = ({ heading, posts, layout = 'default' }: RelationPos
                   />
                 </div>
               )}
-              <span className='block px-[var(--space-12)] py-[var(--space-12)] text-[var(--font-size-ui-pc)] font-[var(--font-weight-bold)] leading-[1.5] text-[var(--color-text-primary)]'>
+              <span className='block px-[var(--space-12)] py-[var(--space-12)] text-[var(--font-size-ui-lg)] font-[var(--font-weight-bold)] leading-[1.5] text-[var(--color-text-primary)]'>
                 {post.title}
               </span>
             </a>

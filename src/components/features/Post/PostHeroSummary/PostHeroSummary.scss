@@ -7,7 +7,7 @@
   gap: var(--space-16);
 
   &__heading {
-    font-size: var(--font-size-h2-sp);
+    font-size: var(--font-size-h2-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-secondary);
     padding-bottom: var(--space-12);
@@ -37,12 +37,12 @@
     margin: var(--space-0) var(--space-0) var(--space-12);
     line-height: 1.8;
     color: var(--color-text-primary);
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
   }
 
   &__cite {
     display: block;
-    font-size: var(--font-size-ui-sp);
+    font-size: var(--font-size-ui-sm);
     color: var(--color-text-secondary);
     font-style: normal;
 

@@ -9,7 +9,7 @@
   &__comment {
     width: 100%;
     font-family: var(--font-accent-strong);
-    font-size: var(--font-size-h2-sp);
+    font-size: var(--font-size-h2-sm);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     letter-spacing: 0.03em;
@@ -17,7 +17,7 @@
     margin: var(--space-0);
 
     @include layout-md {
-      font-size: var(--font-size-h2-pc);
+      font-size: var(--font-size-h2-lg);
     }
   }
 
@@ -25,14 +25,14 @@
   &__title-main {
     width: 100%;
     font-family: var(--font-ja-heading);
-    font-size: var(--font-size-title-sp);
+    font-size: var(--font-size-title-sm);
     color: var(--color-text-primary);
     line-height: 1.2;
     letter-spacing: 0.01em;
     margin: var(--space-0);
 
     @include layout-md {
-      font-size: var(--font-size-title-pc);
+      font-size: var(--font-size-title-lg);
     }
   }
 
@@ -58,19 +58,19 @@
 
   &__title-sub {
     font-family: var(--font-en-heading);
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     color: var(--color-text-secondary);
     letter-spacing: 0.04em;
     margin: var(--space-0);
 
     @include layout-md {
-      font-size: var(--font-size-body-pc);
+      font-size: var(--font-size-body-lg);
     }
   }
 
   &__meta {
     font-family: var(--font-ja-body);
-    font-size: var(--font-size-body-sp);
+    font-size: var(--font-size-body-sm);
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
     margin: var(--space-0);
@@ -86,7 +86,7 @@
 
   &__copyright {
     font-family: var(--font-ja-body);
-    font-size: var(--font-size-caption-sp);
+    font-size: var(--font-size-caption-sm);
     color: var(--color-text-muted);
     letter-spacing: 0.03em;
     margin: var(--space-0);

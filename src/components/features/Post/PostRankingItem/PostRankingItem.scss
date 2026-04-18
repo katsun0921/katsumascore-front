@@ -30,7 +30,7 @@
     background: linear-gradient(135deg, var(--color-secondary), var(--color-category));
     color: var(--color-text-inverse);
     font-family: var(--font-ui);
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
   }
 
   &__body {
@@ -50,7 +50,7 @@
     background: var(--color-secondary);
     color: var(--color-text-inverse);
     font-family: var(--font-ui);
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     font-weight: var(--font-weight-bold);
     flex-shrink: 0;
 
@@ -63,14 +63,14 @@
   &__score {
     color: var(--color-score-border);
     font-family: var(--font-ui);
-    font-size: var(--font-size-h3-pc);
+    font-size: var(--font-size-h3-lg);
     font-weight: var(--font-weight-bold);
     line-height: 1;
   }
 
   &__title {
     color: var(--color-text-primary);
-    font-size: var(--font-size-body-pc);
+    font-size: var(--font-size-body-lg);
     font-weight: var(--font-weight-medium);
     line-height: 1.4;
     overflow: hidden;
@@ -81,7 +81,7 @@
 
   &__excerpt {
     color: var(--color-text-secondary);
-    font-size: var(--font-size-caption-pc);
+    font-size: var(--font-size-caption-lg);
     line-height: 1.5;
     overflow: hidden;
     display: -webkit-box;

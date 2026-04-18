@@ -129,29 +129,28 @@
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
      直接値（font-size: 16px, text-[16px]など）の使用は禁止。
      ─────────────────────────────────────────────────────────────── */
-  --font-size-title-pc: 48px;
-  --font-size-title-sp: 32px;
-  --font-size-h1-pc: 32px;
-  --font-size-h1-sp: 24px;
-  --font-size-h2-pc: 24px;
-  --font-size-h2-sp: 20px;
-  --font-size-h3-pc: 20px;
-  --font-size-h3-sp: 18px;
-  --font-size-body-pc: 16px;
-  --font-size-body-sp: 14px;
-  --font-size-ui-pc: 14px;
-  --font-size-ui-sp: 12px;
-  --font-size-caption-pc: 12px;
-  --font-size-caption-sp: 10px;
+  --font-size-title-lg: 48px;
+  --font-size-title-sm: 32px;
+  --font-size-h1-lg: 32px;
+  --font-size-h1-sm: 24px;
+  --font-size-h2-lg: 24px;
+  --font-size-h2-sm: 20px;
+  --font-size-h3-lg: 20px;
+  --font-size-h3-sm: 18px;
+  --font-size-body-lg: 16px;
+  --font-size-body-sm: 14px;
+  --font-size-ui-lg: 14px;
+  --font-size-ui-sm: 12px;
+  --font-size-caption-lg: 12px;
+  --font-size-caption-sm: 10px;
 
   /* ScoreWithRank ヒーロー（ランク数字・画像重なり） */
-  --font-size-score-hero-int-pc: 120px;
-  --font-size-score-hero-int-sp: 72px;
-  --font-size-score-hero-decimal-pc: 60px;
-  --font-size-score-hero-decimal-sp: 36px;
-  --letter-spacing-score-hero: -0.02em;
-  --size-score-rank-badge-pc: 96px;
-  --size-score-rank-badge-sp: 72px;
+  --font-size-score-hero-int-lg: 120px;
+  --font-size-score-hero-int-sm: 72px;
+  --font-size-score-hero-decimal-lg: 60px;
+  --font-size-score-hero-decimal-sm: 36px;
+  --size-score-rank-badge-lg: 96px;
+  --size-score-rank-badge-sm: 72px;
 
   /* ランク画像と重なる数字の縁取り（ページ地色と揃え、必要なら上書き） */
   --color-score-hero-text-halo: var(--color-bg);
@@ -246,12 +245,12 @@
   --spacing-12: var(--space-48);
 
   /* Font Size — PC base (Tailwind クラス text-h1, text-body 等で参照) */
-  --font-size-h1: var(--font-size-h1-pc);
-  --font-size-h2: var(--font-size-h2-pc);
-  --font-size-h3: var(--font-size-h3-pc);
-  --font-size-body: var(--font-size-body-pc);
-  --font-size-ui: var(--font-size-ui-pc);
-  --font-size-caption: var(--font-size-caption-pc);
+  --font-size-h1: var(--font-size-h1-lg);
+  --font-size-h2: var(--font-size-h2-lg);
+  --font-size-h3: var(--font-size-h3-lg);
+  --font-size-body: var(--font-size-body-lg);
+  --font-size-ui: var(--font-size-ui-lg);
+  --font-size-caption: var(--font-size-caption-lg);
 }
 
 body {

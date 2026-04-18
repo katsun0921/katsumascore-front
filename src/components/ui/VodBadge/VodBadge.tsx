@@ -1,7 +1,7 @@
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 
-const itemBase = 'inline-block rounded px-3 py-1 text-[var(--font-size-caption-pc)] font-bold text-white'
+const itemBase = 'inline-block rounded px-3 py-1 text-[var(--font-size-caption-lg)] font-bold text-white'
 
 const variantClasses = {
   netflix: `${itemBase} bg-[var(--color-netflix)]`,

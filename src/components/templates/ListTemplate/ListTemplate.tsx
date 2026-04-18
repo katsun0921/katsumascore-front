@@ -56,7 +56,7 @@ export const ListTemplate = ({
             <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-border)] uppercase'>
               Category
             </p>
-            <h1 className='text-[var(--font-size-h1-sp)] md:text-[var(--font-size-title-pc)] font-bold text-[var(--color-text-inverse)]'>
+            <h1 className='text-[var(--font-size-h1-sm)] md:text-[var(--font-size-title-lg)] font-bold text-[var(--color-text-inverse)]'>
               {categoryName}
             </h1>
             {categoryDescription && (
@@ -87,7 +87,7 @@ export const ListTemplate = ({
           {/* Ranking */}
           {rankingPosts.length > 0 && !isLoading && (
             <section className='space-y-2'>
-              <h2 className='text-[var(--font-size-h3-sp)] md:text-[var(--font-size-h2-pc)] font-bold text-[var(--color-text-primary)]'>
+              <h2 className='text-[var(--font-size-h3-sm)] md:text-[var(--font-size-h2-lg)] font-bold text-[var(--color-text-primary)]'>
                 ランキング
               </h2>
               <ol>

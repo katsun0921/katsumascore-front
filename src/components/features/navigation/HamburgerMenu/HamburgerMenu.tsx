@@ -10,7 +10,7 @@ export const HamburgerMenu = ({ label }: THamburgerMenuProps) => {
     <button
       type='button'
       id='js-menu-button'
-      className='flex items-center text-[var(--font-size-h2-sp)]'
+      className='flex items-center text-[var(--font-size-h2-sm)]'
       onClick={() => clickHamburgerMenu()}
     >
       <span className='relative block w-[30px] h-[24px]'>

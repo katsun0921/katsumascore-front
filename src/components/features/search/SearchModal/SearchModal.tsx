@@ -95,7 +95,7 @@ export const SearchModal = ({ onClose }: Props) => {
           <input
             ref={inputRef}
             type='search'
-            className='h-11 flex-1 bg-transparent px-3 text-[var(--font-size-body-pc)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)]'
+            className='h-11 flex-1 bg-transparent px-3 text-[var(--font-size-body-lg)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none placeholder:text-[var(--color-text-muted)]'
             placeholder='タイトルで検索...'
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -110,7 +110,7 @@ export const SearchModal = ({ onClose }: Props) => {
           />
           <button
             type='button'
-            className='shrink-0 py-1 font-[var(--font-ui)] text-[var(--font-size-ui-pc)] font-medium whitespace-nowrap text-[var(--color-primary)] transition-opacity duration-150 ease-[ease] hover:opacity-70'
+            className='shrink-0 py-1 font-[var(--font-ui)] text-[var(--font-size-ui-lg)] font-medium whitespace-nowrap text-[var(--color-primary)] transition-opacity duration-150 ease-[ease] hover:opacity-70'
             onClick={onClose}
             aria-label='検索を閉じる'
           >

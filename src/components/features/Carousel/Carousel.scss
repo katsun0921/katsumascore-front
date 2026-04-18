@@ -36,7 +36,7 @@
     border-radius: 50%;
     background: var(--color-bg);
     color: var(--color-text-primary);
-    font-size: var(--font-size-h3-pc);
+    font-size: var(--font-size-h3-lg);
     cursor: pointer;
     transition: background 0.15s;
 
@@ -45,7 +45,7 @@
   }
 
   &__indicator {
-    font-size: var(--font-size-ui-sp);
+    font-size: var(--font-size-ui-sm);
     color: var(--color-text-secondary);
     min-width: 48px;
     text-align: center;

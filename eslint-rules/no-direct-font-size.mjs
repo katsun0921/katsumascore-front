@@ -11,7 +11,7 @@
  *   <div className="text-[1rem]" />
  *
  * Good:
- *   <div style={{ fontSize: 'var(--font-size-body-pc)' }} />
+ *   <div style={{ fontSize: 'var(--font-size-body-lg)' }} />
  *   <div className="text-body" />
  */
 

@@ -11,7 +11,7 @@
 }
 
 .post-hero-score__comment {
-  font-size: var(--font-size-h2-sp);
+  font-size: var(--font-size-h2-sm);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   letter-spacing: 0.03em;
@@ -20,6 +20,6 @@
   margin: var(--space-0);
 
   @include layout-md {
-    font-size: var(--font-size-h2-pc);
+    font-size: var(--font-size-h2-lg);
   }
 }
