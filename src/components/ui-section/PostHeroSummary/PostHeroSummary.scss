@@ -4,8 +4,17 @@
 .post-hero-summary {
   display: flex;
   align-items: stretch;
-  margin-top: var(--space-32);
   gap: var(--space-16);
+
+  &--column {
+    flex-direction: column;
+    align-items: flex-start;
+
+    .post-hero-summary__poster {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+    }
+  }
 
   &__heading {
     @include font-size-h2;

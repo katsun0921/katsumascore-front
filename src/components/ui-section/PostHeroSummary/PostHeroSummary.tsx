@@ -10,12 +10,13 @@ export type PostHeroSummaryProps = {
   refUrl?: string
   refLabel?: string
   locale?: Locale
+  direction?: 'row' | 'column'
 }
 
 export const PostHeroSummary = (props: PostHeroSummaryProps) => {
-  const { posterUrl, text, refUrl, refLabel, locale = 'ja' } = props
+  const { posterUrl, text, refUrl, refLabel, locale = 'ja', direction = 'row' } = props
   return (
-    <section className='post-hero-summary'>
+    <section className={`post-hero-summary post-hero-summary--${direction}`}>
       <div className='post-hero-summary__poster'>
         {posterUrl ? (
           <Image

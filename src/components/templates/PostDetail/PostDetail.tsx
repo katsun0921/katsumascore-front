@@ -1,5 +1,5 @@
 import { PostHeader } from '@/components/features/Post/PostHeader/PostHeader'
-import { PostHero } from '@/components/features/Post/PostHero/PostHero'
+import { PostHero } from '@/components/ui-section/PostHero/PostHero'
 import { TitleMeta } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
 import { TableOfContents } from '@/components/features/Post/TableOfContents/TableOfContents'

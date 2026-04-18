@@ -307,10 +307,7 @@ src/
 ```css
 /* globals.css — ブレークポイント定義 */
 @theme inline {
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
+  --breakpoint-lg: 768px;
 }
 ```
 
