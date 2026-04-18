@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .post-header {
   display: flex;
   flex-direction: column;

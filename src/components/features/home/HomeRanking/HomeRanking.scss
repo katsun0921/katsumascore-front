@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .homeRanking {
   &__header {
     display: flex;

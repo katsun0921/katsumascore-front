@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .post-hero {
   display: flex;
   flex-direction: column;

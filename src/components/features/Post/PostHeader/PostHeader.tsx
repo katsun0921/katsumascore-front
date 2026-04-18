@@ -8,8 +8,8 @@ import './PostHeader.scss'
 
 export type PostHeaderProps = {
   category: string
-  titleJa: string
-  titleEn?: string
+  titleOfficial: string
+  titleOriginal?: string
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]
   releaseDate?: string  // 'YYYYMMDD'
@@ -22,9 +22,8 @@ export type PostHeaderProps = {
 }
 
 export const PostHeader = ({
-  category,
-  titleJa,
-  titleEn,
+  titleOfficial,
+  titleOriginal,
   filmStudios,
   productionStudios,
   releaseDate,
@@ -45,11 +44,13 @@ export const PostHeader = ({
   const prefix = 'post-header'
   return (
     <div className={prefix}>
-      {comment && <p className={`${prefix}__comment`}>{comment}</p>}
-      <h1 className={`${prefix}__title-main`}>{titleJa}</h1>
+      <hgroup>
+        {comment && <p className={`${prefix}__comment`}>{comment}</p>}
+        <h1 className={`${prefix}__title-main`}>{titleOfficial}</h1>
+      </hgroup>
       <div className={`${prefix}__lower`}>
         <div className={`${prefix}__meta-group`}>
-          {titleEn && <p className={`${prefix}__title-sub`}>{titleEn}</p>}
+          {titleOriginal && <p className={`${prefix}__title-original`}>{titleOriginal}</p>}
           {metaParts.length > 0 && (
             <p className={`${prefix}__meta`}>
               {metaParts.map((part, i) => (

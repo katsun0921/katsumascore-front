@@ -1,3 +1,5 @@
+@use "../../../styles/scss/global/mixin/layout.scss" as *;
+
 .list {
   display: grid;
   grid-template-columns: 1fr;

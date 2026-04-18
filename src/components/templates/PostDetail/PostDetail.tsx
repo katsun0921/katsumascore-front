@@ -17,8 +17,8 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
       {/* ── title.php 相当 ── */}
       <PostHeader
         category={post.category ?? ''}
-        titleJa={post.title}
-        titleEn={post.titleEn}
+        titleOfficial={post.title}
+        titleOriginal={post.titleEn}
         filmStudios={post.TitleMeta?.filmStudios}
         productionStudios={post.TitleMeta?.productionStudios}
         releaseDate={post.TitleMeta?.releaseDate}

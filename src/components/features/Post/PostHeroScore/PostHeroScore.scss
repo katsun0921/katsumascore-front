@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .post-hero-score {
   display: flex;
   gap: var(--space-12);

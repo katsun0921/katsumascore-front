@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .postCard {
   width: 100%;
   background: var(--color-bg);

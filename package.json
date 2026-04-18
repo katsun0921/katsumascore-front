@@ -7,6 +7,11 @@
     "node": "25.8.1"
   },
   "scripts": {
+    "generate:breakpoints": "node scripts/generate-breakpoints.mjs",
+    "predev": "npm run generate:breakpoints",
+    "prebuild": "npm run generate:breakpoints",
+    "prestorybook": "npm run generate:breakpoints",
+    "prebuild-storybook": "npm run generate:breakpoints",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

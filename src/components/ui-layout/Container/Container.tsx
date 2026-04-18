@@ -1,7 +1,7 @@
 import React from 'react'
 import type { ReactNode } from 'react'
 
-export type TContainerSize = 'sm' | 'md' | 'xl' | 'full'
+export type TContainerSize = 'lg' | 'full'
 
 export type TContainerProps = {
   children: ReactNode
@@ -10,13 +10,11 @@ export type TContainerProps = {
 }
 
 const sizeClasses: Record<TContainerSize, string> = {
-  sm:   'w-[min(100%,var(--layout-width-sm))]',
-  md:   'w-[min(100%,var(--layout-width-md))]',
-  xl:   'w-[min(100%,var(--layout-width-xl))]',
+  lg:   'w-[min(100%,var(--layout-width-lg))]',
   full: 'w-full',
 }
 
-export const Container = ({ children, size = 'xl', className = '' }: TContainerProps) => {
+export const Container = ({ children, size = 'lg', className = '' }: TContainerProps) => {
   return (
     <div className={`w-full mx-auto px-4 sm:px-6 md:px-8 ${sizeClasses[size]} ${className}`.trim()}>
       {children}

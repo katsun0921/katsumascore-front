@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .homeFeatured {
   &__title {
     color: var(--color-text-inverse);

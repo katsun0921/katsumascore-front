@@ -1,3 +1,5 @@
+@use "../../../styles/scss/global/mixin/layout.scss" as *;
+
 .product {
   margin: var(--space-40) var(--space-0);
   border: 1px solid var(--color-border-muted);

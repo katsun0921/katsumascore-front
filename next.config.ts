@@ -8,7 +8,7 @@ const nextConfig: NextConfig = {
     defaultLocale: 'ja',
   },
   sassOptions: {
-    additionalData: `@use "${path.resolve('./src/styles/scss/global/variable/colors.scss')}" as *; @use "${path.resolve('./src/styles/scss/global/variable/fontWeight.scss')}" as *; @use "${path.resolve('./src/styles/scss/global/mixin/layout.scss')}" as *;`,
+    additionalData: `@use "${path.resolve('./src/styles/scss/global/variable/colors.scss')}" as *; @use "${path.resolve('./src/styles/scss/global/variable/fontWeight.scss')}" as *;`,
   },
 };
 

@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 
 const srcDir = resolve(__dirname, '../src')
 const publicDir = resolve(__dirname, '../public')
-const sassAdditionalData = `@use "${resolve(__dirname, '../src/styles/scss/global/variable/colors.scss')}" as *; @use "${resolve(__dirname, '../src/styles/scss/global/variable/fontWeight.scss')}" as *; @use "${resolve(__dirname, '../src/styles/scss/global/mixin/layout.scss')}" as *;`
+const sassAdditionalData = `@use "${resolve(__dirname, '../src/styles/scss/global/variable/colors.scss')}" as *; @use "${resolve(__dirname, '../src/styles/scss/global/variable/fontWeight.scss')}" as *;`
 
 /** GitHub Pages などサブパス配信時は `STORYBOOK_BASE_PATH=/repo-name/` を CI で渡す */
 const storybookBase = process.env.STORYBOOK_BASE_PATH?.trim() || '/'

@@ -9,8 +9,8 @@ const meta: Meta<typeof PostHeader> = {
   },
   args: {
     category: '映画',
-    titleJa: 'ナイブズ・アウト／名探偵と刃の館の秘密',
-    titleEn: 'Knives Out',
+    titleOfficial: 'ナイブズ・アウト／名探偵と刃の館の秘密',
+    titleOriginal: 'Knives Out',
     filmStudios: [{ name: 'ライオンズゲート' }],
     productionStudios: [{ name: 'アメリカ' }],
     releaseDate: '20191127',
@@ -26,8 +26,8 @@ export const Default: Story = {}
 
 export const LongTitle: Story = {
   args: {
-    titleJa: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',
-    titleEn: 'Mobile Suit Gundam GQuuuuuuX -Beginning-',
+    titleOfficial: '劇場版『機動戦士ガンダム ジークアクス』',
+    titleOriginal: 'Mobile Suit Gundam GQuuuuuuX -Beginning-',
   },
 }
 

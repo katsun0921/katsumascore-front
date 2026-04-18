@@ -1,3 +1,5 @@
+@use "../../../../styles/scss/global/mixin/layout.scss" as *;
+
 .homeVodFinder {
   &__title {
     color: var(--color-text-inverse);

@@ -1,3 +1,5 @@
+@use "../../../styles/scss/global/mixin/layout.scss" as *;
+
 .homeTemplate {
   background: var(--color-footer);
   min-height: 100vh;
@@ -8,7 +10,7 @@
     display: flex;
     flex-direction: column;
     gap: 40px;
-    max-width: var(--layout-width-xl);
+    max-width: var(--layout-width-lg);
     margin: 0 auto;
     padding: 32px 16px;
 

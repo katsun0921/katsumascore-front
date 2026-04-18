@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Kaisei+Tokumin:wght@400;500;700&family=Rampart+One&family=Yusei+Magic&display=swap");
 @import "tailwindcss";
 @import "./reset.css" layer(base);
+@import "./generated/breakpoints.css";
 
 /* ─── globals.css 運用ルール ─────────────────────────────────────
    このファイルに書いてよいもの:
@@ -15,25 +16,14 @@
    ─────────────────────────────────────────────────────────────── */
 
 /* ─── Breakpoints ───────────────────────────────────────────────
-   コンポーネント側には直接 @media を書かない。
-   ブレークポイントはここで一元管理し、Tailwind の sm/md/lg を使う。
-   ──────────────────────────────────────────────────────────────
-   sm:  640px  （モバイル横向き・小型端末）
-   md:  768px  （タブレット）
-   lg:  1024px （デスクトップ）
-   xl:  1280px （ワイドデスクトップ）
+   src/styles/tokens/breakpoints.json を正本として自動生成する。
+   現在の切り替えは SP ファーストの 1 点のみで、`lg = 768px`。
+   CSS 側は ./generated/breakpoints.css を import し、
+   SCSS 側は global/variable/_breakpoints.scss を参照する。
    ─────────────────────────────────────────────────────────────── */
-@theme inline {
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-}
 
 :root {
-  --layout-width-sm: 640px;
-  --layout-width-md: 768px;
-  --layout-width-xl: 1200px;
+  --layout-width-lg: 768px;
   --measure-readable: 40rem;
   --color-primary: #2563eb;
   --color-secondary: #1e1b4b;
