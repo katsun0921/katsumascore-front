@@ -161,7 +161,7 @@ export const ChaosSliceMiddle: Story = {
 //   - Gap between cards is consistent regardless of content height
 // ---------------------------------------------------------------------------
 
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 const heightChaosPosts: Post[] = [
   // Card 1: minimum content — 1-char title, 1-char excerpt, image present

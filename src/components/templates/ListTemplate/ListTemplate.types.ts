@@ -1,4 +1,4 @@
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 import type { FilterOption } from '@/components/features/Post/ListFilterBar/ListFilterBar.types';
 
 export type VodRankingItem = {

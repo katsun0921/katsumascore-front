@@ -1,5 +1,5 @@
 import type { WPPost, WPCategory, WPTag } from "@/types/wordpress";
-import type { Post } from "@/components/features/Post/types/post";
+import type { Post } from "@/types/post";
 
 // Strip HTML tags and decode basic entities — used to clean WP excerpt
 const stripHtml = (html: string): string =>

@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 type Props = {
   post: Post;

@@ -9,7 +9,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostCard } from './PostCard';
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 const meta = {
   title: 'Features/Post/PostCard/Stress',

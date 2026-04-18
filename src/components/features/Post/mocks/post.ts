@@ -1,4 +1,4 @@
-import type { Post, PostContentData } from '@/components/features/Post/types/post';
+import type { Post, PostContentData } from '@/types/post';
 
 export const mockPost: Post = {
   id: 'post-001',

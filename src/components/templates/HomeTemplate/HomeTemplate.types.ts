@@ -1,4 +1,4 @@
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 import type { HomeHeroProps } from '@/components/features/home/HomeHero/HomeHero';
 import type { VodFinderItem } from '@/components/features/home/HomeVodFinder/HomeVodFinder';
 import type { SeasonItem } from '@/components/features/home/HomeSeasonReview/HomeSeasonReview';

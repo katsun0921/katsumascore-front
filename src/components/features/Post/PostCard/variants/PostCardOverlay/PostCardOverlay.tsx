@@ -1,5 +1,5 @@
 import { PostCard } from '@/components/features/Post/PostCard/PostCard';
-import type { PostVariantProps } from '@/components/features/Post/types/post';
+import type { PostVariantProps } from '@/types/post';
 import './PostCardOverlay.scss';
 
 export const PostCardOverlay = ({ post, isLoading = false, className }: PostVariantProps) => {

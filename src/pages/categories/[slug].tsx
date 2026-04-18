@@ -2,9 +2,9 @@ import Head from 'next/head';
 import { useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate/ListTemplate';
-import { normalizePosts } from '@/components/features/Post/utils/normalizePost';
+import { normalizePosts } from '@/lib/utils/normalizePost';
 import { getCategories, getPostsByCategory } from '@/lib/api/wordpress';
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },

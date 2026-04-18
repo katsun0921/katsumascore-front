@@ -1,4 +1,4 @@
-export type { Post, PostContentData, PostVariantProps } from '@/components/features/Post/types/post';
+export type { Post, PostContentData, PostVariantProps } from '@/types/post';
 export { mockPost, mockPostLongTitle, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/Post/mocks/post';
 export { PostCard } from '@/components/features/Post/PostCard/PostCard';
 export type { PostCardProps } from '@/components/features/Post/PostCard/PostCard.types';

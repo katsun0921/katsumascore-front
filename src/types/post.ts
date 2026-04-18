@@ -1,3 +1,5 @@
+import type { VodService } from '@/lib/vod';
+
 export type { VodService } from '@/lib/vod';
 
 export type Post = {

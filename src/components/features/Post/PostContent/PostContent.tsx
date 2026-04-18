@@ -1,4 +1,4 @@
-import type { PostContentData } from '@/components/features/Post/types/post';
+import type { PostContentData } from '@/types/post';
 import { publicAssetUrl } from '@/lib/publicAssetUrl';
 import './PostContent.scss';
 

@@ -11,7 +11,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostList } from './PostList';
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 const meta = {
   title: 'UI-Section/PostList/Stress',

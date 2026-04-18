@@ -1,4 +1,4 @@
-import type { Post } from '@/components/features/Post/types/post';
+import type { Post } from '@/types/post';
 
 type LoadedPostCardProps = {
   post: Post;

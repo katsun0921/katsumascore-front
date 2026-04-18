@@ -1,6 +1,6 @@
-import type { Post } from '@/components/features/Post/types/post';
-import type { WPPost } from '@/types/wordpress';
 import { publicAssetUrl } from '@/lib/publicAssetUrl';
+import type { Post } from '@/types/post';
+import type { WPPost } from '@/types/wordpress';
 
 export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
   const title =

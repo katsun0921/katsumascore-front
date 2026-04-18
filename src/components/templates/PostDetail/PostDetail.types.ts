@@ -1,4 +1,4 @@
-import type { Post } from '@/components/features/Post/types/post'
+import type { Post } from '@/types/post'
 import type { TocItem } from '@/lib/toc'
 import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
 import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
