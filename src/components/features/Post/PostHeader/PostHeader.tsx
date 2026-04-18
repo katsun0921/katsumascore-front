@@ -1,4 +1,4 @@
-import { ScoreWithRank } from '@/components/features/Score/ScoreWithRank/ScoreWithRank'
+import { ScoreWithRank } from '@/components/features/ScoreWithRank/ScoreWithRank'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
