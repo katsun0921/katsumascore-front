@@ -133,28 +133,19 @@
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
      直接値（font-size: 16px, text-[16px]など）の使用は禁止。
      ─────────────────────────────────────────────────────────────── */
-  --font-size-title-lg: 48px;
-  --font-size-title-sm: 32px;
-  --font-size-h1-lg: 32px;
-  --font-size-h1-sm: 24px;
-  --font-size-h2-lg: 24px;
-  --font-size-h2-sm: 20px;
-  --font-size-h3-lg: 20px;
-  --font-size-h3-sm: 18px;
-  --font-size-body-lg: 16px;
-  --font-size-body-sm: 14px;
-  --font-size-ui-lg: 14px;
-  --font-size-ui-sm: 12px;
-  --font-size-caption-lg: 12px;
-  --font-size-caption-sm: 10px;
+  --font-size-title: clamp(32px, 4vw, 48px);
+  --font-size-h1: clamp(24px, 3vw, 32px);
+  --font-size-h2: clamp(20px, 2.5vw, 24px);
+  --font-size-h3: clamp(18px, 2vw, 20px);
+  --font-size-body: clamp(14px, 1.2vw, 16px);
+  --font-size-ui: clamp(12px, 1vw, 14px);
+  --font-size-caption: clamp(10px, 0.8vw, 12px);
 
   /* ScoreWithRank ヒーロー（ランク数字・画像重なり） */
-  --font-size-score-hero-int-lg: 96px;
-  --font-size-score-hero-int-sm: 72px;
-  --font-size-score-hero-decimal-lg: 60px;
-  --font-size-score-hero-decimal-sm: 36px;
-  --size-score-rank-badge-lg: 96px;
-  --size-score-rank-badge-sm: 72px;
+  --score-scale: clamp(72px, 8vw, 96px);
+  --font-size-score-hero-int: var(--score-scale);
+  --font-size-score-hero-decimal: calc(var(--score-scale) * 0.625);
+  --size-score-rank-badge: var(--score-scale);
 
   /* ランク画像と重なる数字の縁取り（ページ地色と揃え、必要なら上書き） */
   --color-score-hero-text-halo: var(--color-bg);
@@ -248,13 +239,13 @@
   --spacing-10: var(--space-40);
   --spacing-12: var(--space-48);
 
-  /* Font Size — PC base (Tailwind クラス text-h1, text-body 等で参照) */
-  --font-size-h1: var(--font-size-h1-lg);
-  --font-size-h2: var(--font-size-h2-lg);
-  --font-size-h3: var(--font-size-h3-lg);
-  --font-size-body: var(--font-size-body-lg);
-  --font-size-ui: var(--font-size-ui-lg);
-  --font-size-caption: var(--font-size-caption-lg);
+  /* Font Size — Tailwind classes (text-h1, text-body etc) will reference the clamp() tokens below */
+  --font-size-h1: var(--font-size-h1);
+  --font-size-h2: var(--font-size-h2);
+  --font-size-h3: var(--font-size-h3);
+  --font-size-body: var(--font-size-body);
+  --font-size-ui: var(--font-size-ui);
+  --font-size-caption: var(--font-size-caption);
 }
 
 body {

@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .product {
   margin: var(--space-40) var(--space-0);
@@ -33,7 +32,7 @@
 
   &__type {
     display: inline-block;
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     font-weight: var(--font-weight-bold);
     padding: var(--space-4) var(--space-8);
     border-radius: 3px;
@@ -43,14 +42,14 @@
   }
 
   &__title {
-    @include font-size-body;
+    font-size: var(--font-size-body);
     font-weight: var(--font-weight-bold);
     margin: var(--space-0) var(--space-0) var(--space-8);
     color: var(--color-text-primary);
   }
 
   &__desc {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     color: var(--color-text-secondary);
     margin: var(--space-0) var(--space-0) var(--space-12);
   }
@@ -66,7 +65,7 @@
 
   &__btn {
     display: inline-block;
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     padding: var(--space-8) var(--space-12);
     color: var(--color-text-inverse);
     text-decoration: none;

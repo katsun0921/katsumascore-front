@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .p-posts-group {
   margin-top: var(--space-24);
@@ -9,7 +8,7 @@
     font-family: var(--font-ja-heading), serif;
     font-style: italic;
     text-transform: uppercase;
-    @include font-size-h1;
+    font-size: var(--font-size-h)1;
     line-height: 2rem;
     color: var(--color-secondary);
     padding-bottom: var(--space-16);
@@ -30,7 +29,7 @@
   }
 
   &__description {
-    @include font-size-body;
+    font-size: var(--font-size-body);
     color: var(--color-text-secondary);
     margin-bottom: var(--space-16);
     line-height: 1.6;
@@ -80,12 +79,12 @@
     justify-content: center;
     width: 100%;
     height: 100%;
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     color: var(--color-text-secondary);
   }
 
   &__title {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     line-height: 1.5;
     font-weight: var(--font-weight-medium);
   }

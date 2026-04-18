@@ -1,4 +1,3 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .sidebar-genre-nav {
   padding: var(--space-16);
@@ -8,7 +7,7 @@
 
   // ── 見出し「ジャンル」──
   &__heading {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     font-weight: 700;
     letter-spacing: 0.08em;
     color: var(--color-text-primary);
@@ -63,7 +62,7 @@
 
   // ── ラベル ──
   &__label {
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     font-weight: 600;
     color: var(--color-text-primary);
     white-space: nowrap;

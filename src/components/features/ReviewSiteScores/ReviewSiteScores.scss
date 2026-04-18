@@ -1,4 +1,3 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .p-review-scores {
   --review-score-label-width: 5.5rem;
@@ -14,7 +13,7 @@
   border-radius: var(--space-8);
 
   &__heading {
-    @include font-size-h2;
+    font-size: var(--font-size-h2);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin-bottom: var(--space-16);
@@ -43,7 +42,7 @@
     width: var(--review-score-label-width);
     text-align: right;
     flex-shrink: 0;
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     color: var(--color-text-secondary);
   }
 
@@ -86,7 +85,7 @@
     min-width: var(--review-score-value-width);
     width: var(--review-score-value-width);
     flex-shrink: 0;
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     text-decoration: none;
@@ -99,21 +98,21 @@
   }
 
   &__unit {
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     font-weight: 400;
     color: var(--color-text-muted);
   }
 
   &__summary {
     margin-left: var(--review-score-summary-indent);
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     line-height: 1.6;
     color: var(--color-text-secondary);
   }
 
   &__footer {
     margin-top: var(--space-16);
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     color: var(--color-text-secondary);
     line-height: 1.6;
   }

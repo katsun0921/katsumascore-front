@@ -1,4 +1,3 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .p-carousel {
   position: relative;
@@ -38,7 +37,7 @@
     border-radius: 50%;
     background: var(--color-bg);
     color: var(--color-text-primary);
-    @include font-size-h3;
+    font-size: var(--font-size-h3);
     cursor: pointer;
     transition: background 0.15s;
 
@@ -47,7 +46,7 @@
   }
 
   &__indicator {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     color: var(--color-text-secondary);
     min-width: 48px;
     text-align: center;

@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .post-header {
   display: flex;
@@ -10,7 +9,7 @@
   &__comment {
     width: 100%;
     font-family: var(--font-accent-strong);
-    @include font-size-h2;
+    font-size: var(--font-size-h2);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     letter-spacing: 0.03em;
@@ -21,7 +20,7 @@
   // title: 全幅
   &__title-main {
     width: 100%;
-    @include font-size-title;
+    font-size: var(--font-size-title);
     font-family: var(--font-ja-heading);
     color: var(--color-text-primary);
     line-height: 1.2;
@@ -60,7 +59,7 @@
 
   &__title-sub {
     font-family: var(--font-en-heading);
-    @include font-size-body;
+    font-size: var(--font-size-body);
     color: var(--color-text-secondary);
     letter-spacing: 0.04em;
     margin: var(--space-0);
@@ -68,7 +67,7 @@
 
   &__meta {
     font-family: var(--font-ja-body);
-    @include font-size-body;
+    font-size: var(--font-size-body);
     color: var(--color-text-muted);
     letter-spacing: 0.04em;
     margin: var(--space-0);
@@ -80,7 +79,7 @@
 
   &__copyright {
     font-family: var(--font-ja-body);
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     color: var(--color-text-muted);
     letter-spacing: 0.03em;
     margin: var(--space-0);

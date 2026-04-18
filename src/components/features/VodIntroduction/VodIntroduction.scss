@@ -1,9 +1,8 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .p-vod-intro {
   &__heading {
     font-family: var(--font-heading);
-    @include font-size-h3;
+    font-size: var(--font-size-h3);
     font-weight: var(--font-weight-bold);
     line-height: 1.5;
     color: var(--color-text-primary);
@@ -11,7 +10,7 @@
   }
 
   &__body {
-    @include font-size-body;
+    font-size: var(--font-size-body);
     line-height: 1.7;
     color: var(--color-text-primary);
     margin-bottom: var(--space-16);
@@ -45,7 +44,7 @@
   }
 
   &__vod-name {
-    @include font-size-body;
+    font-size: var(--font-size-body);
     font-weight: var(--font-weight-medium);
   }
 
@@ -55,7 +54,7 @@
 
   &__related-heading {
     font-family: var(--font-heading);
-    @include font-size-body;
+    font-size: var(--font-size-body);
     font-weight: var(--font-weight-bold);
     color: var(--color-text-primary);
     margin-bottom: var(--space-12);
@@ -94,12 +93,12 @@
   }
 
   &__related-title {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     line-height: 1.5;
   }
 
   &__note {
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     color: var(--color-text-secondary);
     margin-top: var(--space-16);
     font-weight: var(--font-weight-bold);

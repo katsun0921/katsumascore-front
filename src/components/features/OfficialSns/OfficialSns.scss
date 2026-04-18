@@ -1,4 +1,3 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .official-sns {
   // ── タブリスト ──
@@ -11,7 +10,7 @@
   &__tab {
     flex: 1;
     padding: var(--space-8) var(--space-8);
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     color: var(--color-text-secondary);
     background: var(--color-surface-muted);
     border: 1px solid transparent;
@@ -60,7 +59,7 @@
   }
 
   &__placeholder-text {
-    @include font-size-caption;
+    font-size: var(--font-size-caption);
     color: var(--color-text-secondary);
   }
 

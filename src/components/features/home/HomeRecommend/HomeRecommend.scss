@@ -1,10 +1,9 @@
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .homeRecommend {
   &__title {
     color: var(--color-text-inverse);
     font-family: var(--font-heading);
-    @include font-size-h3;
+    font-size: var(--font-size-h3);
     font-weight: 700;
     margin-bottom: 16px;
   }

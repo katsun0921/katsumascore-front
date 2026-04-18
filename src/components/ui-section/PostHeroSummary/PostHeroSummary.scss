@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .post-hero-summary {
   display: flex;
@@ -17,7 +16,7 @@
   }
 
   &__heading {
-    @include font-size-h2;
+    font-size: var(--font-size-h2);
     font-weight: var(--font-weight-bold);
     color: var(--color-secondary);
     padding-bottom: var(--space-12);
@@ -47,12 +46,12 @@
     margin: var(--space-0) var(--space-0) var(--space-12);
     line-height: 1.8;
     color: var(--color-text-primary);
-    @include font-size-body;
+    font-size: var(--font-size-body);
   }
 
   &__cite {
     display: block;
-    @include font-size-ui;
+    font-size: var(--font-size-ui);
     color: var(--color-text-secondary);
     font-style: normal;
 

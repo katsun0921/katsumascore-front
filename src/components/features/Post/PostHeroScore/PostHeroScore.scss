@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .post-hero-score {
   display: flex;
@@ -12,7 +11,7 @@
 }
 
 .post-hero-score__comment {
-  @include font-size-h2;
+  font-size: var(--font-size-h2);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   letter-spacing: 0.03em;

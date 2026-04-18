@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .postSection {
   padding: var(--space-32) 0;
@@ -11,7 +10,7 @@
   &__title {
     margin-bottom: var(--space-24);
     color: var(--color-text-primary);
-    @include font-size-h2;
+    font-size: var(--font-size-h2);
     font-weight: var(--font-weight-bold);
     line-height: 1.3;
   }

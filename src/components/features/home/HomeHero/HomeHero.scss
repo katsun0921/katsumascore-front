@@ -1,5 +1,4 @@
 @use "@/styles/scss/global/mixin/layout.scss" as *;
-@use "@/styles/scss/global/mixin/fontSize.scss" as *;
 
 .homeHero {
   position: relative;
@@ -89,7 +88,7 @@
   &__title {
     color: var(--color-text-inverse);
     font-family: var(--font-heading);
-    @include font-size-h2;
+    font-size: var(--font-size-h2);
     font-weight: 700;
     line-height: 1.5;
 
@@ -100,7 +99,7 @@
 
   &__subtitle {
     color: var(--color-text-secondary);
-    @include font-size-body;
+    font-size: var(--font-size-body);
     line-height: 1.7;
   }
 
