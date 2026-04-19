@@ -1,5 +1,15 @@
-.p-postCardTop {
-  position: relative;
+.postCardTop {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 var(--space-16) var(--space-32) var(--color-border-soft);
+
+  &__link {
+    display: grid;
+    color: inherit;
+  }
 
   .postCard__body {
     padding: var(--space-24);

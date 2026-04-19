@@ -1,16 +1,19 @@
-.p-postCardOverlay {
-  position: relative;
+.postCardOverlay {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 var(--space-16) var(--space-32) var(--color-border-soft);
 
-  .postCard {
-    overflow: hidden;
+  &__link {
+    position: relative;
+    display: grid;
+    color: inherit;
   }
 
   .postCard__media {
     min-height: 360px;
-  }
-
-  .postCard__link {
-    position: relative;
   }
 
   .postCard__body {

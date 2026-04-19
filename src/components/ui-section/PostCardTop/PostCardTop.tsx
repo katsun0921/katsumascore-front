@@ -1,12 +1,26 @@
-import { PostCard } from '@/components/ui-parts/PostCard';
-import type { PostCardProps } from '@/components/ui-parts/PostCard';
+import Link from 'next/link';
+import { PostCardMedia } from '@/components/ui-parts/PostCardMedia';
+import { PostCardBody } from '@/components/ui-parts/PostCardBody';
+import type { Post } from '@/types/post';
 import './PostCardTop.scss';
 
-export const PostCardTop = ({ post, isLoading, className }: PostCardProps) => {
-  const classes = ['p-postCardTop', className].filter(Boolean).join(' ');
+type Props = {
+  post: Post;
+  className?: string;
+};
+
+export const PostCardTop = ({ post, className }: Props) => {
+  const classes = ['postCardTop', className].filter(Boolean).join(' ');
   return (
-    <div className={classes}>
-      <PostCard post={post} isLoading={isLoading} />
-    </div>
+    <article className={classes}>
+      <Link href={post.slug} className='postCardTop__link'>
+        <PostCardMedia image={post.image} title={post.title} />
+        <PostCardBody
+          publishedAt={post.publishedAt}
+          title={post.title}
+          excerpt={post.excerpt}
+        />
+      </Link>
+    </article>
   );
 };

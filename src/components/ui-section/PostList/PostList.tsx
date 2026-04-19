@@ -1,11 +1,15 @@
-import { PostCard } from '@/components/ui-parts/PostCard';
+import { PostCardTop } from '@/components/ui-section/PostCardTop';
+import { PostCardLeft } from '@/components/ui-section/PostCardLeft';
+import { PostCardSkeleton } from '@/components/ui-parts/PostCardSkeleton';
 import type { PostListProps } from './PostList.types';
 import styles from './PostList.module.scss';
 
 const SKELETON_COUNT = 4;
 
-export const PostList = ({ posts, isLoading = false }: PostListProps) => {
-  const items = isLoading ? Array.from({ length: SKELETON_COUNT }, (_, index) => `loading-${index}`) : posts;
+export const PostList = ({ posts, isLoading = false, variant = 'grid' }: PostListProps) => {
+  const items = isLoading
+    ? Array.from({ length: SKELETON_COUNT }, (_, index) => `loading-${index}`)
+    : posts;
 
   if (!isLoading && posts.length === 0) {
     return (
@@ -18,15 +22,19 @@ export const PostList = ({ posts, isLoading = false }: PostListProps) => {
     );
   }
 
+  const listClass = [styles.list, variant === 'grid' ? styles.gridVariant : styles.rowVariant].join(' ');
+
   return (
     <section aria-busy={isLoading} aria-live='polite'>
-      <ul className={[styles.list, styles.gridVariant].join(' ')}>
+      <ul className={listClass}>
         {items.map((item) => (
           <li className={styles.item} key={typeof item === 'string' ? item : item.id}>
             {typeof item === 'string' ? (
-              <PostCard isLoading />
+              <PostCardSkeleton />
+            ) : variant === 'row' ? (
+              <PostCardLeft post={item} />
             ) : (
-              <PostCard post={item} />
+              <PostCardTop post={item} />
             )}
           </li>
         ))}

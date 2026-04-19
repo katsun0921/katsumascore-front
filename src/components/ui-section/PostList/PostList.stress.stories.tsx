@@ -107,7 +107,7 @@ export const Dense20List: Story = {
   name: '[Stress] Dense20 — list variant',
   args: {
     posts: generatePosts(20),
-    variant: 'list',
+    variant: 'row',
   },
 };
 

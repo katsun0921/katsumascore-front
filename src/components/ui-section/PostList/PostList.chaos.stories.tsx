@@ -74,7 +74,7 @@ export const ChaosDense: Story = {
   name: '[Chaos] ChaosDense (22 posts, list variant)',
   args: {
     posts: chaosPosts,
-    variant: 'list',
+    variant: 'row',
   },
 };
 

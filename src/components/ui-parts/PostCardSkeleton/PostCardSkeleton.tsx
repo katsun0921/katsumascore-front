@@ -1,24 +1,21 @@
-import '@/components/ui-parts/PostCard/PostCard.scss';
 import './PostCardSkeleton.scss';
-
-const cx = (...classNames: Array<string | undefined | false>) =>
-  classNames.filter(Boolean).join(' ');
 
 export type PostCardSkeletonProps = {
   className?: string;
 };
 
 export const PostCardSkeleton = ({ className }: PostCardSkeletonProps) => {
+  const classes = ['postCardSkeleton', className].filter(Boolean).join(' ');
   return (
-    <article className={cx('postCard', 'is-loading', className)} aria-busy='true'>
-      <div className='postCard__link'>
-        <div className='postCard__media postCard__skeleton' />
-        <div className='postCard__body'>
-          <span className='postCard__date postCard__skeleton postCard__skeletonDate' />
-          <span className='postCard__title postCard__skeleton postCard__skeletonTitle' />
-          <span className='postCard__title postCard__skeleton postCard__skeletonTitleShort' />
-          <span className='postCard__excerpt postCard__skeleton postCard__skeletonExcerpt' />
-          <span className='postCard__excerpt postCard__skeleton postCard__skeletonExcerptShort' />
+    <article className={classes} aria-busy='true'>
+      <div className='postCardSkeleton__link'>
+        <div className='postCardSkeleton__media postCardSkeleton__skeleton' />
+        <div className='postCardSkeleton__body'>
+          <span className='postCardSkeleton__skeleton postCardSkeleton__skeletonDate' />
+          <span className='postCardSkeleton__skeleton postCardSkeleton__skeletonTitle' />
+          <span className='postCardSkeleton__skeleton postCardSkeleton__skeletonTitleShort' />
+          <span className='postCardSkeleton__skeleton postCardSkeleton__skeletonExcerpt' />
+          <span className='postCardSkeleton__skeleton postCardSkeleton__skeletonExcerptShort' />
         </div>
       </div>
     </article>
