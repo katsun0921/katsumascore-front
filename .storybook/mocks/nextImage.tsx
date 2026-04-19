@@ -1,4 +1,5 @@
-const publicAssetUrl = (src: string): string => src;
+const BASE_PATH = (import.meta.env?.STORYBOOK_BASE_PATH ?? '/').replace(/\/$/, '')
+const publicAssetUrl = (src: string): string => `${BASE_PATH}${src}`
 
 type Props = {
   src: string;

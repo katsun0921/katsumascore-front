@@ -16,6 +16,40 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const [activeId, setActiveId] = useState<string>('')
   const [isContentEnded, setIsContentEnded] = useState(false)
   const tocRef = useRef<HTMLElement>(null)
+  const tocOffsetRef = useRef<number | null>(null)
+  const [isTocAtTop, setIsTocAtTop] = useState(false)
+
+  useEffect(() => {
+    const toc = tocRef.current
+    if (!toc) return
+    const win = toc.ownerDocument.defaultView
+    if (!win) return
+
+    tocOffsetRef.current = toc.getBoundingClientRect().top + win.scrollY
+
+    const onScroll = () => {
+      if (tocOffsetRef.current === null) return
+      setIsTocAtTop(win.scrollY >= tocOffsetRef.current)
+    }
+
+    const onResize = () => {
+      // stickyを外さずに元のDOM位置を再計算する
+      // tocがstickyの場合 getBoundingClientRect().top は 0 になるため
+      // 親要素の位置から算出する
+      const parent = toc.parentElement
+      if (!parent) return
+      const parentRect = parent.getBoundingClientRect()
+      tocOffsetRef.current = parentRect.top + win.scrollY
+      setIsTocAtTop(win.scrollY >= tocOffsetRef.current)
+    }
+
+    win.addEventListener('scroll', onScroll, { passive: true })
+    win.addEventListener('resize', onResize, { passive: true })
+    return () => {
+      win.removeEventListener('scroll', onScroll)
+      win.removeEventListener('resize', onResize)
+    }
+  }, [])
 
   // .p-content の bottom が viewport 上端を抜けたら sticky を解除する
   useEffect(() => {
@@ -51,7 +85,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
         }
       },
       {
-        rootMargin: '-40% 0px -55% 0px',
+        rootMargin: '-30% 0px -55% 0px',
         threshold: [0, 0.25, 0.5, 1],
       }
     )
@@ -61,46 +95,38 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     return () => observer.disconnect()
   }, [items])
 
-  // アクティブ項目を常に目次の top: 0 にスクロール
-  useEffect(() => {
-    if (!activeId) return
-
-    const activeItem = tocRef.current?.querySelector(`a[href="#${activeId}"]`)?.closest('li')
-    if (activeItem) {
-      activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' })
-    }
-  }, [activeId])
-
   if (items.length === 0) return null
 
   return (
-    <nav
-      ref={tocRef}
-      className={['toc', !isContentEnded ? 'toc--sticky' : ''].filter(Boolean).join(' ')}
-      aria-label={t(messages, ['heading', 'label'], locale)}
-    >
-      <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
-      <ol className='toc__list'>
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className={[
-              'toc__item',
-              `toc__item--level-${item.level}`,
-              activeId === item.id ? 'toc__item--active' : '',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <a
-              href={`#${item.id}`}
-              aria-current={activeId === item.id ? 'true' : undefined}
+    <>
+      <nav
+        ref={tocRef}
+        className={['toc', isTocAtTop && !isContentEnded ? 'toc--sticky' : ''].join(' ')}
+        aria-label={t(messages, ['heading', 'label'], locale)}
+      >
+        <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
+        <ol className='toc__list'>
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className={[
+                'toc__item',
+                `toc__item--level-${item.level}`,
+                activeId === item.id ? 'toc__item--active' : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
             >
-              {item.text}
-            </a>
-          </li>
-        ))}
-      </ol>
-    </nav>
+              <a
+                href={`#${item.id}`}
+                aria-current={activeId === item.id ? 'true' : undefined}
+              >
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </>
   )
 }

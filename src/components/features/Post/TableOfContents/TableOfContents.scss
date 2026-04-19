@@ -5,14 +5,21 @@
   z-index: 10;
   scroll-behavior: smooth;
 
-  &--sticky {
-    position: sticky;
-    top: 0;
-  }
   padding: 12px 16px;
   background: var(--color-bg);
   border-bottom: 1px solid var(--color-border-subtle);
 
+  &--sticky {
+    position: sticky;
+    top: 0;
+    transition: all 0.3s ease;
+    padding-left: 0;
+    .toc__list {
+      max-height: calc(1em + (var(--space-8) * 2));
+      flex-flow: row nowrap;
+      overflow-x: scroll;
+    }
+  }
   &__heading {
     margin-bottom: 8px;
     font-weight: 600;
