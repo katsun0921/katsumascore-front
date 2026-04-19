@@ -84,7 +84,10 @@ export const TitleMeta = ({
             {hasActors && actors.map((actor, i) => (
               <div key={`actor-${i}`} className='p-title-meta__credit-box'>
                 {actor.character && (
-                  <span className='p-title-meta__credit-role'>{actor.character}</span>
+                  <div className='p-title-meta__credit-role'>
+                    <span>{actor.character}</span>
+                    <span>{t(messages, ['actor', 'labelRole'], locale)}</span>
+                  </div>
                 )}
                 <div className='p-title-meta__credit-name'>
                   {actor.actorUrl ? (

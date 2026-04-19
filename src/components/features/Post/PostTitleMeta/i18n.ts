@@ -12,6 +12,7 @@ export const messages = {
   actor: {
     labelPrefix: { ja: '俳優: ', en: 'Actor: ' },
     otherWorks: { ja: '他の作品:', en: 'Other Works:' },
+    labelRole: { ja: '役', en: 'Role' },
   },
   date: {
     yearSuffix: { ja: '年', en: '' },
