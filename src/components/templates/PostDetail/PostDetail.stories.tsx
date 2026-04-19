@@ -155,12 +155,12 @@ const basePost: PostDetailData = {
 }
 
 const meta = {
-  title: 'Features/Post/PostDetail',
+  title: 'Templates/PostDetail',
   component: PostDetail,
   parameters: { layout: 'fullscreen' },
   decorators: [
     (Story: React.ComponentType) => (
-      <div className='mx-auto w-full px-6'>
+      <div className='mx-auto w-full'>
         <Story />
       </div>
     ),

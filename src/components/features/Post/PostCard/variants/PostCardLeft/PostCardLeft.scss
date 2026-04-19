@@ -1,31 +1,30 @@
-@use "@/styles/scss/global/mixin/layout.scss" as *;
-
 .p-postCardLeft {
+
   position: relative;
 
   .postCard__link {
-    display: grid;
-    grid-template-columns: 1fr;
-    align-items: stretch;
-  }
 
-  .postCard__media {
-    aspect-ratio: 16 / 10;
+    display: grid;
+
+    grid-template-columns: minmax(120px, 30%) minmax(0, 1fr);
+
+    align-items: stretch;
+
   }
 
   .postCard__body {
-    align-content: center;
-    min-height: 100%;
-    padding: var(--space-24);
-  }
-  @include layout-lg {
-    .postCard__link {
-      grid-template-columns: minmax(220px, 36%) minmax(0, 1fr);
-    }
 
-    .postCard__media {
-      aspect-ratio: auto;
-      min-height: 100%;
-    }
+    align-content: center;
+
+    min-height: 100%;
+
+    padding: var(--space-24);
+
+  }
+
+  .postCard__media {
+
+    min-height: 100%;
+
   }
 }

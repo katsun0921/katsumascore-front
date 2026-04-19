@@ -147,10 +147,6 @@ export const ChaosSliceMiddle: Story = {
 //   Card 5 — 3–5 line title + long excerpt + image  → maximum combined height
 //             (square 1:1 image source)
 //
-// Note: PostCard constrains all images to aspect-ratio 27/20 via CSS, so the
-//   native image ratio does not affect card height. The risk here is the text
-//   content area — rows with mixed text density will produce extreme height spreads.
-//
 // Layout risks:
 //   - Row containing Card 1 (min-height) and Card 2 (tall title) in the same row
 //   - Card 4 (no image) next to Card 3 (long excerpt) — fallback vs. text-heavy
