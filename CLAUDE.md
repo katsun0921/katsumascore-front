@@ -215,7 +215,8 @@ src/
 │   ├── ui-section/            ← 意味を持つUIまとまり
 │   │   ├── PostList/
 │   │   ├── PostListRow/
-│   │   └── PostSection/
+│   │   ├── PostSection/
+│   │   └── ProductBlock/      ← WordPress ACF ブロック（Gutenberg挿入用）表示確認専用TSX
 │   │
 │   ├── templates/
 │   │   ├── HomeTemplate/

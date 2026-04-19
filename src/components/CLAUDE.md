@@ -78,6 +78,11 @@ UIの配置・レイアウトを定義する
 - データはpropsで受け取る
 - hooks禁止
 
+### ■ 例外：WordPress ACF ブロック
+`ProductBlock` はWordPress ACF + Gutenbergブロックとして挿入されるコンポーネント。  
+実装本体はPHPだが、表示確認のためTSXで実装している。  
+Next.jsアプリからはimportされないが、削除禁止。
+
 ---
 
 ## ■ features（ロジック）

@@ -55,7 +55,7 @@ export const ProductBlock = ({
     <div
       className={`my-10 border border-[var(--color-border-muted)] border-l-4 ${borderColor[type]} bg-[var(--color-bg)] rounded-md`}
     >
-      <div className='flex flex-col gap-4 p-4 lg:flex-row'>
+      <div className='flex flex-col gap-4 p-4 md:flex-row'>
         {imageUrl && (
           <div className='flex-shrink-0'>
             <Image

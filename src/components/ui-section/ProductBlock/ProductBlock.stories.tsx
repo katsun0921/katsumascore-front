@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ProductBlock } from './ProductBlock'
 
+/**
+ * WordPress ACF + Gutenbergブロックとして記事内に挿入されるコンポーネント。
+ * 実装本体はPHPだが、表示確認のためTSXで実装している。
+ * Next.jsアプリからはimportされない。削除禁止。
+ */
 const meta: Meta<typeof ProductBlock> = {
   title: 'ui-section/ProductBlock',
   component: ProductBlock,
