@@ -1,15 +1,7 @@
 import type { Post } from '@/types/post';
 
-type LoadedPostCardProps = {
-  post: Post;
+export type PostCardProps = {
+  post?: Post;
   className?: string;
-  isLoading?: false;
+  isLoading?: boolean;
 };
-
-type LoadingPostCardProps = {
-  post?: never;
-  className?: string;
-  isLoading: true;
-};
-
-export type PostCardProps = LoadedPostCardProps | LoadingPostCardProps;

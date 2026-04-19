@@ -18,9 +18,3 @@ export type Post = {
 export type PostContentData = {
   content: string;
 };
-
-export type PostVariantProps = {
-  post: Post;
-  isLoading?: boolean;
-  className?: string;
-};

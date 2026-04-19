@@ -23,12 +23,11 @@ const PostCardSkeleton = ({ className }: Pick<PostCardProps, 'className'>) => {
   );
 };
 
-export const PostCard = (props: PostCardProps) => {
-  if (props.isLoading) {
-    return <PostCardSkeleton className={props.className} />;
+export const PostCard = ({ post, isLoading, className }: PostCardProps) => {
+  if (isLoading || !post) {
+    return <PostCardSkeleton className={className} />;
   }
 
-  const { post, className } = props;
   const imageAlt = `${post.title}のサムネイル画像`;
 
   return (

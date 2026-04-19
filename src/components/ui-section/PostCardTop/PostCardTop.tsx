@@ -1,12 +1,12 @@
 import { PostCard } from '@/components/features/Post/PostCard';
-import type { PostVariantProps } from '@/types/post';
+import type { PostCardProps } from '@/components/features/Post/PostCard/PostCard.types';
 import './PostCardTop.scss';
 
-export const PostCardTop = ({ post, isLoading = false, className }: PostVariantProps) => {
+export const PostCardTop = ({ post, isLoading, className }: PostCardProps) => {
   const classes = ['p-postCardTop', className].filter(Boolean).join(' ');
   return (
     <div className={classes}>
-      {isLoading ? <PostCard isLoading /> : <PostCard post={post} />}
+      <PostCard post={post} isLoading={isLoading} />
     </div>
   );
 };
