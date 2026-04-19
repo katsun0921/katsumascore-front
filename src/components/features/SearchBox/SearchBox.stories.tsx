@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SearchBox } from './SearchBox'
 
 const meta: Meta<typeof SearchBox> = {
-  title: 'Features/SearchBox',
+  title: 'Layout/Sidebar/SearchBox',
   component: SearchBox,
   parameters: { layout: 'padded' },
 }

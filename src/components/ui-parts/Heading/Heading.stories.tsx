@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Heading } from './Heading';
 
 export default {
-  title: 'ui-parts/Heading',
+  title: 'ui/Heading',
   component: Heading,
   parameters: {
     layout: 'fullscreen',

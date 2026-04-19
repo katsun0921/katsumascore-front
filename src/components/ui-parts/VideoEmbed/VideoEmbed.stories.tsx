@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { VideoEmbed } from './VideoEmbed'
 
 const meta = {
-  title: 'ui-parts/VideoEmbed',
+  title: 'UI/VideoEmbed',
   component: VideoEmbed,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof VideoEmbed>

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ShareButtons } from './ShareButtons'
 
 const meta: Meta<typeof ShareButtons> = {
-  title: 'ui-parts/ShareButtons',
+  title: 'ui/ShareButtons',
   component: ShareButtons,
   tags: ['autodocs'],
   args: {

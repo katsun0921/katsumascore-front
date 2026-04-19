@@ -3,7 +3,7 @@ import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { ScoreWithRank } from './ScoreWithRank'
 
 const meta: Meta<typeof ScoreWithRank> = {
-  title: 'features/ScoreWithRank',
+  title: 'features/Score/ScoreWithRank',
   component: ScoreWithRank,
   args: {
     max: SCORE_DISPLAY_MAX,

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { VodLink } from './VodLink';
 
 const meta: Meta<typeof VodLink> = {
-  title: 'ui-parts/VodLink',
+  title: 'UI/VodLink',
   component: VodLink,
   parameters: {
     layout: 'centered',

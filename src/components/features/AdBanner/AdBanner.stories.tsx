@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { AdBanner } from './AdBanner'
 
 const meta: Meta<typeof AdBanner> = {
-  title: 'Features/AdBanner',
+  title: 'Layout/Sidebar/AdBanner',
   component: AdBanner,
   parameters: {
     layout: 'padded',

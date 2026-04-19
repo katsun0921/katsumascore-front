@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostCardBody } from './PostCardBody';
 
 const meta = {
-  title: 'ui-parts/PostCardBody',
+  title: 'Ui/PostCardBody',
   component: PostCardBody,
   parameters: {
     layout: 'centered',

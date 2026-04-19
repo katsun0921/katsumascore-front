@@ -3,7 +3,7 @@ import { PickUpAndScore } from './PickUpAndScore'
 import type { PickUpPost } from './PickUpAndScore'
 
 const meta: Meta<typeof PickUpAndScore> = {
-  title: 'Features/PickUpAndScore',
+  title: 'Layout/Sidebar/PickUpAndScore',
   component: PickUpAndScore,
   parameters: {
     layout: 'padded',
