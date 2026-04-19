@@ -1,4 +1,4 @@
-import '@/components/ui/PostCard/PostCard.scss';
+import '@/components/ui-parts/PostCard/PostCard.scss';
 import './PostCardSkeleton.scss';
 
 const cx = (...classNames: Array<string | undefined | false>) =>
