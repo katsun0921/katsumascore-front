@@ -1,4 +1,4 @@
-import { ScoreWithRank } from '@/components/features/ScoreWithRank/ScoreWithRank'
+import { ScoreWithRank } from '@/components/features/ScoreWithRank'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import './PostHeroScore.scss'
 

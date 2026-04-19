@@ -1,0 +1,1 @@
+export { VodPanel } from './VodPanel';

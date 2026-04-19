@@ -1,4 +1,4 @@
-import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost/RelationPost'
+import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost'
 import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config'
 
 export type TRelationPostItem = {

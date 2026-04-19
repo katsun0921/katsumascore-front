@@ -1,0 +1,1 @@
+export { PostHeroScore } from './PostHeroScore';

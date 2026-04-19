@@ -1,6 +1,6 @@
-import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod/StreamingVod'
+import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod'
 import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config'
-import { VodItem } from '@/components/ui-section/VodItem/VodItem'
+import { VodItem } from '@/components/ui-section/VodItem'
 import type { VodService as TVodService } from '@/lib/vod'
 
 export type TStreamingVodEntry = {

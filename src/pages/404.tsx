@@ -1,7 +1,7 @@
 import Head from 'next/head';
-import { NotFoundTemplate } from '@/components/templates/NotFoundTemplate/NotFoundTemplate';
+import { NotFoundTemplate } from '@/components/templates/NotFoundTemplate';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
     <>
       <Head>
@@ -11,3 +11,5 @@ export default function NotFound() {
     </>
   );
 }
+
+export default NotFound;

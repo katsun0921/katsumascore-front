@@ -34,21 +34,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     return () => observer.disconnect()
   }, [])
 
-  // スクロール進捗を --toc-progress に反映
-  useEffect(() => {
-    const updateProgress = () => {
-      const scrollTop = window.scrollY
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight
-      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0
-      tocRef.current?.style.setProperty('--toc-progress', `${progress}%`)
-    }
-
-    window.addEventListener('scroll', updateProgress, { passive: true })
-    updateProgress()
-    return () => window.removeEventListener('scroll', updateProgress)
-  }, [])
-
-  // アクティブ制御（画面中央付近で判定・1つだけ）
+// アクティブ制御（画面中央付近で判定・1つだけ）
   useEffect(() => {
     if (items.length === 0) return
 
@@ -74,6 +60,16 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
     return () => observer.disconnect()
   }, [items])
+
+  // アクティブ項目を常に目次の top: 0 にスクロール
+  useEffect(() => {
+    if (!activeId) return
+
+    const activeItem = tocRef.current?.querySelector(`a[href="#${activeId}"]`)?.closest('li')
+    if (activeItem) {
+      activeItem.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    }
+  }, [activeId])
 
   if (items.length === 0) return null
 

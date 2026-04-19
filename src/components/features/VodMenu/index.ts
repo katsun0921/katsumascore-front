@@ -1,0 +1,1 @@
+export { VodMenu } from './VodMenu';

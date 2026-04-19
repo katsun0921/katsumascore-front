@@ -2,17 +2,17 @@ import type { GetServerSideProps } from 'next';
 import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wordpress';
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
-import { PostDetail } from '@/components/templates/PostDetail/PostDetail';
-import { PostSEO } from '@/components/features/Post/PostSEO/PostSEO';
+import { PostDetail } from '@/components/templates/PostDetail';
+import { PostSEO } from '@/components/features/Post/PostSEO';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 
 type Props = {
   post: PostDetailProps['post'];
   locale: string;
-  genres: import('@/components/features/Sidebar/GenreNav/GenreNav').GenreNavTag[];
+  genres: import('@/components/features/Sidebar/GenreNav').GenreNavTag[];
 };
 
-export default function PostPage({ post, locale, genres }: Props) {
+export const PostPage = ({ post, locale, genres }: Props) => {
   return (
     <>
       <PostSEO post={post} locale={locale} />

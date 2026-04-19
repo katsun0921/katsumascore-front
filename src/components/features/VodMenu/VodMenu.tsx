@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { VodMenuItem } from '@/components/ui/VodMenuItem/VodMenuItem';
+import { VodMenuItem } from '@/components/ui/VodMenuItem';
 import type { TVodMenuService } from './VodMenu.types';
 
 type TVodMenuProps = {

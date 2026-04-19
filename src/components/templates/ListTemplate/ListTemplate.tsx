@@ -1,9 +1,9 @@
-import { Breadcrumb } from '@/components/ui/Breadcrumb/Breadcrumb';
-import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
-import { PostFeatured } from '@/components/features/Post/PostFeatured/PostFeatured';
-import { PostRankingItem } from '@/components/features/Post/PostRankingItem/PostRankingItem';
-import { PostList } from '@/components/ui-section/PostList/PostList';
-import { ListFilterBar } from '@/components/features/Post/ListFilterBar/ListFilterBar';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { PageLayout } from '@/components/templates/PageLayout';
+import { PostFeatured } from '@/components/features/Post/PostFeatured';
+import { PostRankingItem } from '@/components/features/Post/PostRankingItem';
+import { PostList } from '@/components/ui-section/PostList';
+import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
 import type { ListTemplateProps } from './ListTemplate.types';
 
 const DEFAULT_FILTER_OPTIONS = [

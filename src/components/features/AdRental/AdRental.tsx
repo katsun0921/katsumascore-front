@@ -1,4 +1,4 @@
-import { AdRental as AdRentalSection } from '@/components/ui-section/AdRental/AdRental'
+import { AdRental as AdRentalSection } from '@/components/ui-section/AdRental'
 import { adRentalConfig } from './AdRental.config'
 
 export type TRentalService = {

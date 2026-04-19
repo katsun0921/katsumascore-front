@@ -1,7 +1,12 @@
 export const messages = {
+  section: {
+    creditsAndCast: { ja: 'スタッフ & キャスト', en: 'Director & Cast' },
+    officialInfo: { ja: '公式情報', en: 'Official Info' },
+  },
   terms: {
     officialSite: { ja: '公式サイト', en: 'Official Site' },
-    officialSns: { ja: '公式サイトSNS', en: 'Official SNS' },
+    visitSite: { ja: '公式サイトを見る', en: 'Visit Official Site' },
+    officialSns: { ja: 'SNS', en: 'SNS' },
     cast: { ja: '登場人物', en: 'Cast' },
   },
   actor: {

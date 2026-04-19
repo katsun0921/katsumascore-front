@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import { HomeTemplate } from '@/components/templates/HomeTemplate/HomeTemplate';
+import { HomeTemplate } from '@/components/templates/HomeTemplate';
 import {
   mockHeroData,
   mockRankingPosts,

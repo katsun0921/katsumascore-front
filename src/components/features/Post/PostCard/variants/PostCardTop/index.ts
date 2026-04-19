@@ -1,0 +1,1 @@
+export { PostCardTop } from './PostCardTop';

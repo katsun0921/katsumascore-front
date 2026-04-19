@@ -1,4 +1,4 @@
-import { CinemaCheck as CinemaCheckSection } from '@/components/ui-section/CinemaCheck/CinemaCheck'
+import { CinemaCheck as CinemaCheckSection } from '@/components/ui-section/CinemaCheck'
 import { cinemaCheckConfig } from '@/components/ui-section/CinemaCheck/CinemaCheck.config'
 
 export type TCinemaCheckProps = {

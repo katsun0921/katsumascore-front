@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { HomeCardScroll } from '@/components/features/home/HomeCardScroll/HomeCardScroll';
+import { HomeCardScroll } from '@/components/features/home/HomeCardScroll';
 import type { Post } from '@/types/post';
 import './HomeRecommend.scss';
 

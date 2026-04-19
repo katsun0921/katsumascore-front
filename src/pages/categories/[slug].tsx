@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { ListTemplate } from '@/components/templates/ListTemplate/ListTemplate';
+import { ListTemplate } from '@/components/templates/ListTemplate';
 import { normalizePosts } from '@/lib/utils/normalizePost';
 import { getCategories, getPostsByCategory } from '@/lib/api/wordpress';
 import type { Post } from '@/types/post';

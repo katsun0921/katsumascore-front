@@ -105,6 +105,43 @@ UIの配置・レイアウトを定義する
 
 ---
 
+# ■ index.ts ルール（厳守）
+
+## ■ 原則
+
+- **全てのコンポーネントディレクトリに `index.ts` を必ず作成する**
+- **コンポーネントのインポートは必ず `index.ts` 経由（ディレクトリ単位）で行う**
+
+## ■ index.ts の書き方
+
+```ts
+// ComponentName/index.ts
+export { ComponentName } from './ComponentName';
+```
+
+型・hooks・utilsをディレクトリ外から参照する場合も `index.ts` からエクスポートする：
+
+```ts
+// search/index.ts
+export { Search } from './Search';
+export { useSearch } from './useSearch';
+export type { SearchResult } from './types';
+```
+
+## ■ インポートの書き方
+
+```ts
+// ✅ 正しい — ディレクトリ単位
+import { Header } from '@/components/ui-layout/Header';
+import { PostCard } from '@/components/features/Post/PostCard';
+
+// ❌ 禁止 — ファイル直接参照
+import { Header } from '@/components/ui-layout/Header/Header';
+import { PostCard } from '@/components/features/Post/PostCard/PostCard';
+```
+
+---
+
 # ■ 判断基準（最重要）
 
 ## ■ Q1：ロジックを持つか？

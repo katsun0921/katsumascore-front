@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { PageLayout } from '@/components/templates/PageLayout/PageLayout';
+import { PageLayout } from '@/components/templates/PageLayout';
 
 export const NotFoundTemplate = () => {
   return (

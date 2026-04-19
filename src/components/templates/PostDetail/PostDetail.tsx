@@ -1,13 +1,13 @@
-import { PostHeader } from '@/components/features/Post/PostHeader/PostHeader'
-import { PostHero } from '@/components/ui-section/PostHero/PostHero'
-import { TitleMeta } from '@/components/features/Post/PostTitleMeta/PostTitleMeta'
-import { GoodPoint } from '@/components/features/Post/PostGoodPoint/PostGoodPoint'
-import { TableOfContents } from '@/components/features/Post/TableOfContents/TableOfContents'
-import { PostContent } from '@/components/features/Post/PostContent/PostContent'
-import { ReviewSiteScores } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
-import { VodIntroduction } from '@/components/features/VodIntroduction/VodIntroduction'
-import { ShareButtons } from '@/components/ui/ShareButtons/ShareButtons'
-import { Sidebar } from '@/components/ui-layout/Sidebar/Sidebar'
+import { PostHeader } from '@/components/features/Post/PostHeader'
+import { PostHero } from '@/components/ui-section/PostHero'
+import { TitleMeta } from '@/components/features/Post/PostTitleMeta'
+import { GoodPoint } from '@/components/features/Post/PostGoodPoint'
+import { TableOfContents } from '@/components/features/Post/TableOfContents'
+import { PostContent } from '@/components/features/Post/PostContent'
+import { ReviewSiteScores } from '@/components/features/ReviewSiteScores'
+import { VodIntroduction } from '@/components/features/VodIntroduction'
+import { ShareButtons } from '@/components/ui/ShareButtons'
+import { Sidebar } from '@/components/ui-layout/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 
 export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
@@ -45,7 +45,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section
-            className='relative mb-8 border-2 border-b-[14px] border-black/10 p-4'
+            className='relative mb-8'
           >
 
             {/* 基本情報・キャスト情報 */}

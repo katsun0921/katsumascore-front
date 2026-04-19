@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { VideoEmbed } from '@/components/ui/VideoEmbed/VideoEmbed'
+import { VideoEmbed } from '@/components/ui/VideoEmbed'
 import { t } from '@/i18n/t'
 import { useLocale } from '@/i18n/provider'
 import { messages } from './i18n'

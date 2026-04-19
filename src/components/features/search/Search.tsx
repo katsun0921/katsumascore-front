@@ -1,7 +1,7 @@
 import { useRef, useEffect, useId } from 'react';
 import './Search.scss';
 import { useSearch } from './useSearch';
-import { SearchResultItem } from '@/components/ui/SearchResultItem/SearchResultItem';
+import { SearchResultItem } from '@/components/ui/SearchResultItem';
 
 type Props = {
   onNavigate?: (href: string) => void;
