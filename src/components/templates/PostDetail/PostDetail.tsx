@@ -45,7 +45,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section
-            className='relative mt-6 mb-8 border-3 border-b-[14px] border-black/10 p-4'
+            className='relative mb-8 border-2 border-b-[14px] border-black/10 p-4'
           >
 
             {/* 基本情報・キャスト情報 */}

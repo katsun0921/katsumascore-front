@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Search } from '@/components/features/Search/Search';
-import { CTAButton } from '@/components/ui/CTAButton/CTAButton';
-import { HeaderNav } from '@/components/features/Navigation/HeaderNav/HeaderNav';
+import { Search } from '@/components/features/search';
+import { CTAButton } from '@/components/ui/CTAButton';
+import { HeaderNav } from '@/components/features/navigation/HeaderNav';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
