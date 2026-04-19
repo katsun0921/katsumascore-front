@@ -7,7 +7,7 @@ import type { TRentalService } from '@/components/features/AdRental'
 import type { TRelationPostItem } from '@/components/features/RelationPost'
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup'
 import type { TVodIntroductionProps } from '@/components/features/VodIntroduction'
-import type { ProfileProps } from '@/components/features/Sidebar/Profile'
+import type { ProfileProps } from '@/components/ui-section/Profile'
 
 export type PostDetailData = Post & {
   // コンテンツ
@@ -52,8 +52,8 @@ export type PostDetailData = Post & {
   // サイドバー用
   profile?: ProfileProps
   toc?: TocItem[]
-  pickupPosts?: import('@/components/features/Sidebar/PickUpAndScore').PickUpPost[]
-  highScorePosts?: import('@/components/features/Sidebar/PickUpAndScore').PickUpPost[]
+  pickupPosts?: import('@/components/features/PickUpAndScore').PickUpPost[]
+  highScorePosts?: import('@/components/features/PickUpAndScore').PickUpPost[]
 
   // aside ブロック群
   isCinemaShowing?: boolean
@@ -74,5 +74,5 @@ export type PostDetailData = Post & {
 export type PostDetailProps = {
   post: PostDetailData
   locale?: 'ja' | 'en'
-  genres?: import('@/components/features/Sidebar/GenreNav').GenreNavTag[]
+  genres?: import('@/components/features/GenreNav').GenreNavTag[]
 }

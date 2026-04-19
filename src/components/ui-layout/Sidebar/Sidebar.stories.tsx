@@ -47,9 +47,9 @@ const mockProfile = {
   comment: '最近はSF映画にハマってます！インターステラーは何度見ても泣けます。',
   avatarUrl: '/images/mock-avatar.webp',
   aboutUrl: '/about',
+  locale: 'ja' as const,
   social: {
     x: 'https://x.com/Katsun0921',
-    instagram: 'https://instagram.com/katsumascore',
   },
 }
 

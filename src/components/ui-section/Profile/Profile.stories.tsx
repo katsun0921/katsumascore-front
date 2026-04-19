@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Profile } from './Profile'
 
 const meta: Meta<typeof Profile> = {
-  title: 'Layout/Sidebar/Profile',
+  title: 'ui-section/Profile',
   component: Profile,
   parameters: {
     layout: 'padded',
@@ -27,41 +27,25 @@ const baseArgs = {
   aboutUrl: '/about',
   social: {
     x: 'https://x.com/Katsun0921',
-    instagram: 'https://instagram.com/katsumascore',
   },
 }
 
-// ── 全要素表示
 export const Default: Story = {
   args: baseArgs,
 }
 
-// ── コメントなし
 export const NoComment: Story = {
-  args: {
-    ...baseArgs,
-    comment: undefined,
-  },
+  args: { ...baseArgs, comment: undefined },
 }
 
-// ── SNSリンクなし
 export const NoSocial: Story = {
-  args: {
-    ...baseArgs,
-    social: undefined,
-  },
+  args: { ...baseArgs, social: undefined },
 }
 
-// ── コメント・SNSなし（最小構成）
 export const Minimal: Story = {
-  args: {
-    ...baseArgs,
-    comment: undefined,
-    social: undefined,
-  },
+  args: { ...baseArgs, comment: undefined, social: undefined },
 }
 
-// ── 説明文が長い（折り返し確認）
 export const LongDescription: Story = {
   args: {
     ...baseArgs,
@@ -70,7 +54,6 @@ export const LongDescription: Story = {
   },
 }
 
-// ── コメントが長い（吹き出し折り返し確認）
 export const LongComment: Story = {
   args: {
     ...baseArgs,
@@ -79,7 +62,6 @@ export const LongComment: Story = {
   },
 }
 
-// ── 英語ロケール
 export const English: Story = {
   args: baseArgs,
   globals: { locale: 'en' },

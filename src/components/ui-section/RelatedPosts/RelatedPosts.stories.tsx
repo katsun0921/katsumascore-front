@@ -3,7 +3,7 @@ import { RelatedPosts } from './RelatedPosts'
 import type { RelatedPostItem } from './RelatedPosts'
 
 const meta: Meta<typeof RelatedPosts> = {
-  title: 'Layout/Sidebar/RelatedPosts',
+  title: 'ui-section/RelatedPosts',
   component: RelatedPosts,
   parameters: {
     layout: 'padded',
@@ -28,12 +28,10 @@ const mockPosts: RelatedPostItem[] = [
   { slug: '/posts/memento',         title: 'メメント',                   thumbnailUrl: '/images/mock-image.webp', score: 3.5 },
 ]
 
-// ── 5件・スコア付き（基本）
 export const Default: Story = {
   args: { posts: mockPosts },
 }
 
-// ── スコアなし記事を含む
 export const WithoutScore: Story = {
   args: {
     posts: [
@@ -44,21 +42,18 @@ export const WithoutScore: Story = {
   },
 }
 
-// ── サムネイルなし（fallback 表示確認）
 export const NoImage: Story = {
   args: {
     posts: mockPosts.map((p) => ({ ...p, thumbnailUrl: undefined })),
   },
 }
 
-// ── 1件のみ
 export const SinglePost: Story = {
   args: {
     posts: [mockPosts[0]],
   },
 }
 
-// ── 5件超（6件渡しても5件にクランプされることを確認）
 export const OverLimit: Story = {
   args: {
     posts: [
@@ -68,7 +63,6 @@ export const OverLimit: Story = {
   },
 }
 
-// ── タイトルが長い（2行クランプ確認）
 export const LongTitle: Story = {
   args: {
     posts: [
@@ -83,12 +77,10 @@ export const LongTitle: Story = {
   },
 }
 
-// ── 空（null 確認）
 export const Empty: Story = {
   args: { posts: [] },
 }
 
-// ── 英語ロケール（見出し "Related Posts" に変化）
 export const English: Story = {
   args: { posts: mockPosts },
   globals: { locale: 'en' },

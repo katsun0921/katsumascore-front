@@ -9,7 +9,7 @@ import type { PostDetailProps } from '@/components/templates/PostDetail/PostDeta
 type Props = {
   post: PostDetailProps['post'];
   locale: string;
-  genres: import('@/components/features/Sidebar/GenreNav').GenreNavTag[];
+  genres: import('@/components/features/GenreNav').GenreNavTag[];
 };
 
 export const PostPage = ({ post, locale, genres }: Props) => {
@@ -62,9 +62,9 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, lo
     description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
     avatarUrl: '/images/mock-avatar.webp',
     aboutUrl: '/about',
+    locale: (locale ?? 'ja') as 'ja' | 'en',
     social: {
       x: 'https://x.com/Katsun0921',
-      instagram: 'https://instagram.com/katsumascore',
     },
   };
 

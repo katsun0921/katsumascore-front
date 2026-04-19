@@ -4,7 +4,6 @@ import { getRankingIcon } from '@/components/features/ScoreWithRank/getRankingIc
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './RelatedPosts.scss'
 
 export type RelatedPostItem = {
   slug: string
@@ -23,42 +22,47 @@ export const RelatedPosts = ({ posts }: RelatedPostsProps) => {
   if (posts.length === 0) return null
 
   return (
-    <div className='sidebar-related'>
-      <p className='sidebar-related__heading'>
+    <div className='p-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
+      <p className='text-[length:var(--font-size-ui)] font-bold tracking-[0.08em] text-[var(--color-text-primary)] mb-3'>
         {t(messages, ['heading', 'label'], locale)}
       </p>
-      <ul className='sidebar-related__list'>
+      <ul className='list-none p-0 m-0 flex flex-col'>
         {posts.slice(0, 5).map((post) => {
           const rank = post.score !== undefined ? getRankingIcon(post.score) : null
 
           return (
-            <li key={post.slug} className='sidebar-related__item'>
-              <Link href={post.slug} className='sidebar-related__link'>
+            <li key={post.slug} className='border-t border-[var(--color-border-muted)] first:border-t-0'>
+              <Link
+                href={post.slug}
+                className='flex items-center gap-3 py-3 no-underline text-inherit transition-opacity duration-200 ease hover:opacity-75'
+              >
                 {/* サムネイル */}
-                <div className='sidebar-related__thumb'>
+                <div className='flex-shrink-0 w-16 h-16 rounded overflow-hidden bg-[var(--color-surface-muted)]'>
                   {post.thumbnailUrl ? (
                     <Image
                       src={post.thumbnailUrl}
                       alt={t(messages, ['thumbnail', 'alt'], locale)}
                       width={64}
                       height={64}
-                      className='sidebar-related__thumb-img'
+                      className='w-full h-full object-cover block'
                     />
                   ) : (
-                    <div className='sidebar-related__thumb-fallback' aria-hidden='true' />
+                    <div className='w-full h-full bg-[var(--color-bg-muted)]' aria-hidden='true' />
                   )}
                 </div>
 
                 {/* テキスト */}
-                <div className='sidebar-related__body'>
-                  <span className='sidebar-related__title'>{post.title}</span>
+                <div className='flex-1 min-w-0 flex flex-col gap-1'>
+                  <span className='text-[length:var(--font-size-caption)] font-semibold leading-[1.5] text-[var(--color-text-primary)] line-clamp-2'>
+                    {post.title}
+                  </span>
                   {rank && (
-                    <img
+                    <Image
                       src={rank.src}
                       alt={`rank ${rank.label}`}
                       width={20}
                       height={20}
-                      className='sidebar-related__rank'
+                      className='flex-shrink-0 self-start'
                     />
                   )}
                 </div>
