@@ -1,10 +1,10 @@
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostHeader } from '@/components/features/Post/PostHeader'
-import { PostHero } from '@/components/ui-section/PostHero'
+import { PostHero } from '@/components/ui-section/PostPage/PostHero'
 import { TitleMeta } from '@/components/features/Post/PostTitleMeta'
-import { GoodPoint } from '@/components/ui-section/PostGoodPoint'
+import { GoodPoint } from '@/components/ui-section/PostPage/PostGoodPoint'
 import { TableOfContents } from '@/components/features/Post/TableOfContents'
-import { PostContent } from '@/components/ui-section/PostContent'
+import { PostContent } from '@/components/ui-section/PostPage/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction'
 import { ShareButtons } from '@/components/ui-parts/ShareButtons'

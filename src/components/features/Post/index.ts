@@ -10,7 +10,7 @@ export { PostCardOverlay } from '@/components/ui-section/PostCardOverlay';
 export { PostList } from '@/components/ui-section/PostList';
 export { PostListRow } from '@/components/ui-section/PostListRow';
 export type { PostListProps } from '@/components/ui-section/PostList/PostList.types';
-export { PostContent } from '@/components/ui-section/PostContent';
+export { PostContent } from '@/components/ui-section/PostPage/PostContent';
 export { PostSection } from '@/components/ui-section/PostSection';
 export { PostSEO } from '@/components/features/Post/PostSEO';
 export { PostFeatured } from '@/components/features/Post/PostFeatured';

@@ -19,7 +19,7 @@ KatsumaScore フロントエンドにおける
 ```
 src/components/
 
-ui/
+ui-parts/
 ui-layout/
 ui-section/
 features/
