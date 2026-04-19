@@ -1,0 +1,1 @@
+export { PostSEO } from './SeoHead';

@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { PostSEO } from './Meta';
+import { SeoHead } from './SeoHead';
 import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 
 /**
  * PostSEO renders into <head> — visible output is via Storybook's addon panel (Head tags).
  * Stories here document valid prop combinations for SEO coverage.
  */
-const meta: Meta<typeof PostSEO> = {
+const meta: Meta<typeof SeoHead> = {
   title: 'Features/Post/PostSEO',
-  component: PostSEO,
+  component: SeoHead,
   tags: ['autodocs'],
   parameters: {
     layout: 'centered',
@@ -16,7 +16,7 @@ const meta: Meta<typeof PostSEO> = {
 };
 export default meta;
 
-type Story = StoryObj<typeof PostSEO>;
+type Story = StoryObj<typeof SeoHead>;
 
 export const Default: Story = {
   args: { post: mockPost },
