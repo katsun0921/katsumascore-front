@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Search } from '@/components/features/search';
+import { Search } from '@/components/features/Search';
 import { CTAButton } from '@/components/ui-parts/CTAButton';
 import { HeaderNav } from '@/components/ui-section/HeaderNav';
 import { useLocale } from '@/i18n/provider';
@@ -42,7 +42,7 @@ export const Header = () => {
 
       {/* ─── SP レイアウト：md未満で表示 ──────────────────────────── */}
       <div className='md:hidden'>
-        <div className='flex h-14 items-center gap-3 px-4'>
+        <div className='flex h-14 items-center gap-4 px-4'>
           <Link href='/' className='block shrink-0 hover:opacity-80 transition-opacity duration-200'>
             <Image
               src='/images/logo.webp'

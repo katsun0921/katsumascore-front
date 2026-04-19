@@ -39,7 +39,7 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         />
       </div>
       {/* body: 最大幅・中央・flex（md以上） */}
-      <div className='relative mx-auto mt-8 pb-8'>
+      <div className='md:flex relative mx-auto mt-8 pb-8'>
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 px-4'>
@@ -91,20 +91,22 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
         </div>
 
         {/* ── サイドバー ── */}
-        <Sidebar
-          locale={locale}
-          profile={post.profile}
-          pickupPosts={post.pickupPosts}
-          highScorePosts={post.highScorePosts}
-          relationPosts={post.relationPosts}
-          isCinemaShowing={post.isCinemaShowing}
-          titleJp={post.title}
-          titleEn={post.titleEn}
-          streamingVods={post.streamingVods}
-          rentalServices={post.rentalServices}
-          postsGroups={post.postsGroups}
-          genres={genres}
-        />
+        <div className='md:w-[320px] shrink-0 px-4'>
+          <Sidebar
+            locale={locale}
+            profile={post.profile}
+            pickupPosts={post.pickupPosts}
+            highScorePosts={post.highScorePosts}
+            relationPosts={post.relationPosts}
+            isCinemaShowing={post.isCinemaShowing}
+            titleJp={post.title}
+            titleEn={post.titleEn}
+            streamingVods={post.streamingVods}
+            rentalServices={post.rentalServices}
+            postsGroups={post.postsGroups}
+            genres={genres}
+          />
+        </div>
       </div>
     </PageLayout>
   )

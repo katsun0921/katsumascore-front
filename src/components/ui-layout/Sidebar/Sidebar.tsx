@@ -28,7 +28,7 @@ export const Sidebar = ({
   postsGroups,
 }: SidebarProps) => {
   return (
-    <aside className='flex flex-col gap-8 w-full mt-8 px-4'>
+    <aside className='flex flex-col gap-8 w-full px-4'>
 
       {/* ❶ プロフィールカード */}
       {profile && <Profile {...profile} />}
