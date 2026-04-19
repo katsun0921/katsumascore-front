@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GenreNav } from './GenreNav'
 
 const meta: Meta<typeof GenreNav> = {
-  title: 'Layout/Sidebar/GenreNav',
+  title: 'Features/GenreNav',
   component: GenreNav,
   parameters: { layout: 'padded' },
 }

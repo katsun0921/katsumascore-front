@@ -3,7 +3,7 @@ import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 import { PostCardOverlay } from './PostCardOverlay';
 
 const meta = {
-  title: 'UiSection/PostCardOverlay',
+  title: 'Ui-Section/PostCardOverlay',
   component: PostCardOverlay,
   parameters: {
     layout: 'padded',

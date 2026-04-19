@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Breadcrumb } from './Breadcrumb'
 
 const meta: Meta<typeof Breadcrumb> = {
-  title: 'ui/Breadcrumb',
+  title: 'ui-parts/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs'],
 }
