@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { Search } from '@/components/features/_search';
+import { Search } from '@/components/features/Search';
 import { CTAButton } from '@/components/ui-parts/CTAButton';
 import { HeaderNav } from '@/components/ui-section/HeaderNav';
 import { useLocale } from '@/i18n/provider';
