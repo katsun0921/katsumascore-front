@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v4.0 ― ui-layout / ui-section レイヤー追加、コンポーネント責務再定義
-> 2026年4月16日
+> v4.1 ― ui → ui-parts に統一
+> 2026年4月19日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -19,7 +19,7 @@
 
 ```
 components/
-├── ui/              ← 純粋UI（最小単位）
+├── ui-parts/        ← 純粋UI（最小単位）
 ├── ui-layout/       ← 構造（配置・骨格）
 ├── ui-section/      ← 意味を持つUIまとまり
 ├── features/        ← ロジック（hooks / state / ドメイン知識）
@@ -34,10 +34,10 @@ components/
 
 | レイヤー | 役割 | ルール |
 |----------|------|--------|
-| components/ui | 純粋UI（Score, Heading, Badge等） | propsの値を表示するのみ。hooks/state禁止。i18nのみ許可 |
+| components/ui-parts | 純粋UI（Score, Heading, Badge等） | propsの値を表示するのみ。hooks/state禁止。i18nのみ許可 |
 | components/ui-layout | 構造（Header, Footer, Sidebar等） | ロジック禁止。データ依存禁止。childrenで構成 |
 | components/ui-section | 意味を持つUIまとまり（PostList, PostSection等） | ロジック禁止。データはpropsで受け取る。hooks禁止 |
-| components/features | 機能コンポーネント（PostCard, Search, VodItem等） | hooks/state使用可。ui/ui-sectionを組み合わせる |
+| components/features | 機能コンポーネント（PostCard, Search, VodItem等） | hooks/state使用可。ui-parts/ui-sectionを組み合わせる |
 | components/templates | 画面構造（HomeTemplate, PostDetail等） | ページ単位の組み立て |
 | components/docs | Storybook専用（DesignRules等） | 設計・デザインルールの可視化 |
 | components/typography | タイポグラフィ仕様 | フォント・サイズトークンの可視化 |
@@ -47,7 +47,7 @@ components/
 
 1. **Q1：ロジック（hooks / state）を持つか？** → YES：features / NO：次へ
 2. **Q2：意味を持つUIのまとまりか？** → YES：ui-section / NO：次へ
-3. **Q3：レイアウト（配置・骨格）か？** → YES：ui-layout / NO：ui
+3. **Q3：レイアウト（配置・骨格）か？** → YES：ui-layout / NO：ui-parts
 
 ---
 
@@ -149,7 +149,7 @@ components/
 **1ディレクトリに配置するコンポーネントは1つのみ。**
 
 あるコンポーネントの子コンポーネントは、同じディレクトリに置かず適切なレイヤーに移動する。
-このルールは ui / ui-layout / ui-section / features / templates すべてのレイヤーに適用する。
+このルールは ui-parts / ui-layout / ui-section / features / templates すべてのレイヤーに適用する。
 
 ```
 ❌ 禁止
@@ -169,7 +169,7 @@ components/features/Sidebar/
 
 - ロジック（hooks/state）を持つ子コンポーネント → `features/`
 - 意味を持つUIまとまり → `ui-section/`
-- 汎用的でドメイン非依存な子コンポーネント → `ui/`
+- 汎用的でドメイン非依存な子コンポーネント → `ui-parts/`
 
 ---
 
@@ -191,7 +191,7 @@ components/features/Sidebar/
 ```
 src/
 ├── components/
-│   ├── ui/                    ← 純粋UI（props表示のみ）
+│   ├── ui-parts/              ← 純粋UI（props表示のみ）
 │   │   ├── Badge/
 │   │   ├── Breadcrumb/
 │   │   ├── CTAButton/
@@ -271,7 +271,7 @@ src/
 | 対象 | 技術 |
 |------|------|
 | pages | Tailwind |
-| components/ui | Tailwind 必須。SCSSは最小限のみ許可（装飾用途） |
+| components/ui-parts | Tailwind 必須。SCSSは最小限のみ許可（装飾用途） |
 | components/ui-layout | Tailwind |
 | components/ui-section | SCSS（コンポーネントスコープ）※レイアウト系の複雑さを許容 |
 | components/templates | Tailwind |
