@@ -1,4 +1,4 @@
-import { PostCard } from '@/components/features/Post/PostCard';
+import { PostCard } from '@/components/ui/PostCard';
 import type { PostListProps } from '@/components/ui-section/PostList/PostList.types';
 import styles from './PostListRow.module.scss';
 

@@ -7,7 +7,7 @@ import {
 } from '@/mocks/post';
 
 const meta = {
-  title: 'Features/Post/PostCard',
+  title: 'Ui/PostCard',
   component: PostCard,
   parameters: {
     layout: 'centered',

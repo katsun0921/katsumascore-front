@@ -1,18 +1,9 @@
-/**
- * PostCard Stress Stories
- *
- * These stories intentionally use extreme or inconsistent data
- * to validate layout robustness. They are NOT normal usage examples.
- *
- * Run these to verify the card survives real-world messy content.
- */
-
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostCard } from './PostCard';
 import type { Post } from '@/types/post';
 
 const meta = {
-  title: 'Features/Post/PostCard/Stress',
+  title: 'Ui/PostCard/Stress',
   component: PostCard,
   parameters: {
     layout: 'centered',
@@ -23,9 +14,6 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-// ---------------------------------------------------------------------------
-// Base post used as the foundation for all stress variants
-// ---------------------------------------------------------------------------
 const basePost: Post = {
   id: 'stress-base',
   slug: '/posts/stress-test',
@@ -37,11 +25,6 @@ const basePost: Post = {
   score: 3,
 };
 
-// ---------------------------------------------------------------------------
-// ExtremelyLongTitle
-// Tests: title overflow, multi-line wrapping, card height expansion
-// Expectation: title should wrap gracefully without breaking the card layout
-// ---------------------------------------------------------------------------
 export const ExtremelyLongTitle: Story = {
   name: '[Stress] ExtremelyLongTitle',
   args: {
@@ -56,11 +39,6 @@ export const ExtremelyLongTitle: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// ExtremelyLongTitleNoImage
-// Tests: long title + fallback media block combined
-// Expectation: fallback block height is consistent; title still wraps
-// ---------------------------------------------------------------------------
 export const ExtremelyLongTitleNoImage: Story = {
   name: '[Stress] ExtremelyLongTitle + NoImage',
   args: {
@@ -75,11 +53,6 @@ export const ExtremelyLongTitleNoImage: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// NoImage
-// Tests: fallback rendering when image is null
-// Expectation: fallback block fills the media area without layout collapse
-// ---------------------------------------------------------------------------
 export const NoImage: Story = {
   name: '[Stress] NoImage',
   args: {
@@ -93,11 +66,6 @@ export const NoImage: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// NoCategory
-// Tests: layout when optional `category` field is absent
-// Expectation: card renders without errors; no broken spacing
-// ---------------------------------------------------------------------------
 export const NoCategory: Story = {
   name: '[Stress] NoCategory',
   args: {
@@ -111,11 +79,6 @@ export const NoCategory: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// NoScore
-// Tests: layout when optional `score` field is absent
-// Expectation: score area gracefully disappears; card proportions hold
-// ---------------------------------------------------------------------------
 export const NoScore: Story = {
   name: '[Stress] NoScore',
   args: {
@@ -129,11 +92,6 @@ export const NoScore: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// MixedMeta
-// Tests: all optional fields missing simultaneously
-// Expectation: card degrades gracefully with only required fields present
-// ---------------------------------------------------------------------------
 export const MixedMeta: Story = {
   name: '[Stress] MixedMeta (all optional fields missing)',
   args: {
@@ -144,17 +102,10 @@ export const MixedMeta: Story = {
       excerpt: 'category・score・image がすべて undefined / null の最低限データ状態を再現します。',
       image: null,
       publishedAt: '2026-01-01',
-      // category: undefined (omitted)
-      // score: undefined (omitted)
     },
   },
 };
 
-// ---------------------------------------------------------------------------
-// EmptyStrings
-// Tests: title and excerpt as empty strings (API returns "")
-// Expectation: no visual collapse; elements render safely even if empty
-// ---------------------------------------------------------------------------
 export const EmptyStrings: Story = {
   name: '[Stress] EmptyStrings (title="" excerpt="")',
   args: {
@@ -167,11 +118,6 @@ export const EmptyStrings: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// WhitespaceOnlyTitle
-// Tests: title is only whitespace characters
-// Expectation: card does not appear to have content; no visual glitch
-// ---------------------------------------------------------------------------
 export const WhitespaceOnlyTitle: Story = {
   name: '[Stress] WhitespaceOnlyTitle',
   args: {
@@ -184,11 +130,6 @@ export const WhitespaceOnlyTitle: Story = {
   },
 };
 
-// ---------------------------------------------------------------------------
-// VeryShortContent
-// Tests: single-character title and excerpt
-// Expectation: card stays visually consistent; no unexpected large whitespace
-// ---------------------------------------------------------------------------
 export const VeryShortContent: Story = {
   name: '[Stress] VeryShortContent (1-char title)',
   args: {

@@ -9,7 +9,8 @@
       "Bash(done)",
       "Bash(grep \"\\\\.scss$\")",
       "Bash(npm run:*)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(grep -v \"^$\")"
     ]
   }
 }
