@@ -1,12 +1,4 @@
-@use "@/styles/scss/global/mixin/layout.scss" as *;
-
 .postCard {
-  &__body {
-    display: grid;
-    gap: var(--space-12);
-    padding: var(--space-16) var(--space-16) var(--space-20);
-  }
-
   &__date {
     color: var(--color-text-secondary);
     font-family: var(--font-ui);
@@ -34,13 +26,5 @@
     word-break: break-word;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
-  }
-}
-
-@include layout-md {
-  .postCard {
-    &__body {
-      padding: var(--space-20);
-    }
   }
 }

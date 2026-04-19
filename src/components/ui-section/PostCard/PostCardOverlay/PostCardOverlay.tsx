@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { PostCardContainer } from '@/components/ui-parts/PostCardContainer';
+import { PostCardContainer } from '@/components/ui-parts/PostCard/PostCardContainer';
 import { PostCardMedia } from '@/components/ui-parts/PostCard/PostCardMedia';
 import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import type { Post } from '@/types/post';

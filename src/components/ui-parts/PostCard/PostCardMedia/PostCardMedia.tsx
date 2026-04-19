@@ -2,9 +2,9 @@ import Image from 'next/image';
 import type { PostCardMediaProps } from './PostCardMedia.types';
 import './PostCardMedia.scss';
 
-export const PostCardMedia = ({ image, title }: PostCardMediaProps) => {
+export const PostCardMedia = ({ image, title, className }: PostCardMediaProps) => {
   return (
-    <div className='postCard__media'>
+    <div className={['postCard__media', className].filter(Boolean).join(' ')}>
       {image ? (
         <Image
           src={image}
