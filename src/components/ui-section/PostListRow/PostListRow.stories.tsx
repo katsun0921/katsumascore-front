@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostListRow } from './PostListRow';
-import { mockPosts } from '@/components/features/Post/mocks/post';
+import { mockPosts } from '@/mocks/post';
 
 const meta: Meta<typeof PostListRow> = {
   title: 'UI-Section/PostListRow',

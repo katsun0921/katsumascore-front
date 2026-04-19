@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { extractToc } from '@/lib/toc'
-import { mockPostContentFull } from '@/components/features/Post/mocks/post'
+import { mockPostContentFull } from '@/mocks/post'
 import { Sidebar } from './Sidebar'
 
 const meta: Meta<typeof Sidebar> = {

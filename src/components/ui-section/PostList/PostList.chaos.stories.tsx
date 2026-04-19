@@ -11,7 +11,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostList } from './PostList';
-import { chaosPosts } from '@/components/features/Post/mocks/chaosPosts';
+import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
   title: 'UI-Section/PostList/Chaos',

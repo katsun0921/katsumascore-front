@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { PostsGroup } from './PostsGroup'
-import { mockPosts, mockPostNoImage } from '@/components/features/Post/mocks/post'
+import { mockPosts, mockPostNoImage } from '@/mocks/post'
 
 const meta = {
   title: 'Features/PostsGroup',

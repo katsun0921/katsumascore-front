@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSEO } from './PostSEO';
-import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/components/features/Post/mocks/post';
+import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 
 /**
  * PostSEO renders into <head> — visible output is via Storybook's addon panel (Head tags).

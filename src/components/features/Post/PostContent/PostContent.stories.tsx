@@ -10,7 +10,7 @@ import {
   mockPostContentMedia,
   mockPostContentTable,
   mockPostContentTypography,
-} from '@/components/features/Post/mocks/post';
+} from '@/mocks/post';
 import { PostContent } from './PostContent';
 
 const meta: Meta<typeof PostContent> = {

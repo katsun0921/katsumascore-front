@@ -4,7 +4,7 @@ import {
   mockPost,
   mockPostLongTitle,
   mockPostNoImage,
-} from '@/components/features/Post/mocks/post';
+} from '@/mocks/post';
 
 const meta = {
   title: 'Features/Post/PostCard',

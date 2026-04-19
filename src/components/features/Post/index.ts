@@ -1,5 +1,5 @@
 export type { Post, PostContentData, PostVariantProps } from '@/types/post';
-export { mockPost, mockPostLongTitle, mockPostNoImage, mockPosts, mockPostContent } from '@/components/features/Post/mocks/post';
+export { mockPost, mockPostLongTitle, mockPostNoImage, mockPosts, mockPostContent } from '../../../mocks/post';
 export { PostCard } from '@/components/features/Post/PostCard';
 export type { PostCardProps } from '@/components/features/Post/PostCard/PostCard.types';
 export { PostCardLeft } from '@/components/features/Post/PostCard/variants/PostCardLeft';

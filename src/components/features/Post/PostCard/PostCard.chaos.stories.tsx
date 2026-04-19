@@ -11,7 +11,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostCard } from './PostCard';
-import { chaosPosts } from '@/components/features/Post/mocks/chaosPosts';
+import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
   title: 'Features/Post/PostCard/Chaos',

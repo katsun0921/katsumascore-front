@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/components/features/Post/mocks/post';
+import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 import { PostCardLeft } from './PostCardLeft';
 
 const meta = {

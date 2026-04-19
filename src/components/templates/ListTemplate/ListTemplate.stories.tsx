@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ListTemplate } from './ListTemplate';
-import { mockPosts } from '@/components/features/Post/mocks/post';
-import { chaosPosts } from '@/components/features/Post/mocks/chaosPosts';
+import { mockPosts } from '@/mocks/post';
+import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
   title: 'templates/ListTemplate',
