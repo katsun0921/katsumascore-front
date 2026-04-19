@@ -12,7 +12,7 @@ export { PostListRow } from '@/components/ui-section/PostListRow';
 export type { PostListProps } from '@/components/ui-section/PostList/PostList.types';
 export { PostContent } from '@/components/ui-section/PostPage/PostContent';
 export { PostSection } from '@/components/ui-section/PostSection';
-export { PostSEO } from '@/components/features/Post/PostSEO';
+export { PostSEO } from '@/components/ui-section/Meta';
 export { PostFeatured } from '@/components/features/Post/PostFeatured';
 export type { PostFeaturedProps } from '@/components/features/Post/PostFeatured/PostFeatured.types';
 export { PostRankingItem } from '@/components/features/Post/PostRankingItem';

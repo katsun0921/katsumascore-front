@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { PostSEO } from './PostSEO';
+import { PostSEO } from './Meta';
 import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 
 /**

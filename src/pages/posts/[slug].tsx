@@ -3,7 +3,7 @@ import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wor
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import { PostDetail } from '@/components/templates/PostDetail';
-import { PostSEO } from '@/components/features/Post/PostSEO';
+import { PostSEO } from '@/components/ui-section/Meta';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 
 type Props = {
