@@ -1,4 +1,4 @@
-import { clickHamburgerMenu } from '@/hooks/useHamburgerMenu';
+import { clickHamburgerMenu } from './useHamburgerMenu';
 import './HamburgerMenu.scss';
 
 type THamburgerMenuProps = {

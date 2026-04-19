@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { PostHeroScore } from './PostHeroScore'
 
 const meta: Meta<typeof PostHeroScore> = {
-  title: 'features/post/PostHeroScore',
+  title: 'ui-section/PostHeroScore',
   component: PostHeroScore,
   parameters: {
     layout: 'padded',
@@ -41,5 +41,12 @@ export const LongComment: Story = {
     score: 4.0,
     comment:
       '前半のテンポの良さと後半の感情的な重厚さが絶妙なバランスで共存しており、観終わった後にじわじわと余韻が広がっていく。脚本の緻密さと俳優陣の演技が見事に融合した、数年に一度出会えるかどうかの作品。もう一度、劇場で観たい。',
+  },
+}
+
+export const NoComment: Story = {
+  args: {
+    score: 3.5,
+    comment: '',
   },
 }
