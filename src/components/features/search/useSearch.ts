@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { SearchResult } from '../types';
+import type { SearchResult } from './types';
 
 export type { SearchResult };
 

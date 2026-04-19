@@ -1,6 +1,6 @@
 import { useEffect, useRef, useId } from 'react';
 import { useRouter } from 'next/router';
-import { useSearch } from '@/components/features/Search/Search/useSearch';
+import { useSearch } from '@/components/features/Search/useSearch';
 import { SearchResultItem } from '@/components/ui/SearchResultItem/SearchResultItem';
 
 type Props = {

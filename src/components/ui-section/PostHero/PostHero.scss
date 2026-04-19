@@ -21,6 +21,9 @@
 
   &__summary {
     grid-area: summary;
+    @include layout-lg { 
+      padding-left: var(--space-16);
+    }
   }
 
 
