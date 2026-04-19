@@ -17,7 +17,7 @@
     padding: 60px 24px 80px;
     text-align: center;
 
-    @include layout-lg {
+    @include layout-md {
       flex-direction: row;
       gap: 60px;
       text-align: left;
@@ -35,7 +35,7 @@
   &__hexScore {
     display: block;
 
-    @include layout-lg {
+    @include layout-md {
       width: 140px;
       height: 154px;
     }
@@ -72,7 +72,7 @@
     flex-direction: column;
     gap: 12px;
 
-    @include layout-lg {
+    @include layout-md {
       gap: 16px;
     }
   }
@@ -92,7 +92,7 @@
     font-weight: 700;
     line-height: 1.5;
 
-    @include layout-lg {
+    @include layout-md {
       font-size: 28px;
     }
   }
@@ -119,7 +119,7 @@
       background: rgba(255, 45, 252, 0.08);
     }
 
-    @include layout-lg {
+    @include layout-md {
       align-self: flex-start;
     }
   }

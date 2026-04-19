@@ -52,7 +52,7 @@
   }
 
   &__rank {
-    @include layout-lg {
+    @include layout-md {
         right: var(--space-12);
         top: var(--font-size-h2);
         z-index: 1;

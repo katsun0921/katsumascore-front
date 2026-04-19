@@ -37,7 +37,7 @@
   }
 }
 
-@include layout-lg {
+@include layout-md {
   .postCard {
     &__body {
       padding: var(--space-20);

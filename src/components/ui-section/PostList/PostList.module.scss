@@ -48,7 +48,7 @@
   line-height: 1.8;
 }
 
-@include layout-lg {
+@include layout-md {
   .gridVariant {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: var(--space-24);

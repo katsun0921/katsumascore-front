@@ -7,7 +7,7 @@
       "trailer trailer"
       "poster summary";
     grid-template-columns: 30% 1fr;
-  @include layout-lg {
+  @include layout-md {
     gap: var(--space-16);
     grid-template-areas:
       "trailer poster"
@@ -21,7 +21,7 @@
 
   &__summary {
     grid-area: summary;
-    @include layout-lg { 
+    @include layout-md { 
       padding-left: var(--space-16);
     }
   }

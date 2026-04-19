@@ -40,7 +40,7 @@
     gap: 8px;
     list-style: none;
 
-    @include layout-lg {
+    @include layout-md {
       grid-template-columns: 1fr 1fr;
 
       .homeRankingItem:first-child {
