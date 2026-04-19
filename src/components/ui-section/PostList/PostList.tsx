@@ -1,5 +1,5 @@
-import { PostCardTop } from '@/components/ui-section/PostCard/PostCardTop';
-import { PostCardLeft } from '@/components/ui-section/PostCard/PostCardLeft';
+import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
+import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostCardSkeleton } from '@/components/ui-parts/PostCard/PostCardSkeleton';
 import type { PostListProps } from './PostList.types';
 import styles from './PostList.module.scss';
@@ -32,9 +32,9 @@ export const PostList = ({ posts, isLoading = false, variant = 'grid' }: PostLis
             {typeof item === 'string' ? (
               <PostCardSkeleton />
             ) : variant === 'row' ? (
-              <PostCardLeft post={item} />
+              <PostCardImgLeft post={item} />
             ) : (
-              <PostCardTop post={item} />
+              <PostCardImgTop post={item} />
             )}
           </li>
         ))}

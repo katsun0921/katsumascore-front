@@ -1,0 +1,1 @@
+export { PostCardImgLeft } from './PostCardImgLeft';

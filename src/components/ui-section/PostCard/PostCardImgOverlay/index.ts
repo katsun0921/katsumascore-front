@@ -1,0 +1,1 @@
+export { PostCardImgOverlay } from './PostCardImgOverlay';

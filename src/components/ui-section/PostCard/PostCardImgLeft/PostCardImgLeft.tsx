@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-export const PostCardLeft = ({ post, className }: Props) => (
+export const PostCardImgLeft = ({ post, className }: Props) => (
   <PostCardContainer className={className}>
     <Link
       href={post.slug}

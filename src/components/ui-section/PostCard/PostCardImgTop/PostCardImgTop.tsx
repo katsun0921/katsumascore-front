@@ -9,7 +9,7 @@ type Props = {
   className?: string;
 };
 
-export const PostCardTop = ({ post, className }: Props) => (
+export const PostCardImgTop = ({ post, className }: Props) => (
   <PostCardContainer className={className}>
     <Link href={post.slug} className='grid text-inherit'>
       <PostCardMedia image={post.image} title={post.title} />

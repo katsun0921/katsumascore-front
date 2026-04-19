@@ -3,16 +3,16 @@ import { PostCardContainer } from '@/components/ui-parts/PostCard/PostCardContai
 import { PostCardMedia } from '@/components/ui-parts/PostCard/PostCardMedia';
 import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import type { Post } from '@/types/post';
-import './PostCardOverlay.scss';
+import './PostCardImgOverlay.scss';
 
 type Props = {
   post: Post;
   className?: string;
 };
 
-export const PostCardOverlay = ({ post, className }: Props) => (
-  <PostCardContainer className={['postCardOverlay', className].filter(Boolean).join(' ')}>
-    <Link href={post.slug} className='postCardOverlay__link'>
+export const PostCardImgOverlay = ({ post, className }: Props) => (
+  <PostCardContainer className={['postCardImgOverlay', className].filter(Boolean).join(' ')}>
+    <Link href={post.slug} className='postCardImgOverlay__link'>
       <PostCardMedia image={post.image} title={post.title} />
       <PostCardBody
         publishedAt={post.publishedAt}
