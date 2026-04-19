@@ -1,19 +1,19 @@
 import Link from 'next/link';
-import { PostCardMedia } from '@/components/ui-parts/PostCardMedia';
-import { PostCardBody } from '@/components/ui-parts/PostCardBody';
+import { PostCardMedia } from '@/components/ui-parts/PostCard/PostCardMedia';
+import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import type { Post } from '@/types/post';
-import './PostCardOverlay.scss';
+import './PostCardTop.scss';
 
 type Props = {
   post: Post;
   className?: string;
 };
 
-export const PostCardOverlay = ({ post, className }: Props) => {
-  const classes = ['postCardOverlay', className].filter(Boolean).join(' ');
+export const PostCardTop = ({ post, className }: Props) => {
+  const classes = ['postCardTop', className].filter(Boolean).join(' ');
   return (
     <article className={classes}>
-      <Link href={post.slug} className='postCardOverlay__link'>
+      <Link href={post.slug} className='postCardTop__link'>
         <PostCardMedia image={post.image} title={post.title} />
         <PostCardBody
           publishedAt={post.publishedAt}

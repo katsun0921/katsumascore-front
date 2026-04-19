@@ -1,10 +1,10 @@
 export type { Post, PostContentData } from '@/types/post';
 export { mockPost, mockPostLongTitle, mockPostNoImage, mockPosts, mockPostContent } from '../../../mocks/post';
-export { PostCardSkeleton } from '@/components/ui-parts/PostCardSkeleton';
-export type { PostCardSkeletonProps } from '@/components/ui-parts/PostCardSkeleton';
-export { PostCardLeft } from '@/components/ui-section/PostCardLeft';
-export { PostCardTop } from '@/components/ui-section/PostCardTop';
-export { PostCardOverlay } from '@/components/ui-section/PostCardOverlay';
+export { PostCardSkeleton } from '@/components/ui-parts/PostCard/PostCardSkeleton';
+export type { PostCardSkeletonProps } from '@/components/ui-parts/PostCard/PostCardSkeleton';
+export { PostCardLeft } from '@/components/ui-section/PostCard/PostCardLeft';
+export { PostCardTop } from '@/components/ui-section/PostCard/PostCardTop';
+export { PostCardOverlay } from '@/components/ui-section/PostCard/PostCardOverlay';
 export { PostList } from '@/components/ui-section/PostList';
 export type { PostListProps, PostListVariant } from '@/components/ui-section/PostList';
 export { PostContent } from '@/components/ui-section/PostPage/PostContent';

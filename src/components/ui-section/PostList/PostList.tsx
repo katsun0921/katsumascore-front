@@ -1,6 +1,6 @@
-import { PostCardTop } from '@/components/ui-section/PostCardTop';
-import { PostCardLeft } from '@/components/ui-section/PostCardLeft';
-import { PostCardSkeleton } from '@/components/ui-parts/PostCardSkeleton';
+import { PostCardTop } from '@/components/ui-section/PostCard/PostCardTop';
+import { PostCardLeft } from '@/components/ui-section/PostCard/PostCardLeft';
+import { PostCardSkeleton } from '@/components/ui-parts/PostCard/PostCardSkeleton';
 import type { PostListProps } from './PostList.types';
 import styles from './PostList.module.scss';
 
