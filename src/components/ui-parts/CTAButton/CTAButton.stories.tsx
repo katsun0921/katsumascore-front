@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { CTAButton } from './CTAButton'
 
 const meta: Meta<typeof CTAButton> = {
-  title: 'ui-parts/CTAButton',
+  title: 'Ui-Parts/CTAButton',
   component: CTAButton,
   parameters: { layout: 'padded' },
   args: {

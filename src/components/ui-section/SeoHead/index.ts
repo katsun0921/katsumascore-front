@@ -1,1 +1,1 @@
-export { PostSEO } from './SeoHead';
+export { SeoHead } from './SeoHead';

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Pagination } from './Pagination'
 
 const meta: Meta<typeof Pagination> = {
-  title: 'Features/Pagination/Pagination',
+  title: 'Features/Pagination',
   component: Pagination,
   tags: ['autodocs'],
   args: {

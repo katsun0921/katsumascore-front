@@ -3,7 +3,7 @@ import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import { Score } from './Score'
 
 const meta: Meta<typeof Score> = {
-  title: 'ui/Score',
+  title: 'Ui-Parts/Score',
   component: Score,
   args: {
     max: SCORE_DISPLAY_MAX,

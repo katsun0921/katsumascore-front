@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SearchResultItem } from './SearchResultItem'
 
 const meta: Meta<typeof SearchResultItem> = {
-  title: 'ui-parts/SearchResultItem',
+  title: 'Ui-Parts/SearchResultItem',
   component: SearchResultItem,
   parameters: { layout: 'padded' },
   decorators: [(Story) => <ul role='listbox'><Story /></ul>],

@@ -3,7 +3,7 @@ import { PostCard } from './PostCard';
 import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
-  title: 'Ui/PostCard/Chaos',
+  title: 'Ui-Parts/PostCard/Chaos',
   component: PostCard,
   parameters: {
     layout: 'centered',

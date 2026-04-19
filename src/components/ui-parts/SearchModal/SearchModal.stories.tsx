@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { SearchModal } from './SearchModal'
 
 const meta: Meta<typeof SearchModal> = {
-  title: 'ui-parts/SearchModal',
+  title: 'Ui-Parts/SearchModal',
   component: SearchModal,
   parameters: { layout: 'fullscreen' },
   args: {

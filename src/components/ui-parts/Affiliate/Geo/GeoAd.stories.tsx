@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { GeoAd } from './GeoAd'
 
 const meta: Meta<typeof GeoAd> = {
-  title: 'ui-parts/Affiliate/GeoAd',
+  title: 'Ui-Parts/Affiliate/GeoAd',
   component: GeoAd,
   parameters: { layout: 'padded' },
 }

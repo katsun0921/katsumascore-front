@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { TsutayaAd } from './TsutayaAd'
 
 const meta: Meta<typeof TsutayaAd> = {
-  title: 'ui-parts/Affiliate/TsutayaAd',
+  title: 'Ui-Parts/Affiliate/TsutayaAd',
   component: TsutayaAd,
   parameters: { layout: 'padded' },
 }

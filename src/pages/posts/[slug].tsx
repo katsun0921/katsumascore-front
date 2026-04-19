@@ -3,7 +3,7 @@ import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wor
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import { PostDetail } from '@/components/templates/PostDetail';
-import { PostSEO } from '@/components/ui-section/SeoHead';
+import { SeoHead } from '@/components/ui-section/SeoHead';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 export const PostPage = ({ post, locale, genres }: Props) => {
   return (
     <>
-      <PostSEO post={post} locale={locale} />
+      <SeoHead post={post} locale={locale} />
       <PostDetail post={post} genres={genres} />
     </>
   );

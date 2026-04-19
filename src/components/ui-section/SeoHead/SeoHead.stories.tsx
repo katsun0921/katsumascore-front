@@ -3,11 +3,11 @@ import { SeoHead } from './SeoHead';
 import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
 
 /**
- * PostSEO renders into <head> — visible output is via Storybook's addon panel (Head tags).
+ * SeoHead renders into <head> — visible output is via Storybook's addon panel (Head tags).
  * Stories here document valid prop combinations for SEO coverage.
  */
 const meta: Meta<typeof SeoHead> = {
-  title: 'Features/Post/PostSEO',
+  title: 'Ui-Section/SeoHead',
   component: SeoHead,
   tags: ['autodocs'],
   parameters: {

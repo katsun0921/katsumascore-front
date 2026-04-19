@@ -3,7 +3,7 @@ import { PostCard } from './PostCard';
 import type { Post } from '@/types/post';
 
 const meta = {
-  title: 'Ui/PostCard/Stress',
+  title: 'Ui-Parts/PostCard/Stress',
   component: PostCard,
   parameters: {
     layout: 'centered',

@@ -14,7 +14,7 @@ import {
 import { PostContent } from './PostContent';
 
 const meta: Meta<typeof PostContent> = {
-  title: 'Features/Post/PostContent',
+  title: 'Ui-Section/PostContent',
   component: PostContent,
   parameters: {
     layout: 'padded',
