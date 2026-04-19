@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { ProductBlock } from './ProductBlock'
 
 const meta: Meta<typeof ProductBlock> = {
-  title: 'features/ProductBlock',
+  title: 'ui-section/ProductBlock',
   component: ProductBlock,
   tags: ['autodocs'],
 }
@@ -39,5 +39,35 @@ export const NoImage: Story = {
     type: 'vod',
     title: '進撃の巨人 The Final Season',
     links: [{ site: 'amazon_prime', url: 'https://amazon.co.jp/watch/456' }],
+  },
+}
+
+export const WithImage: Story = {
+  args: {
+    type: 'shopping',
+    title: '呪術廻戦 1巻',
+    description: '芥見下々による人気漫画の第1巻。',
+    imageUrl: '/images/sample.jpg',
+    imageAlt: '呪術廻戦 1巻',
+    links: [
+      { site: 'amazon', url: 'https://amazon.co.jp/dp/456' },
+    ],
+  },
+}
+
+export const NoLinks: Story = {
+  args: {
+    type: 'vod',
+    title: 'リンクなし作品',
+    description: 'リンクが存在しないケース。',
+    links: [],
+  },
+}
+
+export const UnknownSite: Story = {
+  args: {
+    type: 'vod',
+    title: '未知のサイト',
+    links: [{ site: 'unknown_vod', url: 'https://example.com' }],
   },
 }

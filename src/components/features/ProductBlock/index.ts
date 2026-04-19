@@ -1,1 +1,0 @@
-export { ProductBlock } from './ProductBlock';
