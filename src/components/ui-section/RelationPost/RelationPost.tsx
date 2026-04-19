@@ -1,7 +1,7 @@
-import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
+import { PostCardByKind } from '@/components/ui-section/PostCard';
 import type { RelationPostProps } from './RelationPost.types'
 
-export const RelationPost = ({ heading, posts, layout = 'default' }: RelationPostProps) => {
+export const RelationPost = ({ heading, posts, layout = 'default', kind = 'imgTop' }: RelationPostProps) => {
   const listClassName =
     layout === 'three-column'
       ? 'm-0 grid list-none grid-cols-1 gap-4 p-0 min-[480px]:grid-cols-3'
@@ -15,7 +15,8 @@ export const RelationPost = ({ heading, posts, layout = 'default' }: RelationPos
       <ul className={listClassName}>
         {posts.map((post) => (
           <li key={post.id}>
-            <PostCardImgLeft
+            <PostCardByKind
+              kind={kind}
               post={{
                 id: String(post.id),
                 slug: post.href,

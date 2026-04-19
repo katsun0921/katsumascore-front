@@ -1,4 +1,5 @@
-import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
+import { PostCardByKind } from '@/components/ui-section/PostCard';
+import type { PostCardKind } from '@/components/ui-section/PostCard/types';
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
@@ -12,9 +13,10 @@ export type RelatedPostItem = {
 
 export type RelatedPostsProps = {
   posts: RelatedPostItem[]
+  kind?: PostCardKind
 }
 
-export const RelatedPosts = ({ posts }: RelatedPostsProps) => {
+export const RelatedPosts = ({ posts, kind = 'imgTop' }: RelatedPostsProps) => {
   const locale = useLocale()
 
   if (posts.length === 0) return null
@@ -27,7 +29,8 @@ export const RelatedPosts = ({ posts }: RelatedPostsProps) => {
       <ul className='list-none p-0 m-0 flex flex-col gap-3'>
         {posts.slice(0, 5).map((post) => (
           <li key={post.slug}>
-            <PostCardImgLeft
+            <PostCardByKind
+              kind={kind}
               post={{
                 id: post.slug,
                 slug: post.slug,
