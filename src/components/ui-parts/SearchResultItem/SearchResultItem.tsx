@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import type { SearchResult } from '@/components/features/search';
+import type { SearchResult } from '@/components/features/Search';
 
 type Props = {
   result: SearchResult;
