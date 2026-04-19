@@ -1,5 +1,5 @@
-import { TsutayaAd } from '@/components/ui/Affiliate/Tsutaya'
-import { GeoAd } from '@/components/ui/Affiliate/Geo'
+import { TsutayaAd } from '@/components/ui-parts/Affiliate/Tsutaya'
+import { GeoAd } from '@/components/ui-parts/Affiliate/Geo'
 import type { AdRentalProps } from './AdRental.types'
 
 export const AdRental = ({ heading }: AdRentalProps) => (

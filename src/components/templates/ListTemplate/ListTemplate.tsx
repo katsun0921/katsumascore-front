@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostFeatured } from '@/components/features/Post/PostFeatured';
 import { PostRankingItem } from '@/components/features/Post/PostRankingItem';

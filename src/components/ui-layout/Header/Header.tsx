@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Search } from '@/components/features/search';
-import { CTAButton } from '@/components/ui/CTAButton';
+import { CTAButton } from '@/components/ui-parts/CTAButton';
 import { HeaderNav } from '@/components/features/navigation/HeaderNav';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';

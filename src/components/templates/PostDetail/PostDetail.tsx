@@ -7,7 +7,7 @@ import { TableOfContents } from '@/components/features/Post/TableOfContents'
 import { PostContent } from '@/components/features/Post/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores'
 import { VodIntroduction } from '@/components/features/VodIntroduction'
-import { ShareButtons } from '@/components/ui/ShareButtons'
+import { ShareButtons } from '@/components/ui-parts/ShareButtons'
 import { Sidebar } from '@/components/ui-layout/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 

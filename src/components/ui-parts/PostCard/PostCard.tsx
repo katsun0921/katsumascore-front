@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { PostCardSkeleton } from '@/components/ui/PostCardSkeleton';
-import { PostCardMedia } from '@/components/ui/PostCardMedia';
-import { PostCardBody } from '@/components/ui/PostCardBody';
+import { PostCardSkeleton } from '@/components/ui-parts/PostCardSkeleton';
+import { PostCardMedia } from '@/components/ui-parts/PostCardMedia';
+import { PostCardBody } from '@/components/ui-parts/PostCardBody';
 import type { PostCardProps } from './PostCard.types';
 import './PostCard.scss';
 

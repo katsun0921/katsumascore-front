@@ -1,5 +1,5 @@
-import { PostCard } from '@/components/ui/PostCard';
-import type { PostCardProps } from '@/components/ui/PostCard';
+import { PostCard } from '@/components/ui-parts/PostCard';
+import type { PostCardProps } from '@/components/ui-parts/PostCard';
 import './PostCardTop.scss';
 
 export const PostCardTop = ({ post, isLoading, className }: PostCardProps) => {
