@@ -7,7 +7,7 @@ const basePost: Post = {
   slug: '/posts/sample',
   title: 'KPOPガールズ! デーモン・ハンターズ',
   excerpt: '',
-  image: null,
+  image: '/images/mock-image.webp',
   publishedAt: '2025-01-10',
   category: 'アニメ',
   score: 4.2,
