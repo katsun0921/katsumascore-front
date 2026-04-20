@@ -2,23 +2,19 @@ import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostRankingItem } from '@/components/features/Post/PostRankingItem';
-import { PostList } from '@/components/ui-section/PostList';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
 
-const DEFAULT_FILTER_OPTIONS = [
-  { label: '評価順', value: 'score' },
-  { label: '新着', value: 'new' },
-  { label: '配信中', value: 'streaming' },
-];
-
-const RANKING_COUNT = 3;
+const RANKING_COUNT = 10;
 
 export const ListTemplate = ({
   categoryName,
   categoryDescription,
   posts,
-  filterOptions = DEFAULT_FILTER_OPTIONS,
+  filterOptions,
   activeFilter = 'score',
   onFilterSelect,
   currentPage = 1,
@@ -27,12 +23,27 @@ export const ListTemplate = ({
   isLoading = false,
   vodRanking,
 }: ListTemplateProps) => {
+  const locale = useLocale();
+
+  const defaultFilterOptions = [
+    { label: t(messages, ['filterOptions', 'score'], locale), value: 'score' },
+    { label: t(messages, ['filterOptions', 'new'], locale), value: 'new' },
+    { label: t(messages, ['filterOptions', 'streaming'], locale), value: 'streaming' },
+  ];
+
+  const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
+
+  const scoreFilterItems = [
+    { label: t(messages, ['scoreFilter', 'high'], locale), value: '4.0+', color: 'var(--color-score-rank-s-text)' },
+    { label: t(messages, ['scoreFilter', 'mid'], locale), value: '3.0-3.9', color: 'var(--color-score-rank-a-text)' },
+    { label: t(messages, ['scoreFilter', 'low'], locale), value: '2.9-', color: 'var(--color-score-rank-b-text)' },
+  ];
+
   const featuredPost = posts[0];
   const rankingPosts = posts.slice(0, RANKING_COUNT);
-  const gridPosts = posts.slice(RANKING_COUNT);
 
   const breadcrumbItems = [
-    { label: 'ホーム', href: '/' },
+    { label: t(messages, ['breadcrumb', 'home'], locale), href: '/' },
     { label: categoryName },
   ];
 
@@ -54,7 +65,7 @@ export const ListTemplate = ({
         <section className='px-4 py-8 md:py-12'>
           <div className='space-y-2'>
             <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-border)] uppercase'>
-              Category
+              {t(messages, ['category', 'label'], locale)}
             </p>
             <h1 className='font-bold text-[var(--color-text-inverse)]'>
               {categoryName}
@@ -69,7 +80,7 @@ export const ListTemplate = ({
       {/* Filter */}
       <div className='py-4 px-4 bg-[var(--color-bg)] border-b border-[var(--color-border)]'>
         <ListFilterBar
-          options={filterOptions}
+          options={resolvedFilterOptions}
           activeValue={activeFilter}
           onSelect={handleFilterSelect}
         />
@@ -79,18 +90,13 @@ export const ListTemplate = ({
       <div className='grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start px-4 py-8 pb-12'>
         {/* Main column */}
         <div className='space-y-8'>
-          {/* Featured */}
           {featuredPost && !isLoading && (
-            <PostCardImgLeft post={featuredPost} />
+            <PostCardImgLeft post={featuredPost} rank={1} />
           )}
 
-          {/* Ranking */}
-          {rankingPosts.length > 0 && !isLoading && (
+          {rankingPosts.length > 1 && !isLoading && (
             <section className='space-y-2'>
-              <h2 className='text-[var(--font-size-h3-sm)] font-bold text-[var(--color-text-primary)]'>
-                ランキング
-              </h2>
-              <ol className='flex flex-wrap gap-4'>
+              <ol className='grid grid-cols-3 gap-4'>
                 {rankingPosts.map((post, index) => (
                   <PostRankingItem key={post.id} post={post} rank={index + 1} columns={3} />
                 ))}
@@ -98,14 +104,9 @@ export const ListTemplate = ({
             </section>
           )}
 
-          {/* Grid */}
-          <section>
-            <PostList posts={gridPosts} isLoading={isLoading} />
-          </section>
-
           {/* Pagination */}
           {totalPages > 1 && (
-            <nav className='flex justify-center gap-2' aria-label='ページネーション'>
+            <nav className='flex justify-center gap-2' aria-label={t(messages, ['pagination', 'ariaLabel'], locale)}>
               {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                 <button
                   key={page}
@@ -131,43 +132,20 @@ export const ListTemplate = ({
           {/* 広告 */}
           <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-5'>
             <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase mb-3'>
-              Ad
+              {t(messages, ['ad', 'label'], locale)}
             </p>
             <div className='flex items-center justify-center h-[250px] rounded-lg bg-[var(--color-bg-muted)] text-[var(--color-text-secondary)] text-sm'>
-              300×250
+              {t(messages, ['ad', 'placeholder'], locale)}
             </div>
           </div>
-
-          {/* VODランキング */}
-          {vodRanking && vodRanking.length > 0 && (
-            <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-5 space-y-3'>
-              <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase'>
-                VOD ランキング
-              </p>
-              <ol className='space-y-2'>
-                {vodRanking.map((item, index) => (
-                  <li key={item.id} className='flex items-center gap-3 text-sm text-[var(--color-text-primary)]'>
-                    <span className='flex-shrink-0 w-5 h-5 rounded-full bg-[var(--color-secondary)] text-[var(--color-text-inverse)] font-ui text-xs flex items-center justify-center font-bold'>
-                      {index + 1}
-                    </span>
-                    <span className='truncate'>{item.title}</span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
 
           {/* スコア別フィルター */}
           <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-5 space-y-3'>
             <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase'>
-              スコア別
+              {t(messages, ['scoreFilter', 'heading'], locale)}
             </p>
             <ul className='space-y-2'>
-              {[
-                { label: '4.0 以上', value: '4.0+', color: 'var(--color-score-rank-s-text)' },
-                { label: '3.0〜3.9', value: '3.0-3.9', color: 'var(--color-score-rank-a-text)' },
-                { label: '2.9 以下', value: '2.9-', color: 'var(--color-score-rank-b-text)' },
-              ].map((item) => (
+              {scoreFilterItems.map((item) => (
                 <li key={item.value}>
                   <button
                     type='button'
