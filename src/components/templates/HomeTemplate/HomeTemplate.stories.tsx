@@ -9,7 +9,7 @@ import {
   mockVodFinderItems,
   mockSeasonItems,
   mockFeaturedItems,
-} from '@/components/features/home/mocks/home';
+} from '@/components/ui-home/mocks/home';
 import { HomeTemplate } from './HomeTemplate';
 
 const meta: Meta<typeof HomeTemplate> = {

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockRankingPosts } from '@/components/features/home/mocks/home';
+import { mockRankingPosts } from '@/components/ui-home/mocks/home';
 import { HomeRanking } from './HomeRanking';
 
 const meta: Meta<typeof HomeRanking> = {
-  title: 'Features/Home/HomeRanking',
+  title: 'UIHome/HomeRanking',
   component: HomeRanking,
   parameters: { layout: 'padded' },
   decorators: [

@@ -1,9 +1,9 @@
 import type { Post } from '@/types/post';
-import type { HomeHeroProps } from '@/components/features/home/HomeHero';
-import type { VodFinderItem } from '@/components/features/home/HomeVodFinder';
-import type { SeasonItem } from '@/components/features/home/HomeSeasonReview';
-import type { RecommendBlock } from '@/components/features/home/HomeRecommend';
-import type { FeaturedItem } from '@/components/features/home/HomeFeatured';
+import type { HomeHeroProps } from '@/components/ui-home/HomeHero';
+import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
+import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
+import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';
+import type { FeaturedItem } from '@/components/ui-home/HomeFeatured';
 
 export type HomeTemplateProps = {
   hero: HomeHeroProps;

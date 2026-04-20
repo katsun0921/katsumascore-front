@@ -1,1 +1,0 @@
-export { HomeRanking } from './HomeRanking';

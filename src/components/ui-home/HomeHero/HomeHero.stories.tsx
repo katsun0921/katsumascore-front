@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockHeroData } from '@/components/features/home/mocks/home';
+import { mockHeroData } from '@/components/ui-home/mocks/home';
 import { HomeHero } from './HomeHero';
 
 const meta: Meta<typeof HomeHero> = {
-  title: 'Features/Home/HomeHero',
+  title: 'UIHome/HomeHero',
   component: HomeHero,
   parameters: { layout: 'fullscreen' },
 };

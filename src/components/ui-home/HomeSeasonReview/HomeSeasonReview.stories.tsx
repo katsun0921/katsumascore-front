@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockSeasonItems } from '@/components/features/home/mocks/home';
+import { mockSeasonItems } from '@/components/ui-home/mocks/home';
 import { HomeSeasonReview } from './HomeSeasonReview';
 
 const meta: Meta<typeof HomeSeasonReview> = {
-  title: 'Features/Home/HomeSeasonReview',
+  title: 'UIHome/HomeSeasonReview',
   component: HomeSeasonReview,
   parameters: { layout: 'padded' },
   decorators: [

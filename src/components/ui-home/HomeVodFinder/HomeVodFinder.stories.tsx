@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockVodFinderItems } from '@/components/features/home/mocks/home';
+import { mockVodFinderItems } from '@/components/ui-home/mocks/home';
 import { HomeVodFinder } from './HomeVodFinder';
 
 const meta: Meta<typeof HomeVodFinder> = {
-  title: 'Features/Home/HomeVodFinder',
+  title: 'UIHome/HomeVodFinder',
   component: HomeVodFinder,
   parameters: { layout: 'padded' },
   decorators: [
