@@ -3,7 +3,7 @@ import {
   mockLatestPosts,
   mockAnimePosts,
   mockHighScorePosts,
-} from '@/components/features/home/mocks/home';
+} from '@/components/ui-home/mocks/home';
 import { HomeCardScrollList } from './HomeCardScrollList';
 
 const meta: Meta<typeof HomeCardScrollList> = {

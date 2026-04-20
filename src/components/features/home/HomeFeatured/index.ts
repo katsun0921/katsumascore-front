@@ -1,1 +1,0 @@
-export { HomeFeatured } from './HomeFeatured';

@@ -10,7 +10,7 @@ import {
   mockVodFinderItems,
   mockSeasonItems,
   mockFeaturedItems,
-} from '@/components/features/home/mocks/home';
+} from '@/components/ui-home/mocks/home';
 
 const Home = () => {
   return (

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockRecommendBlocks } from '@/components/features/home/mocks/home';
+import { mockRecommendBlocks } from '@/components/ui-home/mocks/home';
 import { HomeRecommend } from './HomeRecommend';
 
 const meta: Meta<typeof HomeRecommend> = {
-  title: 'Features/Home/HomeRecommend',
+  title: 'UIHome/HomeRecommend',
   component: HomeRecommend,
   parameters: { layout: 'padded' },
   decorators: [

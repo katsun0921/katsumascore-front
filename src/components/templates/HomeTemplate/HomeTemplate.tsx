@@ -1,10 +1,10 @@
-import { HomeHero } from '@/components/features/home/HomeHero';
-import { HomeRanking } from '@/components/features/home/HomeRanking';
+import { HomeHero } from '@/components/ui-home/HomeHero';
+import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
-import { HomeVodFinder } from '@/components/features/home/HomeVodFinder';
-import { HomeSeasonReview } from '@/components/features/home/HomeSeasonReview';
-import { HomeRecommend } from '@/components/features/home/HomeRecommend';
-import { HomeFeatured } from '@/components/features/home/HomeFeatured';
+import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
+import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
+import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
+import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { PageLayout } from '@/components/templates/PageLayout';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 import './HomeTemplate.scss';
