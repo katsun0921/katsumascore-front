@@ -1,6 +1,6 @@
 import { HomeHero } from '@/components/features/home/HomeHero';
 import { HomeRanking } from '@/components/features/home/HomeRanking';
-import { HomeCardScroll } from '@/components/features/home/HomeCardScroll';
+import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/features/home/HomeVodFinder';
 import { HomeSeasonReview } from '@/components/features/home/HomeSeasonReview';
 import { HomeRecommend } from '@/components/features/home/HomeRecommend';
@@ -43,17 +43,17 @@ export const HomeTemplate = ({
         </section>
 
         <section className='homeTemplate__section'>
-          <HomeCardScroll title='最新レビュー' posts={latestPosts} seeAllHref='/posts' />
+          <HomeCardScrollList title='最新レビュー' posts={latestPosts} seeAllHref='/posts' />
         </section>
 
         {/* ── SP: 3列目 / PC: 右列1段目（sidebar） ── */}
         <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeCardScroll title='注目のアニメ' posts={animePosts} seeAllHref='/anime' />
+          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/anime' />
         </section>
 
         {/* ── SP: 4列目 / PC: 左列続き ── */}
         <section className='homeTemplate__section'>
-          <HomeCardScroll title='高評価作品' posts={highScorePosts} icon='star' />
+          <HomeCardScrollList title='高評価作品' posts={highScorePosts} icon='star' />
         </section>
 
         <section className='homeTemplate__section'>

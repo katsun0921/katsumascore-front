@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { HomeCardScroll } from '@/components/features/home/HomeCardScroll';
+import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import type { Post } from '@/types/post';
 import './HomeRecommend.scss';
 
@@ -28,7 +28,7 @@ export const HomeRecommend = ({ blocks }: HomeRecommendProps) => {
                 </Link>
               )}
             </div>
-            <HomeCardScroll posts={posts} />
+            <HomeCardScrollList posts={posts} />
           </div>
         ))}
       </div>
