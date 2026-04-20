@@ -7,7 +7,7 @@ import {
 import { HomeCardScrollList } from './HomeCardScrollList';
 
 const meta: Meta<typeof HomeCardScrollList> = {
-  title: 'UiHome/HomeCardScrollList',
+  title: 'UI-Home/HomeCardScrollList',
   component: HomeCardScrollList,
   parameters: { layout: 'padded' },
   decorators: [

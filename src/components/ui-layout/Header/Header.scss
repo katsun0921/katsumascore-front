@@ -1,0 +1,74 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.header {
+  display: grid;
+  grid-template-areas:
+    "logo search"
+    "cta  cta"
+    "nav  nav";
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  padding: 0 1rem;
+  column-gap: 1em;
+
+  &__logo {
+    grid-area: logo;
+    display: flex;
+    align-items: center;
+    height: 3.5rem;
+  }
+
+  &__search {
+    grid-area: search;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3.5rem;
+  }
+
+  &__cta {
+    grid-area: cta;
+    padding: 0.5rem 0;
+  }
+
+  &__nav {
+    grid-area: nav;
+  }
+
+  @include layout-md {
+    grid-template-areas: "logo search cta nav";
+    grid-template-columns: auto 1fr auto auto;
+    column-gap: var(--space-32);
+    padding: 0 1.5rem;
+    height: 4rem;
+
+    &__logo {
+      height: 4rem;
+    }
+
+    &__search {
+      height: auto;
+    }
+
+    &__cta {
+      padding: 0;
+      display: flex;
+      align-items: center;
+
+      // fullWidth ボタンを PC 向けにインラインスタイルへ上書き
+      // .header__cta a の specificity (0,1,1) > Tailwind utility (0,1,0)
+      a {
+        width: auto;
+        height: auto;
+        display: inline-flex;
+        border-radius: 6px;
+        padding: 0.5rem 1rem;
+      }
+    }
+
+    &__nav {
+      display: flex;
+      align-items: center;
+    }
+  }
+}

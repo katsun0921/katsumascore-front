@@ -3,7 +3,7 @@ import { mockRankingPosts } from '@/components/ui-home/mocks/home';
 import { HomeRanking } from './HomeRanking';
 
 const meta: Meta<typeof HomeRanking> = {
-  title: 'UIHome/HomeRanking',
+  title: 'UI-Home/HomeRanking',
   component: HomeRanking,
   parameters: { layout: 'padded' },
   decorators: [

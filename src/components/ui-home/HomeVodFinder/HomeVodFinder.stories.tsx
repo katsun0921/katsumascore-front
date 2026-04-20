@@ -3,7 +3,7 @@ import { mockVodFinderItems } from '@/components/ui-home/mocks/home';
 import { HomeVodFinder } from './HomeVodFinder';
 
 const meta: Meta<typeof HomeVodFinder> = {
-  title: 'UIHome/HomeVodFinder',
+  title: 'UI-Home/HomeVodFinder',
   component: HomeVodFinder,
   parameters: { layout: 'padded' },
   decorators: [

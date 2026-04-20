@@ -3,7 +3,7 @@ import { mockHeroData } from '@/components/ui-home/mocks/home';
 import { HomeHero } from './HomeHero';
 
 const meta: Meta<typeof HomeHero> = {
-  title: 'UIHome/HomeHero',
+  title: 'UI-Home/HomeHero',
   component: HomeHero,
   parameters: { layout: 'fullscreen' },
 };

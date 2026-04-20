@@ -3,7 +3,7 @@ import { mockFeaturedItems } from '@/components/ui-home/mocks/home';
 import { HomeFeatured } from './HomeFeatured';
 
 const meta: Meta<typeof HomeFeatured> = {
-  title: 'UIHome/HomeFeatured',
+  title: 'UI-Home/HomeFeatured',
   component: HomeFeatured,
   parameters: { layout: 'padded' },
   decorators: [

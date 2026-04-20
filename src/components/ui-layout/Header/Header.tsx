@@ -3,68 +3,41 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { Search } from '@/components/features/Search';
 import { CTAButton } from '@/components/ui-parts/CTAButton';
-import { HeaderNav } from '@/components/ui-section/HeaderNav';
+import { HeaderNav } from '@/components/ui-parts/HeaderNav';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
+import './Header.scss';
 
 export const Header = () => {
   const router = useRouter();
   const locale = useLocale();
+  const prefixClassName = 'header';
 
   return (
-    <header className='bg-[var(--color-header)]' role='banner'>
+    <header className={`${prefixClassName} bg-[var(--color-header)]`} role='banner'>
+      <Link href='/' className={`${prefixClassName}__logo hover:opacity-80 transition-opacity duration-200`}>
+        <Image
+          src='/images/logo.webp'
+          alt={t(messages, ['logo', 'alt'], locale)}
+          width={120}
+          height={40}
+          unoptimized
+          className='block h-9 w-auto md:h-10'
+        />
+      </Link>
 
-      {/* ─── PC レイアウト：md以上で表示 ──────────────────────────── */}
-      <div className='hidden md:flex h-16 items-center justify-between px-6'>
-        <div className='flex items-center shrink-0'>
-          <Link href='/' className='block hover:opacity-80 transition-opacity duration-200'>
-            <Image
-              src='/images/logo.webp'
-              alt={t(messages, ['logo', 'alt'], locale)}
-              width={120}
-              height={40}
-              unoptimized
-              className='block h-10 w-auto'
-            />
-          </Link>
-        </div>
-
-        <div className='flex flex-1 items-center justify-center gap-3 px-6'>
-          <Search onNavigate={router.push} className='header-search-pc' />
-          <CTAButton href='/vod' />
-        </div>
-
-        <div className='flex items-center shrink-0'>
-          <HeaderNav layout='pc' />
-        </div>
+      <div className={`${prefixClassName}__search`}>
+        <Search onNavigate={router.push} className={`${prefixClassName}-search`} />
       </div>
 
-      {/* ─── SP レイアウト：md未満で表示 ──────────────────────────── */}
-      <div className='md:hidden'>
-        <div className='flex h-14 items-center gap-4 px-4'>
-          <Link href='/' className='block shrink-0 hover:opacity-80 transition-opacity duration-200'>
-            <Image
-              src='/images/logo.webp'
-              alt={t(messages, ['logo', 'alt'], locale)}
-              width={120}
-              height={36}
-              unoptimized
-              className='block h-9 w-auto'
-            />
-          </Link>
-          <div className='flex-1'>
-            <Search onNavigate={router.push} className='header-search-sp' />
-          </div>
-        </div>
-
-        <div className='mx-4 my-2'>
-          <CTAButton href='/vod' fullWidth />
-        </div>
-
-        <HeaderNav layout='sp' />
+      <div className={`${prefixClassName}__cta`}>
+        <CTAButton href='/vod' fullWidth />
       </div>
 
+      <div className={`${prefixClassName}__nav`}>
+        <HeaderNav />
+      </div>
     </header>
   );
 };

@@ -1,0 +1,59 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.headerNav {
+  &__list {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  &__link {
+    display: block;
+    padding: 0.25rem 0.5rem;
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: rgba(var(--color-white-rgb), 0.6);
+    transition: color 150ms ease;
+
+    &:hover {
+      color: rgba(var(--color-white-rgb), 0.9);
+    }
+
+    &--active {
+      border-bottom: 2px solid var(--color-primary);
+      padding-bottom: 0.25rem;
+      color: var(--color-text-inverse);
+
+      &:hover {
+        color: var(--color-text-inverse);
+      }
+    }
+  }
+
+  @include layout-md {
+    &__list {
+      justify-content: flex-start;
+      gap: 1.5rem;
+      padding: 0;
+    }
+
+    &__link {
+      font-size: 0.9375rem;
+      padding: 0;
+      color: var(--color-text-inverse);
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      &--active {
+        border-bottom: none;
+        padding-bottom: 0;
+        color: var(--color-text-inverse);
+      }
+    }
+  }
+}

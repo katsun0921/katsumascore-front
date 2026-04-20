@@ -3,7 +3,7 @@ import { mockSeasonItems } from '@/components/ui-home/mocks/home';
 import { HomeSeasonReview } from './HomeSeasonReview';
 
 const meta: Meta<typeof HomeSeasonReview> = {
-  title: 'UIHome/HomeSeasonReview',
+  title: 'UI-Home/HomeSeasonReview',
   component: HomeSeasonReview,
   parameters: { layout: 'padded' },
   decorators: [

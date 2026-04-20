@@ -3,7 +3,7 @@ import { mockRecommendBlocks } from '@/components/ui-home/mocks/home';
 import { HomeRecommend } from './HomeRecommend';
 
 const meta: Meta<typeof HomeRecommend> = {
-  title: 'UIHome/HomeRecommend',
+  title: 'UI-Home/HomeRecommend',
   component: HomeRecommend,
   parameters: { layout: 'padded' },
   decorators: [

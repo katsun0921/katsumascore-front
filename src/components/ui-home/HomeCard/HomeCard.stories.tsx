@@ -15,7 +15,7 @@ const basePost: Post = {
 };
 
 const meta: Meta<typeof HomeCard> = {
-  title: 'UiHome/HomeCard',
+  title: 'UI-Home/HomeCard',
   component: HomeCard,
   parameters: { layout: 'padded' },
   decorators: [

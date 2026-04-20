@@ -10,12 +10,10 @@ export default meta
 
 type Story = StoryObj<typeof meta>
 
-export const PC: Story = {
-  args: { layout: 'pc' },
+export const Default: Story = {
   decorators: [(Story) => <div style={{ background: 'var(--color-header)', padding: '12px 16px' }}><Story /></div>],
 }
 
-export const SP: Story = {
-  args: { layout: 'sp' },
+export const Mobile: Story = {
   decorators: [(Story) => <div style={{ background: 'var(--color-header)', width: '375px' }}><Story /></div>],
 }

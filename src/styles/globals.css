@@ -129,6 +129,9 @@
   --space-40: 40px;
   --space-48: 48px;
 
+  /* ─── Size Tokens ──────────────────────────────────────────────── */
+  --size-post-card-overlay-height: 320px;
+
   /* ─── Font Size Tokens ─────────────────────────────────────────
      PC / SP分離。コンポーネントは必ずこのtokenを使う。
      直接値（font-size: 16px, text-[16px]など）の使用は禁止。

@@ -6,7 +6,7 @@
   }
 
   .postCard__media {
-    min-height: 360px;
+    max-height: var(--size-post-card-overlay-height);
   }
 
   .postCard__body {
