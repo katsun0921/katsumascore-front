@@ -10,8 +10,6 @@ export type { PostListProps, PostListVariant } from '@/components/ui-section/Pos
 export { PostContent } from '@/components/ui-section/PostPage/PostContent';
 export { PostSection } from '@/components/ui-section/PostSection';
 export { SeoHead } from '@/components/ui-section/SeoHead';
-export { PostFeatured } from '@/components/features/Post/PostFeatured';
-export type { PostFeaturedProps } from '@/components/features/Post/PostFeatured/PostFeatured.types';
 export { PostRankingItem } from '@/components/features/Post/PostRankingItem';
 export type { PostRankingItemProps } from '@/components/features/Post/PostRankingItem/PostRankingItem.types';
 export { ListFilterBar } from '@/components/features/Post/ListFilterBar';

@@ -5,7 +5,7 @@ const meta: Meta<typeof PostRankingItem> = {
   title: 'features/Post/PostRankingItem',
   component: PostRankingItem,
   parameters: { layout: 'padded' },
-  decorators: [(Story) => <ul><Story /></ul>],
+  decorators: [(Story) => <ul className='flex flex-wrap gap-4'><Story /></ul>],
   args: {
     post: {
       id: '1',
@@ -64,6 +64,43 @@ export const NoScore: Story = {
     },
     rank: 6,
   },
+}
+
+export const Col2: Story = {
+  args: { columns: 2 },
+  decorators: [
+    (Story) => (
+      <ul className='flex flex-wrap gap-4 w-full'>
+        <Story />
+        <PostRankingItem
+          post={{ id: '2', slug: '/posts/b', title: '作品B', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2024-01-01', score: 4.0 }}
+          rank={2}
+          columns={2}
+        />
+      </ul>
+    ),
+  ],
+}
+
+export const Col3: Story = {
+  args: { columns: 3 },
+  decorators: [
+    (Story) => (
+      <ul className='flex flex-wrap gap-4 w-full'>
+        <Story />
+        <PostRankingItem
+          post={{ id: '2', slug: '/posts/b', title: '作品B', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2024-01-01', score: 4.0 }}
+          rank={2}
+          columns={3}
+        />
+        <PostRankingItem
+          post={{ id: '3', slug: '/posts/c', title: '作品C', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2024-01-01', score: 3.8 }}
+          rank={3}
+          columns={3}
+        />
+      </ul>
+    ),
+  ],
 }
 
 export const LongTitle: Story = {

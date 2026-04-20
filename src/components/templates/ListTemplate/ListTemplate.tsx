@@ -1,6 +1,6 @@
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
-import { PostFeatured } from '@/components/features/Post/PostFeatured';
+import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostRankingItem } from '@/components/features/Post/PostRankingItem';
 import { PostList } from '@/components/ui-section/PostList';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
@@ -52,7 +52,7 @@ export const ListTemplate = ({
           <Breadcrumb items={breadcrumbItems} />
         </div>
         <section className='px-4 py-8 md:py-12'>
-          <header className='space-y-2'>
+          <div className='space-y-2'>
             <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-border)] uppercase'>
               Category
             </p>
@@ -62,7 +62,7 @@ export const ListTemplate = ({
             {categoryDescription && (
               <p className='text-sm text-[rgba(255,255,255,0.7)]'>{categoryDescription}</p>
             )}
-          </header>
+          </div>
         </section>
       </div>
 
@@ -81,7 +81,7 @@ export const ListTemplate = ({
         <div className='space-y-8'>
           {/* Featured */}
           {featuredPost && !isLoading && (
-            <PostFeatured post={featuredPost} />
+            <PostCardImgLeft post={featuredPost} />
           )}
 
           {/* Ranking */}
@@ -90,9 +90,9 @@ export const ListTemplate = ({
               <h2 className='text-[var(--font-size-h3-sm)] font-bold text-[var(--color-text-primary)]'>
                 ランキング
               </h2>
-              <ol>
+              <ol className='flex flex-wrap gap-4'>
                 {rankingPosts.map((post, index) => (
-                  <PostRankingItem key={post.id} post={post} rank={index + 1} />
+                  <PostRankingItem key={post.id} post={post} rank={index + 1} columns={3} />
                 ))}
               </ol>
             </section>

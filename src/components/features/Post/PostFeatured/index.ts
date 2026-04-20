@@ -1,1 +1,0 @@
-export { PostFeatured } from './PostFeatured';
