@@ -1,1 +1,0 @@
-export { HomeCardScroll } from './HomeCardScroll';

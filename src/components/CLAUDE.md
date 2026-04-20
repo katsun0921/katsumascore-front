@@ -22,6 +22,7 @@ src/components/
 ui-parts/
 ui-layout/
 ui-section/
+ui-home/
 features/
 ```
 
@@ -82,6 +83,23 @@ UIの配置・レイアウトを定義する
 `ProductBlock` はWordPress ACF + Gutenbergブロックとして挿入されるコンポーネント。  
 実装本体はPHPだが、表示確認のためTSXで実装している。  
 Next.jsアプリからはimportされないが、削除禁止。
+
+---
+
+## ■ ui-home（Home ページ専用UI）
+
+### ■ 役割
+Home ページ固有の意味あるUIのまとまり（`HomeCard` / `HomeCardScrollList` 等）
+
+### ■ 特徴
+- ui-section と同じ責務だが、スコープが Home ページ限定
+- HomeTemplate からのみ参照される
+- Home 固有のデザイン意図（ダーク背景・固定サイズ・横スクロール等）を閉じ込める
+
+### ■ ルール
+- ロジック禁止（hooks / state 禁止）
+- データは props で受け取る
+- 汎用化されたら `ui-section/` へ昇格する
 
 ---
 

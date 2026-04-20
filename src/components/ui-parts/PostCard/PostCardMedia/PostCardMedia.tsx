@@ -2,7 +2,15 @@ import Image from 'next/image';
 import type { PostCardMediaProps } from './PostCardMedia.types';
 import './PostCardMedia.scss';
 
-export const PostCardMedia = ({ image, title, className }: PostCardMediaProps) => {
+const DEFAULT_SIZES = '(max-width: 768px) 100vw, 540px';
+
+export const PostCardMedia = ({
+  image,
+  title,
+  className,
+  sizes = DEFAULT_SIZES,
+  children,
+}: PostCardMediaProps) => {
   return (
     <div className={['postCard__media', className].filter(Boolean).join(' ')}>
       {image ? (
@@ -10,7 +18,7 @@ export const PostCardMedia = ({ image, title, className }: PostCardMediaProps) =
           src={image}
           alt={`${title}のサムネイル画像`}
           fill
-          sizes='(max-width: 768px) 100vw, 540px'
+          sizes={sizes}
           className='postCard__image'
         />
       ) : (
@@ -22,6 +30,7 @@ export const PostCardMedia = ({ image, title, className }: PostCardMediaProps) =
           <span className='postCard__fallbackLabel'>No Image</span>
         </div>
       )}
+      {children}
     </div>
   );
 };

@@ -1,6 +1,7 @@
 export type PostCardBodyProps = {
-  publishedAt: string;
   title: string;
-  excerpt: string;
+  publishedAt?: string;
+  excerpt?: string;
+  category?: string;
   className?: string;
 };

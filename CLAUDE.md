@@ -22,6 +22,7 @@ components/
 ├── ui-parts/        ← 純粋UI（最小単位）
 ├── ui-layout/       ← 構造（配置・骨格）
 ├── ui-section/      ← 意味を持つUIまとまり
+├── ui-home/         ← Home ページ専用の意味あるUI
 ├── features/        ← ロジック（hooks / state / ドメイン知識）
 ├── templates/       ← 画面構造
 ├── docs/            ← Storybook専用ドキュメント
@@ -37,6 +38,7 @@ components/
 | components/ui-parts | 純粋UI（Score, Heading, Badge等） | propsの値を表示するのみ。hooks/state禁止。i18nのみ許可 |
 | components/ui-layout | 構造（Header, Footer, Sidebar等） | ロジック禁止。データ依存禁止。childrenで構成 |
 | components/ui-section | 意味を持つUIまとまり（PostList, PostSection等） | ロジック禁止。データはpropsで受け取る。hooks禁止 |
+| components/ui-home | Home ページ専用の意味あるUI（HomeCard, HomeCardScrollList等） | ロジック禁止。HomeTemplateからのみ参照される。hooks禁止 |
 | components/features | 機能コンポーネント（PostCard, Search, VodItem等） | hooks/state使用可。ui-parts/ui-sectionを組み合わせる |
 | components/templates | 画面構造（HomeTemplate, PostDetail等） | ページ単位の組み立て |
 | components/docs | Storybook専用（DesignRules等） | 設計・デザインルールの可視化 |
@@ -197,11 +199,14 @@ src/
 │   │   ├── CTAButton/
 │   │   ├── Category/
 │   │   ├── Heading/
+│   │   ├── PostCard/           ← Container / Media / Body / Skeleton 等の基礎部品
 │   │   ├── Score/
+│   │   ├── ScoreHexBadge/
 │   │   ├── SearchResultItem/
 │   │   ├── ShareButtons/
 │   │   ├── Tag/
 │   │   ├── VideoEmbed/
+│   │   ├── VodDots/
 │   │   ├── VodLink/
 │   │   └── VodMenuItem/
 │   │
@@ -213,10 +218,15 @@ src/
 │   │   └── Sidebar/
 │   │
 │   ├── ui-section/            ← 意味を持つUIまとまり
+│   │   ├── PostCard/           ← PostCardImgTop / ImgLeft / ImgOverlay
 │   │   ├── PostList/
 │   │   ├── PostListRow/
 │   │   ├── PostSection/
 │   │   └── ProductBlock/      ← WordPress ACF ブロック（Gutenberg挿入用）表示確認専用TSX
+│   │
+│   ├── ui-home/               ← Home ページ専用の意味あるUI（HomeTemplateからのみ参照）
+│   │   ├── HomeCard/
+│   │   └── HomeCardScrollList/
 │   │
 │   ├── templates/
 │   │   ├── HomeTemplate/
@@ -275,6 +285,7 @@ src/
 | components/ui-parts | Tailwind 必須。SCSSは最小限のみ許可（装飾用途） |
 | components/ui-layout | Tailwind |
 | components/ui-section | SCSS（コンポーネントスコープ）※レイアウト系の複雑さを許容 |
+| components/ui-home | SCSS（コンポーネントスコープ）※ページ固有のスタイル複雑さを許容 |
 | components/templates | Tailwind |
 | components/features | SCSS（コンポーネントスコープ）※ドメインロジックに依存し複雑になるため許容 |
 

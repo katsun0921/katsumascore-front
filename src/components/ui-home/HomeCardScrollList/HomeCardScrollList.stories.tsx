@@ -1,10 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { mockLatestPosts, mockAnimePosts, mockHighScorePosts } from '@/components/features/home/mocks/home';
-import { HomeCardScroll } from './HomeCardScroll';
+import {
+  mockLatestPosts,
+  mockAnimePosts,
+  mockHighScorePosts,
+} from '@/components/features/home/mocks/home';
+import { HomeCardScrollList } from './HomeCardScrollList';
 
-const meta: Meta<typeof HomeCardScroll> = {
-  title: 'Features/Home/HomeCardScroll',
-  component: HomeCardScroll,
+const meta: Meta<typeof HomeCardScrollList> = {
+  title: 'UiHome/HomeCardScrollList',
+  component: HomeCardScrollList,
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (
@@ -63,6 +67,17 @@ export const Dense: Story = {
       ...mockLatestPosts.map((p) => ({ ...p, id: `${p.id}-2` })),
       ...mockHighScorePosts.map((p) => ({ ...p, id: `${p.id}-3` })),
     ],
+    seeAllHref: '/posts',
+  },
+};
+
+export const Extreme: Story = {
+  args: {
+    title: 'Extreme（20+）',
+    posts: Array.from({ length: 22 }, (_, i) => ({
+      ...mockLatestPosts[i % mockLatestPosts.length],
+      id: `extreme-${i}`,
+    })),
     seeAllHref: '/posts',
   },
 };
