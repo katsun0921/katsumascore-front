@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards, Autoplay } from 'swiper/modules';
+import type { Swiper as SwiperInstance } from 'swiper';
 import { gsap } from 'gsap';
 import 'swiper/swiper.css';
 import 'swiper/css/effect-cards';
@@ -23,6 +24,8 @@ export type HomeHeroProps = {
   slides: HomeHeroSlide[];
 };
 
+const SWIPER_MODULES = [EffectCards, Autoplay];
+
 const RANK_COLORS: Record<string, string> = {
   SS: 'var(--color-score-rank-ss-text)',
   S:  'var(--color-score-rank-s-text)',
@@ -38,6 +41,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const textBlockRef     = useRef<HTMLDivElement>(null);
   const hexPathRef       = useRef<SVGPathElement>(null);
   const scoreNumRef      = useRef<HTMLDivElement>(null);
+  const swiperRef        = useRef<SwiperInstance | null>(null);
   const tlRef            = useRef<gsap.core.Timeline | null>(null);
   const isAnimatingRef   = useRef(false);
   const hasInitializedRef = useRef(false);
@@ -54,15 +58,20 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   };
 
   const animateIn = (score: number) => {
+    if (scoreNumRef.current) scoreNumRef.current.textContent = '0.0';
+
+    const counter = { val: 0 };
     const tl = gsap.timeline();
     tlRef.current = tl;
     tl.to(hexPathRef.current, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
       .to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '-=0.4')
-      .to(scoreNumRef.current, {
-        innerText: score,
+      .to(counter, {
+        val: score,
         duration: 1.0,
-        snap: { innerText: 0.1 },
         ease: 'power3.out',
+        onUpdate: () => {
+          if (scoreNumRef.current) scoreNumRef.current.textContent = counter.val.toFixed(1);
+        },
       }, '-=0.5')
       .to(textBlockRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.7');
   };
@@ -157,12 +166,17 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
         {/* Right: Swiper Cards */}
         <div className='homeHero__right'>
           <Swiper
-            modules={[EffectCards, Autoplay]}
+            modules={SWIPER_MODULES}
             effect='cards'
             grabCursor
-            loop
-            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            loop={false}
+            autoplay={{
+              delay: 5000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: false
+            }}
             className='homeHero__swiper'
+            onSwiper={(swiper) => { swiperRef.current = swiper; swiper.autoplay.start(); }}
             onRealIndexChange={(swiper) => handleSlideChange(swiper.realIndex)}
           >
             {slides.map((slide) => (
