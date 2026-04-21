@@ -270,7 +270,8 @@ src/
 │
 ├── pages/
 ├── styles/
-└── types/
+├── types/
+└── ui-proposals/          ← UIプロトタイプ・提案HTML（実装前の確認用）
 ```
 
 ---

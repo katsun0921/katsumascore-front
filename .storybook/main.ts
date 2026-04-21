@@ -9,6 +9,7 @@ const __dirname = dirname(__filename);
 
 const srcDir = resolve(__dirname, '../src')
 const publicDir = resolve(__dirname, '../public')
+const uiProposalsDir = resolve(__dirname, '../src/ui-proposals')
 const sassAdditionalData = `@use "${resolve(__dirname, '../src/styles/scss/global/variable/colors.scss')}" as *; @use "${resolve(__dirname, '../src/styles/scss/global/variable/fontWeight.scss')}" as *;`
 
 /** GitHub Pages などサブパス配信時は `STORYBOOK_BASE_PATH=/repo-name/` を CI で渡す */
@@ -17,8 +18,12 @@ const storybookBase = process.env.STORYBOOK_BASE_PATH?.trim() || '/'
 const config: StorybookConfig = {
   stories: [
     '../src/components/**/*.stories.@(js|jsx|ts|tsx)',
+    '../src/ui-proposals/**/*.stories.@(js|jsx|ts|tsx)',
   ],
-  staticDirs: [{ from: publicDir, to: '/' }],
+  staticDirs: [
+    { from: publicDir, to: '/' },
+    { from: uiProposalsDir, to: '/ui-proposals' },
+  ],
   addons: [
     '@storybook/addon-links',
     '@storybook/addon-docs',
