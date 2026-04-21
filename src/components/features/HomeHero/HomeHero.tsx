@@ -1,0 +1,185 @@
+'use client';
+
+import { useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { EffectCards, Autoplay } from 'swiper/modules';
+import { gsap } from 'gsap';
+import 'swiper/swiper.css';
+import 'swiper/modules/effect-cards.css';
+import './HomeHero.scss';
+
+export type HomeHeroSlide = {
+  title: string;
+  copy: string;
+  score: number;
+  rank: 'SS' | 'S' | 'A' | 'B' | 'C';
+  href: string;
+  image: string;
+};
+
+export type HomeHeroProps = {
+  slides: HomeHeroSlide[];
+};
+
+const RANK_COLORS: Record<string, string> = {
+  SS: 'var(--color-score-rank-ss-text)',
+  S:  'var(--color-score-rank-s-text)',
+  A:  'var(--color-score-rank-a-text)',
+  B:  'var(--color-score-rank-b-text)',
+  C:  'var(--color-score-rank-c-text)',
+};
+
+export const HomeHero = ({ slides }: HomeHeroProps) => {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const scoreBlockRef    = useRef<HTMLDivElement>(null);
+  const textBlockRef     = useRef<HTMLDivElement>(null);
+  const hexPathRef       = useRef<SVGPathElement>(null);
+  const scoreNumRef      = useRef<HTMLDivElement>(null);
+  const tlRef            = useRef<gsap.core.Timeline | null>(null);
+  const isAnimatingRef   = useRef(false);
+  const hasInitializedRef = useRef(false);
+
+  const current = slides[activeIndex] ?? slides[0];
+
+  const animateOut = (onComplete: () => void) => {
+    if (tlRef.current) tlRef.current.kill();
+    gsap.to([scoreBlockRef.current, textBlockRef.current], {
+      opacity: 0, y: 12, duration: 0.25,
+      onComplete,
+    });
+    gsap.set(hexPathRef.current, { strokeDashoffset: 400 });
+  };
+
+  const animateIn = (score: number) => {
+    const tl = gsap.timeline();
+    tlRef.current = tl;
+    tl.to(hexPathRef.current, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
+      .to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '-=0.4')
+      .to(scoreNumRef.current, {
+        innerText: score,
+        duration: 1.0,
+        snap: { innerText: 0.1 },
+        ease: 'power3.out',
+      }, '-=0.5')
+      .to(textBlockRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.7');
+  };
+
+  // 初回登場
+  useEffect(() => {
+    gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
+    gsap.set(hexPathRef.current, { strokeDashoffset: 400 });
+    const initTl = gsap.timeline({ delay: 0.3 });
+    initTl.call(() => {
+      hasInitializedRef.current = true;
+      animateIn(slides[0].score);
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleSlideChange = (realIndex: number) => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    animateOut(() => {
+      setActiveIndex(realIndex);
+      isAnimatingRef.current = false;
+    });
+  };
+
+  // activeIndex が変わったらアニメーションIn
+  useEffect(() => {
+    if (!hasInitializedRef.current) return; // 初回はuseEffect[0]が担う
+    animateIn(slides[activeIndex].score);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeIndex]);
+
+  return (
+    <section className='homeHero'>
+      {/* 背景レイヤー */}
+      <div className='homeHero__bg' aria-hidden='true'>
+        {slides.map((slide, i) => (
+          <Image
+            key={slide.image}
+            src={slide.image}
+            alt=''
+            fill
+            className={`homeHero__bgImg${i === activeIndex ? ' is-active' : ''}`}
+            priority={i === 0}
+            sizes='100vw'
+          />
+        ))}
+        <div className='homeHero__bgOverlay' />
+      </div>
+
+      {/* コンテンツ */}
+      <div className='homeHero__inner'>
+
+        {/* Left: テキスト */}
+        <div className='homeHero__left'>
+          {/* スコア */}
+          <div className='homeHero__scoreBlock' ref={scoreBlockRef}>
+            <div className='homeHero__hexWrap'>
+              <svg viewBox='0 0 100 100' aria-label={`スコア ${current.score} ランク ${current.rank}`}>
+                <path
+                  ref={hexPathRef}
+                  className='homeHero__hexPath'
+                  d='M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z'
+                />
+              </svg>
+              <div
+                ref={scoreNumRef}
+                className='homeHero__scoreVal'
+                style={{ color: RANK_COLORS[current.rank] }}
+              >
+                {current.score.toFixed(1)}
+              </div>
+            </div>
+            <div className='homeHero__scoreMeta'>
+              <span className='homeHero__scoreRank' style={{ color: RANK_COLORS[current.rank] }}>
+                {current.rank} RANK
+              </span>
+            </div>
+          </div>
+
+          {/* テキスト */}
+          <div className='homeHero__textBlock' ref={textBlockRef}>
+            <p className='homeHero__copy'>{current.copy}</p>
+            <h2 className='homeHero__title'>{current.title}</h2>
+            <Link href={current.href} className='homeHero__readReview'>
+              レビューを読む
+              <span className='homeHero__readReviewArrow' aria-hidden='true'>→</span>
+            </Link>
+          </div>
+        </div>
+
+        {/* Right: Swiper Cards */}
+        <div className='homeHero__right'>
+          <Swiper
+            modules={[EffectCards, Autoplay]}
+            effect='cards'
+            grabCursor
+            loop
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            className='homeHero__swiper'
+            onRealIndexChange={(swiper) => handleSlideChange(swiper.realIndex)}
+          >
+            {slides.map((slide) => (
+              <SwiperSlide key={slide.image} className='homeHero__swiperSlide'>
+                <Image
+                  src={slide.image}
+                  alt={slide.title}
+                  fill
+                  sizes='(max-width: 767px) 220px, 260px'
+                  style={{ objectFit: 'cover' }}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
+
+      </div>
+    </section>
+  );
+};

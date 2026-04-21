@@ -1,5 +1,5 @@
 import type { Post } from '@/types/post';
-import type { HomeHeroProps } from '@/components/ui-home/HomeHero';
+import type { HomeHeroProps } from '@/components/features/HomeHero';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
 import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';

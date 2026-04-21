@@ -1,4 +1,4 @@
-import { HomeHero } from '@/components/ui-home/HomeHero';
+import { HomeHero } from '@/components/features/HomeHero';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';

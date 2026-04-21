@@ -6,12 +6,32 @@ import type { RecommendBlock } from '../HomeRecommend/HomeRecommend';
 import type { FeaturedItem } from '../HomeFeatured/HomeFeatured';
 
 export const mockHeroData: HomeHeroProps = {
-  title: 'ナイブズ・アウト：ウェイク・アップ・デッドマン',
-  subtitle: '信仰と罪が交差する密室、名探偵は不可能を暴けるか。ライアン・ジョンソン監督が紡ぐ三部作の完結編。',
-  score: 3.5,
-  rank: 'A',
-  href: '/posts/knives-out-3',
-  vods: ['netflix', 'amazon'],
+  slides: [
+    {
+      title: 'DUNE PART TWO',
+      copy: '震えるほどの、熱狂を。',
+      score: 9.2,
+      rank: 'SS',
+      href: '/posts/dune-part-two',
+      image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600',
+    },
+    {
+      title: 'OPPENHEIMER',
+      copy: '愛が、すべてを壊す。',
+      score: 8.5,
+      rank: 'S',
+      href: '/posts/oppenheimer',
+      image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=1600',
+    },
+    {
+      title: 'PERFECT DAYS',
+      copy: 'その結末に、涙する。',
+      score: 7.8,
+      rank: 'A',
+      href: '/posts/perfect-days',
+      image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1600',
+    },
+  ],
 };
 
 export const mockRankingPosts: Post[] = [

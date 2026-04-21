@@ -1,0 +1,218 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.homeHero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+
+  /* ─── 背景 ─── */
+  &__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  &__bgImg {
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 1s ease;
+
+    &.is-active {
+      opacity: 1;
+    }
+  }
+
+  &__bgOverlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, rgba(10,6,24,0.92) 0%, rgba(10,6,24,0.6) 50%, rgba(10,6,24,0.2) 100%),
+      linear-gradient(to top,   rgba(10,6,24,0.7)  0%, transparent 50%);
+    pointer-events: none;
+  }
+
+  /* ─── レイアウト ─── */
+  &__inner {
+    position: relative;
+    z-index: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 20px 40px;
+    gap: 40px;
+
+    @include layout-md {
+      flex-direction: row;
+      padding: 48px 56px;
+      gap: 64px;
+    }
+  }
+
+  /* ─── Left ─── */
+  &__left {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: center;
+    text-align: center;
+
+    @include layout-md {
+      flex: 1;
+      max-width: 480px;
+      align-items: flex-start;
+      text-align: left;
+    }
+  }
+
+  /* スコアブロック */
+  &__scoreBlock {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+  }
+
+  &__hexWrap {
+    position: relative;
+    width: 96px;
+    height: 96px;
+    flex-shrink: 0;
+
+    svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &__hexPath {
+    fill: none;
+    stroke: var(--color-score-border);
+    stroke-width: 2;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+  }
+
+  &__scoreVal {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-ui);
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--color-score-rank-ss-text);
+  }
+
+  &__scoreMeta {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  &__scoreLabel {
+    font-family: var(--font-ui);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-home-text-secondary);
+  }
+
+  &__scoreRank {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: var(--color-score-border);
+  }
+
+  /* テキストブロック */
+  &__textBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    opacity: 0;
+  }
+
+  &__copy {
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--color-home-text-secondary);
+    margin-bottom: 8px;
+  }
+
+  &__title {
+    font-family: var(--font-heading);
+    font-size: clamp(24px, 3.5vw, 48px);
+    font-weight: 700;
+    color: var(--color-home-text-soft);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+
+  &__readReview {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-score-border);
+    text-decoration: none;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 45, 252, 0.3);
+    transition: border-color 0.2s;
+    align-self: center;
+
+    @include layout-md {
+      align-self: flex-start;
+    }
+
+    &:hover {
+      border-color: var(--color-score-border);
+    }
+  }
+
+  &__readReviewArrow {
+    display: inline-block;
+    transition: transform 0.2s;
+
+    .homeHero__readReview:hover & {
+      transform: translateX(4px);
+    }
+  }
+
+  /* ─── Right: Swiper ─── */
+  &__right {
+    flex-shrink: 0;
+    order: -1;
+
+    @include layout-md {
+      order: 0;
+    }
+  }
+
+  &__swiper {
+    width: 220px;
+    height: 308px;
+
+    @include layout-md {
+      width: 260px;
+      height: 364px;
+    }
+  }
+
+  &__swiperSlide {
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
+    background: var(--color-home-card);
+    position: relative;
+  }
+}
