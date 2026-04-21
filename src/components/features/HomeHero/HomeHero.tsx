@@ -7,7 +7,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards, Autoplay } from 'swiper/modules';
 import { gsap } from 'gsap';
 import 'swiper/swiper.css';
-import 'swiper/modules/effect-cards.css';
+import 'swiper/css/effect-cards';
 import './HomeHero.scss';
 
 export type HomeHeroSlide = {

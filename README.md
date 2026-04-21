@@ -158,6 +158,24 @@ npm run deploy
 
 ---
 
+## これからやること
+
+### VODパーソナライズ & 通知機能
+
+ユーザーのVOD契約に基づいて作品をフィルタリングし、新エピソード公開時にPWA通知する機能の実装を予定しています。
+
+| ステップ | 内容 |
+|---|---|
+| 1 | VOD選択UI（初回モーダル + localStorage保存） |
+| 2 | localStorage設計 |
+| 3 | Seriesフィルタリングロジック |
+| 4 | トップページへの反映（「あなたが見られる今期シリーズ」） |
+| 5 | 通知実装（Service Worker / Cloudflare Workers） |
+
+詳細設計: [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md)
+
+---
+
 ## 設計ドキュメント
 
 詳細な設計規約・移行ガイドは [CLAUDE.md](./CLAUDE.md) を参照してください。
