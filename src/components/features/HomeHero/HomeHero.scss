@@ -90,7 +90,7 @@
 
   &__hexPath {
     fill: none;
-    stroke: var(--color-score-border);
+    stroke: var(--color-score-accent);
     stroke-width: 2;
     stroke-dasharray: 400;
     stroke-dashoffset: 400;
@@ -105,7 +105,7 @@
     font-family: var(--font-ui);
     font-size: 32px;
     font-weight: 900;
-    color: var(--color-score-rank-ss-text);
+    color: var(--color-score-accent);
   }
 
   &__scoreMeta {
@@ -119,7 +119,7 @@
     font-size: 10px;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--color-home-text-secondary);
+    color: rgba(var(--color-white-rgb), 0.55);
   }
 
   &__scoreRank {
@@ -127,7 +127,7 @@
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.1em;
-    color: var(--color-score-border);
+    color: var(--color-score-accent);
   }
 
   /* テキストブロック */
@@ -141,7 +141,7 @@
   &__copy {
     font-size: 13px;
     letter-spacing: 0.14em;
-    color: var(--color-home-text-secondary);
+    color: rgba(var(--color-white-rgb), 0.55);
     margin-bottom: 8px;
   }
 
@@ -149,7 +149,7 @@
     font-family: var(--font-heading);
     font-size: clamp(24px, 3.5vw, 48px);
     font-weight: 700;
-    color: var(--color-home-text-soft);
+    color: var(--color-text-inverse);
     line-height: 1.15;
     margin-bottom: 20px;
   }
@@ -163,7 +163,7 @@
     font-weight: 700;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--color-score-border);
+    color: var(--color-score-accent);
     text-decoration: none;
     padding-bottom: 4px;
     border-bottom: 1px solid rgba(255, 45, 252, 0.3);
@@ -175,7 +175,7 @@
     }
 
     &:hover {
-      border-color: var(--color-score-border);
+      border-color: var(--color-score-accent);
     }
   }
 
@@ -212,7 +212,7 @@
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
-    background: var(--color-home-card);
+    background: var(--color-surface-dark);
     position: relative;
   }
 }

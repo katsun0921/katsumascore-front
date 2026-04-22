@@ -27,11 +27,11 @@ export type HomeHeroProps = {
 const SWIPER_MODULES = [EffectCards, Autoplay];
 
 const RANK_COLORS: Record<string, string> = {
-  SS: 'var(--color-score-rank-ss-text)',
-  S:  'var(--color-score-rank-s-text)',
-  A:  'var(--color-score-rank-a-text)',
-  B:  'var(--color-score-rank-b-text)',
-  C:  'var(--color-score-rank-c-text)',
+  SS: 'var(--color-score-accent)',
+  S:  'var(--color-score-rank-high)',
+  A:  'var(--color-score-rank-mid)',
+  B:  'var(--color-score-rank-low)',
+  C:  'var(--color-score-rank-low)',
 };
 
 export const HomeHero = ({ slides }: HomeHeroProps) => {

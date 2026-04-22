@@ -24,7 +24,7 @@ export const SearchResultItem = ({ result, isActive, id, onClick }: Props) => {
         <span className='min-w-0 flex-1 overflow-hidden text-ellipsis whitespace-nowrap text-[var(--font-size-ui-lg)] font-medium'>
           {result.title}
         </span>
-        <span className='shrink-0 whitespace-nowrap rounded bg-[var(--color-surface-muted)] px-2 py-1 font-[var(--font-ui)] text-[var(--font-size-caption-lg)] text-[var(--color-text-secondary)]'>
+        <span className='shrink-0 whitespace-nowrap rounded bg-[var(--color-surface)] px-2 py-1 font-[var(--font-ui)] text-[var(--font-size-caption-lg)] text-[var(--color-text-secondary)]'>
           {result.type}
         </span>
       </Link>

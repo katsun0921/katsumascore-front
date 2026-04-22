@@ -29,30 +29,64 @@
 :root {
   --layout-width-lg: 768px;
   --measure-readable: 40rem;
+
+  /* Brand */
   --color-primary: #2563eb;
   --color-secondary: #1e1b4b;
   --color-accent: #6d28d9;
+  --color-accent-strong: #ff2dfc;
+
+  /* Derived UI */
   --color-header: var(--color-secondary);
   --color-navigation: var(--color-secondary);
   --color-footer: #0e011c;
   --color-category: #5c39f2;
   --color-category-hover: var(--color-secondary);
+
+  /* Background */
+  --color-bg: #ffffff;
+  --color-bg-muted: #f3f4f6;
+  --color-surface: #f7f7f7;
+  --color-bg-dark: #0a0618;
+  --color-surface-dark: #1a1030;
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-text-muted: #616161;
+
+  /* Border */
+  --color-border: #d1d5db;
+  --color-border-muted: #e0e0e0;
+  --color-border-soft: rgba(var(--color-black-rgb), 0.1);
+
+  /* Score */
   --color-score-bg: #14082e;
-  --color-score-border: #ff2dfc;
+  --color-score-accent: #ff2dfc;
+  --color-score-rank-low: #64748b;
+  --color-score-rank-mid: #2563eb;
+  --color-score-rank-high: #c026d3;
 
-  /* Home: ダークテーマ専用カラー */
-  --color-home-bg: #0a0618;
-  --color-home-card: #1a1030;
-  --color-home-text: #e8e6f0;
-  --color-home-text-secondary: #9890b0;
-  --color-home-text-soft: #f0eef6;
+  /* Highlight */
+  --color-highlight-bg: #fefce8;
+  --color-highlight-mark: #fef08a;
 
-  /* ScoreWithRank: ランク別スコア数字色（C→SS で段階的に強調） */
-  --color-score-rank-c-text: #64748b;
-  --color-score-rank-b-text: #0f766e;
-  --color-score-rank-a-text: #2563eb;
-  --color-score-rank-s-text: #c026d3;
-  --color-score-rank-ss-text: #ff2dfc;
+  /* Product */
+  --color-product-vod: #4caf50;
+  --color-product-commerce: #ff9800;
+
+  /* Misc */
+  --color-primary-dark: #1e40af;
+  --color-accent-yellow: #eab308;
+  --color-heading-gradient-start: #667eea;
+  --color-heading-gradient-end: #764ba2;
+  --color-heading-gold-start: #ffd700;
+  --color-heading-gold-end: #ffed4e;
+  --color-black: #000000;
+  --color-bg-code: #111827;
+
+  /* Service */
   --color-netflix: #e50914;
   --color-amazon: #00a8e1;
   --color-amazon-shopping: #ff9900;
@@ -64,42 +98,20 @@
   --color-abema: #00bcd4;
   --color-appletv: #555555;
   --color-youtube: #ff0000;
-  --color-twitter: #1da1f2;
-  --color-x: #000000;
-  --color-facebook: #1877f2;
-  --color-instagram: #e1306c;
-  --color-line: #06c755;
-  --color-rss: #ec7c1c;
   --color-tsutaya: #003087;
   --color-geo: #0066cc;
   --color-imdb: #f5c518;
   --color-rt: #fa320a;
   --color-filmarks: #3a7bd5;
   --color-eiga-com: #e8562a;
-  --color-text-dark: #2f2f2f;
-  --color-bg: #ffffff;
-  --color-bg-muted: #f3f4f6;
-  --color-surface-muted: #f7f7f7;
-  --color-border-muted: #e0e0e0;
-  --color-border-soft: rgba(var(--color-black-rgb), 0.1);
-  --color-text-primary: #111827;
-  --color-text-secondary: #6b7280;
-  --color-text-inverse: #ffffff;
-  --color-text-muted: #616161;
-  --color-primary-dark: #1e40af;
-  --color-text-body: #374151;
-  --color-border: #d1d5db;
-  --color-highlight-bg: #fefce8;
-  --color-highlight-mark: #fef08a;
-  --color-accent-yellow: #eab308;
-  --color-heading-gradient-start: #667eea;
-  --color-heading-gradient-end: #764ba2;
-  --color-heading-gold-start: #ffd700;
-  --color-heading-gold-end: #ffed4e;
-  --color-product-vod: #4caf50;
-  --color-product-shopping: #ff9800;
-  --color-black: #000000;
-  --color-bg-code: #111827;
+
+  /* Social */
+  --color-twitter: #1da1f2;
+  --color-x: #000000;
+  --color-facebook: #1877f2;
+  --color-instagram: #e1306c;
+  --color-line: #06c755;
+  --color-rss: #ec7c1c;
 
   /* RGB channel variables for alpha color compositions */
   --color-primary-rgb: 37, 99, 235;
@@ -108,9 +120,8 @@
   --color-black-rgb: 0, 0, 0;
   --color-text-primary-rgb: 17, 24, 39;
   --color-text-secondary-rgb: 107, 114, 128;
-  --color-text-body-rgb: 55, 65, 81;
   --color-bg-muted-rgb: 243, 244, 246;
-  --color-surface-muted-rgb: 247, 247, 247;
+  --color-surface-rgb: 247, 247, 247;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
 
@@ -164,22 +175,65 @@
 @theme inline {
   --color-background: var(--color-bg);
   --color-foreground: var(--color-text-primary);
+
+  /* Brand */
   --color-primary: var(--color-primary);
   --color-secondary: var(--color-secondary);
   --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+
+  /* Derived UI */
   --color-header: var(--color-header);
   --color-navigation: var(--color-navigation);
   --color-footer: var(--color-footer);
   --color-category: var(--color-category);
   --color-category-hover: var(--color-category-hover);
+
+  /* Background */
+  --color-bg: var(--color-bg);
+  --color-bg-muted: var(--color-bg-muted);
+  --color-surface: var(--color-surface);
+  --color-bg-dark: var(--color-bg-dark);
+  --color-surface-dark: var(--color-surface-dark);
+
+  /* Text */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-inverse: var(--color-text-inverse);
+  --color-text-muted: var(--color-text-muted);
+
+  /* Border */
+  --color-border: var(--color-border);
+  --color-border-muted: var(--color-border-muted);
+  --color-border-soft: var(--color-border-soft);
+
+  /* Score */
   --color-score-bg: var(--color-score-bg);
-  --color-score-border: var(--color-score-border);
-  --color-score-rank-c-text: var(--color-score-rank-c-text);
-  --color-score-rank-b-text: var(--color-score-rank-b-text);
-  --color-score-rank-a-text: var(--color-score-rank-a-text);
-  --color-score-rank-s-text: var(--color-score-rank-s-text);
-  --color-score-rank-ss-text: var(--color-score-rank-ss-text);
+  --color-score-accent: var(--color-score-accent);
+  --color-score-rank-low: var(--color-score-rank-low);
+  --color-score-rank-mid: var(--color-score-rank-mid);
+  --color-score-rank-high: var(--color-score-rank-high);
   --color-score-hero-text-halo: var(--color-score-hero-text-halo);
+
+  /* Highlight */
+  --color-highlight-bg: var(--color-highlight-bg);
+  --color-highlight-mark: var(--color-highlight-mark);
+
+  /* Product */
+  --color-product-vod: var(--color-product-vod);
+  --color-product-commerce: var(--color-product-commerce);
+
+  /* Misc */
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent-yellow: var(--color-accent-yellow);
+  --color-heading-gradient-start: var(--color-heading-gradient-start);
+  --color-heading-gradient-end: var(--color-heading-gradient-end);
+  --color-heading-gold-start: var(--color-heading-gold-start);
+  --color-heading-gold-end: var(--color-heading-gold-end);
+  --color-black: var(--color-black);
+  --color-bg-code: var(--color-bg-code);
+
+  /* Service */
   --color-netflix: var(--color-netflix);
   --color-amazon: var(--color-amazon);
   --color-amazon-shopping: var(--color-amazon-shopping);
@@ -191,42 +245,21 @@
   --color-abema: var(--color-abema);
   --color-appletv: var(--color-appletv);
   --color-youtube: var(--color-youtube);
-  --color-twitter: var(--color-twitter);
-  --color-x: var(--color-x);
-  --color-facebook: var(--color-facebook);
-  --color-instagram: var(--color-instagram);
-  --color-line: var(--color-line);
-  --color-rss: var(--color-rss);
   --color-tsutaya: var(--color-tsutaya);
   --color-geo: var(--color-geo);
   --color-imdb: var(--color-imdb);
   --color-rt: var(--color-rt);
   --color-filmarks: var(--color-filmarks);
   --color-eiga-com: var(--color-eiga-com);
-  --color-text-dark: var(--color-text-dark);
-  --color-bg: var(--color-bg);
-  --color-bg-muted: var(--color-bg-muted);
-  --color-surface-muted: var(--color-surface-muted);
-  --color-border-muted: var(--color-border-muted);
-  --color-border-soft: var(--color-border-soft);
-  --color-text-primary: var(--color-text-primary);
-  --color-text-secondary: var(--color-text-secondary);
-  --color-text-inverse: var(--color-text-inverse);
-  --color-text-muted: var(--color-text-muted);
-  --color-primary-dark: var(--color-primary-dark);
-  --color-text-body: var(--color-text-body);
-  --color-border: var(--color-border);
-  --color-highlight-bg: var(--color-highlight-bg);
-  --color-highlight-mark: var(--color-highlight-mark);
-  --color-accent-yellow: var(--color-accent-yellow);
-  --color-heading-gradient-start: var(--color-heading-gradient-start);
-  --color-heading-gradient-end: var(--color-heading-gradient-end);
-  --color-heading-gold-start: var(--color-heading-gold-start);
-  --color-heading-gold-end: var(--color-heading-gold-end);
-  --color-product-vod: var(--color-product-vod);
-  --color-product-shopping: var(--color-product-shopping);
-  --color-black: var(--color-black);
-  --color-bg-code: var(--color-bg-code);
+
+  /* Social */
+  --color-twitter: var(--color-twitter);
+  --color-x: var(--color-x);
+  --color-facebook: var(--color-facebook);
+  --color-instagram: var(--color-instagram);
+  --color-line: var(--color-line);
+  --color-rss: var(--color-rss);
+
   --font-body: var(--font-body), sans-serif;
   --font-heading: var(--font-heading), serif;
 

@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { type Locale } from '@/i18n/t'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import ProfileImg from '@/assets/images/profile.webp'
-import IconX from '@/assets/icons/x.svg'
+import ProfileImg from '@assets/images/profile.webp'
+import IconX from '@assets/icons/x.svg'
 
 export type ProfileProps = {
   name: string
@@ -48,7 +48,7 @@ export const Profile = ({
       {/* 管理者の一言コメント */}
       {comment && (
         <div className='mb-3'>
-          <span className='block relative text-[length:var(--font-size-caption)] leading-[1.65] text-[var(--color-text-body)] bg-[var(--color-surface-muted)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface-muted)_transparent_transparent]'>
+          <span className='block relative text-[length:var(--font-size-caption)] leading-[1.65] text-[var(--color-text-primary)] bg-[var(--color-surface)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
             {comment}
           </span>
         </div>

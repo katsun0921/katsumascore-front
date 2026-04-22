@@ -28,6 +28,7 @@ const brandColors: Swatch[] = [
   { name: 'Primary Dark', token: '--color-primary-dark', value: '#1e40af', textColor: '#ffffff' },
   { name: 'Secondary', token: '--color-secondary', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Accent', token: '--color-accent', value: '#6d28d9', textColor: '#ffffff' },
+  { name: 'Accent Strong', token: '--color-accent-strong', value: '#ff2dfc' },
   { name: 'Category', token: '--color-category', value: '#5c39f2', textColor: '#ffffff' },
   { name: 'Category Hover', token: '--color-category-hover', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Header', token: '--color-header', value: '#1e1b4b', textColor: '#ffffff' },
@@ -38,7 +39,9 @@ const brandColors: Swatch[] = [
 const surfaceColors: Swatch[] = [
   { name: 'Background', token: '--color-bg', value: '#ffffff' },
   { name: 'Background Muted', token: '--color-bg-muted', value: '#f3f4f6' },
-  { name: 'Surface Muted', token: '--color-surface-muted', value: '#f7f7f7' },
+  { name: 'Surface', token: '--color-surface', value: '#f7f7f7' },
+  { name: 'Background Dark', token: '--color-bg-dark', value: '#0a0618', textColor: '#ffffff' },
+  { name: 'Surface Dark', token: '--color-surface-dark', value: '#1a1030', textColor: '#ffffff' },
   { name: 'Border Muted', token: '--color-border-muted', value: '#e0e0e0' },
   { name: 'Border', token: '--color-border', value: '#d1d5db' },
   { name: 'Border Soft', token: '--color-border-soft', value: 'rgba(0,0,0,0.1)' },
@@ -50,24 +53,16 @@ const surfaceColors: Swatch[] = [
 const textAndFeatureColors: Swatch[] = [
   { name: 'Text Primary', token: '--color-text-primary', value: '#111827', textColor: '#ffffff' },
   { name: 'Text Secondary', token: '--color-text-secondary', value: '#6b7280', textColor: '#ffffff' },
-  { name: 'Text Body', token: '--color-text-body', value: '#374151', textColor: '#ffffff' },
   { name: 'Text Muted', token: '--color-text-muted', value: '#616161', textColor: '#ffffff' },
-  { name: 'Text Dark', token: '--color-text-dark', value: '#2f2f2f', textColor: '#ffffff' },
   { name: 'Text Inverse', token: '--color-text-inverse', value: '#ffffff' },
   { name: 'Black', token: '--color-black', value: '#000000', textColor: '#ffffff' },
   { name: 'Accent Yellow', token: '--color-accent-yellow', value: '#eab308' },
   { name: 'Score BG', token: '--color-score-bg', value: '#14082e', textColor: '#ffffff' },
-  { name: 'Score Border', token: '--color-score-border', value: '#ff2dfc' },
-  { name: 'Score Rank C Text', token: '--color-score-rank-c-text', value: '#64748b' },
-  { name: 'Score Rank B Text', token: '--color-score-rank-b-text', value: '#0f766e' },
-  { name: 'Score Rank A Text', token: '--color-score-rank-a-text', value: '#2563eb' },
-  { name: 'Score Rank S Text', token: '--color-score-rank-s-text', value: '#c026d3' },
-  { name: 'Score Rank SS Text', token: '--color-score-rank-ss-text', value: '#ff2dfc' },
-  {
-    name: 'Score Hero Text Halo',
-    token: '--color-score-hero-text-halo',
-    value: '#ffffff',
-  },
+  { name: 'Score Accent', token: '--color-score-accent', value: '#ff2dfc' },
+  { name: 'Score Rank Low', token: '--color-score-rank-low', value: '#64748b' },
+  { name: 'Score Rank Mid', token: '--color-score-rank-mid', value: '#2563eb' },
+  { name: 'Score Rank High', token: '--color-score-rank-high', value: '#c026d3' },
+  { name: 'Score Hero Text Halo', token: '--color-score-hero-text-halo', value: '#ffffff' },
 ];
 
 const serviceColors: Swatch[] = [

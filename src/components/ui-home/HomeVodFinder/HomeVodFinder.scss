@@ -32,7 +32,7 @@
   transition: border-color 0.2s;
 
   &:hover {
-    border-color: var(--color-score-rank-s-text);
+    border-color: var(--color-score-rank-high);
   }
 
   &__icon {

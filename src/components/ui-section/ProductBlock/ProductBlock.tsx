@@ -37,7 +37,7 @@ const SITE_BG: Record<string, string> = {
 
 const borderColor: Record<TProductType, string> = {
   vod: 'border-l-[var(--color-product-vod)]',
-  shopping: 'border-l-[var(--color-product-shopping)]',
+  shopping: 'border-l-[var(--color-product-commerce)]',
 }
 
 export const ProductBlock = ({

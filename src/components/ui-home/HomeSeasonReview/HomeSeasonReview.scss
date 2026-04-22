@@ -36,11 +36,11 @@
   transition: border-color 0.2s;
 
   &:hover {
-    border-color: var(--color-score-rank-s-text);
+    border-color: var(--color-score-rank-high);
   }
 
   &__label {
-    color: var(--color-score-rank-s-text);
+    color: var(--color-score-rank-high);
     font-family: var(--font-heading);
     font-size: 18px;
     font-weight: 700;
@@ -48,7 +48,7 @@
   }
 
   &--current &__label {
-    color: var(--color-score-border);
+    color: var(--color-score-accent);
   }
 
   &__period {

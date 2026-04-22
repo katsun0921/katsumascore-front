@@ -63,7 +63,7 @@
   &__title-sub {
     font-family: var(--font-en-heading);
     font-size: var(--font-size-body);
-    color: var(--color-home-text-secondary);
+    color: rgba(var(--color-white-rgb), 0.55);
     letter-spacing: 0.04em;
     margin: var(--space-0);
   }
@@ -71,7 +71,7 @@
   &__meta {
     font-family: var(--font-ja-body);
     font-size: var(--font-size-body);
-    color: var(--color-home-text-secondary);
+    color: rgba(var(--color-white-rgb), 0.55);
     letter-spacing: 0.04em;
     margin: var(--space-0);
   }
@@ -83,7 +83,7 @@
   &__copyright {
     font-family: var(--font-ja-body);
     font-size: var(--font-size-caption);
-    color: var(--color-home-text-secondary);
+    color: rgba(var(--color-white-rgb), 0.55);
     letter-spacing: 0.03em;
     margin: var(--space-0);
   }

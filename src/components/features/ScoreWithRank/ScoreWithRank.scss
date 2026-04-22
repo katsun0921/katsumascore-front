@@ -45,11 +45,11 @@
     letter-spacing: 0.02em;
     font-size: var(--font-size-score-hero-int);
 
-    &--rank-c  { color: var(--color-score-rank-c-text); }
-    &--rank-b  { color: var(--color-score-rank-b-text); }
-    &--rank-a  { color: var(--color-score-rank-a-text); }
-    &--rank-s  { color: var(--color-score-rank-s-text); }
-    &--rank-ss { color: var(--color-score-rank-ss-text); }
+    &--rank-c  { color: var(--color-score-rank-low); }
+    &--rank-b  { color: var(--color-score-rank-low); }
+    &--rank-a  { color: var(--color-score-rank-mid); }
+    &--rank-s  { color: var(--color-score-rank-high); }
+    &--rank-ss { color: var(--color-score-accent); }
     &--rank-none { color: var(--color-text-primary); }
   }
 
@@ -67,11 +67,11 @@
     height: 30%;
     clip-path: polygon(100% 0, 0 35%, 20% 100%);
 
-    &--rank-c  { background-color: var(--color-score-rank-c-text); }
-    &--rank-b  { background-color: var(--color-score-rank-b-text); }
-    &--rank-a  { background-color: var(--color-score-rank-a-text); }
-    &--rank-s  { background-color: var(--color-score-rank-s-text); }
-    &--rank-ss { background-color: var(--color-score-rank-ss-text); }
+    &--rank-c  { background-color: var(--color-score-rank-low); }
+    &--rank-b  { background-color: var(--color-score-rank-low); }
+    &--rank-a  { background-color: var(--color-score-rank-mid); }
+    &--rank-s  { background-color: var(--color-score-rank-high); }
+    &--rank-ss { background-color: var(--color-score-accent); }
     &--rank-none { background-color: var(--color-text-primary); }
   }
 

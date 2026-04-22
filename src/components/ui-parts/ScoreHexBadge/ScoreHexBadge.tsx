@@ -5,8 +5,8 @@ const HIGH_SCORE_THRESHOLD = 3.5;
 export const ScoreHexBadge = ({ score, className }: ScoreHexBadgeProps) => {
   const color =
     score >= HIGH_SCORE_THRESHOLD
-      ? 'var(--color-score-border)'
-      : 'var(--color-score-rank-s-text)';
+      ? 'var(--color-score-accent)'
+      : 'var(--color-score-rank-high)';
   return (
     <svg
       width='24'

@@ -9,6 +9,7 @@ const __dirname = dirname(__filename);
 
 const srcDir = resolve(__dirname, '../src')
 const publicDir = resolve(__dirname, '../public')
+const assetsDir = resolve(__dirname, '../src/assets')
 const uiProposalsDir = resolve(__dirname, '../src/ui-proposals')
 const sassAdditionalData = `@use "${resolve(__dirname, '../src/styles/scss/global/variable/colors.scss')}" as *; @use "${resolve(__dirname, '../src/styles/scss/global/variable/fontWeight.scss')}" as *;`
 
@@ -45,7 +46,8 @@ const config: StorybookConfig = {
     config.resolve = config.resolve ?? {}
     config.resolve.alias = {
       ...(config.resolve.alias ?? {}),
-      '@/assets': publicDir,
+      '@public': publicDir,
+      '@assets': assetsDir,
       '@': srcDir,
       'next/image': resolve(__dirname, './mocks/nextImage.tsx'),
       'next/router': resolve(__dirname, './mocks/nextRouter.tsx'),

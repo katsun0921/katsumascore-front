@@ -34,9 +34,9 @@ export const ListTemplate = ({
   const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
 
   const scoreFilterItems = [
-    { label: t(messages, ['scoreFilter', 'high'], locale), value: '4.0+', color: 'var(--color-score-rank-s-text)' },
-    { label: t(messages, ['scoreFilter', 'mid'], locale), value: '3.0-3.9', color: 'var(--color-score-rank-a-text)' },
-    { label: t(messages, ['scoreFilter', 'low'], locale), value: '2.9-', color: 'var(--color-score-rank-b-text)' },
+    { label: t(messages, ['scoreFilter', 'high'], locale), value: '4.0+', color: 'var(--color-score-rank-high)' },
+    { label: t(messages, ['scoreFilter', 'mid'], locale), value: '3.0-3.9', color: 'var(--color-score-rank-mid)' },
+    { label: t(messages, ['scoreFilter', 'low'], locale), value: '2.9-', color: 'var(--color-score-rank-low)' },
   ];
 
   const featuredPost = posts[0];
@@ -64,7 +64,7 @@ export const ListTemplate = ({
         </div>
         <section className='px-4 py-8 md:py-12'>
           <div className='space-y-2'>
-            <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-border)] uppercase'>
+            <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-accent)] uppercase'>
               {t(messages, ['category', 'label'], locale)}
             </p>
             <h1 className='font-bold text-[var(--color-text-inverse)]'>
@@ -130,7 +130,7 @@ export const ListTemplate = ({
         {/* Sidebar */}
         <aside className='space-y-6'>
           {/* 広告 */}
-          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-5'>
+          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5'>
             <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase mb-3'>
               {t(messages, ['ad', 'label'], locale)}
             </p>
@@ -140,7 +140,7 @@ export const ListTemplate = ({
           </div>
 
           {/* スコア別フィルター */}
-          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface-muted)] p-5 space-y-3'>
+          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5 space-y-3'>
             <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase'>
               {t(messages, ['scoreFilter', 'heading'], locale)}
             </p>
