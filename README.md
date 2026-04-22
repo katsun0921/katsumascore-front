@@ -248,7 +248,13 @@ npm run deploy
 
 #### コンポーネント整理
 - [ ] `features/` 内の重複・未整理コンポーネントの移行（AdRental / CinemaCheck / GenreNav等）
+  - [ ] AdRental
+  - [ ] CinemaCheck
+  - [ ] GenreNav
 - [ ] `ui-section/` 内の整理（Profile / RelatedPosts / SeoHead）
+  - [ ] Profile
+  - [ ] RelatedPosts
+  - [ ] SeoHead
 
 ---
 
