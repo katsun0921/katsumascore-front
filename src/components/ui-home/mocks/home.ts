@@ -13,7 +13,7 @@ export const mockHeroData: HomeHeroProps = {
       score: 9.2,
       rank: 'SS',
       href: '/posts/dune-part-two',
-      image: 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600',
+      image: 'https://placehold.jp/1000x1400.png',
     },
     {
       title: 'OPPENHEIMER',
@@ -21,7 +21,7 @@ export const mockHeroData: HomeHeroProps = {
       score: 8.5,
       rank: 'S',
       href: '/posts/oppenheimer',
-      image: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=1600',
+      image: 'https://placehold.jp/3d4070/ffffff/1000x1400.png',
     },
     {
       title: 'PERFECT DAYS',
@@ -29,7 +29,7 @@ export const mockHeroData: HomeHeroProps = {
       score: 7.8,
       rank: 'A',
       href: '/posts/perfect-days',
-      image: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1600',
+      image: 'https://placehold.jp/dd6699/ffffff/1000x1400.png',
     },
   ],
 };

@@ -2,19 +2,26 @@
 
 .homeHero {
   position: relative;
-  height: 100vh;
-  overflow: hidden;
 
   /* ─── 背景 ─── */
   &__bg {
     position: absolute;
-    inset: 0;
+    width: fit-content;
+    height: fit-content;
+    right: 26%;
     z-index: 0;
+    display: grid;
+    > * {
+      grid-area: 1 / -1;
+    }
   }
 
   &__bgImg {
-    object-fit: cover;
+    object-fit: contain;
+    width: auto;
+    height: 50vw;
     opacity: 0;
+    right: 0;
     transition: opacity 1s ease;
 
     &.is-active {
@@ -23,11 +30,9 @@
   }
 
   &__bgOverlay {
-    position: absolute;
-    inset: 0;
-    background:
-      linear-gradient(to right, rgba(10,6,24,0.92) 0%, rgba(10,6,24,0.6) 50%, rgba(10,6,24,0.2) 100%),
-      linear-gradient(to top,   rgba(10,6,24,0.7)  0%, transparent 50%);
+    position: relative;
+    height: 100%;
+    opacity: 0.8;
     pointer-events: none;
   }
 

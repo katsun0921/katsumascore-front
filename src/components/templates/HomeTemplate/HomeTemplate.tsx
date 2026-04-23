@@ -2,7 +2,6 @@ import { HomeHero } from '@/components/features/HomeHero';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
-import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { PageLayout } from '@/components/templates/PageLayout';
@@ -24,11 +23,9 @@ export const HomeTemplate = ({
   hero,
   rankingPosts,
   latestPosts,
-  animePosts,
   highScorePosts,
   recommendBlocks,
   vodFinderItems,
-  seasonItems,
   featuredItems,
 }: HomeTemplateProps) => {
   return (
@@ -46,11 +43,6 @@ export const HomeTemplate = ({
           <HomeCardScrollList title='最新レビュー' posts={latestPosts} seeAllHref='/posts' />
         </section>
 
-        {/* ── SP: 3列目 / PC: 右列1段目（sidebar） ── */}
-        <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/anime' />
-        </section>
-
         {/* ── SP: 4列目 / PC: 左列続き ── */}
         <section className='homeTemplate__section'>
           <HomeCardScrollList title='高評価作品' posts={highScorePosts} icon='star' />
@@ -66,11 +58,6 @@ export const HomeTemplate = ({
 
         <section className='homeTemplate__section'>
           <HomeVodFinder items={vodFinderItems} />
-        </section>
-
-        {/* ── SP: 末尾 / PC: 右列2段目（sidebar） ── */}
-        <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeSeasonReview seasons={seasonItems} />
         </section>
       </div>
     </div>

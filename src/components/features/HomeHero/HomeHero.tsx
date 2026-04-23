@@ -45,6 +45,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const tlRef            = useRef<gsap.core.Timeline | null>(null);
   const isAnimatingRef   = useRef(false);
   const hasInitializedRef = useRef(false);
+  const prefixClassName = 'homeHero';
 
   const current = slides[activeIndex] ?? slides[0];
 
@@ -105,66 +106,67 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   }, [activeIndex]);
 
   return (
-    <section className='homeHero'>
+    <section className={prefixClassName} aria-label='ホームヒーローセクション'>
       {/* 背景レイヤー */}
-      <div className='homeHero__bg' aria-hidden='true'>
+      <div className={`${prefixClassName}__bg`} aria-hidden='true'>
         {slides.map((slide, i) => (
-          <Image
-            key={slide.image}
-            src={slide.image}
-            alt=''
-            fill
-            className={`homeHero__bgImg${i === activeIndex ? ' is-active' : ''}`}
-            priority={i === 0}
-            sizes='100vw'
-          />
+          <div key={slide.image} className={`${prefixClassName}__bgOverlay`}>
+            <Image
+              key={slide.image}
+              src={slide.image}
+              alt=''
+              className={`${prefixClassName}__bgImg${i === activeIndex ? ' is-active' : ''}`}
+              priority={i === 0}
+            />
+          </div>
         ))}
-        <div className='homeHero__bgOverlay' />
       </div>
 
       {/* コンテンツ */}
-      <div className='homeHero__inner'>
+      <div className={`${prefixClassName}__inner`}>
 
         {/* Left: テキスト */}
-        <div className='homeHero__left'>
+        <div className={`${prefixClassName}__left`}>
           {/* スコア */}
-          <div className='homeHero__scoreBlock' ref={scoreBlockRef}>
-            <div className='homeHero__hexWrap'>
+          <div className={`${prefixClassName}__scoreBlock`} ref={scoreBlockRef}>
+            <div className={`${prefixClassName}__hexWrap`}>
               <svg viewBox='0 0 100 100' aria-label={`スコア ${current.score} ランク ${current.rank}`}>
                 <path
                   ref={hexPathRef}
-                  className='homeHero__hexPath'
+                  className={`${prefixClassName}__hexPath`}
                   d='M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z'
                 />
               </svg>
               <div
                 ref={scoreNumRef}
-                className='homeHero__scoreVal'
+                className={`${prefixClassName}__scoreVal`}
                 style={{ color: RANK_COLORS[current.rank] }}
               >
                 {current.score.toFixed(1)}
               </div>
             </div>
-            <div className='homeHero__scoreMeta'>
-              <span className='homeHero__scoreRank' style={{ color: RANK_COLORS[current.rank] }}>
+            <div className={`${prefixClassName}__scoreMeta`}>
+              <span className={`${prefixClassName}__scoreRank`} style={{ color: RANK_COLORS[current.rank] }}>
                 {current.rank} RANK
               </span>
             </div>
           </div>
 
           {/* テキスト */}
-          <div className='homeHero__textBlock' ref={textBlockRef}>
-            <p className='homeHero__copy'>{current.copy}</p>
-            <h2 className='homeHero__title'>{current.title}</h2>
-            <Link href={current.href} className='homeHero__readReview'>
+          <div className={`${prefixClassName}__textBlock`} ref={textBlockRef}>
+            <p className={`${prefixClassName}__copy`}>{current.copy}</p>
+            <h2 className={`${prefixClassName}__title`}>{current.title}</h2>
+            <Link href={current.href} className={`${prefixClassName}__readReview`}>
               レビューを読む
-              <span className='homeHero__readReviewArrow' aria-hidden='true'>→</span>
+              <span className={`${prefixClassName}__readReviewArrow`} aria-hidden='true'>
+                →
+              </span>
             </Link>
           </div>
         </div>
 
         {/* Right: Swiper Cards */}
-        <div className='homeHero__right'>
+        <div className={`${prefixClassName}__right`}>
           <Swiper
             modules={SWIPER_MODULES}
             effect='cards'
@@ -175,12 +177,12 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
               disableOnInteraction: false,
               pauseOnMouseEnter: false
             }}
-            className='homeHero__swiper'
+            className={`${prefixClassName}__swiper`}
             onSwiper={(swiper) => { swiperRef.current = swiper; swiper.autoplay.start(); }}
             onRealIndexChange={(swiper) => handleSlideChange(swiper.realIndex)}
           >
             {slides.map((slide) => (
-              <SwiperSlide key={slide.image} className='homeHero__swiperSlide'>
+              <SwiperSlide key={slide.image} className={`${prefixClassName}__swiperSlide`}>
                 <Image
                   src={slide.image}
                   alt={slide.title}
