@@ -6,26 +6,31 @@
   /* ─── 背景 ─── */
   &__bg {
     position: absolute;
-    width: fit-content;
-    height: fit-content;
-    right: 26%;
     z-index: 0;
     display: grid;
+    right: 50%;
+    top: 0;
+    transform: translateX(50%);
     > * {
       grid-area: 1 / -1;
+    }
+    @include layout-md {
+      transform: translateX(0%);
+      right: 26%;
     }
   }
 
   &__bgImg {
     object-fit: contain;
-    width: auto;
-    height: 50vw;
     opacity: 0;
-    right: 0;
     transition: opacity 1s ease;
-
+    height: 123vw;
+    max-width: none;
     &.is-active {
       opacity: 1;
+    }
+    @include layout-md {
+      height: clamp(364px, 50vw, calc(464px + (48px * 2)));
     }
   }
 
