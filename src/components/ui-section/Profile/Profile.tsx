@@ -4,7 +4,7 @@ import { type Locale } from '@/i18n/t'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 import ProfileImg from '@assets/images/profile.webp'
-import IconX from '@assets/icons/x.svg'
+import { XIcon } from '@/assets/icons'
 
 export type ProfileProps = {
   name: string
@@ -63,13 +63,7 @@ export const Profile = ({
           className='flex items-center justify-center w-8 h-8 rounded-full bg-[var(--color-x)] text-[var(--color-text-inverse)] transition-[opacity,transform] duration-200 ease hover:opacity-80 hover:scale-110'
           aria-label='X (Twitter)'
         >
-          <Image
-            src={IconX}
-            alt="X (Twitter) Katsun0921"
-            width={72}
-            height={72}
-            className='w-4 h-4 fill-current'
-          />
+          <XIcon width='16' height='16' aria-hidden='true' />
         </Link>
       </div>
     </div>

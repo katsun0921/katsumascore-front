@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { VodMenuItem } from '@/components/ui-parts/VodMenuItem';
+import { PlayIcon, ChevronDownIcon } from '@/assets/icons';
 import type { TVodMenuService } from './VodMenu.types';
 
 type TVodMenuProps = {
@@ -30,28 +31,14 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
         aria-haspopup='listbox'
         onClick={() => setIsOpen((prev) => !prev)}
       >
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          fill='currentColor'
-          aria-hidden='true'
-          width='14'
-          height='14'
-        >
-          <path d='M8 5v14l11-7z' />
-        </svg>
+        <PlayIcon width='14' height='14' aria-hidden='true' />
         <span>配信</span>
-        <svg
-          xmlns='http://www.w3.org/2000/svg'
-          viewBox='0 0 24 24'
-          fill='currentColor'
-          aria-hidden='true'
+        <ChevronDownIcon
           width='12'
           height='12'
+          aria-hidden='true'
           className={`transition-transform duration-200 ease-[ease]${isOpen ? ' rotate-180' : ''}`}
-        >
-          <path d='M7 10l5 5 5-5z' />
-        </svg>
+        />
       </button>
 
       {isOpen && (
