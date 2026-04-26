@@ -8,11 +8,8 @@ export type RelationPostItem = {
   imageAlt?: string
 }
 
-export type RelationPostLayout = 'default' | 'three-column'
-
 export type RelationPostProps = {
   heading: string
   posts: RelationPostItem[]
-  layout?: RelationPostLayout
   kind?: PostCardKind
 }

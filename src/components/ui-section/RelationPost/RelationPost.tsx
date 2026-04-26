@@ -1,15 +1,16 @@
+import type { PostCardKind } from '@/components/ui-section/PostCard'
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import type { RelationPostProps } from './RelationPost.types'
 
 export const RelationPost = ({ heading, posts, kind }: RelationPostProps) => {
-
+  const postKind: PostCardKind = 'imgOver'
   return (
     <section>
       <h2 className='mb-4 text-[length:var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
         {heading}
       </h2>
       <PostCardListVertical
-        postCardKind={kind}
+        postCardKind={postKind}
         posts={posts.map((post) => ({
           id: String(post.id),
           slug: post.href,
