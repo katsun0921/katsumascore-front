@@ -238,14 +238,14 @@ npm run deploy
 ### 🚧 作業中（フェーズ 1-2）
 
 #### lib/api 基盤整備
-- [ ] `lib/api/wordpress.schema.ts` の作成（Zodバリデーション）
-- [ ] `lib/api/wordpress.transform.ts` の作成（transformPostを独立ファイルへ）
-- [ ] fetchにリトライ（2回）・タイムアウト（3秒）を実装
+- [x] `lib/api/wordpress/schema.ts` の作成（Zodバリデーション）
+- [x] `lib/api/wordpress/transform.ts` の作成（transformPostを独立ファイルへ）
+- [x] fetchにリトライ（2回）・タイムアウト（3秒）を実装
 
 #### ページ API 接続
-- [ ] `pages/index.tsx` のモックデータ→実APIデータへ置き換え（`getStaticProps` + ISR）
-- [ ] `pages/search.tsx` の新規作成（CSR + `searchPosts()`）
-- [ ] `pages/posts/[slug].tsx` に `getStaticPaths` を追加（ビルド時事前生成）
+- [x] `pages/index.tsx` のモックデータ→実APIデータへ置き換え（`getStaticProps` + ISR）
+- [x] `pages/search.tsx` の新規作成（CSR + `searchPosts()`）
+- [x] `pages/posts/[slug].tsx` に `getStaticPaths` を追加（ビルド時事前生成）
 
 #### コンポーネント整理
 - [ ] `features/` 内の重複・未整理コンポーネントの移行（AdRental / CinemaCheck / GenreNav等）
@@ -268,9 +268,6 @@ npm run deploy
 - [x] サイトマップの実装（`/sitemap.xml`・`/server-sitemap.xml` / 動的ルート対応・ja/en両ロケール）
 - [x] `robots.txt` の設定
 
-#### Storybook 整備（フェーズ 4）
-- [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
-
 #### 品質・テスト（フェーズ 6）
 - [ ] Vitest によるユニットテスト整備（`lib/api/` / `lib/utils/` 優先）
 - [ ] ESLint ルールの `warn` → `error` 昇格
@@ -288,3 +285,4 @@ npm run deploy
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 - [ ] WordPress との表示比較（主要ページ）
 - [ ] パフォーマンス最適化・アクセシビリティ対応
+- [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
