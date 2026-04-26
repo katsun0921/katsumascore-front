@@ -76,7 +76,7 @@ export const Footer = () => {
           <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
             {VOD_LINKS.map(({ name, href }) => (
               <li key={name}>
-                <Link href={href} className='footer-vod-link text-[var(--font-size-caption-sm)] block py-1'>
+                <Link href={href} className='footer-vod-link text-[length:var(--font-size-caption-sm)] block py-1'>
                   {name}
                 </Link>
               </li>
@@ -106,7 +106,7 @@ export const Footer = () => {
           <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
             {META_LINKS.map(({ name, href }) => (
               <li key={name}>
-                <Link href={href} className='footer-meta-link text-[var(--font-size-caption-sm)] block py-1'>
+                <Link href={href} className='footer-meta-link text-[length:var(--font-size-caption-sm)] block py-1'>
                   {name}
                 </Link>
               </li>
@@ -115,7 +115,7 @@ export const Footer = () => {
         </nav>
 
         {/* 8. Copyright */}
-        <small className='footer-copyright mt-10 text-[var(--font-size-caption-sm)]'>
+        <small className='footer-copyright mt-10 text-[length:var(--font-size-caption-sm)]'>
           &copy; {currentYear} Katsumascore. All rights reserved.
         </small>
 

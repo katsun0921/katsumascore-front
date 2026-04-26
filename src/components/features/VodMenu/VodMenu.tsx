@@ -26,7 +26,7 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
     <div className='relative' ref={ref}>
       <button
         type='button'
-        className='inline-flex items-center gap-2 rounded border border-[var(--color-text-inverse)] px-3 py-2 text-[var(--font-size-ui-lg)] font-medium whitespace-nowrap text-[var(--color-text-inverse)] transition-[background-color,color] duration-200 ease-[ease] hover:bg-[var(--color-text-inverse)] hover:text-[var(--color-header)]'
+        className='inline-flex items-center gap-2 rounded border border-[var(--color-text-inverse)] px-3 py-2 text-[length:var(--font-size-ui-lg)] font-medium whitespace-nowrap text-[var(--color-text-inverse)] transition-[background-color,color] duration-200 ease-[ease] hover:bg-[var(--color-text-inverse)] hover:text-[var(--color-header)]'
         aria-expanded={isOpen}
         aria-haspopup='listbox'
         onClick={() => setIsOpen((prev) => !prev)}
