@@ -1,5 +1,6 @@
 import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost'
 import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config'
+import { useLocale } from '@/i18n/provider'
 import type { PostCardKind } from '@/components/ui-section/PostCard'
 
 export type TRelationPostItem = {
@@ -12,14 +13,13 @@ export type TRelationPostItem = {
 
 export type TRelationPostProps = {
   posts: TRelationPostItem[]
-  locale?: 'ja' | 'en'
   kind?: PostCardKind
 }
 
-export const RelationPost = ({ posts, locale = 'ja', kind }: TRelationPostProps) => {
+export const RelationPost = ({ posts, kind }: TRelationPostProps) => {
+  const locale = useLocale()
+
   if (!posts.length) return null
 
-  const layout = posts.length === 3 ? 'three-column' : 'default'
-
-  return <RelationPostSection heading={relationPostConfig[locale].heading} posts={posts} layout={layout} kind={kind} />
+  return <RelationPostSection heading={relationPostConfig[locale].heading} posts={posts} kind={kind} />
 }

@@ -1,6 +1,7 @@
 import { VodPanel as VodPanelSection } from '@/components/ui-section/VodPanel'
 import { vodPanelConfig } from '@/components/ui-section/VodPanel/VodPanel.config'
 import { VodItem } from '@/components/ui-section/VodItem'
+import { useLocale } from '@/i18n/provider'
 import type { VodService as TVodService } from '@/lib/vod'
 
 export type TVodPanelEntry = {
@@ -14,10 +15,10 @@ export type TVodPanelProps = {
   services: TVodPanelEntry[]
   isCinema?: boolean
   titleJp?: string
-  locale?: 'ja' | 'en'
 }
 
-export const VodPanel = ({ services, isCinema = false, titleJp, locale = 'ja' }: TVodPanelProps) => {
+export const VodPanel = ({ services, isCinema = false, titleJp }: TVodPanelProps) => {
+  const locale = useLocale()
   const { cinemaBadgeLabel, cinemaNote, listHeading, listHeadingSuffix } = vodPanelConfig[locale]
 
   if (isCinema) {
@@ -35,7 +36,6 @@ export const VodPanel = ({ services, isCinema = false, titleJp, locale = 'ja' }:
       streamingUrl={entry.url}
       signupUrl={entry.signupUrl}
       isPaid={entry.isPaid}
-      locale={locale}
     />
   ))
 

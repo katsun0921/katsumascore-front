@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocale } from '@/i18n/provider'
 import './ReviewSiteScores.scss'
 
 export type ReviewSiteId = 'imdb' | 'rt-critics' | 'rt-audience' | 'filmarks' | 'eiga-com'
@@ -15,7 +16,6 @@ export type TReviewSite = {
 
 export type TReviewSiteScoresProps = {
   sites: TReviewSite[]
-  locale?: 'ja' | 'en'
   updatedAt?: string
   publishedDate?: string
 }
@@ -93,10 +93,10 @@ const formatScore = (score: number, maxScore: number) => {
 
 export const ReviewSiteScores = ({
   sites,
-  locale = 'ja',
   updatedAt,
   publishedDate,
 }: TReviewSiteScoresProps) => {
+  const locale = useLocale()
   const validSites = sites
     .filter((site) => site.score > 0)
     .sort((a, b) => SITE_ORDER.indexOf(a.siteId) - SITE_ORDER.indexOf(b.siteId))

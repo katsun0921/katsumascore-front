@@ -15,26 +15,23 @@ const meta: Meta<typeof TitleMeta> = {
       instagram: { link: 'https://www.instagram.com/kimetsu_off' },
     },
     copyright: '© 吾峠呼世晴/集英社・アニプレックス・ufotable',
-    locale: 'ja',
   },
 }
 export default meta
 
 type Story = StoryObj<typeof TitleMeta>
 
-export const Japanese: Story = { args: { locale: 'ja' } }
-export const English: Story = { args: { locale: 'en' } }
+export const Japanese: Story = {}
+export const English: Story = { globals: { locale: 'en' } }
 export const Minimal: Story = {
   args: {
     titleEn: 'Demon Slayer',
     officialUrl: 'https://kimetsu.com',
     officialSns: undefined,
-    locale: 'ja',
   },
 }
 export const WithCredits: Story = {
   args: {
-    locale: 'ja',
     credits: [
       { role: '監督', names: ['外崎春雄'] },
       { role: 'キャラクターデザイン', names: ['松島晃'] },
@@ -46,7 +43,6 @@ export const WithCredits: Story = {
 
 export const WithActors: Story = {
   args: {
-    locale: 'ja',
     credits: [
       { role: '監督', names: ['クリストファー・ノーラン'] },
     ],
@@ -83,7 +79,6 @@ export const WithActors: Story = {
 
 export const CreditsAndActors: Story = {
   args: {
-    locale: 'ja',
     credits: [
       { role: '監督', names: ['外崎春雄'] },
       { role: '脚本', names: ['ufotable'] },

@@ -11,7 +11,7 @@ const meta: Meta<typeof RelationPost> = {
   title: 'features/RelationPost',
   component: RelationPost,
   tags: ['autodocs'],
-  args: { posts: mockPosts, locale: 'ja' },
+  args: { posts: mockPosts },
 }
 export default meta
 
@@ -32,6 +32,6 @@ export const English: Story = {
       { id: 1, title: 'Demon Slayer: Entertainment District Arc Review', href: '/posts/ds-entertainment' },
       { id: 2, title: 'Demon Slayer: Swordsmith Village Arc Review', href: '/posts/ds-swordsmith' },
     ],
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }

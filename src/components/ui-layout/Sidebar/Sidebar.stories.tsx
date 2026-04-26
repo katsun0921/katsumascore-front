@@ -1,6 +1,4 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { extractToc } from '@/lib/toc'
-import { mockPostContentFull } from '@/mocks/post'
 import { Sidebar } from './Sidebar'
 
 const meta: Meta<typeof Sidebar> = {
@@ -33,13 +31,11 @@ const mockPostsGroups = [
   {
     heading: 'こちらもおすすめです！',
     posts: [
-      { id: 1, title: 'おすすめ作品1', href: '/posts/1', image: '/images/mock-image.webp', slug: 'post-1', excerpt: '' },
-      { id: 2, title: 'おすすめ作品2', href: '/posts/2', image: '/images/mock-image.webp', slug: 'post-2', excerpt: '' },
+      { id: '1', title: 'おすすめ作品1', href: '/posts/1', image: '/images/mock-image.webp', slug: 'post-1', excerpt: '', publishedAt: '2026-04-01' },
+      { id: '2', title: 'おすすめ作品2', href: '/posts/2', image: '/images/mock-image.webp', slug: 'post-2', excerpt: '', publishedAt: '2026-04-01' },
     ],
   },
 ]
-
-const mockToc = extractToc(mockPostContentFull.content)
 
 const mockProfile = {
   name: 'Katsuma',
@@ -47,7 +43,6 @@ const mockProfile = {
   comment: '最近はSF映画にハマってます！インターステラーは何度見ても泣けます。',
   avatarUrl: '/images/mock-avatar.webp',
   aboutUrl: '/about',
-  locale: 'ja' as const,
   social: {
     x: 'https://x.com/Katsun0921',
   },
@@ -56,9 +51,7 @@ const mockProfile = {
 // ── ❶ Profile + ❻ 関連記事 + ❷ VOD + ❹ レンタル + ❼ PostsGroup 全部入り
 export const Default: Story = {
   args: {
-    locale: 'ja',
     profile: mockProfile,
-    toc: mockToc,
     titleJp: 'インターステラー',
     titleEn: 'Interstellar',
     isCinemaShowing: false,
@@ -81,14 +74,13 @@ export const CinemaShowing: Story = {
 export const EnLocale: Story = {
   args: {
     ...Default.args,
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }
 
 // ── 関連記事のみ（VOD・レンタルなし）
 export const RelatedOnly: Story = {
   args: {
-    locale: 'ja',
     relationPosts: mockRelationPosts,
   },
 }
@@ -96,7 +88,6 @@ export const RelatedOnly: Story = {
 // ── VODのみ
 export const VodOnly: Story = {
   args: {
-    locale: 'ja',
     titleJp: 'インターステラー',
     titleEn: 'Interstellar',
     streamingVods: mockStreamingVods,
@@ -104,8 +95,4 @@ export const VodOnly: Story = {
 }
 
 // ── 何も表示しない（空）
-export const Empty: Story = {
-  args: {
-    locale: 'ja',
-  },
-}
+export const Empty: Story = {}

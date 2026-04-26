@@ -1,12 +1,12 @@
 import type { TRelationPostItem } from '@/components/features/RelationPost'
-import type { TStreamingVodEntry } from '@/components/features/StreamingVod'
-import type { TRentalService } from '@/components/features/AdRental'
-import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup'
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
+import type { TRentalService } from '@/components/features/AdRental/AdRental'
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
 import type { ProfileProps } from '@/components/ui-section/Profile'
-import type { AdBannerProps } from '@/components/features/AdBanner'
+import type { AdBannerProps } from '@/components/features/AdBanner/AdBanner'
+import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore'
+import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav'
 export type SidebarProps = {
-  locale?: 'ja' | 'en'
-
   // ❶ プロフィールカード
   profile?: ProfileProps
 
@@ -17,11 +17,11 @@ export type SidebarProps = {
   relatedPosts?: import('@/components/ui-section/RelatedPosts').RelatedPostItem[]
 
   // ❼ PICK UP / HIGH SCORE
-  pickupPosts?: import('@/components/features/PickUpAndScore').PickUpPost[]
-  highScorePosts?: import('@/components/features/PickUpAndScore').PickUpPost[]
+  pickupPosts?: PickUpPost[]
+  highScorePosts?: PickUpPost[]
 
   // ❽ ジャンルナビ
-  genres?: import('@/components/features/GenreNav').GenreNavTag[]
+  genres?: GenreNavTag[]
   activeGenreSlug?: string
 
   // 関連記事（acf-relation-by-post-id.php 相当）

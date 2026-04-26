@@ -8,10 +8,10 @@ import { RelationPost } from '@/components/features/RelationPost'
 import { StreamingVod } from '@/components/features/StreamingVod'
 import { AdRental } from '@/components/features/AdRental'
 import { PostsGroup } from '@/components/features/Post/PostsGroup'
+import { useLocale } from '@/i18n/provider'
 import type { SidebarProps } from './Sidebar.types'
 
 export const Sidebar = ({
-  locale = 'ja',
   profile,
   adBanner,
   relatedPosts,
@@ -27,6 +27,8 @@ export const Sidebar = ({
   rentalServices,
   postsGroups,
 }: SidebarProps) => {
+  const locale = useLocale()
+
   return (
     <aside className='flex flex-col gap-8 w-full px-4'>
 
@@ -39,7 +41,6 @@ export const Sidebar = ({
           titleJp={titleJp ?? ''}
           titleEn={titleEn}
           services={streamingVods}
-          locale={locale}
         />
       )}
 
@@ -47,7 +48,6 @@ export const Sidebar = ({
       {!isCinemaShowing && locale !== 'en' && rentalServices && rentalServices.length > 0 && (
         <AdRental
           title={titleJp ?? ''}
-          locale={locale}
         />
       )}
 
@@ -72,7 +72,7 @@ export const Sidebar = ({
 
       {/* 既存：acf-relation-by-post-id.php 相当（記事本文内グリッド形式） */}
       {relationPosts && relationPosts.length > 0 && (
-        <RelationPost posts={relationPosts} locale={locale} />
+        <RelationPost posts={relationPosts} />
       )}
 
       {/* ❼ 関連投稿グループ（PostsGroup 相当） */}

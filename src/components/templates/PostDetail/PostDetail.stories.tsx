@@ -149,7 +149,6 @@ const basePost: PostDetailData = {
     aboutUrl: '/about',
     social: {
       x: 'https://x.com/Katsun0921',
-      instagram: 'https://instagram.com/katsumascore',
     },
   },
 }
@@ -183,8 +182,8 @@ export const Default: Story = {
 export const EnLocale: Story = {
   args: {
     post: basePost,
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }
 
 // ---------------------------------------------------------------------------

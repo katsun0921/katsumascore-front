@@ -8,7 +8,6 @@ const meta: Meta<typeof CinemaCheck> = {
   args: {
     isCinemaShowing: true,
     titleJp: '鬼滅の刃 柱稽古編',
-    locale: 'ja',
   },
 }
 export default meta
@@ -21,6 +20,6 @@ export const English: Story = {
   args: {
     isCinemaShowing: true,
     titleJp: 'Demon Slayer',
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }

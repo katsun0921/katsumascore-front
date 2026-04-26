@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import { type Locale } from '@/i18n/t'
+import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 import ProfileImg from '@assets/images/profile.webp'
@@ -10,11 +10,11 @@ export type ProfileProps = {
   name: string
   description: string
   comment?: string
+  avatarUrl?: string
   aboutUrl: string
   social?: {
     x?: string
   }
-  locale: Locale
 }
 
 export const Profile = ({
@@ -22,8 +22,9 @@ export const Profile = ({
   description,
   comment,
   aboutUrl,
-  locale,
 }: ProfileProps) => {
+  const locale = useLocale()
+
   return (
     <div className='p-5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
       {/* アバター + 名前 */}

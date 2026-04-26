@@ -1,4 +1,5 @@
 import { AdRental as AdRentalSection } from '@/components/ui-section/AdRental'
+import { useLocale } from '@/i18n/provider'
 import { adRentalConfig } from './AdRental.config'
 
 export type TRentalService = {
@@ -8,10 +9,10 @@ export type TRentalService = {
 
 type TAdRentalProps = {
   title: string
-  locale?: 'ja' | 'en'
 }
 
-export const AdRental = ({ title, locale = 'ja' }: TAdRentalProps) => {
+export const AdRental = ({ title }: TAdRentalProps) => {
+  const locale = useLocale()
 
   if (locale === 'en') {
     return null

@@ -1,3 +1,4 @@
+import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/lib/vod'
 import { messages } from './i18n'
@@ -12,7 +13,6 @@ export type TVodItemProps = {
   streamingText?: string
   unregisteredText?: string
   isPaid?: boolean
-  locale?: 'ja' | 'en'
 }
 
 export const VodItem = ({
@@ -22,8 +22,8 @@ export const VodItem = ({
   streamingText,
   unregisteredText,
   isPaid = false,
-  locale = 'ja',
 }: TVodItemProps) => {
+  const locale = useLocale()
   const label = VOD_LABEL[service]
   const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale)
   const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale)

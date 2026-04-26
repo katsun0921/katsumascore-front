@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { OfficialSns } from '@/components/features/OfficialSns'
+import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 import './PostTitleMeta.scss'
@@ -34,7 +35,6 @@ export type TTitleMetaProps = {
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
   actors?: TActor[]
-  locale?: 'ja' | 'en'
 }
 
 export const TitleMeta = ({
@@ -44,8 +44,8 @@ export const TitleMeta = ({
   officialSns,
   credits,
   actors,
-  locale = 'ja',
 }: TTitleMetaProps) => {
+  const locale = useLocale()
   let parsedDate: string | null = null
   if (releaseDate && releaseDate.length === 8) {
     const y = releaseDate.slice(0, 4)

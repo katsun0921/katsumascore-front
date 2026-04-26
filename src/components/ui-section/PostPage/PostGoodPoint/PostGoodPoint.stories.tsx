@@ -11,26 +11,24 @@ const meta: Meta<typeof GoodPoint> = {
       '感情を揺さぶるストーリー展開',
       '個性豊かなキャラクターたち',
     ],
-    locale: 'ja',
   },
 }
 export default meta
 
 type Story = StoryObj<typeof GoodPoint>
 
-export const Japanese: Story = { args: { locale: 'ja' } }
+export const Japanese: Story = {}
 
 export const English: Story = {
   args: {
     points: ['Outstanding animation quality', 'Emotionally gripping story', 'Memorable characters'],
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }
 
 export const SinglePoint: Story = {
   args: {
     points: ['唯一のおすすめポイントです。'],
-    locale: 'ja',
   },
 }
 

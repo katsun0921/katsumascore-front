@@ -1,7 +1,8 @@
+import { useLocale } from '@/i18n/provider'
+
 export type TDateProps = {
   publishedAt: string
   updatedAt?: string
-  locale?: 'ja' | 'en'
 }
 
 const formatDate = (dateStr: string, locale: 'ja' | 'en'): { display: string; datetime: string } => {
@@ -14,7 +15,8 @@ const formatDate = (dateStr: string, locale: 'ja' | 'en'): { display: string; da
   return { display, datetime }
 }
 
-export const PostDate = ({ publishedAt, updatedAt, locale = 'ja' }: TDateProps) => {
+export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
+  const locale = useLocale()
   const published = formatDate(publishedAt, locale)
   const updated = updatedAt ? formatDate(updatedAt, locale) : null
 

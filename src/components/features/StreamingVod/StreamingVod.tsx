@@ -1,6 +1,7 @@
 import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod'
 import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config'
 import { VodItem } from '@/components/ui-section/VodItem'
+import { useLocale } from '@/i18n/provider'
 import type { VodService as TVodService } from '@/lib/vod'
 
 export type TStreamingVodEntry = {
@@ -14,10 +15,11 @@ export type TStreamingVodProps = {
   titleJp?: string
   titleEn?: string
   services: TStreamingVodEntry[]
-  locale?: 'ja' | 'en'
 }
 
-export const StreamingVod = ({ titleJp, titleEn, services, locale = 'ja' }: TStreamingVodProps) => {
+export const StreamingVod = ({ titleJp, titleEn, services }: TStreamingVodProps) => {
+  const locale = useLocale()
+
   if (!services.length) return null
 
   const title = locale === 'en' ? titleEn : titleJp
@@ -30,7 +32,6 @@ export const StreamingVod = ({ titleJp, titleEn, services, locale = 'ja' }: TStr
       streamingUrl={entry.url}
       signupUrl={entry.signupUrl}
       isPaid={entry.isPaid}
-      locale={locale}
     />
   ))
 

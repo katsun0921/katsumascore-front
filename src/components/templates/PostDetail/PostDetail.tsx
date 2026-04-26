@@ -11,7 +11,7 @@ import { ShareButtons } from '@/components/ui-parts/ShareButtons'
 import { Sidebar } from '@/components/ui-layout/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
 
-export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => {
+export const PostDetail = ({ post, genres }: PostDetailProps) => {
   return (
     <PageLayout>
       <div className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-primary-dark))] px-4 pb-4'>
@@ -51,13 +51,13 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
 
             {/* 基本情報・キャスト情報 */}
             {(post.TitleMeta || (post.credits && post.credits.length > 0) || (post.actors && post.actors.length > 0)) && (
-              <TitleMeta {...post.TitleMeta} credits={post.credits} actors={post.actors} locale={locale} />
+              <TitleMeta {...post.TitleMeta} credits={post.credits} actors={post.actors} />
             )}
           </section>
 
           {/* ── acf-good-point.php 相当 ── */}
           {post.goodPoints && post.goodPoints.length > 0 && (
-            <GoodPoint points={post.goodPoints} locale={locale} score={post.score} />
+            <GoodPoint points={post.goodPoints} score={post.score} />
           )}
 
           {/* ── 目次（GoodPointの直下） ── */}
@@ -80,20 +80,17 @@ export const PostDetail = ({ post, locale = 'ja', genres }: PostDetailProps) => 
               sites={post.reviewSiteScores.sites}
               updatedAt={post.reviewSiteScores.updatedAt}
               publishedDate={post.reviewSiteScores.publishedDate}
-              locale={locale}
             />
           )}
 
-          {/* ── post-introduce-vod.php 相当 ── */}
           {post.vodIntroduction && (
-            <VodIntroduction {...post.vodIntroduction} locale={locale} />
+            <VodIntroduction {...post.vodIntroduction} />
           )}
         </div>
 
         {/* ── サイドバー ── */}
         <div className='md:w-[320px] shrink-0 px-4'>
           <Sidebar
-            locale={locale}
             profile={post.profile}
             pickupPosts={post.pickupPosts}
             highScorePosts={post.highScorePosts}

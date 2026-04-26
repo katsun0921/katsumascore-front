@@ -23,11 +23,12 @@ export const Default: Story = {
 };
 
 export const Japanese: Story = {
-  args: { post: mockPost, locale: 'ja' },
+  args: { post: mockPost },
 };
 
 export const English: Story = {
-  args: { post: mockPost, locale: 'en' },
+  args: { post: mockPost },
+  globals: { locale: 'en' },
 };
 
 export const LongTitle: Story = {

@@ -24,9 +24,10 @@ export type PickUpAndScoreProps = {
 type Tab = 'pickup' | 'highscore'
 
 // ── 各記事行の共通UI
-const PostRow = ({ post, locale }: { post: PickUpPost; locale: string }) => {
+const PostRow = ({ post }: { post: PickUpPost }) => {
+  const locale = useLocale()
   const rank = post.score !== undefined ? getRankingIcon(post.score) : null
-  const altText = t(messages, ['thumbnail', 'alt'], locale as 'ja' | 'en')
+  const altText = t(messages, ['thumbnail', 'alt'], locale)
 
   return (
     <li className='sidebar-picks__item'>
@@ -116,7 +117,7 @@ export const PickUpAndScore = ({
       {/* リスト */}
       <ul className='sidebar-picks__list'>
         {currentPosts.slice(0, 5).map((post) => (
-          <PostRow key={post.slug} post={post} locale={locale} />
+          <PostRow key={post.slug} post={post} />
         ))}
       </ul>
     </div>

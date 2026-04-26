@@ -15,15 +15,14 @@ const meta: Meta<typeof StreamingVod> = {
     titleJp: '鬼滅の刃',
     titleEn: 'Demon Slayer',
     services: mockServices,
-    locale: 'ja',
   },
 }
 export default meta
 
 type Story = StoryObj<typeof StreamingVod>
 
-export const Japanese: Story = { args: { locale: 'ja' } }
-export const English: Story = { args: { locale: 'en' } }
+export const Japanese: Story = {}
+export const English: Story = { globals: { locale: 'en' } }
 export const SingleService: Story = { args: { services: [mockServices[0]] } }
 export const AllServices: Story = {
   args: {

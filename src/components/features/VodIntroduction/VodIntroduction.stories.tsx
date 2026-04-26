@@ -89,6 +89,6 @@ export const EnLocale: Story = {
       vodUrl: 'https://www.amazon.co.jp/prime-video',
     },
     publishedAt: '2026-04-01',
-    locale: 'en',
   },
+  globals: { locale: 'en' },
 }

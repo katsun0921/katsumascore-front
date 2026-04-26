@@ -1,16 +1,17 @@
 import Head from 'next/head';
+import { useLocale } from '@/i18n/provider';
 import type { Post } from '@/types/post';
 
 type Props = {
   post: Post;
-  locale?: string;
 };
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? 'KatsumaScore';
 const FALLBACK_OG_IMAGE = `${SITE_URL}/og-default.png`;
 
-export const SeoHead = ({ post, locale = 'ja' }: Props) => {
+export const SeoHead = ({ post }: Props) => {
+  const locale = useLocale();
   const title = `${post.title} | ${SITE_NAME}`;
   const description = post.excerpt || post.title;
   const canonicalUrl = `${SITE_URL}${post.slug}`;

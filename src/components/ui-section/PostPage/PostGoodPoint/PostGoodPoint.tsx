@@ -1,15 +1,17 @@
 import React from 'react'
 import { ScoreWithRank } from '@/components/features/ScoreWithRank'
+import { useLocale } from '@/i18n/provider'
 import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
 import './PostGoodPoint.scss'
 
 export type TGoodPointProps = {
   points: string[]
-  locale?: 'ja' | 'en'
   score?: number
 }
 
-export const GoodPoint = ({ points, locale = 'ja', score }: TGoodPointProps) => {
+export const GoodPoint = ({ points, score }: TGoodPointProps) => {
+  const locale = useLocale()
+
   if (!points.length) return null
 
   return (

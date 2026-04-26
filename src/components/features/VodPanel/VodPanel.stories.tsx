@@ -15,7 +15,6 @@ const meta: Meta<typeof VodPanel> = {
     services: mockServices,
     isCinema: false,
     titleJp: '鬼滅の刃',
-    locale: 'ja',
   },
 }
 export default meta
@@ -24,5 +23,5 @@ type Story = StoryObj<typeof VodPanel>
 
 export const Available: Story = {}
 export const CinemaMode: Story = { args: { isCinema: true } }
-export const English: Story = { args: { locale: 'en' } }
+export const English: Story = { globals: { locale: 'en' } }
 export const Single: Story = { args: { services: [mockServices[0]] } }

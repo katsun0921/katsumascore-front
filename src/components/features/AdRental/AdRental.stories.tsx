@@ -7,7 +7,6 @@ const meta: Meta<typeof AdRental> = {
   tags: ['autodocs'],
   args: {
     title: '鬼滅の刃',
-    locale: 'ja',
   },
 }
 export default meta
@@ -15,4 +14,4 @@ export default meta
 type Story = StoryObj<typeof AdRental>
 
 export const BothServices: Story = {}
-export const English: Story = { args: { locale: 'en' } }
+export const English: Story = { globals: { locale: 'en' } }

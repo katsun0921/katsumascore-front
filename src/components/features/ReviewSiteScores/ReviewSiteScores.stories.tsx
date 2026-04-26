@@ -46,7 +46,6 @@ const meta: Meta<typeof ReviewSiteScores> = {
   tags: ['autodocs'],
   args: {
     sites: defaultSites,
-    locale: 'ja',
     updatedAt: '2026-04-05',
   },
 }
@@ -82,7 +81,6 @@ export const LowScores: Story = {
 
 export const English: Story = {
   args: {
-    locale: 'en',
     updatedAt: '2026-04-05',
     sites: [
       { siteId: 'imdb', score: 7.3, summary: 'Washington gets strong praise, though the plot feels thin to some.', url: 'https://example.com/imdb' },
@@ -92,6 +90,7 @@ export const English: Story = {
       { siteId: 'eiga-com', score: 3.7, summary: 'The catharsis lands for many viewers, though plausibility divides opinion.', url: 'https://example.com/eiga' },
     ] satisfies TReviewSite[],
   },
+  globals: { locale: 'en' },
 }
 
 export const WithoutRT: Story = {
