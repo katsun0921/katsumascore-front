@@ -192,6 +192,7 @@ npm run deploy
 |---|---|
 | [CLAUDE.md](./CLAUDE.md) | 設計規約・レイヤー構成・スタイリング方針 |
 | [docs/migration-plan.md](./docs/migration-plan.md) | WordPress → Next.js 移行プラン（フェーズ別 TODO） |
+| [docs/archive/wordpress-to-nextjs-migration.md](./docs/archive/wordpress-to-nextjs-migration.md) | WordPress → Next.js 移行手順（アーカイブ・2026-04 実装完了時点） |
 | [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md) | VODパーソナライズ & 通知機能設計 |
 
 ---
@@ -264,7 +265,8 @@ npm run deploy
 - [x] `next-seo` 導入（v7: JSON-LD専用）・全ページOGP / Twitter Card対応
 - [x] JSON-LD構造化データの実装（Product + review + aggregateRating + BreadcrumbList）
 - [x] Google Analytics（GA4）・Google AdSenseの実装（`next/script` / 本番環境のみ / 多言語対応）
-- [x] `next-sitemap` の設定（静的ページ自動生成 + `/server-sitemap.xml` で動的ルート対応・ja/en両ロケール）
+- [x] サイトマップの実装（`/sitemap.xml`・`/server-sitemap.xml` / 動的ルート対応・ja/en両ロケール）
+- [x] `robots.txt` の設定
 
 #### Storybook 整備（フェーズ 4）
 - [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加

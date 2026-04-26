@@ -1,5 +1,4 @@
 import Head from 'next/head';
-import { ProductJsonLd, BreadcrumbJsonLd } from 'next-seo';
 import { useLocale } from '@/i18n/provider';
 import type { Post } from '@/types/post';
 
@@ -40,10 +39,45 @@ export const SeoHead = (props: SeoHeadProps) => {
   const enUrl = `${SITE_URL.replace(/\/$/, '')}/en${path}`;
 
   const breadcrumbItems = [
-    { name: 'HOME', item: SITE_URL },
-    ...(post.category ? [{ name: post.category }] : []),
-    { name: post.title, item: canonicalUrl },
+    { position: 1, name: 'HOME', item: SITE_URL },
+    ...(post.category ? [{ position: 2, name: post.category }] : []),
+    { position: post.category ? 3 : 2, name: post.title, item: canonicalUrl },
   ];
+
+  const productJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: post.title,
+    description,
+    image: ogImage,
+    url: canonicalUrl,
+    ...(post.score != null && {
+      review: {
+        '@type': 'Review',
+        reviewRating: {
+          '@type': 'Rating',
+          ratingValue: post.score,
+          bestRating: 5,
+        },
+        author: {
+          '@type': 'Person',
+          name: SITE_NAME,
+        },
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: post.score,
+        bestRating: 5,
+        reviewCount: 1,
+      },
+    }),
+  };
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbItems,
+  };
 
   return (
     <>
@@ -69,28 +103,19 @@ export const SeoHead = (props: SeoHeadProps) => {
         <meta name='twitter:title' content={title} />
         <meta name='twitter:description' content={description} />
         <meta name='twitter:image' content={ogImage} />
+
+        {/* JSON-LD: Product + Review */}
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
+        />
+
+        {/* JSON-LD: BreadcrumbList */}
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
       </Head>
-
-      <ProductJsonLd
-        name={post.title}
-        description={description}
-        image={ogImage}
-        review={
-          post.score != null
-            ? {
-                reviewRating: { ratingValue: post.score, bestRating: 5 },
-                author: { name: SITE_NAME },
-              }
-            : undefined
-        }
-        aggregateRating={
-          post.score != null
-            ? { ratingValue: post.score, reviewCount: 1, bestRating: 5 }
-            : undefined
-        }
-      />
-
-      <BreadcrumbJsonLd items={breadcrumbItems} />
     </>
   );
 };
