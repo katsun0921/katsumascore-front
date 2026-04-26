@@ -192,7 +192,6 @@ npm run deploy
 |---|---|
 | [CLAUDE.md](./CLAUDE.md) | 設計規約・レイヤー構成・スタイリング方針 |
 | [Todo.md](./docs/features/MigrationNextjsTodo.md) | 移行進捗 TODO（フェーズ別チェックリスト） |
-| [docs/migration-plan.md](./docs/migration-plan.md) | WordPress → Next.js 移行プラン（フェーズ別 TODO） |
 | [docs/archive/wordpress-to-nextjs-migration.md](./docs/archive/wordpress-to-nextjs-migration.md) | WordPress → Next.js 移行手順（アーカイブ・2026-04 実装完了時点） |
 | [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md) | VODパーソナライズ & 通知機能設計 |
 

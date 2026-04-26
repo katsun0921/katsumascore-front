@@ -1,7 +1,57 @@
 # KatsumaScore 移行進捗 TODO
 
-> フェーズ別実装チェックリスト
+> 対象: `katsumascore_wordpress_theme` → `katsumascore-front`（Next.js）
+> 方針: WordPressはCMSのみ。Next.jsでフロントエンドを再設計する。
 > 最終更新: 2026-04-26
+
+> [!IMPORTANT]
+> 移行元の `katsumascore_wordpress_theme` は**読み取り専用**とする。
+> コードの修正・追加・削除は一切行わない。参照・調査のみ許可する。
+
+---
+
+## テンプレート対応表
+
+| WordPress テンプレート | Next.js ページ / テンプレート |
+|---|---|
+| `page-home.php` | `pages/index.tsx` + `HomeTemplate` |
+| `archive.php` | `pages/[category]/index.tsx` + `ListTemplate` |
+| `single.php` | `pages/posts/[slug].tsx` + `PostDetail` |
+| `search.php` | `pages/search.tsx` + `ListTemplate` |
+| `page-top.php` | `pages/top.tsx` |
+| `page-featured-article.php` | `pages/featured.tsx` |
+| `page-seasonal-anime-and-dramas-reviews.php` | `pages/seasonal-reviews/index.tsx` |
+| `404.php` | `pages/404.tsx` + `NotFoundTemplate` |
+| `header.php` / `footer.php` / `sidebar.php` | `PageLayout` + `ui-layout/Header` + `ui-layout/Footer` + `ui-layout/Sidebar` |
+
+---
+
+## プラグイン依存の処理方針
+
+### Polylang（多言語）
+
+| WordPress | Next.js |
+|---|---|
+| `pll_current_language()` | `useLocale()` from `@/i18n/provider` |
+| `pll_get_post($id, 'en')` | `fetchPostBySlug(slug, locale)` |
+| `pll_home_url()` | `next/router` の `locale` |
+
+### ACF（Advanced Custom Fields）
+
+- REST API 拡張（`acf-to-rest-api`）経由で `/wp-json/wp/v2/posts/{id}?acf_format=standard` から取得
+- `lib/api/wordpress/transform.ts` の `transformPost()` で正規化
+
+---
+
+## 移行非対象
+
+以下は Next.js に移行しない。
+
+- CSS / JS enqueue（Tailwind / SCSS で代替）
+- コメント機能
+- 月別アーカイブ
+- 管理画面カスタマイズ
+- ショートコード（ACF で代替）
 
 ---
 
@@ -35,15 +85,21 @@
 - [x] `pages/categories/[slug].tsx`（カテゴリアーカイブ・実API接続済み）
 - [x] `pages/404.tsx`
 
-### lib/api 基盤整備
-- [x] `lib/api/wordpress/schema.ts` の作成（Zodバリデーション）
-- [x] `lib/api/wordpress/transform.ts` の作成（transformPostを独立ファイルへ）
-- [x] fetchにリトライ（2回）・タイムアウト（3秒）を実装
+### lib/api 基盤整備（フェーズ 1）
+- [x] 全エンドポイント定義（getPosts / getPostBySlug / getCategories / getTags / searchPosts 等）
+- [x] `lib/api/wordpress/schema.ts` の作成（Zod によるレスポンスバリデーション）
+- [x] `lib/api/wordpress/transform.ts` の作成（`transformPost()` を独立ファイルへ分離）
+- [x] `mapWPPostToPost()` で ACF フィールドを正規化（score / vod / isCinemaShowing 等）
+- [x] Polylang 対応（`lang` パラメータ経由）
+- [x] fetch にリトライ（最大 2 回）・タイムアウト（3 秒）を実装
 
-### ページ API 接続
+### ページ API 接続（フェーズ 2）
 - [x] `pages/index.tsx` のモックデータ→実APIデータへ置き換え（`getStaticProps` + ISR）
 - [x] `pages/search.tsx` の新規作成（CSR + `searchPosts()`）
 - [x] `pages/posts/[slug].tsx` に `getStaticPaths` を追加（ビルド時事前生成）
+- [x] カテゴリアーカイブ: `getStaticPaths` でカテゴリ一覧から動的パス生成
+- [x] カテゴリアーカイブ: ソート・フィルター機能（評価順 / 新着）
+- [x] `pages/404.tsx` の作成
 
 ### コンポーネント整理（一部完了）
 - [x] AdRental（`features/AdRental` wrapper + `ui-section/AdRental` 純粋UIに分離済み・Sidebar使用中）
@@ -63,7 +119,14 @@
 
 ## 🚧 作業中
 
-### コンポーネント整理
+### ページ API 接続（フェーズ 2 残）
+- [ ] `lib/api/wordpress.types.ts` の作成（`WPPost` / `NormalizedPost` 等の型定義を集約）
+- [ ] `null` / 欠損を前提とした型設計の確認・修正
+- [ ] `pages/posts/[slug].tsx`: `getStaticProps` + `revalidate` への切り替え検討（現在 SSR）
+- [ ] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
+- [ ] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
+
+### コンポーネント整理（フェーズ 5）
 - [ ] CinemaCheck（`ui-section/CinemaCheck` は使用中、`features/CinemaCheck` wrapper は未接続）
 
 ### 未使用コンポーネントの整理
@@ -71,6 +134,10 @@
 - [ ] `features/Carousel` — 完全未使用（削除または接続先の検討）
 - [ ] `features/Post/PostDate` — 完全未使用（削除または接続先の検討）
 - [ ] `features/VodPanel` — 完全未使用（`ui-section/VodPanel`との重複整理）
+- [ ] `features/OfficialSns` — 適切なレイヤーへ移動または削除
+- [ ] `features/PickUpAndScore` — 適切なレイヤーへ移動
+- [ ] `features/ReviewSiteScores` — 適切なレイヤーへ移動
+- [ ] `features/ScoreWithRank` — 適切なレイヤーへ移動
 - [ ] `ui-layout/Container` — 完全未使用（削除または接続先の検討）
 - [ ] `ui-parts/Badge` — 完全未使用
 - [ ] `ui-parts/CTAButton` — 完全未使用
@@ -79,20 +146,41 @@
 - [ ] `ui-parts/Affiliate/Admax` — 未使用（Tsutaya / Geo は AdRental で使用中）
 - [ ] `ui-parts/Affiliate/Wowow` — 未使用
 - [ ] `ui-section/ProductBlock` — 完全未使用（Gutenberg確認用途として保持か削除か要判断）
+- [ ] `ui-section/VodIntroduction` → `ui-section/` 内での位置整理
+- [ ] `features/vod/` への整理（`VodMenu`, `VodPanel`, `VodItem` 等）
+- [ ] `features/Post/PostVariants` の整備
+- [ ] `ui-section/PostListRow` コンポーネントの実装（新設）
 
 ---
 
 ## 📋 今後の予定
 
+### Storybook 品質確認（フェーズ 4）
+- [ ] 全 `ui-parts` コンポーネントに異常系 Story を追加
+  - [ ] `LongTitle` — 長いタイトル
+  - [ ] `NoImage` — サムネイルなし
+  - [ ] `MixedData` — 欠損混在データ
+  - [ ] `Dense`（10 件以上）
+  - [ ] `Extreme`（20 件以上）
+- [ ] `ui-section` コンポーネントの Story 整備
+- [ ] `features` コンポーネントの Story 整備
+- [ ] Storybook GitHub Pages への自動デプロイ確認（`release/v1` ブランチ）
+
 ### 品質・テスト（フェーズ 6）
 - [ ] Vitest によるユニットテスト整備（`lib/api/` / `lib/utils/` 優先）
+- [ ] ESLint カスタムルール `katsumascore-ui/no-hardcoded-i18n` の全コンポーネント適用確認
 - [ ] ESLint ルールの `warn` → `error` 昇格
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
+- [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
 
 ### 本番対応（フェーズ 7）
-- [ ] WordPress 本番 API との接続確認（[手順・参照](docs/features/wordpress_production_api_verification.md) / [TODO チェックリスト](docs/features/wordpress_production_api_verification_checklist.md)）
+- [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
 - [ ] Cloudflare Workers デプロイの本番検証
+- [ ] 広告コード（A8.net / admax）を `next/script` で管理
+- [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）
+- [ ] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
 - [ ] ISR Webhook設定（WordPress更新時にrevalidate）
+- [ ] VOD ページは SSR のままとする確認
 
 ### 公開後対応（フェーズ 8）
 - [ ] 全コンポーネントに Storybook Story 作成
