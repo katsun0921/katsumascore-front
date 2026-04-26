@@ -1,6 +1,6 @@
 import type { Post } from "@/types/post";
-import { WPPostSchema } from "@/lib/api/wordpress.schema";
-import type { ParsedWPPost } from "@/lib/api/wordpress.schema";
+import { WPPostSchema } from "./schema";
+import type { ParsedWPPost } from "./schema";
 
 export const stripHtml = (html: string): string =>
   html

@@ -47,17 +47,17 @@ src/lib/api/wordpress/
 
 依存追加なし。動作は等価のままコードの読みやすさを大きく改善する。
 
-- [ ] `src/lib/api/wordpress/` ディレクトリを作成
-- [ ] 既存 `wordpress.schema.ts` を `wordpress/schema.ts` へ移設
-- [ ] 既存 `wordpress.transform.ts` を `wordpress/transform.ts` へ移設
-- [ ] `wpFetch` と `wpFetchPostsWithMeta` を 1 つに統合（generics で「ヘッダ込みで返すか body だけか」を切替）
-- [ ] `client.ts` にタイムアウト・リトライ・`_embed` / `acf_format` / `_fields` の既定値付与を集約
-- [ ] `endpoints/posts.ts` に `getPosts` / `getPostsWithMeta` / `getPostBySlug` / `getRelatedPosts` / `searchPosts` を分割
-- [ ] `endpoints/categories.ts` / `tags.ts` / `pages.ts` を分割
-- [ ] `_fields` パラメータを各エンドポイントで指定（**`_links,_embedded` を必ず含める** — transform が `_embedded` 依存）
-- [ ] `index.ts` で公開 API を barrel export
-- [ ] 旧 `wordpress.ts` を削除し、import 元（`pages/posts/[slug].tsx` 等）を新パスに更新
-- [ ] `npm run build` と本番 API 検証スクリプト（`scripts/verify-wp-api.sh` / `scripts/verify-wp-section2.ts`）で挙動が等価であることを確認
+- [x] `src/lib/api/wordpress/` ディレクトリを作成
+- [x] 既存 `wordpress.schema.ts` を `wordpress/schema.ts` へ移設
+- [x] 既存 `wordpress.transform.ts` を `wordpress/transform.ts` へ移設
+- [x] `wpFetch` と `wpFetchPostsWithMeta` を 1 つに統合（generics で「ヘッダ込みで返すか body だけか」を切替）
+- [x] `client.ts` にタイムアウト・リトライ・`_embed` / `acf_format` / `_fields` の既定値付与を集約
+- [x] `endpoints/posts.ts` に `getPosts` / `getPostsWithMeta` / `getPostBySlug` / `getRelatedPosts` / `searchPosts` を分割
+- [x] `endpoints/categories.ts` / `tags.ts` / `pages.ts` を分割
+- [x] `_fields` パラメータを各エンドポイントで指定（**`_links,_embedded` を必ず含める** — transform が `_embedded` 依存）
+- [x] `index.ts` で公開 API を barrel export
+- [x] 旧 `wordpress.ts` を削除し、import 元（`pages/posts/[slug].tsx` 等）を新パスに更新
+- [x] `npm run build` と本番 API 検証スクリプト（`scripts/verify-wp-api.sh` / `scripts/verify-wp-section2.ts`）で挙動が等価であることを確認
 
 ### Step 2: OpenAPI スキーマ + 型生成の導入
 

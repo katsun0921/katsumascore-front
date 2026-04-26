@@ -5,7 +5,7 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getChildPages } from '@/lib/api/wordpress';
-import { stripHtml } from '@/lib/api/wordpress.transform';
+import { stripHtml } from '@/lib/api/wordpress';
 import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
 
 type SeasonalIndexProps = {

@@ -74,7 +74,7 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
   return {
     props: {
       categoryName: category.name,
-      posts: normalizePosts(fetched.posts, currentLocale),
+      posts: normalizePosts(fetched.items, currentLocale),
       locale: currentLocale,
     },
     revalidate: 60,

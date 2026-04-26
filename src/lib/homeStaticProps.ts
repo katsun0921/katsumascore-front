@@ -15,7 +15,7 @@ import {
   getCategoryBySlug,
   getChildPages,
 } from "@/lib/api/wordpress";
-import { stripHtml } from "@/lib/api/wordpress.transform";
+import { stripHtml } from "@/lib/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/lib/buildVodFinderItems";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {

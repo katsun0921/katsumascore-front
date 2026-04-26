@@ -39,7 +39,7 @@ export const loadCategoryListPage = async (
   return {
     categoryName: category.name,
     slug: category.slug,
-    posts: normalizePosts(fetched.posts, currentLocale),
+    posts: normalizePosts(fetched.items, currentLocale),
     currentPage: safePage,
     totalPages,
   };

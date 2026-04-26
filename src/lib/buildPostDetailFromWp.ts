@@ -4,8 +4,8 @@ import type { TRelationPostItem } from "@/components/features/RelationPost";
 import type { TStreamingVodEntry } from "@/components/features/StreamingVod";
 import type { TRentalService } from "@/components/features/AdRental";
 import type { TPostsGroupItem } from "@/components/features/Post/PostsGroup";
-import type { ParsedWPPost } from "@/lib/api/wordpress.schema";
-import { parseWPPostUnknown, stripHtml, mapWPPostToPost } from "@/lib/api/wordpress.transform";
+import type { ParsedWPPost } from "@/lib/api/wordpress";
+import { parseWPPostUnknown, stripHtml, mapWPPostToPost } from "@/lib/api/wordpress";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://katsumascore.blog";
 
