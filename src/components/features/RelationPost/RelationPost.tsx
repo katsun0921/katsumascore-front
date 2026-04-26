@@ -1,6 +1,6 @@
 import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost'
 import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config'
-import type { PostCardKind } from '@/components/ui-section/PostCard/types'
+import type { PostCardKind } from '@/components/ui-section/PostCard'
 
 export type TRelationPostItem = {
   id: number

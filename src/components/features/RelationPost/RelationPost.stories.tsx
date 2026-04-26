@@ -23,7 +23,7 @@ export const TwoColumns: Story = {
 }
 export const NoImages: Story = {
   args: {
-    posts: mockPosts.map(({ imageUrl: _, imageAlt: __, ...rest }) => rest),
+    posts: mockPosts.map(({ id, title, href }) => ({ id, title, href })),
   },
 }
 export const English: Story = {

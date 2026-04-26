@@ -1,2 +1,4 @@
 export type { PostCardKind } from './types';
-export { PostCardByKind } from './PostCardByKind';
+export { PostCardGrid } from './PostCardGrid';
+export { PostCardListHorizontal } from './PostCardListHorizontal';
+export { PostCardListVertical } from './PostCardListVertical';
