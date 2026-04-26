@@ -1,7 +1,5 @@
 import Image from 'next/image';
 import type { PostCardMediaProps } from './PostCardMedia.types';
-import './PostCardMedia.scss';
-
 const DEFAULT_SIZES = '(max-width: 768px) 100vw, 540px';
 
 export const PostCardMedia = ({

@@ -33,6 +33,12 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+/** Satisfies Storybook `args` when using a custom `render` that ignores them */
+const renderOnlyArgs = {
+  title: '',
+  children: <></>,
+} as const;
+
 // ---------------------------------------------------------------------------
 // ChaosSections (CRITICAL)
 // What it tests: 3 PostSections stacked vertically, each receiving a different
@@ -54,6 +60,7 @@ type Story = StoryObj<typeof meta>;
 // ---------------------------------------------------------------------------
 export const ChaosSections: Story = {
   name: '[Chaos] ChaosSections (3 sections — CRITICAL)',
+  args: renderOnlyArgs,
   render: () => (
     <>
       <PostSection title='Latest'>
@@ -88,6 +95,7 @@ export const ChaosSections: Story = {
 // ---------------------------------------------------------------------------
 export const ChaosWithEmpty: Story = {
   name: '[Chaos] ChaosWithEmpty (empty section + populated section)',
+  args: renderOnlyArgs,
   render: () => (
     <>
       <PostSection title='新着記事（0件）'>
@@ -116,6 +124,7 @@ export const ChaosWithEmpty: Story = {
 // ---------------------------------------------------------------------------
 export const ChaosAllSectionsEmpty: Story = {
   name: '[Chaos] ChaosAllSectionsEmpty (3 empty sections)',
+  args: renderOnlyArgs,
   render: () => (
     <>
       <PostSection title='映画'>
@@ -150,6 +159,7 @@ export const ChaosAllSectionsEmpty: Story = {
 // ---------------------------------------------------------------------------
 export const ChaosAsymmetricSections: Story = {
   name: '[Chaos] ChaosAsymmetricSections (1 / 20 / 3 posts per section)',
+  args: renderOnlyArgs,
   render: () => (
     <>
       <PostSection title='今週のピックアップ（1件）'>
@@ -185,7 +195,7 @@ export const ChaosAsymmetricSections: Story = {
 export const ChaosNoSectionTitle: Story = {
   name: '[Chaos] ChaosNoSectionTitle (title=undefined, chaos content)',
   args: {
-    // No title prop — test graceful omission
+    title: undefined,
     children: <PostCardListVertical posts={chaosPosts.slice(0, 6)} />,
   },
 };

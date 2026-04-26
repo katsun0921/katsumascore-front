@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './OfficialSns.scss'
-
 export type TabId = 'x' | 'youtube' | 'instagram'
 
 export type OfficialSnsProps = {

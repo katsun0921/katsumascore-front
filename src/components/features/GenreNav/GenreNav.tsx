@@ -3,8 +3,6 @@ import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { getGenreIcon } from './genreIconMap'
 import { messages } from './i18n'
-import './GenreNav.scss'
-
 export type GenreNavTag = {
   slug: string
   name: string

@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import './HeaderNav.scss';
-
 const NAV_ITEMS = [
   { label: '映画', href: '/movies' },
   { label: 'アニメ', href: '/anime' },

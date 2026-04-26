@@ -4,8 +4,6 @@ import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import { ScoreHexBadge } from '@/components/ui-parts/ScoreHexBadge';
 import { VodDots } from '@/components/ui-parts/VodDots';
 import type { HomeCardProps } from './HomeCard.types';
-import './HomeCard.scss';
-
 export const HomeCard = ({ post, className }: HomeCardProps) => {
   return (
     <Link href={post.slug} className={['homeCard', className].filter(Boolean).join(' ')}>

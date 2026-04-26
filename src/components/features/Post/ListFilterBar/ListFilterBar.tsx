@@ -1,6 +1,4 @@
 import type { ListFilterBarProps } from './ListFilterBar.types';
-import './ListFilterBar.scss';
-
 export const ListFilterBar = ({ options, activeValue, onSelect, className }: ListFilterBarProps) => {
   return (
     <div className={['listFilterBar', className].filter(Boolean).join(' ')} role='toolbar' aria-label='絞り込み'>

@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { HomeCard } from '@/components/ui-home/HomeCard';
 import type { Post } from '@/types/post';
-import './HomeRanking.scss';
-
 export type HomeRankingProps = {
   posts: Post[];
   seeAllHref?: string;

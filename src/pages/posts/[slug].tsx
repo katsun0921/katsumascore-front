@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wordpress';
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
@@ -24,11 +24,30 @@ export const PostPage = ({ post, locale, genres }: Props) => {
       <PostDetail post={post} genres={genres} />
     </I18nProvider>
   );
-}
+};
 
 export default PostPage;
 
-export const getServerSideProps: GetServerSideProps<Props> = async ({ params, locale }) => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
+  const locs = locales ?? ['ja', 'en'];
+  const paths: { params: { slug: string }; locale: string }[] = [];
+
+  for (const loc of locs) {
+    const posts = await getPosts({ per_page: 100, lang: loc });
+    for (const p of posts) {
+      if (typeof p.slug === 'string') {
+        paths.push({ params: { slug: p.slug }, locale: loc });
+      }
+    }
+  }
+
+  return {
+    paths,
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) => {
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
 
@@ -36,25 +55,26 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, lo
   if (!wpPost) return { notFound: true };
 
   const post = mapWPPostToPost(wpPost);
+  if (!post) return { notFound: true };
+
   const toc = extractToc(post.content);
 
-  // HIGH SCORE（スコア4以上からランダム5件）+ ジャンルタグ
   const [allHighScore, allTags] = await Promise.all([
     getPosts({ per_page: 100, lang: locale }),
     getTags(locale),
   ]);
+
   const highScorePosts = pickRandom(
     allHighScore
       .filter((p) => (p.acf?.review_score ?? 0) >= 4)
-      .map((p) => {
-        const mapped = mapWPPostToPost(p);
-        return {
-          slug: mapped.slug,
-          title: mapped.title,
-          thumbnailUrl: mapped.image ?? undefined,
-          score: mapped.score,
-        };
-      }),
+      .map((p) => mapWPPostToPost(p))
+      .filter((m): m is NonNullable<typeof m> => m !== null)
+      .map((mapped) => ({
+        slug: mapped.slug,
+        title: mapped.title,
+        thumbnailUrl: mapped.image ?? undefined,
+        score: mapped.score,
+      })),
     5,
   );
 
@@ -80,5 +100,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, lo
       locale: locale ?? 'ja',
       genres,
     },
+    revalidate: 60,
   };
 };

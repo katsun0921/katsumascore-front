@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import './HomeFeatured.scss';
-
 export type FeaturedItem = {
   label: string;
   title: string;

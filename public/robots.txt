@@ -1,0 +1,10 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://katsumascore.blog
+
+# Sitemaps
+Sitemap: https://katsumascore.blog/sitemap.xml
+Sitemap: https://katsumascore.blog/server-sitemap.xml

@@ -11,7 +11,7 @@ const meta: Meta<typeof PostHero> = {
     backgrounds: { value: 'dark' },
   },
   args: {
-    titleJa: 'ナイブズ・アウト／名探偵と刃の館の秘密',
+    title: 'ナイブズ・アウト／名探偵と刃の館の秘密',
     trailerYoutubeId: 'hLRMHi73BzQ',
     posterUrl: '/images/mock-image.webp',
     description:
@@ -27,7 +27,7 @@ export const Default: Story = {}
 
 export const LongTitle: Story = {
   args: {
-    titleJa: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',
+    title: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',
   },
 }
 
@@ -40,7 +40,7 @@ export const NoTrailer: Story = {
 export const English: Story = {
   globals: { locale: 'en' },
   args: {
-    titleJa: 'Knives Out',
+    title: 'Knives Out',
     description:
       'When renowned crime novelist Harlan Thrombey is found dead the morning after his 85th birthday, eccentric detective Benoit Blanc investigates the family.',
   },

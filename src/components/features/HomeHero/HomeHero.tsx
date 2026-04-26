@@ -9,8 +9,6 @@ import type { Swiper as SwiperInstance } from 'swiper';
 import { gsap } from 'gsap';
 import 'swiper/swiper.css';
 import 'swiper/css/effect-cards';
-import './HomeHero.scss';
-
 export type HomeHeroSlide = {
   title: string;
   copy: string;

@@ -4,8 +4,6 @@ import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
 import type { TStudioEntry } from '@/components/features/Post/PostTitleMeta'
-import './PostHeader.scss'
-
 export type PostHeaderProps = {
   category: string
   titleOfficial: string

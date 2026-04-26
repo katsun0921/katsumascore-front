@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
-import './ScoreWithRank.scss'
 import { getRankingIcon } from './getRankingIcon'
 import type { RankLabel } from './getRankingIcon'
 

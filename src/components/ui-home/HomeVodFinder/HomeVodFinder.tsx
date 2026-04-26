@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { type VodService, VOD_LABEL, VOD_INITIAL, VOD_COLOR_VAR } from '@/lib/vod';
-import './HomeVodFinder.scss';
-
 export type VodFinderItem = {
   vod: VodService;
   count?: number;

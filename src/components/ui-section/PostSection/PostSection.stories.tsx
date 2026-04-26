@@ -22,6 +22,11 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
+const renderOnlyArgs = {
+  title: '',
+  children: <></>,
+} as const;
+
 export const WithTitle: Story = {
   args: {
     title: '最新記事',
@@ -36,6 +41,7 @@ export const WithoutTitle: Story = {
 };
 
 export const MultipleSections: Story = {
+  args: renderOnlyArgs,
   render: () => (
     <>
       <PostSection title='最新記事'>

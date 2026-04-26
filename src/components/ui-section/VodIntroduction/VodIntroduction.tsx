@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { PostCardListVertical } from '@/components/ui-section/PostCard'
+import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import type { Post } from '@/types/post'
@@ -92,6 +93,14 @@ export const VodIntroduction = ({
         )}
         <span className='text-body font-medium'>{vodName} {title}</span>
       </Link>
+      <PostCardImgLeft post={{
+        id: '',
+        slug: vodUrl,
+        title: `${vodName} ${title}`,
+        excerpt: '',
+        image: vodImageUrl || '',
+        publishedAt
+      }} />
       {relatedPosts.length > 0 && (
         <div className='mt-6'>
           <h3 className='font-heading text-body font-bold mb-3'>

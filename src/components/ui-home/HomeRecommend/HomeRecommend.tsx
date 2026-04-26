@@ -1,8 +1,6 @@
 import Link from 'next/link';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import type { Post } from '@/types/post';
-import './HomeRecommend.scss';
-
 export type RecommendBlock = {
   tag: string;
   posts: Post[];

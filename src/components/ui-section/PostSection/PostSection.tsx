@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import './PostSection.scss';
-
 type Props = {
   title?: string;
   children: ReactNode;

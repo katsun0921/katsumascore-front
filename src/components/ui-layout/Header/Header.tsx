@@ -7,8 +7,6 @@ import { HeaderNav } from '@/components/ui-parts/HeaderNav';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
-import './Header.scss';
-
 export const Header = () => {
   const router = useRouter();
   const locale = useLocale();

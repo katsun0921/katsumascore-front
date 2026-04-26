@@ -206,15 +206,11 @@ export const CinemaShowing: Story = {
   args: {
     post: {
       ...basePost,
+      title: '機動戦士ガンダム ジークアクス',
       isCinemaShowing: true,
-      vodIntroduction: {
-        titleJp: '機動戦士ガンダム ジークアクス',
-        writtenFrom: {
-          type: 'cinema',
-          isShowing: true,
-          cinemaUrl: 'https://example.com/cinema',
-        },
+      cinemaIntroduction: {
         publishedAt: '2026-04-01',
+        cinemaUrl: 'https://example.com/cinema',
       },
     },
   },

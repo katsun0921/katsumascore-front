@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import './Typography.scss';
-
 type TypographyVariant = 'overview' | 'palette' | 'fonts' | 'font-sizes';
 
 type TypographyProps = {

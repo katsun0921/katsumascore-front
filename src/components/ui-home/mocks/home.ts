@@ -1,9 +1,9 @@
 import type { Post } from '@/types/post';
-import type { HomeHeroProps } from '../HomeHero/HomeHero';
-import type { VodFinderItem } from '../HomeVodFinder/HomeVodFinder';
-import type { SeasonItem } from '../HomeSeasonReview/HomeSeasonReview';
-import type { RecommendBlock } from '../HomeRecommend/HomeRecommend';
-import type { FeaturedItem } from '../HomeFeatured/HomeFeatured';
+import type { HomeHeroProps } from '@/components/features/HomeHero';
+import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
+import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
+import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';
+import type { FeaturedItem } from '@/components/ui-home/HomeFeatured';
 
 export const mockHeroData: HomeHeroProps = {
   slides: [

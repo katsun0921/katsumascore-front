@@ -2,8 +2,6 @@ import Link from 'next/link'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './AdBanner.scss'
-
 // ── バナー型（A8.net 等のアフィリエイトHTMLを dangerouslySetInnerHTML で挿入）
 type BannerVariant = {
   type: 'banner'

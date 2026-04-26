@@ -7,8 +7,6 @@ import { getRankingIcon } from '@/components/features/ScoreWithRank/getRankingIc
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './PickUpAndScore.scss'
-
 export type PickUpPost = {
   slug: string
   title: string

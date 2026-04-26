@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import type { ReactNode } from 'react'
-import './Carousel.scss'
-
 export type TCarouselProps = {
   items: ReactNode[]
   label?: string

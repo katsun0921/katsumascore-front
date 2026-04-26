@@ -1,6 +1,4 @@
 import type { PostCardBodyProps } from './PostCardBody.types';
-import './PostCardBody.scss';
-
 export const PostCardBody = ({
   publishedAt,
   title,

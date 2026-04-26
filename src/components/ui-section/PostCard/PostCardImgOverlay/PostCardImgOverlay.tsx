@@ -4,8 +4,6 @@ import { PostCardMedia } from '@/components/ui-parts/PostCard/PostCardMedia';
 import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import { PostCardRankBadge } from '@/components/ui-parts/PostCard/PostCardRankBadge';
 import type { Post } from '@/types/post';
-import './PostCardImgOverlay.scss';
-
 type Props = {
   post: Post;
   rank?: number;

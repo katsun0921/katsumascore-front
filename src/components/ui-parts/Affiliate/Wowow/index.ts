@@ -1,1 +1,1 @@
-export { TsutayaAd } from './WowowAd';
+export { WowowRectangleBanner, WowowSquareBanner } from './WowowAd';

@@ -5,8 +5,6 @@ import { OfficialSns } from '@/components/features/OfficialSns'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './PostTitleMeta.scss'
-
 export type TStudioEntry = {
   name: string
   href?: string

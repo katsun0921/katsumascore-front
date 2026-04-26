@@ -2,8 +2,6 @@ import Link from 'next/link';
 import { HomeCard } from '@/components/ui-home/HomeCard';
 import { StarIcon } from '@/assets/icons';
 import type { HomeCardScrollListProps } from './HomeCardScrollList.types';
-import './HomeCardScrollList.scss';
-
 export const HomeCardScrollList = ({
   title,
   posts,

@@ -3,8 +3,6 @@ import { VideoEmbed } from '@/components/ui-parts/VideoEmbed'
 import { t } from '@/i18n/t'
 import { useLocale } from '@/i18n/provider'
 import { messages } from './i18n'
-import './PostHero.scss'
-
 export type PostHeroProps = {
   title: string
   trailerYoutubeId?: string

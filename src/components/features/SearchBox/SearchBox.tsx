@@ -5,8 +5,6 @@ import { useRouter } from 'next/router'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'
-import './SearchBox.scss'
-
 export const SearchBox = () => {
   const [query, setQuery] = useState('')
   const router = useRouter()

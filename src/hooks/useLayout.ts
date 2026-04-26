@@ -5,20 +5,20 @@ export type Layout = 'sm' | 'lg'
 
 /**
  * 現在のビューポート幅に基づいて、レイアウト（sm / lg）を判定する
- * - sm: ビューポート < breakpoints.lg
- * - lg: ビューポート >= breakpoints.lg
+ * - sm: ビューポート < breakpoints.md（768px）
+ * - lg: ビューポート >= breakpoints.md
  */
 export const useLayout = (): Layout => {
   const [layout, setLayout] = useState<Layout>(() => {
     // breakpoints.json から px値を数値に変換
-    const breakpointValue = parseInt(breakpoints.lg, 10)
+    const breakpointValue = parseInt(breakpoints.md, 10)
     const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`)
     return mediaQuery.matches ? 'lg' : 'sm'
   })
 
   useEffect(() => {
     // breakpoints.json から px値を数値に変換
-    const breakpointValue = parseInt(breakpoints.lg, 10)
+    const breakpointValue = parseInt(breakpoints.md, 10)
     const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`)
 
     const handleChange = (e: MediaQueryListEvent) => {

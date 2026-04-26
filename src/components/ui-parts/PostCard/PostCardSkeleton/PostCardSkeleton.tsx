@@ -1,5 +1,3 @@
-import './PostCardSkeleton.scss';
-
 export type PostCardSkeletonProps = {
   className?: string;
 };

@@ -1,4 +1,3 @@
-import './ProjectOverview.scss'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import { messages } from './i18n'

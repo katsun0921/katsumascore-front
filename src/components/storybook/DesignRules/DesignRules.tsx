@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import './DesignRules.scss';
-
 type RuleGroup = {
   title: string;
   description: string;

@@ -34,3 +34,11 @@ export const LongTitle: Story = {
 export const NoImage: Story = {
   args: { post: mockPostNoImage },
 };
+
+export const NoIndexSearch: Story = {
+  args: {
+    noIndex: true,
+    pageTitle: '検索結果',
+    pageDescription: '検索結果ページ（noindex）',
+  },
+};

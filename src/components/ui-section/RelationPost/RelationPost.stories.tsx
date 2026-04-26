@@ -26,7 +26,7 @@ export const Default: Story = {
 }
 
 export const ThreeColumn: Story = {
-  args: { posts: mockPosts, layout: 'three-column' },
+  args: { posts: mockPosts, kind: 'imgLeft' },
 }
 
 export const NoImage: Story = {

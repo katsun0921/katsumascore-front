@@ -1,7 +1,5 @@
 import React from 'react'
 import { useLocale } from '@/i18n/provider'
-import './ReviewSiteScores.scss'
-
 export type ReviewSiteId = 'imdb' | 'rt-critics' | 'rt-audience' | 'filmarks' | 'eiga-com'
 
 export type TReviewSite = {

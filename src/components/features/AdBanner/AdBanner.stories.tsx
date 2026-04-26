@@ -17,7 +17,7 @@ const meta: Meta<typeof AdBanner> = {
 }
 
 export default meta
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof AdBanner>
 
 // ── バナー型（300×250 プレースホルダー）
 export const Banner: Story = {

@@ -1,36 +1,29 @@
 import Head from 'next/head';
+import type { GetStaticProps } from 'next';
 import { HomeTemplate } from '@/components/templates/HomeTemplate';
-import {
-  mockHeroData,
-  mockRankingPosts,
-  mockLatestPosts,
-  mockAnimePosts,
-  mockHighScorePosts,
-  mockRecommendBlocks,
-  mockVodFinderItems,
-  mockSeasonItems,
-  mockFeaturedItems,
-} from '@/components/ui-home/mocks/home';
+import type { HomeTemplateProps } from '@/components/templates/HomeTemplate/HomeTemplate.types';
+import { loadHomeTemplateProps } from '@/lib/homeStaticProps';
 
-const Home = () => {
+type Props = HomeTemplateProps;
+
+const Home = (props: Props) => {
   return (
     <>
       <Head>
         <title>KatsumaScore</title>
       </Head>
-      <HomeTemplate
-        hero={mockHeroData}
-        rankingPosts={mockRankingPosts}
-        latestPosts={mockLatestPosts}
-        animePosts={mockAnimePosts}
-        highScorePosts={mockHighScorePosts}
-        recommendBlocks={mockRecommendBlocks}
-        vodFinderItems={mockVodFinderItems}
-        seasonItems={mockSeasonItems}
-        featuredItems={mockFeaturedItems}
-      />
+      <HomeTemplate {...props} />
     </>
   );
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
+  const locale = ctx.locale ?? 'ja';
+  const props = await loadHomeTemplateProps(locale);
+  return {
+    props,
+    revalidate: 60,
+  };
+};

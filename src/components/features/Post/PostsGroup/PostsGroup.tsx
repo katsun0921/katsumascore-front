@@ -1,8 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Post } from '@/types/post'
-import './PostsGroup.scss'
-
 export type TPostsGroupItem = {
   heading: string
   description?: string

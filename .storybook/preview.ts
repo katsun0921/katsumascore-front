@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+import '@/styles/_app-component-styles.scss'
 import { createElement } from 'react'
 import type { CSSProperties } from 'react'
 import type { Preview } from '@storybook/react-vite'

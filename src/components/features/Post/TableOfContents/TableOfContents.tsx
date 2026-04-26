@@ -5,8 +5,6 @@ import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
 import type { TocItem } from '@/lib/toc'
 import { messages } from './i18n'
-import './TableOfContents.scss'
-
 export type TableOfContentsProps = {
   items: TocItem[]
 }

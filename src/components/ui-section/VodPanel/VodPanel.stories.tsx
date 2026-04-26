@@ -8,7 +8,7 @@ const meta: Meta<typeof VodPanel> = {
 }
 export default meta
 
-type Story = StoryObj<typeof meta>
+type Story = StoryObj<typeof VodPanel>
 
 const mockItems = [
   <div key='1' style={{ padding: '8px', background: 'var(--color-bg-muted)', borderRadius: '6px', textAlign: 'center' }}>Netflix</div>,

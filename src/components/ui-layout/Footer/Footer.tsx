@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { XIcon, FacebookIcon, RssIcon } from '@/assets/icons';
-import './Footer.scss';
-
 const CATEGORIES = [
   { name: '映画', href: '/category/movie' },
   { name: 'アニメ', href: '/category/anime' },

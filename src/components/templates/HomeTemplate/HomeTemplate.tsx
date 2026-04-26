@@ -4,10 +4,9 @@ import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
+import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
 import { PageLayout } from '@/components/templates/PageLayout';
 import type { HomeTemplateProps } from './HomeTemplate.types';
-import './HomeTemplate.scss';
-
 /**
  * DOM順はSPファースト。
  * PCでは CSS grid の grid-column / grid-row でサイドバー列（右）に再配置する。
@@ -23,9 +22,11 @@ export const HomeTemplate = ({
   hero,
   rankingPosts,
   latestPosts,
+  animePosts,
   highScorePosts,
   recommendBlocks,
   vodFinderItems,
+  seasonItems,
   featuredItems,
 }: HomeTemplateProps) => {
   return (
@@ -43,6 +44,10 @@ export const HomeTemplate = ({
           <HomeCardScrollList title='最新レビュー' posts={latestPosts} seeAllHref='/posts' />
         </section>
 
+        <section className='homeTemplate__section homeTemplate__section--sidebar'>
+          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/category/anime' />
+        </section>
+
         {/* ── SP: 4列目 / PC: 左列続き ── */}
         <section className='homeTemplate__section'>
           <HomeCardScrollList title='高評価作品' posts={highScorePosts} icon='star' />
@@ -58,6 +63,10 @@ export const HomeTemplate = ({
 
         <section className='homeTemplate__section'>
           <HomeVodFinder items={vodFinderItems} />
+        </section>
+
+        <section className='homeTemplate__section homeTemplate__section--sidebar'>
+          <HomeSeasonReview items={seasonItems} />
         </section>
       </div>
     </div>
