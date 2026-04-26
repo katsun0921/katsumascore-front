@@ -3,7 +3,7 @@ import { VodIntroduction } from './VodIntroduction'
 import { mockPosts } from '@/mocks/post'
 
 const meta = {
-  title: 'Features/VodIntroduction',
+  title: 'UiSection/VodIntroduction',
   component: VodIntroduction,
   parameters: { layout: 'padded' },
 } satisfies Meta<typeof VodIntroduction>
@@ -39,38 +39,6 @@ export const VodStreamingNoRelated: Story = {
       type: 'vod',
       vodName: 'Netflix',
       vodUrl: 'https://www.netflix.com',
-    },
-    publishedAt: '2026-04-01',
-  },
-}
-
-// ---------------------------------------------------------------------------
-// CinemaShowing — 劇場公開中
-// ---------------------------------------------------------------------------
-export const CinemaShowing: Story = {
-  args: {
-    titleJp: '機動戦士ガンダム ジークアクス',
-    titleEn: 'Mobile Suit Gundam GQuuuuuuX',
-    writtenFrom: {
-      type: 'cinema',
-      isShowing: true,
-      cinemaUrl: 'https://example.com/cinema',
-      officialUrl: 'https://example.com/official',
-    },
-    publishedAt: '2026-04-01',
-  },
-}
-
-// ---------------------------------------------------------------------------
-// CinemaEnded — 劇場公開終了
-// ---------------------------------------------------------------------------
-export const CinemaEnded: Story = {
-  args: {
-    titleJp: '花束みたいな恋をした',
-    writtenFrom: {
-      type: 'cinema',
-      isShowing: false,
-      officialUrl: 'https://example.com/official',
     },
     publishedAt: '2026-04-01',
   },

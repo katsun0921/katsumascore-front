@@ -6,7 +6,8 @@ import { GoodPoint } from '@/components/ui-section/PostPage/PostGoodPoint'
 import { TableOfContents } from '@/components/features/Post/TableOfContents'
 import { PostContent } from '@/components/ui-section/PostPage/PostContent'
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores'
-import { VodIntroduction } from '@/components/features/VodIntroduction'
+import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction'
+import { VodIntroduction } from '@/components/ui-section/VodIntroduction'
 import { ShareButtons } from '@/components/ui-parts/ShareButtons'
 import { Sidebar } from '@/components/ui-layout/Sidebar'
 import type { PostDetailProps } from './PostDetail.types'
@@ -80,6 +81,14 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
               sites={post.reviewSiteScores.sites}
               updatedAt={post.reviewSiteScores.updatedAt}
               publishedDate={post.reviewSiteScores.publishedDate}
+            />
+          )}
+
+          {post.cinemaIntroduction && (
+            <CinemaIntroduction
+              title={post.title}
+              isShowing={post.isCinemaShowing ?? false}
+              {...post.cinemaIntroduction}
             />
           )}
 

@@ -1,15 +1,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { PostCardListVertical } from '@/components/ui-section/PostCard'
 import { useLocale } from '@/i18n/provider'
 import { t } from '@/i18n/t'
-import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction'
 import type { Post } from '@/types/post'
 import { messages } from './i18n'
-import './VodIntroduction.scss'
 
-type TWrittenFrom =
-  | { type: 'cinema'; isShowing: boolean; cinemaUrl?: string; officialUrl?: string }
-  | { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
+type TWrittenFrom = { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
 
 export type TVodIntroductionProps = {
   titleJp: string
@@ -30,20 +27,6 @@ export const VodIntroduction = ({
   const locale = useLocale()
   const title = locale === 'en' ? (titleEn || titleJp) : titleJp
 
-  if (writtenFrom.type === 'cinema') {
-    const { isShowing, cinemaUrl, officialUrl } = writtenFrom
-    return (
-      <CinemaIntroduction
-        title={title}
-        publishedAt={publishedAt}
-        isShowing={isShowing}
-        cinemaUrl={cinemaUrl}
-        officialUrl={officialUrl}
-      />
-    )
-  }
-
-  // type === 'vod'
   const { vodName, vodUrl, vodImageUrl } = writtenFrom
   const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP'
   const dateStr = new Intl.DateTimeFormat(dateLocale, {
@@ -54,8 +37,8 @@ export const VodIntroduction = ({
   const text = (path: string[]) => t(messages, path, locale)
 
   return (
-    <section className='p-vod-intro'>
-      <h2 className='p-vod-intro__heading'>
+    <section>
+      <h2 className='text-h3 font-bold leading-normal mb-3'>
         {locale === 'en' ? (
           <>
             {text(['vod', 'heading', 'prefix'])}
@@ -74,7 +57,7 @@ export const VodIntroduction = ({
           </>
         )}
       </h2>
-      <p className='p-vod-intro__body'>
+      <p className='text-body leading-[1.7] mb-4'>
         {locale === 'en' ? (
           <>
             {text(['vod', 'body', 'prefix'])}
@@ -96,38 +79,30 @@ export const VodIntroduction = ({
           </>
         )}
       </p>
-      <Link href={vodUrl} target='_blank' rel='noopener noreferrer' className='p-vod-intro__vod-link'>
+      <Link
+        href={vodUrl}
+        target='_blank'
+        rel='noopener noreferrer'
+        className='inline-flex items-center gap-3 no-underline text-[var(--color-text-primary)] mb-6 hover:opacity-80'
+      >
         {vodImageUrl && (
-          <div className='p-vod-intro__vod-image'>
-            <Image src={vodImageUrl} alt={`${vodName} ${title}`} fill sizes='200px' />
+          <div className='relative w-[120px] h-[60px] shrink-0'>
+            <Image src={vodImageUrl} alt={`${vodName} ${title}`} fill sizes='200px' className='object-contain' />
           </div>
         )}
-        <span className='p-vod-intro__vod-name'>{vodName} {title}</span>
+        <span className='text-body font-medium'>{vodName} {title}</span>
       </Link>
       {relatedPosts.length > 0 && (
-        <div className='p-vod-intro__related'>
-          <h3 className='p-vod-intro__related-heading'>
+        <div className='mt-6'>
+          <h3 className='font-heading text-body font-bold mb-3'>
             {text(['vod', 'relatedHeading', 'prefix'])}
             {vodName}
             {text(['vod', 'relatedHeading', 'suffix'])}
           </h3>
-          <ul className='p-vod-intro__related-list'>
-            {relatedPosts.map((post) => (
-              <li key={post.id}>
-                <Link href={post.slug} className='p-vod-intro__related-item'>
-                  {post.image && (
-                    <div className='p-vod-intro__related-thumb'>
-                      <Image src={post.image} alt={post.title} fill sizes='200px' />
-                    </div>
-                  )}
-                  <span className='p-vod-intro__related-title'>{post.title}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <PostCardListVertical posts={relatedPosts} />
         </div>
       )}
-      <p className='p-vod-intro__note'>
+      <p className='text-ui text-[var(--color-text-secondary)] mt-4 font-bold'>
         {text(['vod', 'note', 'prefix'])}
         {dateStr}
         {text(['vod', 'note', 'middle'])}

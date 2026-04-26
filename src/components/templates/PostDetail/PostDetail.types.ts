@@ -6,7 +6,8 @@ import type { TStreamingVodEntry } from '@/components/features/StreamingVod/Stre
 import type { TRentalService } from '@/components/features/AdRental/AdRental'
 import type { TRelationPostItem } from '@/components/features/RelationPost'
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
-import type { TVodIntroductionProps } from '@/components/features/VodIntroduction/VodIntroduction'
+import type { TVodIntroductionProps } from '@/components/ui-section/VodIntroduction'
+import type { TCinemaIntroductionProps } from '@/components/ui-section/CinemaIntroduction'
 import type { ProfileProps } from '@/components/ui-section/Profile'
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore'
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav'
@@ -47,6 +48,9 @@ export type PostDetailData = Post & {
     updatedAt?: string
     publishedDate?: string
   }
+
+  // 映画紹介（cinema-introduction 相当）
+  cinemaIntroduction?: Omit<TCinemaIntroductionProps, 'title' | 'isShowing'>
 
   // VOD紹介（post-introduce-vod.php 相当）
   vodIntroduction?: Omit<TVodIntroductionProps, 'locale'>
