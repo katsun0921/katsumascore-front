@@ -1,13 +1,22 @@
 import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/HomeTemplate.types";
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
-import type { WPCategory } from "@/types/wordpress";
+import type { SeasonItem } from "@/components/ui-home/HomeSeasonReview";
+import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
+import type { WPCategory, WPPage } from "@/types/wordpress";
 import type { Post } from "@/types/post";
 import { getScoreRank } from "@/types/wordpress";
-import { getPosts, getCategories, mapWPPostToPost } from "@/lib/api/wordpress";
+import {
+  getPosts,
+  getCategories,
+  mapWPPostToPost,
+  pickRandomTags,
+  getPostsByTagId,
+  getCategoryBySlug,
+  getChildPages,
+} from "@/lib/api/wordpress";
+import { stripHtml } from "@/lib/api/wordpress.transform";
 import { buildVodFinderItemsFromConfig } from "@/lib/buildVodFinderItems";
-// recommendBlocks / seasonItems: 暫定モック（API 設計後に差し替え）
-import { mockRecommendBlocks, mockSeasonItems } from "@/components/ui-home/mocks/home";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
@@ -78,11 +87,31 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
     isPrimary: i === 0,
   }));
 
+const mapWpPagesToSeasonItems = (pages: WPPage[]): SeasonItem[] =>
+  pages.map((p) => ({
+    label: stripHtml(p.title.rendered),
+    period: (p.modified ?? p.date).slice(0, 10),
+    href: `/seasonal-reviews/${p.slug}`,
+  }));
+
+const parseCommaList = (raw: string | undefined): string[] | undefined => {
+  if (!raw?.trim()) return undefined;
+  const parts = raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  return parts.length > 0 ? parts : undefined;
+};
+
 export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplateProps> => {
   const lang = locale === "en" ? "en" : "ja";
-  const [categories, poolRaw] = await Promise.all([
+  const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie-ja";
+  const seasonalParentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
+
+  const [categories, poolRaw, randomTags] = await Promise.all([
     getCategories(lang),
     getPosts({ per_page: 100, lang }),
+    pickRandomTags(3, lang),
   ]);
 
   const pool = toMappedPosts(poolRaw);
@@ -92,13 +121,40 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
 
   const animeCategoryId = resolveAnimeCategoryId(categories);
-  const animeRaw = animeCategoryId
-    ? await getPosts({ per_page: 8, category: animeCategoryId, lang })
-    : [];
-  const animePosts = toMappedPosts(animeRaw);
 
-  const featuredSource = [...pool].sort(sortByDateDesc).slice(0, 6);
+  const [animeRaw, movieCategory, recommendBlockRows, seasonalChildren] = await Promise.all([
+    animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId, lang }) : Promise.resolve([]),
+    getCategoryBySlug(movieSlug, lang),
+    Promise.all(
+      randomTags.map(async (tag) => {
+        const raw = await getPostsByTagId(tag.id, { per_page: 6, lang });
+        return {
+          tag: tag.name,
+          posts: toMappedPosts(raw),
+          seeAllHref: `/search?q=${encodeURIComponent(tag.name)}`,
+        } satisfies RecommendBlock;
+      }),
+    ),
+    seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
+      ? getChildPages(Number(seasonalParentRaw), lang)
+      : Promise.resolve([]),
+  ]);
+
+  const animePosts = toMappedPosts(animeRaw);
+  const recommendBlocks = recommendBlockRows.filter((b) => b.posts.length > 0);
+
+  const movieRaw = movieCategory
+    ? await getPosts({ per_page: 6, category: movieCategory.id, lang })
+    : [];
+  const moviePosts = toMappedPosts(movieRaw);
+  const featuredSource =
+    moviePosts.length > 0 ? moviePosts : [...pool].sort(sortByDateDesc).slice(0, 6);
   const featuredItems = toFeaturedItems(featuredSource);
+
+  const seasonItems = mapWpPagesToSeasonItems(seasonalChildren);
+
+  const facebookTimelineEmbedUrl = process.env.NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL?.trim() || undefined;
+  const homeAdScriptSrcs = parseCommaList(process.env.NEXT_PUBLIC_HOME_EXTRA_SCRIPT_SRCS);
 
   return {
     hero: buildHeroFromPosts(pool),
@@ -106,9 +162,11 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     latestPosts,
     animePosts,
     highScorePosts,
-    recommendBlocks: mockRecommendBlocks,
+    recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromConfig(),
-    seasonItems: mockSeasonItems,
+    seasonItems,
     featuredItems,
+    ...(facebookTimelineEmbedUrl ? { facebookTimelineEmbedUrl } : {}),
+    ...(homeAdScriptSrcs ? { homeAdScriptSrcs } : {}),
   };
 };

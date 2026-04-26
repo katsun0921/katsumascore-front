@@ -254,16 +254,17 @@ npm run deploy
 - [ ] `ui-section/` 内の整理（Profile / RelatedPosts / SeoHead）
   - [ ] Profile
   - [x] RelatedPosts
-  - [ ] SeoHead
+  - [x] SeoHead
 
 ---
 
 ### 📋 今後の予定（フェーズ 3-7）
 
 #### SEO / メタデータ（フェーズ 3）
-- [ ] `next-seo` 導入・全ページOGP / Twitter Card対応
-- [ ] JSON-LD構造化データの実装
-- [ ] `next-sitemap` の設定
+- [x] `next-seo` 導入（v7: JSON-LD専用）・全ページOGP / Twitter Card対応
+- [x] JSON-LD構造化データの実装（Product + review + aggregateRating + BreadcrumbList）
+- [x] Google Analytics（GA4）・Google AdSenseの実装（`next/script` / 本番環境のみ / 多言語対応）
+- [x] `next-sitemap` の設定（静的ページ自動生成 + `/server-sitemap.xml` で動的ルート対応・ja/en両ロケール）
 
 #### Storybook 整備（フェーズ 4）
 - [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
@@ -277,4 +278,11 @@ npm run deploy
 - [ ] WordPress 本番 API との接続確認
 - [ ] Cloudflare Workers デプロイの本番検証
 - [ ] ISR Webhook設定（WordPress更新時にrevalidate）
+
+### 公開後対応（フェーズ 8）
+
+- [ ] 全コンポーネントに Storybook Story 作成
+- [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
+- [ ] Lighthouse スコア確認（Performance / SEO / A11y）
+- [ ] WordPress との表示比較（主要ページ）
 - [ ] パフォーマンス最適化・アクセシビリティ対応

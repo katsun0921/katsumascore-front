@@ -12,6 +12,17 @@ export const stripHtml = (html: string): string =>
     .replace(/&#039;/g, "'")
     .trim();
 
+const titleFromWp = (wp: ParsedWPPost): string => {
+  const jp = wp.acf?.title_jp?.trim();
+  if (jp) return stripHtml(jp);
+  return stripHtml(wp.title.rendered);
+};
+
+export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
+  const parsed = WPPostSchema.safeParse(wp);
+  return parsed.success ? parsed.data : null;
+};
+
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {
   const image = wp._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
   const terms = wp._embedded?.["wp:term"];
@@ -21,7 +32,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   return {
     id: String(wp.id),
     slug: `/posts/${wp.slug}`,
-    title: wp.title.rendered,
+    title: titleFromWp(wp),
     excerpt: stripHtml(wp.excerpt.rendered),
     content: wp.content.rendered,
     image: image ?? null,
@@ -32,7 +43,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
 };
 
 export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | null => {
-  const parsed = WPPostSchema.safeParse(wp);
-  if (!parsed.success) return null;
-  return mapParsedWPPostToPost(parsed.data);
+  const parsed = parseWPPostUnknown(wp);
+  if (!parsed) return null;
+  return mapParsedWPPostToPost(parsed);
 };

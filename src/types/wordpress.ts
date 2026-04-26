@@ -44,6 +44,17 @@ export interface WPTag {
   count: number;
 }
 
+/** 固定ページ（季節レビュー子ページ等） */
+export interface WPPage {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  content?: { rendered: string };
+  date: string;
+  modified: string;
+  parent: number;
+}
+
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 
 export const getScoreRank = (score: 1 | 2 | 3 | 4 | 5): ScoreRank => {

@@ -1,13 +1,21 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wordpress';
+import { getPostBySlug, getPosts, getTags, getRelatedPosts, mapWPPostToPost } from '@/lib/api/wordpress';
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
+import {
+  buildPostDetailFromWp,
+  extractRelationPostIds,
+  extractPostsGroupSpecsFromWp,
+} from '@/lib/buildPostDetailFromWp';
 import { PostDetail } from '@/components/templates/PostDetail';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
+import type { Post } from '@/types/post';
+import type { TRelationPostItem } from '@/components/features/RelationPost';
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup';
 
 type Props = {
   post: PostDetailProps['post'];
@@ -47,6 +55,12 @@ export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
   };
 };
 
+const toListPost = (m: Post & { content: string }): Post => {
+  const { content: _c, ...rest } = m;
+  void _c;
+  return rest;
+};
+
 export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) => {
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
@@ -54,9 +68,52 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
   const wpPost = await getPostBySlug(slug, locale);
   if (!wpPost) return { notFound: true };
 
-  const post = mapWPPostToPost(wpPost);
-  if (!post) return { notFound: true };
+  const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
+  const relationIds = extractRelationPostIds(acfRecord);
+  const groupSpecs = extractPostsGroupSpecsFromWp(wpPost);
+  const groupIdSet = new Set(groupSpecs.flatMap((g) => g.ids));
+  const allFetchIds = [...new Set([...relationIds, ...groupIdSet])];
+  const relatedRaw = allFetchIds.length > 0 ? await getRelatedPosts(allFetchIds) : [];
 
+  const relationPosts: TRelationPostItem[] = [];
+  for (const id of relationIds) {
+    const raw = relatedRaw.find((p) => p.id === id);
+    if (!raw) continue;
+    const m = mapWPPostToPost(raw);
+    if (!m) continue;
+    const item: TRelationPostItem = {
+      id: raw.id,
+      title: m.title,
+      href: m.slug,
+    };
+    if (m.image) item.imageUrl = m.image;
+    relationPosts.push(item);
+  }
+
+  const postsGroups: TPostsGroupItem[] = groupSpecs
+    .map((g) => ({
+      heading: g.heading,
+      posts: g.ids
+        .map((id) => {
+          const raw = relatedRaw.find((p) => p.id === id);
+          if (!raw) return null;
+          const m = mapWPPostToPost(raw);
+          return m ? toListPost(m) : null;
+        })
+        .filter((p): p is Post => p !== null),
+    }))
+    .filter((g) => g.posts.length > 0);
+
+  const loc = locale ?? 'ja';
+  const detail = buildPostDetailFromWp({
+    wp: wpPost,
+    locale: loc,
+    relationPosts: relationPosts.length > 0 ? relationPosts : undefined,
+    postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
+  });
+  if (!detail) return { notFound: true };
+
+  const post = detail;
   const toc = extractToc(post.content);
 
   const [allHighScore, allTags] = await Promise.all([

@@ -5,6 +5,7 @@ import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
+import { HomePageEmbeds } from '@/components/features/HomePageEmbeds';
 import { PageLayout } from '@/components/templates/PageLayout';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 /**
@@ -28,6 +29,8 @@ export const HomeTemplate = ({
   vodFinderItems,
   seasonItems,
   featuredItems,
+  facebookTimelineEmbedUrl,
+  homeAdScriptSrcs,
 }: HomeTemplateProps) => {
   return (
     <PageLayout>
@@ -45,7 +48,7 @@ export const HomeTemplate = ({
         </section>
 
         <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/category/anime' />
+          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/categories/anime' />
         </section>
 
         {/* ── SP: 4列目 / PC: 左列続き ── */}
@@ -69,6 +72,10 @@ export const HomeTemplate = ({
           <HomeSeasonReview items={seasonItems} />
         </section>
       </div>
+      <HomePageEmbeds
+        facebookTimelineEmbedUrl={facebookTimelineEmbedUrl}
+        extraScriptSrcs={homeAdScriptSrcs}
+      />
     </div>
     </PageLayout>
   );

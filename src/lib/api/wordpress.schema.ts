@@ -29,6 +29,28 @@ export const WPEmbeddedSchema = z
   })
   .passthrough();
 
+/** ACF 等で使う真偽値のゆるい解釈 */
+const looseBool = z.preprocess((v: unknown) => {
+  if (v === "1" || v === 1 || v === true) return true;
+  if (v === "0" || v === 0 || v === false || v === "" || v == null) return false;
+  return Boolean(v);
+}, z.boolean());
+
+const acfSummaryGroupSchema = z
+  .object({
+    summary_jp: z.string().optional(),
+    summary_en: z.string().optional(),
+  })
+  .passthrough()
+  .optional();
+
+const actorFieldSchema = z.object({ name: z.string() }).passthrough();
+
+const rentalRowSchema = z.object({
+  service: z.string(),
+  url: z.string(),
+});
+
 export const WPPostSchema = z
   .object({
     id: z.number(),
@@ -37,11 +59,30 @@ export const WPPostSchema = z
     content: renderedBlock,
     excerpt: renderedBlock,
     date: z.string(),
+    modified: z.string().optional(),
     featured_media: z.number(),
     _embedded: WPEmbeddedSchema.optional(),
     acf: z
       .object({
         review_score: optionalReviewScore,
+        title_jp: z.string().optional(),
+        title_en: z.string().optional(),
+        acf_summary_group: acfSummaryGroupSchema,
+        actors_filed: z.array(actorFieldSchema).optional(),
+        good_point_filed: z.string().optional(),
+        official_url: z.string().optional(),
+        official_sns: z.union([z.string(), z.record(z.string(), z.unknown())]).optional(),
+        streaming_vod_netflix: looseBool.optional(),
+        streaming_vod_amazon: looseBool.optional(),
+        streaming_vod_unext: looseBool.optional(),
+        is_cinema_showing: looseBool.optional(),
+        trailer_youtube_id: z.string().optional(),
+        trailer_youtube: z.string().optional(),
+        rating: z.string().optional(),
+        author_comment: z.string().optional(),
+        rental_services: z.array(rentalRowSchema).optional(),
+        release_date: z.string().optional(),
+        copyright: z.string().optional(),
       })
       .passthrough()
       .optional(),

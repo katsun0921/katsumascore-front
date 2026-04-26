@@ -1,20 +1,22 @@
 import Head from 'next/head';
 import { useState } from 'react';
-import type { GetStaticPaths, GetStaticProps } from 'next';
+import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
+import { I18nProvider } from '@/i18n/provider';
+import type { Locale } from '@/i18n/t';
+import { getCategoryBySlug, getPostsWithMeta } from '@/lib/api/wordpress';
 import { normalizePosts } from '@/lib/utils/normalizePost';
-import { getCategories, getPostsByCategory } from '@/lib/api/wordpress';
 import type { Post } from '@/types/post';
-
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
   { label: '新着', value: 'new' },
   { label: '配信中', value: 'streaming' },
 ];
 
-type CategoryPageProps = {
+type FeaturedPageProps = {
   categoryName: string;
   posts: Post[];
+  locale: string;
 };
 
 const sortPosts = (posts: Post[], filter: string): Post[] => {
@@ -27,62 +29,53 @@ const sortPosts = (posts: Post[], filter: string): Post[] => {
   return posts;
 };
 
-const CategoryPage = ({ categoryName, posts }: CategoryPageProps) => {
+const FeaturedPage = ({ categoryName, posts, locale }: FeaturedPageProps) => {
   const [activeFilter, setActiveFilter] = useState('score');
-
   const sortedPosts = sortPosts(posts, activeFilter);
+  const loc = (locale ?? 'ja') as Locale;
 
   return (
-    <>
+    <I18nProvider locale={loc}>
       <Head>
         <title>{categoryName} | KatsumaScore</title>
-        <meta name='description' content={`${categoryName}の記事一覧 — スコアで選ぶ`} />
+        <meta name='description' content={`${categoryName}の記事一覧`} />
       </Head>
       <ListTemplate
         categoryName={categoryName}
-        categoryDescription={`今観るべき${categoryName}作品を、スコアで選ぶ`}
+        categoryDescription={categoryName}
         posts={sortedPosts}
         filterOptions={FILTER_OPTIONS}
         activeFilter={activeFilter}
         onFilterSelect={setActiveFilter}
+        currentPage={1}
+        totalPages={1}
       />
-    </>
+    </I18nProvider>
   );
 };
 
-export default CategoryPage;
+export default FeaturedPage;
 
-export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
-  const paths = [];
-
-  for (const locale of locales) {
-    const categories = await getCategories(locale);
-    for (const category of categories) {
-      paths.push({ params: { slug: category.slug }, locale });
-    }
-  }
-
-  return { paths, fallback: 'blocking' };
-};
-
-export const getStaticProps: GetStaticProps = async ({ params, locale }) => {
+export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale }) => {
   const currentLocale = locale ?? 'ja';
-  const slug = params?.slug as string;
+  const lang = currentLocale === 'en' ? 'en' : 'ja';
+  const slug = process.env.WP_FEATURED_CATEGORY_SLUG ?? 'featured';
+  const category = await getCategoryBySlug(slug, lang);
+  if (!category) return { notFound: true };
 
-  const categories = await getCategories(currentLocale);
-  const category = categories.find((c) => c.slug === slug);
-
-  if (!category) {
-    return { notFound: true };
-  }
-
-  const wpPosts = await getPostsByCategory(category.id, currentLocale);
-  const posts = normalizePosts(wpPosts, currentLocale);
+  const fetched = await getPostsWithMeta({
+    category: category.id,
+    page: 1,
+    per_page: 100,
+    lang,
+  });
+  if (!fetched) return { notFound: true };
 
   return {
     props: {
       categoryName: category.name,
-      posts,
+      posts: normalizePosts(fetched.posts, currentLocale),
+      locale: currentLocale,
     },
     revalidate: 60,
   };

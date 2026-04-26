@@ -33,8 +33,11 @@ export const SeoHead = (props: SeoHeadProps) => {
   const { post } = props as { post: SeoData };
   const title = `${post.title} | ${SITE_NAME}`;
   const description = post.excerpt || post.title;
-  const canonicalUrl = `${SITE_URL}${post.slug}`;
+  const path = post.slug.startsWith('/') ? post.slug : `/${post.slug}`;
+  const canonicalUrl = `${SITE_URL.replace(/\/$/, '')}${path}`;
   const ogImage = post.image ?? FALLBACK_OG_IMAGE;
+  const jaUrl = `${SITE_URL.replace(/\/$/, '')}${path}`;
+  const enUrl = `${SITE_URL.replace(/\/$/, '')}/en${path}`;
 
   const breadcrumbItems = [
     { name: 'HOME', item: SITE_URL },
@@ -48,6 +51,9 @@ export const SeoHead = (props: SeoHeadProps) => {
         <title>{title}</title>
         <meta name='description' content={description} />
         <link rel='canonical' href={canonicalUrl} />
+        <link rel='alternate' hrefLang='ja' href={jaUrl} />
+        <link rel='alternate' hrefLang='en' href={enUrl} />
+        <link rel='alternate' hrefLang='x-default' href={jaUrl} />
 
         {/* Open Graph */}
         <meta property='og:type' content='article' />

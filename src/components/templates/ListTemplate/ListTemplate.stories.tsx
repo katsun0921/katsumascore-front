@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ListTemplate } from './ListTemplate';
-import { mockPosts } from '@/mocks/post';
+import { mockPost, mockPosts } from '@/mocks/post';
 import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
@@ -89,5 +89,38 @@ export const Chaos: Story = {
     currentPage: 1,
     totalPages: 3,
     vodRanking: mockVodRanking,
+  },
+};
+
+export const Dense: Story = {
+  args: {
+    ...Default.args,
+    posts: Array.from({ length: 14 }, (_, i) => ({
+      ...mockPost,
+      id: `dense-${i}`,
+      slug: `/posts/dense-${i}`,
+      title: `レビュー記事タイトル ${i + 1}`,
+      publishedAt: `2026-04-${String((i % 28) + 1).padStart(2, '0')}`,
+      score: (i % 5) + 1,
+    })),
+    totalPages: 4,
+    currentPage: 1,
+  },
+};
+
+export const Extreme: Story = {
+  args: {
+    ...Default.args,
+    posts: Array.from({ length: 22 }, (_, i) => ({
+      ...mockPost,
+      id: `ext-${i}`,
+      slug: `/posts/ext-${i}`,
+      title: `Extreme list item ${i + 1}`,
+      publishedAt: `2025-${String((i % 12) + 1).padStart(2, '0')}-15`,
+      score: (i % 5) + 1,
+      image: i % 3 === 0 ? null : mockPost.image,
+    })),
+    totalPages: 6,
+    currentPage: 3,
   },
 };
