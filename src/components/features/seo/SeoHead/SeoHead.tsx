@@ -2,8 +2,10 @@ import Head from 'next/head';
 import { useLocale } from '@/i18n/provider';
 import type { Post } from '@/types/post';
 
+type SeoData = Pick<Post, 'title' | 'excerpt' | 'image' | 'publishedAt' | 'slug'>;
+
 type Props = {
-  post: Post;
+  post: SeoData;
 };
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';

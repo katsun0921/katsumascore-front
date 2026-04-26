@@ -5,11 +5,10 @@ export type { PostCardSkeletonProps } from '@/components/ui-parts/PostCard/PostC
 export { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 export { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 export { PostCardImgOverlay } from '@/components/ui-section/PostCard/PostCardImgOverlay';
-export { PostList } from '@/components/ui-section/PostList';
-export type { PostListProps, PostListVariant } from '@/components/ui-section/PostList';
+export { PostCardListVertical } from '@/components/ui-section/PostCard';
 export { PostContent } from '@/components/ui-section/PostPage/PostContent';
 export { PostSection } from '@/components/ui-section/PostSection';
-export { SeoHead } from '@/components/ui-section/SeoHead';
+export { SeoHead } from '@/components/features/seo/SeoHead';
 export { PostRankingItem } from '@/components/features/Post/PostRankingItem';
 export type { PostRankingItemProps } from '@/components/features/Post/PostRankingItem/PostRankingItem.types';
 export { ListFilterBar } from '@/components/features/Post/ListFilterBar';

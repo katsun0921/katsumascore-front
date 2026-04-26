@@ -1,7 +1,7 @@
 /**
  * PostSection Chaos Stories
  *
- * Composes PostSection + PostList using chaosPosts slices to simulate
+ * Composes PostSection + PostCardListVertical using chaosPosts slices to simulate
  * real page-level chaos: multiple sections on one page, each receiving
  * a different slice of dirty CMS data.
  *
@@ -11,7 +11,7 @@
 
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PostSection } from './PostSection';
-import { PostList } from '@/components/ui-section/PostList';
+import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import { chaosPosts } from '@/mocks/chaosPosts';
 
 const meta = {
@@ -57,15 +57,15 @@ export const ChaosSections: Story = {
   render: () => (
     <>
       <PostSection title='Latest'>
-        <PostList posts={chaosPosts.slice(0, 5)} />
+        <PostCardListVertical posts={chaosPosts.slice(0, 5)} />
       </PostSection>
 
       <PostSection title='Popular'>
-        <PostList posts={chaosPosts.slice(5, 15)} />
+        <PostCardListVertical posts={chaosPosts.slice(5, 15)} />
       </PostSection>
 
       <PostSection title='Mixed'>
-        <PostList posts={chaosPosts.slice(0, 20)} />
+        <PostCardListVertical posts={chaosPosts.slice(0, 20)} />
       </PostSection>
     </>
   ),
@@ -78,7 +78,7 @@ export const ChaosSections: Story = {
 //   (e.g., a new category created in WordPress but not yet used).
 //
 // Layout risks:
-//   - Empty section renders PostList's empty state inside PostSection
+//   - Empty section renders PostCardListVertical's empty list inside PostSection
 //   - Section title for the empty section still renders and takes space
 //   - The gap between empty section and populated section must remain consistent
 //   - Populated section below must not collapse upward to fill the void
@@ -91,11 +91,11 @@ export const ChaosWithEmpty: Story = {
   render: () => (
     <>
       <PostSection title='新着記事（0件）'>
-        <PostList posts={[]} />
+        <PostCardListVertical posts={[]} />
       </PostSection>
 
       <PostSection title='人気記事'>
-        <PostList posts={chaosPosts.slice(0, 6)} />
+        <PostCardListVertical posts={chaosPosts.slice(0, 6)} />
       </PostSection>
     </>
   ),
@@ -119,15 +119,15 @@ export const ChaosAllSectionsEmpty: Story = {
   render: () => (
     <>
       <PostSection title='映画'>
-        <PostList posts={[]} />
+        <PostCardListVertical posts={[]} />
       </PostSection>
 
       <PostSection title='アニメ'>
-        <PostList posts={[]} />
+        <PostCardListVertical posts={[]} />
       </PostSection>
 
       <PostSection title='ドラマ'>
-        <PostList posts={[]} />
+        <PostCardListVertical posts={[]} />
       </PostSection>
     </>
   ),
@@ -154,16 +154,16 @@ export const ChaosAsymmetricSections: Story = {
     <>
       <PostSection title='今週のピックアップ（1件）'>
         {/* chaos-015: triple missing — the most broken single card */}
-        <PostList posts={[chaosPosts[14]]} />
+        <PostCardListVertical posts={[chaosPosts[14]]} />
       </PostSection>
 
       <PostSection title='全記事一覧（20件）'>
-        <PostList posts={chaosPosts.slice(0, 20)} />
+        <PostCardListVertical posts={chaosPosts.slice(0, 20)} />
       </PostSection>
 
       <PostSection title='編集部おすすめ（3件）'>
         {/* chaos-001 / chaos-007 / chaos-017: normal + old-date + future-date */}
-        <PostList posts={[chaosPosts[0], chaosPosts[6], chaosPosts[16]]} />
+        <PostCardListVertical posts={[chaosPosts[0], chaosPosts[6], chaosPosts[16]]} />
       </PostSection>
     </>
   ),
@@ -186,6 +186,6 @@ export const ChaosNoSectionTitle: Story = {
   name: '[Chaos] ChaosNoSectionTitle (title=undefined, chaos content)',
   args: {
     // No title prop — test graceful omission
-    children: <PostList posts={chaosPosts.slice(0, 6)} />,
+    children: <PostCardListVertical posts={chaosPosts.slice(0, 6)} />,
   },
 };

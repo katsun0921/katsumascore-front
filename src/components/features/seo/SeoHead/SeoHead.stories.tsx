@@ -7,7 +7,7 @@ import { mockPost, mockPostLongTitle, mockPostNoImage } from '@/mocks/post';
  * Stories here document valid prop combinations for SEO coverage.
  */
 const meta: Meta<typeof SeoHead> = {
-  title: 'Ui-Section/SeoHead',
+  title: 'Features/Seo/SeoHead',
   component: SeoHead,
   tags: ['autodocs'],
   parameters: {
@@ -19,10 +19,6 @@ export default meta;
 type Story = StoryObj<typeof SeoHead>;
 
 export const Default: Story = {
-  args: { post: mockPost },
-};
-
-export const Japanese: Story = {
   args: { post: mockPost },
 };
 

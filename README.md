@@ -253,7 +253,7 @@ npm run deploy
   - [ ] GenreNav
 - [ ] `ui-section/` 内の整理（Profile / RelatedPosts / SeoHead）
   - [ ] Profile
-  - [ ] RelatedPosts
+  - [x] RelatedPosts
   - [ ] SeoHead
 
 ---

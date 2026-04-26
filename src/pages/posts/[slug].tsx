@@ -3,7 +3,7 @@ import { getPostBySlug, getPosts, getTags, mapWPPostToPost } from '@/lib/api/wor
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import { PostDetail } from '@/components/templates/PostDetail';
-import { SeoHead } from '@/components/ui-section/SeoHead';
+import { SeoHead } from '@/components/features/seo/SeoHead';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
