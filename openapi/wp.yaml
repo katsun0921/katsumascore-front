@@ -1,0 +1,352 @@
+openapi: "3.0.3"
+info:
+  title: WordPress REST API (KatsumaScore subset)
+  version: "1.0"
+  description: |
+    WP REST API の KatsumaScore フロントエンドが実際に使うエンドポイントのみを定義。
+    手で触る場所。openapi-typescript でコンパイル時の型を生成するために使う。
+
+servers:
+  - url: "{baseUrl}/wp-json/wp/v2"
+    variables:
+      baseUrl:
+        default: https://katsumascore.blog
+
+# ---- 共通パラメータ ----
+components:
+  parameters:
+    lang:
+      name: lang
+      in: query
+      schema:
+        type: string
+        enum: [ja, en]
+    page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    per_page:
+      name: per_page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 10
+    _embed:
+      name: _embed
+      in: query
+      schema:
+        type: integer
+        enum: [1]
+    acf_format:
+      name: acf_format
+      in: query
+      schema:
+        type: string
+        enum: [standard]
+    _fields:
+      name: _fields
+      in: query
+      schema:
+        type: string
+      description: カンマ区切りのフィールド名。`_links,_embedded` を必ず含める。
+
+  # ---- 再利用スキーマ ----
+  schemas:
+    RenderedBlock:
+      type: object
+      required: [rendered]
+      properties:
+        rendered:
+          type: string
+
+    WPPost:
+      type: object
+      required: [id, slug, title, content, excerpt, date, featured_media]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          $ref: "#/components/schemas/RenderedBlock"
+        content:
+          $ref: "#/components/schemas/RenderedBlock"
+        excerpt:
+          $ref: "#/components/schemas/RenderedBlock"
+        date:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        featured_media:
+          type: integer
+        acf:
+          $ref: "#/components/schemas/WPPostAcf"
+        _embedded:
+          $ref: "#/components/schemas/WPEmbedded"
+
+    WPPostAcf:
+      type: object
+      description: "ACF フィールド。本番では acf: [] が返ることがある（Zod で吸収）。"
+      properties:
+        review_score:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title_jp:
+          type: string
+        title_en:
+          type: string
+        acf_summary_group:
+          type: object
+          properties:
+            summary_jp:
+              type: string
+            summary_en:
+              type: string
+        actors_filed:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              character:
+                type: string
+              description:
+                type: string
+              role:
+                type: string
+        good_point_filed:
+          type: string
+        official_url:
+          type: string
+        streaming_vod_netflix:
+          type: boolean
+        streaming_vod_amazon:
+          type: boolean
+        streaming_vod_unext:
+          type: boolean
+        is_cinema_showing:
+          type: boolean
+        trailer_youtube_id:
+          type: string
+        trailer_youtube:
+          type: string
+        rating:
+          type: string
+        author_comment:
+          type: string
+        rental_services:
+          type: array
+          items:
+            type: object
+            required: [service, url]
+            properties:
+              service:
+                type: string
+              url:
+                type: string
+        release_date:
+          type: string
+        copyright:
+          type: string
+
+    WPEmbedded:
+      type: object
+      properties:
+        "wp:featuredmedia":
+          type: array
+          items:
+            type: object
+            required: [source_url]
+            properties:
+              source_url:
+                type: string
+        "wp:term":
+          type: array
+          items:
+            type: array
+            items:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                slug:
+                  type: string
+
+    WPCategory:
+      type: object
+      required: [id, slug, name, count, parent]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        count:
+          type: integer
+        parent:
+          type: integer
+
+    WPTag:
+      type: object
+      required: [id, slug, name, count]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        count:
+          type: integer
+
+    WPPage:
+      type: object
+      required: [id, slug, title, content, date, modified]
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        title:
+          $ref: "#/components/schemas/RenderedBlock"
+        content:
+          $ref: "#/components/schemas/RenderedBlock"
+        date:
+          type: string
+          format: date-time
+        modified:
+          type: string
+          format: date-time
+        parent:
+          type: integer
+        menu_order:
+          type: integer
+
+paths:
+  /posts:
+    get:
+      operationId: listPosts
+      summary: 投稿一覧
+      parameters:
+        - $ref: "#/components/parameters/page"
+        - $ref: "#/components/parameters/per_page"
+        - $ref: "#/components/parameters/lang"
+        - $ref: "#/components/parameters/_embed"
+        - $ref: "#/components/parameters/acf_format"
+        - $ref: "#/components/parameters/_fields"
+        - name: categories
+          in: query
+          schema:
+            type: integer
+        - name: tags
+          in: query
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: include
+          in: query
+          schema:
+            type: string
+          description: カンマ区切りの投稿 ID
+      responses:
+        "200":
+          description: 投稿一覧
+          headers:
+            X-WP-Total:
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WPPost"
+
+  /categories:
+    get:
+      operationId: listCategories
+      summary: カテゴリー一覧
+      parameters:
+        - $ref: "#/components/parameters/lang"
+      responses:
+        "200":
+          description: カテゴリー一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WPCategory"
+
+  /tags:
+    get:
+      operationId: listTags
+      summary: タグ一覧
+      parameters:
+        - $ref: "#/components/parameters/per_page"
+        - $ref: "#/components/parameters/lang"
+      responses:
+        "200":
+          description: タグ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WPTag"
+
+  /pages:
+    get:
+      operationId: listPages
+      summary: 固定ページ一覧
+      parameters:
+        - $ref: "#/components/parameters/per_page"
+        - $ref: "#/components/parameters/lang"
+        - name: parent
+          in: query
+          schema:
+            type: integer
+        - name: slug
+          in: query
+          schema:
+            type: string
+        - name: orderby
+          in: query
+          schema:
+            type: string
+            enum: [menu_order, date, title]
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        "200":
+          description: 固定ページ一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WPPage"

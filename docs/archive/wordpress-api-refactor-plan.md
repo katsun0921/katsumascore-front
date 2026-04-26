@@ -63,26 +63,26 @@ src/lib/api/wordpress/
 
 サーバ側を一切触らず、フロント側完結で型安全性を一段上げる。
 
-- [ ] `openapi/wp.yaml` を手書きで作成（最小版: `/posts` のみ、`parameters` は実際に使うクエリだけ）
-- [ ] `package.json` に dev 依存追加: `openapi-typescript`
-- [ ] `package.json` に scripts 追加:
+- [x] `openapi/wp.yaml` を手書きで作成（最小版: `/posts` のみ、`parameters` は実際に使うクエリだけ）
+- [x] `package.json` に dev 依存追加: `openapi-typescript`
+- [x] `package.json` に scripts 追加:
   ```json
   "wp:gen-types": "openapi-typescript openapi/wp.yaml -o src/lib/api/wordpress/generated/wp-schema.d.ts"
   ```
-- [ ] `npm run wp:gen-types` で型生成し、`generated/wp-schema.d.ts` を確認
-- [ ] `/categories`, `/tags`, `/pages` を `openapi/wp.yaml` に追加して再生成
-- [ ] `generated/` を git 管理（CI 不要・差分が見える運用）
+- [x] `npm run wp:gen-types` で型生成し、`generated/wp-schema.d.ts` を確認
+- [x] `/categories`, `/tags`, `/pages` を `openapi/wp.yaml` に追加して再生成
+- [x] `generated/` を git 管理（CI 不要・差分が見える運用）
 
 ### Step 3: `openapi-fetch` への置換
 
 `client.ts` と各 endpoint のリクエスト部分に差分が局所化される。
 
-- [ ] runtime 依存追加: `openapi-fetch`
-- [ ] `client.ts` を `openapi-fetch` ベースに置換（`createClient<paths>({ baseUrl, ... })`）
-- [ ] タイムアウト・リトライは `openapi-fetch` のミドルウェアまたは薄いラッパーで実装
-- [ ] 各 endpoint を `client.GET("/posts", { params: { query: { ... } } })` 形式に置換
-- [ ] レスポンスは `openapi-fetch` の型で受けたうえで、UI に渡す前に Zod でパース＆正規化（`mapWPPostToPost`）
-- [ ] 本番 API 検証スクリプトで挙動が等価であることを再確認
+- [x] runtime 依存追加: `openapi-fetch`
+- [x] `client.ts` を `openapi-fetch` ベースに置換（`createClient<paths>({ baseUrl, ... })`）
+- [x] タイムアウト・リトライは `openapi-fetch` のミドルウェアまたは薄いラッパーで実装
+- [x] 各 endpoint を `client.GET("/posts", { params: { query: { ... } } })` 形式に置換
+- [x] レスポンスは `openapi-fetch` の型で受けたうえで、UI に渡す前に Zod でパース＆正規化（`mapWPPostToPost`）
+- [x] 本番 API 検証スクリプトで挙動が等価であることを再確認
 
 ---
 

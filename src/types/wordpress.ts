@@ -1,59 +1,9 @@
-export interface WPPost {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  content: { rendered: string };
-  excerpt: { rendered: string };
-  date: string;
-  featured_media: number;
-  _embedded?: {
-    "wp:featuredmedia": [{ source_url: string }];
-  };
-  acf?: {
-    review_score?: 1 | 2 | 3 | 4 | 5;
-    title_jp?: string;
-    title_en?: string;
-    acf_summary_group?: {
-      summary_jp?: string;
-      summary_en?: string;
-    };
-    actors_filed?: { name: string; role?: string }[];
-    release_date?: string; // Ymd形式
-    good_point_filed?: string;
-    official_url?: string;
-    official_sns?: string;
-    streaming_vod_netflix?: boolean;
-    streaming_vod_amazon?: boolean;
-    streaming_vod_unext?: boolean;
-    is_cinema_showing?: boolean;
-  };
-}
+import type { components } from "@/lib/api/wordpress/generated/wp-schema";
 
-export interface WPCategory {
-  id: number;
-  slug: string;
-  name: string;
-  count: number;
-  parent: number;
-}
-
-export interface WPTag {
-  id: number;
-  slug: string;
-  name: string;
-  count: number;
-}
-
-/** 固定ページ（季節レビュー子ページ等） */
-export interface WPPage {
-  id: number;
-  slug: string;
-  title: { rendered: string };
-  content?: { rendered: string };
-  date: string;
-  modified: string;
-  parent: number;
-}
+export type WPPost = components["schemas"]["WPPost"];
+export type WPCategory = components["schemas"]["WPCategory"];
+export type WPTag = components["schemas"]["WPTag"];
+export type WPPage = components["schemas"]["WPPage"];
 
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 
@@ -63,4 +13,4 @@ export const getScoreRank = (score: 1 | 2 | 3 | 4 | 5): ScoreRank => {
   if (score === 3) return "A";
   if (score === 2) return "B";
   return "C";
-}
+};

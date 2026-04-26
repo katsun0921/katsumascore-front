@@ -219,24 +219,30 @@ export const buildPostDetailFromWp = ({
     parsed.acf?.trailer_youtube_id?.trim() ||
     parsed.acf?.trailer_youtube?.trim() ||
     (typeof acf?.youtube_id === "string" ? acf.youtube_id.trim() : undefined);
+  const updatedAt = parsed.modified?.slice(0, 10);
+  const rating = parsed.acf?.rating?.trim();
+  const authorComment = parsed.acf?.author_comment?.trim();
+  const goodPoints = splitGoodPoints(parsed.acf?.good_point_filed);
+  const actors = mapActors(parsed);
+  const streamingVods = buildStreamingVods(parsed);
+  const rentalServices = buildRentalServices(parsed);
 
   return {
     ...base,
-    titleEn: titleEn || undefined,
-    updatedAt: parsed.modified?.slice(0, 10),
-    rating: parsed.acf?.rating?.trim() || undefined,
-    trailerYoutubeId: trailerYoutubeId || undefined,
-    authorComment: parsed.acf?.author_comment?.trim() || undefined,
-    goodPoints: splitGoodPoints(parsed.acf?.good_point_filed),
-    summary,
-    TitleMeta: titleMeta,
-    credits: undefined,
-    actors: mapActors(parsed),
+    ...(titleEn ? { titleEn } : {}),
+    ...(updatedAt ? { updatedAt } : {}),
+    ...(rating ? { rating } : {}),
+    ...(trailerYoutubeId ? { trailerYoutubeId } : {}),
+    ...(authorComment ? { authorComment } : {}),
+    ...(goodPoints ? { goodPoints } : {}),
+    ...(summary ? { summary } : {}),
+    ...(titleMeta ? { TitleMeta: titleMeta } : {}),
+    ...(actors ? { actors } : {}),
     isCinemaShowing: Boolean(parsed.acf?.is_cinema_showing),
-    streamingVods: buildStreamingVods(parsed),
-    rentalServices: buildRentalServices(parsed),
-    relationPosts: relationPosts && relationPosts.length > 0 ? relationPosts : undefined,
-    postsGroups: postsGroups && postsGroups.length > 0 ? postsGroups : undefined,
+    ...(streamingVods ? { streamingVods } : {}),
+    ...(rentalServices ? { rentalServices } : {}),
+    ...(relationPosts && relationPosts.length > 0 ? { relationPosts } : {}),
+    ...(postsGroups && postsGroups.length > 0 ? { postsGroups } : {}),
     shareUrl: `${SITE_URL.replace(/\/$/, "")}${base.slug}`,
   };
 };

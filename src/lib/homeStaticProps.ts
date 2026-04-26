@@ -90,7 +90,7 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
 const mapWpPagesToSeasonItems = (pages: WPPage[]): SeasonItem[] =>
   pages.map((p) => ({
     label: stripHtml(p.title.rendered),
-    period: (p.modified ?? p.date).slice(0, 10),
+    period: (p.modified || p.date || "").slice(0, 10),
     href: `/seasonal-reviews/${p.slug}`,
   }));
 
