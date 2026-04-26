@@ -277,7 +277,7 @@ npm run deploy
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 
 #### 本番対応（フェーズ 7）
-- [ ] WordPress 本番 API との接続確認
+- [ ] WordPress 本番 API との接続確認（[手順・参照](docs/features/wordpress_production_api_verification.md) / [TODO チェックリスト](docs/features/wordpress_production_api_verification_checklist.md)）
 - [ ] Cloudflare Workers デプロイの本番検証
 - [ ] ISR Webhook設定（WordPress更新時にrevalidate）
 

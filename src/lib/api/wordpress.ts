@@ -1,7 +1,13 @@
 import type { WPPost, WPCategory, WPTag, WPPage } from "@/types/wordpress";
 export { stripHtml, mapWPPostToPost, parseWPPostUnknown } from "@/lib/api/wordpress.transform";
 
-const BASE_URL = process.env.WP_API_URL;
+const normalizeWpApiBaseUrl = (raw: string | undefined): string | undefined => {
+  const t = raw?.trim();
+  if (!t) return undefined;
+  return t.replace(/\/+$/, "");
+};
+
+const BASE_URL = normalizeWpApiBaseUrl(process.env.WP_API_URL);
 
 const sleep = (ms: number) =>
   new Promise<void>((resolve) => {

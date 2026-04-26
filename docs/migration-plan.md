@@ -155,6 +155,7 @@ WordPress の生データをUIに渡さないための API 層を完成させる
 ## フェーズ 7: 本番対応
 
 - [ ] WordPress 本番 API との接続確認（`WP_API_URL` 環境変数）
+  — [チェックリスト](features/wordpress_production_api_verification_checklist.md)・[手順](features/wordpress_production_api_verification.md)
 - [ ] Cloudflare Workers (OpenNext) デプロイの本番検証
 - [ ] 広告コード（A8.net / admax）を `next/script` で管理
 - [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）

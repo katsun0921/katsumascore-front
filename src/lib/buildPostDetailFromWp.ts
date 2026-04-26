@@ -93,14 +93,29 @@ const splitGoodPoints = (raw: string | undefined): string[] | undefined => {
 const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
   const rows = wp.acf?.actors_filed;
   if (!Array.isArray(rows) || rows.length === 0) return undefined;
-  return rows.map((row) => {
-    const ext = row as { name: string; role?: unknown };
-    const roleStr = typeof ext.role === "string" ? ext.role : undefined;
-    return {
-      character: roleStr,
-      actorName: ext.name,
+  const out: TActor[] = [];
+  for (const row of rows) {
+    const ext = row as {
+      name?: unknown;
+      role?: unknown;
+      character?: unknown;
+      description?: unknown;
     };
-  });
+    const nameStr = typeof ext.name === "string" && ext.name.trim() ? ext.name.trim() : undefined;
+    const charStr =
+      typeof ext.character === "string" && ext.character.trim() ? ext.character.trim() : undefined;
+    const roleStr = typeof ext.role === "string" && ext.role.trim() ? ext.role.trim() : undefined;
+    const descStr =
+      typeof ext.description === "string" && ext.description.trim() ? ext.description.trim() : undefined;
+    const actorName = nameStr ?? charStr ?? "";
+    if (!actorName && !charStr && !descStr) continue;
+    out.push({
+      character: roleStr ?? charStr,
+      actorName: actorName || charStr || "—",
+      ...(descStr ? { description: descStr } : {}),
+    });
+  }
+  return out.length > 0 ? out : undefined;
 };
 
 const buildStreamingVods = (wp: ParsedWPPost): TStreamingVodEntry[] | undefined => {

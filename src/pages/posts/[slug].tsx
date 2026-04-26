@@ -129,8 +129,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
       .map((mapped) => ({
         slug: mapped.slug,
         title: mapped.title,
-        thumbnailUrl: mapped.image ?? undefined,
-        score: mapped.score,
+        ...(mapped.image ? { thumbnailUrl: mapped.image } : {}),
+        ...(mapped.score !== undefined ? { score: mapped.score } : {}),
       })),
     5,
   );

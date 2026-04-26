@@ -16,13 +16,26 @@ REST ベースは同一オリジン上の次を想定する（末尾スラッシ
 
 本番環境の WordPress REST API と Next.js 側クライアント（[`src/lib/api/wordpress.ts`](../../src/lib/api/wordpress.ts)）が、**環境変数・ネットワーク・レスポンス形式**の観点で期待どおり動作することを、再現可能な手順で確認する。
 
-**完了条件（このドキュメントのチェックリストをすべて満たすこと）:**
+**完了条件:** [TODO チェックリスト](./wordpress_production_api_verification_checklist.md)の該当項目をすべて `[x]` にできること（ステージングで代替可の箇所は注記どおり）。
 
-- 本番 `WP_API_URL` への到達性と、匿名 GET での主要エンドポイント応答が確認できている
-- Polylang・ACF・一覧ヘッダが本番データで期待どおりである
-- 下記「アプリ経由スモーク」の各ルートで空振り・500 が再現しない（ステージングで代替可）
+README のチェックボックスを完了にするのは、**実確認が終わったタイミング**で行う（ドキュメントの追加だけでは完了扱いにしない）。
 
-README のチェックボックスを完了にするのは、**上記の実確認が終わったタイミング**で行う（本書の追加だけでは完了扱いにしない）。
+---
+
+## 進捗の記録
+
+作業用のチェックボックスは **[wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md)** に集約する。本ファイルは手順・参照・トラブルシュート用。
+
+### 本番 API を向けたビルド例
+
+`.env.local` がある場合は **シェルで先に export した値が優先される**点に注意する。
+
+```bash
+WP_API_URL=https://katsumascore.blog/wp-json/wp/v2 \
+NEXT_PUBLIC_WP_BASE_URL=https://katsumascore.blog \
+NEXT_PUBLIC_SITE_URL=https://katsumascore.blog \
+npm run build
+```
 
 ---
 
@@ -98,17 +111,99 @@ API 直結ではないが、ページ内容・サイトマップ・ホーム構�
 
 **`curl` 例:**
 
+本番では **デフォルトの curl User-Agent が 403** になることがある。`-A` でブラウザ相当を付与する。
+
 ```bash
+UA='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+
 # 環境変数を使う場合
-curl -sS -D - \
+curl -sS -A "$UA" -D - \
   "${WP_API_URL}/posts?per_page=1&_embed=1&acf_format=standard&lang=ja" \
   -o /dev/null
 
 # 本番を直指定する場合
-curl -sS -D - \
+curl -sS -A "$UA" -D - \
   "https://katsumascore.blog/wp-json/wp/v2/posts?per_page=1&_embed=1&acf_format=standard&lang=ja" \
   -o /dev/null
 ```
+
+### §2 自動検証（リポジトリ）
+
+| コマンド | 内容 |
+|----------|------|
+| `npm run verify:wp-api` | 到達性・`lang=ja`/`en` の 200・`X-WP-Total` の有無（警告） |
+| `npm run verify:wp-section2` | 上記に加えレイテンシ・**先頭 50 件のうち ACF オブジェクト付き投稿**で Zod / `mapWPPostToPost` |
+| `npm run verify:wp-section2:relax` | ACF がまだ `[]` のとき: 先頭 1 件のみ検証し **警告付きで exit 0**（ACF 項は WordPress 修正後に再実行） |
+
+いずれも事前に `WP_API_URL` を export する（例: `https://katsumascore.blog/wp-json/wp/v2`）。
+
+### WordPress: ACF を REST に公開する（作業手順）
+
+投稿の JSON で `acf` が **`[]`** や **空オブジェクト**のままだと、Next 側では [`WPPostSchema`](../../src/lib/api/wordpress.schema.ts) は通るが **`review_score` やリッチ用 ACF が常に欠落**する。次を **本番（またはステージング）の WordPress** で順に実施する。
+
+公式リファレンス: [ACF | WP REST API Integration](https://www.advancedcustomfields.com/resources/wp-rest-api-integration/)
+
+#### 1. ACF のバージョン
+
+- **ACF 5.11 以降**（無料・PRO とも）でフィールドグループ単位の REST 表示が使える。**それより古い**場合は ACF を更新するか、別途 `register_rest_field` 等での露出が必要。
+
+#### 2. フィールドグループで「REST に出す」を有効にする
+
+1. WordPress 管理画面 → **ACF** → **フィールドグループ**（または「カスタムフィールド」メニュー）。
+2. **投稿（post）** に表示されているレビュー用グループを開く（ロケーションルールが「投稿タイプ == 投稿」等になっているもの）。
+3. 画面上部またはサイドの **グループ設定**（歯車アイコン / 「設定」タブ）を開く。
+4. **Show in REST API**（REST API に表示）を **Yes** にする。  
+   - デフォルトは **No** のため、未変更だと REST の `acf` が空に近い状態になりやすい。
+5. **更新**を保存する。
+
+カスタム投稿タイプだけに付いているグループは、その CPT の `wp/v2/<slug>` 側にだけ載る。本サイトのメイン記事が **通常の投稿**なら、ロケーションが **投稿**を含むグループを必ず有効にする。
+
+#### 3. テーマ／プラグインで REST が無効化されていないか
+
+次のフィルタが **`__return_false`** 等で付いていると、グループ設定と無関係に ACF 全体の REST が止まる。子テーマ・必須プラグインを **コード検索**する。
+
+```php
+// これがあると ACF の REST がすべてオフになる
+add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
+```
+
+見つかった場合は削除するか、意図を確認のうえ **`__return_true` に変更**する。
+
+#### 4. キャッシュ・セキュリティ・最適化プラグイン
+
+- **REST のレスポンスを短縮**するプラグインや CDN が、`acf` キーを落としていないか確認する。
+- **オブジェクトキャッシュ**を使っている場合は、設定変更後に **キャッシュフラッシュ**する。
+
+#### 5. リクエストに `acf_format=standard` を付ける
+
+本リポジトリの [`wordpress.ts`](../../src/lib/api/wordpress.ts) は既に全リクエストに `acf_format=standard` を付与している。手動確認するときも同様に付ける（ネストした ACF の形が安定しやすい）。
+
+#### 6. フロントが期待する ACF 名（参考）
+
+正規化は [`wordpress.schema.ts`](../../src/lib/api/wordpress.schema.ts) / [`wordpress.transform.ts`](../../src/lib/api/wordpress.transform.ts) に合わせている。WordPress 側のフィールド名が次と**一致しているか**（タイポ含む）も確認する。
+
+| 用途 | ACF 名（例） |
+|------|----------------|
+| レビュースコア | `review_score` |
+| タイトル（日／英） | `title_jp`, `title_en` |
+| あらすじグループ | `acf_summary_group`（`summary_jp` / `summary_en`） |
+| 出演者 | `actors_filed`（WordPress 側スペルどおり） |
+| 良かった点 | `good_point_filed` |
+| その他 | `official_url`, `official_sns`, `streaming_vod_*`, `rental_services`, … |
+
+#### 7. 動作確認
+
+1. ブラウザで（ログアウト状態でもよい）  
+   `https://katsumascore.blog/wp-json/wp/v2/posts/<投稿ID>?_embed=1&acf_format=standard&lang=ja`  
+   を開き、JSON の **`acf` がオブジェクト**で、上記キーが入っていることを確認する。  
+   - **`acf: []`** のままなら、グループの REST 表示・ロケーション・テーマの `rest_api_enabled` を再確認。
+2. リポジトリで **`npm run verify:wp-section2`**（**非** `relax`）を実行し、exit 0 になることを確認する。
+
+補足: 旧来の **`wp-json/acf/v3/posts/...`** が **404** でも問題ない。本プロジェクトは **`wp/v2/posts` の `acf` プロパティ**だけを使う。
+
+### Polylang と `lang` パラメータ
+
+`lang=ja` と `lang=en` で**先頭投稿のスラッグが同じ**場合、REST 側で言語フィルタが効いていない可能性がある。Polylang の **REST API / 言語**関連設定や、別プラグインによる `lang` クエリの解釈を確認する（詳細は Polylang ドキュメントに従う）。
 
 ---
 
@@ -141,11 +236,14 @@ curl -sS -D - \
 4. **タイムアウト**: 3 秒以内に応答が返らない。WP プラグイン・DB 負荷を確認。
 5. **データ欠落・一部だけ空**: Zod `safeParse` 失敗や ACF 形状差。本番レスポンス 1 件を保存し [`wordpress.transform`](../../src/lib/api/wordpress.transform.ts) と突き合わせる。
 6. **件数・ページネーション異常**: `X-WP-Total` / `X-WP-TotalPages` がプロキシで削られていないか。
+7. **`acf: []`**: WordPress で ACF を REST に公開していない。上記「WordPress: ACF を REST に公開する（作業手順）」と [チェックリスト §2.3](./wordpress_production_api_verification_checklist.md) を実施する。
+8. **手動 `curl` が 403**: User-Agent を付けずに叩いている。ブラウザ相当の `-A` を付与する。
 
 ---
 
 ## 関連（フェーズ 7・その他）
 
+- [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md) — TODO チェックリスト（進捗はここを更新）
 - [README.md](../../README.md) — 「本番対応（フェーズ 7）」: ISR Webhook、Cloudflare 本番検証
 - [docs/migration-plan.md](../migration-plan.md) — フェーズ 7 の詳細項目（広告・パフォーマンス等は別途）
 - [docs/archive/api-integration-plan.md](../archive/api-integration-plan.md) — lib/api 基盤・ページ接続の完了記録（参考）

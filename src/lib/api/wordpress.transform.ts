@@ -29,6 +29,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const categories = Array.isArray(terms) ? terms[0] : undefined;
   const category = categories?.[0]?.name;
 
+  const rs = wp.acf?.review_score;
   return {
     id: String(wp.id),
     slug: `/posts/${wp.slug}`,
@@ -37,8 +38,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     content: wp.content.rendered,
     image: image ?? null,
     publishedAt: wp.date.slice(0, 10),
-    category,
-    score: wp.acf?.review_score,
+    ...(category !== undefined ? { category } : {}),
+    ...(rs !== undefined ? { score: rs } : {}),
   };
 };
 

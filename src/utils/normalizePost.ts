@@ -8,6 +8,7 @@ export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
       ? post.acf?.title_jp || post.title.rendered || ''
       : post.acf?.title_en || post.title.rendered || '';
 
+  const score = typeof post.acf?.review_score === 'number' ? post.acf.review_score : undefined;
   return {
     id: String(post.id),
     slug: `/posts/${post.slug}`,
@@ -15,8 +16,7 @@ export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
     excerpt: post.excerpt?.rendered ?? '',
     image: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? publicAssetUrl('/images/mock-image.webp'),
     publishedAt: post.date,
-    category: undefined,
-    score: typeof post.acf?.review_score === 'number' ? post.acf.review_score : undefined,
+    ...(score !== undefined ? { score } : {}),
   };
 }
 

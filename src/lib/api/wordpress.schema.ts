@@ -44,12 +44,53 @@ const acfSummaryGroupSchema = z
   .passthrough()
   .optional();
 
-const actorFieldSchema = z.object({ name: z.string() }).passthrough();
+/** REST では `name` ではなく `character` + `actor`(ID) + `description` になることがある */
+const actorFieldSchema = z
+  .object({
+    name: z.string().optional(),
+    character: z.string().optional(),
+    description: z.string().optional(),
+    actor: z.union([z.number(), z.string()]).optional(),
+    role: z.string().optional(),
+  })
+  .passthrough();
 
 const rentalRowSchema = z.object({
   service: z.string(),
   url: z.string(),
 });
+
+const wpPostAcfObjectSchema = z
+  .object({
+    review_score: optionalReviewScore,
+    title_jp: z.string().optional(),
+    title_en: z.string().optional(),
+    acf_summary_group: acfSummaryGroupSchema,
+    actors_filed: z.array(actorFieldSchema).optional(),
+    good_point_filed: z.string().optional(),
+    official_url: z.string().optional(),
+    official_sns: z.union([z.string(), z.record(z.string(), z.unknown())]).optional(),
+    streaming_vod_netflix: looseBool.optional(),
+    streaming_vod_amazon: looseBool.optional(),
+    streaming_vod_unext: looseBool.optional(),
+    is_cinema_showing: looseBool.optional(),
+    trailer_youtube_id: z.string().optional(),
+    trailer_youtube: z.string().optional(),
+    rating: z.string().optional(),
+    author_comment: z.string().optional(),
+    rental_services: z.array(rentalRowSchema).optional(),
+    release_date: z.string().optional(),
+    copyright: z.string().optional(),
+  })
+  .passthrough();
+
+/** Production WP may return `acf: []` when REST exposes an empty list; coerce to undefined. */
+const acfFromRest = z.preprocess((v: unknown) => {
+  if (v == null) return undefined;
+  if (Array.isArray(v)) return undefined;
+  if (typeof v !== "object") return undefined;
+  return v;
+}, wpPostAcfObjectSchema.optional());
 
 export const WPPostSchema = z
   .object({
@@ -62,30 +103,7 @@ export const WPPostSchema = z
     modified: z.string().optional(),
     featured_media: z.number(),
     _embedded: WPEmbeddedSchema.optional(),
-    acf: z
-      .object({
-        review_score: optionalReviewScore,
-        title_jp: z.string().optional(),
-        title_en: z.string().optional(),
-        acf_summary_group: acfSummaryGroupSchema,
-        actors_filed: z.array(actorFieldSchema).optional(),
-        good_point_filed: z.string().optional(),
-        official_url: z.string().optional(),
-        official_sns: z.union([z.string(), z.record(z.string(), z.unknown())]).optional(),
-        streaming_vod_netflix: looseBool.optional(),
-        streaming_vod_amazon: looseBool.optional(),
-        streaming_vod_unext: looseBool.optional(),
-        is_cinema_showing: looseBool.optional(),
-        trailer_youtube_id: z.string().optional(),
-        trailer_youtube: z.string().optional(),
-        rating: z.string().optional(),
-        author_comment: z.string().optional(),
-        rental_services: z.array(rentalRowSchema).optional(),
-        release_date: z.string().optional(),
-        copyright: z.string().optional(),
-      })
-      .passthrough()
-      .optional(),
+    acf: acfFromRest,
   })
   .passthrough();
 
