@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計規約（統合版）
 
 > KatsumaScore フロントエンド設計仕様  
-> 2026年4月
+> 2026年4月（Tailwind / Token 命名ルール追記）
 
 ---
 
@@ -265,6 +265,8 @@ WordPressは「データ定義」、Storybookは「UI定義」として分離さ
 | 評価（Score） | score |
 | 補助UI | accent |
 
+実装では、**本文色・補助色など“text トークンを文字色に使う”場合**に `text-text-primary` のように語が重複しないよう、**`text-color-primary` / `text-color-secondary` 等**を用いる（詳細は「Tailwind 実装規約」）。
+
 ---
 
 ## ■ 禁止事項
@@ -354,6 +356,9 @@ Typography は「役割」と「言語」で管理する。
 - `:lang(ja)` と `:lang(en)` で言語を分離する
 - 日本語と英語の font-family を暗黙に混在させない
 - fallback は必ず `system-ui`, `sans-serif`, `serif` を含める
+- 英語 UI 用フォントは `@theme` の **`font-ui`**（`--font-ui`）を Tailwind クラス **`font-ui`** で指定する
+- フォント**サイズ**は `@theme` の **`text-ui` / `text-body` / `text-h3` 等**（`--text-*` → `--font-size-*`）を使い、**廃止した `--font-size-ui-lg` は使わず `text-ui` に統一**する
+- `globals.css` の `--font-size-*` / `--color-*` を追加・変更したら、**`src/components/typography/Typography/Typography.tsx` の表示用データを同期**する（プロジェクトルール）
 
 ---
 
@@ -399,23 +404,75 @@ TailwindとDesign Tokenは責務を明確に分離する。
 - Tokenにないspacing値は「近い値へ丸める」が原則であり、新しい中間値をその場で増やさない
 - breakpointは `globals.css` の token を唯一の参照元とする
 - Media QueryはSPファーストで `min-width` を使う
+- **色・余白・フォントサイズは `src/styles/globals.css` の `@theme inline` に登録したトークンを、Tailwind の通常ユーティリティ（`text-*` / `bg-*` / `p-*` 等）として使う**（下記「実装規約」参照）
 
 ---
 
-## ■ 使用例
+## ■ Tailwind 実装規約（`@theme` 連携）
+
+### ■ 方針
+
+- Design Token は `:root` の CSS 変数（`--color-*` / `--font-size-*` / `--space-*` 等）を正とする。
+- Tailwind v4 では `globals.css` の `@theme inline` に **テーマ用のエイリアス** を置き、`text-*` / `bg-*` / `p-*` などの **通常クラス**で参照する。
+- **arbitrary value（`text-[var(--…)]` 等）は、テーマ未登録の例外に限る。** 登録済みトークンは必ずテーマ経由のクラスに寄せる。
+
+### ■ 色（Color）
+
+- テーマ色は `text-primary` / `bg-surface` / `border-color-border-muted` のように **プレフィックス＋トークン名**で付与する。
+- **重複を避ける命名**  
+  - 本文色・補助色・反転色など *text 系* を表す用途では、`text-text-primary` のように **同じ語が二重**になるのを避け、**`text-color-primary` / `text-color-secondary` / `text-color-muted` / `text-color-inverse`** を使う。  
+  - 背景のページ地・地色付き背景は **`bg-color-bg` / `bg-color-bg-muted`**。  
+  - 枠線は **`border-color-border` / `border-color-border-muted` / `border-color-border-soft`**。  
+- 上記 `text-color-*` / `bg-color-*` / `border-color-*` は `@theme` で `--color-color-*` として **既存の `--color-text-*` / `--color-bg*` / `--color-border*` へエイリアス**している（トークン値の単一正本は従来どおり `:root`）。
+
+### ■ 余白（Spacing）
+
+- `--space-*`（px 名付き）に対応する Tailwind スケール `0 / 1 / 2 / …` へマッピングし、**`p-4` / `gap-3` / `m-6` 等の通常クラス**で指定する。
+- **`p-[var(--space-16)]` のような arbitrary spacing は使わない**（トークン値を近いスケールへ寄せ、上記スケールのみ使用）。
+
+### ■ フォントサイズ
+
+- 標準の段階（title / h1–h3 / body / ui / caption）は `@theme` の **`--text-*` → `text-h1` / `text-h3` / `text-body` / `text-ui` / `text-caption` 等**で指定する。
+- **`--font-size-ui-lg`（旧 PC 用 UI 大）は廃止**し、**`text-ui`（`--font-size-ui`）に統一**する。可変幅の `clamp` が正本。
+- `text-[length:var(--font-size-ui)]` のように **`length:` 型ヒント付き arbitrary** を多用しない。テーマ化済みなら **`text-ui` 等の通常クラス**に置き換える。
+
+### ■ フォントファミリ（UI 用）
+
+- 英語 UI 用の `Inter` 系は `@theme` の **`font-ui`**（`--font-ui`）を使う。  
+- **`font-[var(--font-ui)]` は使わない**（`font-*` ユーティリティは font-weight 解釈になり誤るため）。必要なら **`[font-family:var(--font-ui)]`** か **`font-ui`**。
+
+### ■ 使用例（推奨）
 
 ```tsx
-<div className="p-4 gap-3 bg-[var(--color-bg)] text-[var(--color-text-primary)] rounded-[8px]">
+<div className="p-4 gap-3 rounded-lg bg-color-bg text-color-primary border border-color-border-muted">
+  <p className="text-ui text-color-secondary">補足</p>
+  <h2 className="text-h3 font-bold text-color-primary">見出し</h2>
+</div>
+```
+
+---
+
+## ■ 使用例（旧・非推奨パターン）
+
+次のような書き方は、移行候補・禁止に近い扱いとする。
+
+```tsx
+{/* arbitrary の乱用（テーマ化できる色・余白・フォントサイズ） */}
+<div className="p-[var(--space-16)] text-[var(--color-text-primary)] text-[var(--font-size-ui)]" />
 ```
 
 ---
 
 ## ■ 禁止事項
 
-- Tailwindで色を直接指定する
+- Tailwindで**HEX や**Tailwind デフォルトパレット（`bg-blue-500` 等）を直接指定する
+- **テーマ化可能な**色・余白・フォントサイズに対して `*-[var(--…)]` arbitrary を使い続ける（**登録して通常クラスへ寄せる**）
+- `text-text-*` / `bg-bg*` / `border-border*` のように **ユーティリティ名がトークンと二重化**するクラス名（**`text-color-*` / `bg-color-bg*` / `border-color-border*`** に統一する）
+- `font-[var(--font-ui)]` の使用（**`font-ui` または ` [font-family:var(--font-ui)]`**）
+- 廃止した **`--font-size-ui-lg` / `text-ui-lg` 相当**の参照
 - SCSSでspacingを定義する
 - TailwindでToken外のspacingを使う
-- Tailwind arbitrary spacingで値を直書きする
+- Tailwind arbitrary spacingで**数字付きpx**を直書きする
 - breakpoint値をTSX / SCSSへ直書きする
 - `max-width` ベースのMedia Queryを書く
 - Tokenを使わずにスタイルを書く
