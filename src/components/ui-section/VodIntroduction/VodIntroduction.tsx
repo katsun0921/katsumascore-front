@@ -96,7 +96,7 @@ export const VodIntroduction = ({
           <PostCardListVertical posts={relatedPosts} />
         </div>
       )}
-      <p className='text-ui text-[var(--color-text-secondary)] mt-4 font-bold'>
+      <p className='text-ui text-color-secondary mt-4 font-bold'>
         {text(['vod', 'note', 'prefix'])}
         {dateStr}
         {text(['vod', 'note', 'middle'])}

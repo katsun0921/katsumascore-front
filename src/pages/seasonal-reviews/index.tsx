@@ -23,19 +23,19 @@ const SeasonalIndexPage = ({ items, locale }: SeasonalIndexProps) => {
       </Head>
       <PageLayout>
         <div className='px-4 py-8 max-w-2xl mx-auto'>
-          <h1 className='text-2xl font-bold mb-6 text-[var(--color-text)]'>季節のレビュー</h1>
+          <h1 className='text-2xl font-bold mb-6 text-color-primary'>季節のレビュー</h1>
           {items.length === 0 ? (
-            <p className='text-sm text-[var(--color-text-secondary)]'>現在表示できるページがありません。</p>
+            <p className='text-sm text-color-secondary'>現在表示できるページがありません。</p>
           ) : (
             <ul className='space-y-3'>
               {items.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className='block rounded-lg border border-[var(--color-border)] px-4 py-3 text-[var(--color-text)] hover:border-[var(--color-category)]'
+                    className='block rounded-lg border border-color-border px-4 py-3 text-color-primary hover:border-category'
                   >
                     <span className='font-medium'>{item.label}</span>
-                    <span className='ml-3 text-sm text-[var(--color-text-secondary)]'>{item.period}</span>
+                    <span className='ml-3 text-sm text-color-secondary'>{item.period}</span>
                   </Link>
                 </li>
               ))}

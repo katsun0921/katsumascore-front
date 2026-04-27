@@ -9,12 +9,12 @@ export type TPaginationProps = {
 }
 
 const btnBase =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]';
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-color-bg [font-size:var(--font-size-ui-lg)] text-primary cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-primary hover:text-color-inverse';
 const btnCurrent =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] [font-size:var(--font-size-ui-lg)] font-bold text-[var(--color-text-inverse)] cursor-default';
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-primary [font-size:var(--font-size-ui-lg)] font-bold text-color-inverse cursor-default';
 const btnNav =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-sm)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]';
-const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)]';
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-primary rounded bg-color-bg [font-size:var(--font-size-ui-sm)] text-primary cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-primary hover:text-color-inverse';
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-lg)] text-primary';
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
   const locale = useLocale();

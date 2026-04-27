@@ -40,7 +40,7 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className='bg-[var(--color-footer)] py-20 pb-14 text-center'>
+    <footer className='bg-footer py-20 pb-14 text-center'>
       <div className='flex flex-col items-center'>
 
         {/* 1. Catchcopy */}

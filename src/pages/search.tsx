@@ -65,19 +65,19 @@ const SearchPage = () => {
   return (
     <I18nProvider locale={locale}>
       <SeoHead noIndex pageTitle={pageTitle} pageDescription={pageDescription} />
-      <div className='min-h-[40vh] px-4 py-6 bg-[var(--color-bg)]'>
+      <div className='min-h-[40vh] px-4 py-6 bg-color-bg'>
         {displayLoading ? (
-          <p className='text-sm text-[var(--color-text-secondary)]'>
+          <p className='text-sm text-color-secondary'>
             {t(searchPageMessages, ['loading'], locale)}
           </p>
         ) : null}
         {!displayLoading && !q ? (
-          <p className='text-sm text-[var(--color-text-secondary)]'>
+          <p className='text-sm text-color-secondary'>
             {t(searchPageMessages, ['emptyQuery'], locale)}
           </p>
         ) : null}
         {!displayLoading && q && displayPosts.length === 0 ? (
-          <p className='text-sm text-[var(--color-text-secondary)]'>
+          <p className='text-sm text-color-secondary'>
             {t(searchPageMessages, ['emptyResults'], locale)}
           </p>
         ) : null}

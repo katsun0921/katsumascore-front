@@ -13,7 +13,7 @@ export const Header = () => {
   const prefixClassName = 'header';
 
   return (
-    <header className={`${prefixClassName} bg-[var(--color-header)]`} role='banner'>
+    <header className={`${prefixClassName} bg-header`} role='banner'>
       <Link href='/' className={`${prefixClassName}__logo hover:opacity-80 transition-opacity duration-200`}>
         <Image
           src='/images/logo.webp'

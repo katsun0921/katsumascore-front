@@ -61,7 +61,7 @@ export const Search = ({ onNavigate, className }: Props) => {
         ref={inputRef}
         type='search'
         // search__input クラスは globals.css の .header-search-pc/.header-search-sp セレクタ用に保持
-        className='search__input w-[240px] rounded-[20px] border-2 border-transparent bg-[var(--color-bg)] px-4 py-2 text-[var(--font-size-ui-lg)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 ease-[ease] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)]'
+        className='search__input w-[240px] rounded-[20px] border-2 border-transparent bg-color-bg px-4 py-2 text-[var(--font-size-ui-lg)] font-[var(--font-ui)] text-color-primary outline-none transition-[border-color,box-shadow] duration-200 ease-[ease] placeholder:text-color-muted focus:border-primary focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)]'
         placeholder='タイトルで検索...'
         value={query}
         onChange={e => setQuery(e.target.value)}
@@ -77,7 +77,7 @@ export const Search = ({ onNavigate, className }: Props) => {
       {showDropdown && (
         <ul
           id={listboxId}
-          className='absolute left-0 right-0 top-[calc(100%+var(--space-8))] z-[200] m-0 min-w-[280px] list-none rounded-[10px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] max-h-[320px] overflow-y-auto'
+          className='absolute left-0 right-0 top-[calc(100%+var(--space-8))] z-[200] m-0 min-w-[280px] list-none rounded-[10px] border border-color-border-muted bg-color-bg py-1 shadow-[0_8px_24px_rgba(0,0,0,0.12)] max-h-[320px] overflow-y-auto'
           role='listbox'
         >
           {results.map((result, index) => (

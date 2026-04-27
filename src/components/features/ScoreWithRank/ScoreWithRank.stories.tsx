@@ -62,7 +62,7 @@ export const ImageOnlyOutOfRange: Story = {
 // 暗背景でランク色の確認
 export const OnDarkBackground: Story = {
   render: (args) => (
-    <div className='flex min-h-[280px] items-center justify-center bg-[var(--color-score-bg)] p-8'>
+    <div className='flex min-h-[280px] items-center justify-center bg-score-bg p-8'>
       <ScoreWithRank {...args} />
     </div>
   ),

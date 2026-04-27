@@ -23,18 +23,18 @@ export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
           return (
             <li key={index} className='flex items-center gap-1'>
               {!isLast && item.href ? (
-                <a className='text-[var(--color-primary)] hover:underline' href={item.href}>
+                <a className='text-primary hover:underline' href={item.href}>
                   {item.label}
                 </a>
               ) : (
                 <span
-                  className='inline-block w-[min(100%,15rem)] overflow-hidden text-ellipsis whitespace-nowrap text-[var(--color-text-secondary)]'
+                  className='inline-block w-[min(100%,15rem)] overflow-hidden text-ellipsis whitespace-nowrap text-color-secondary'
                   aria-current={isLast ? 'page' : undefined}
                 >
                   {item.label}
                 </span>
               )}
-              {!isLast && <span className='text-[var(--color-text-secondary)]' aria-hidden='true'>/</span>}
+              {!isLast && <span className='text-color-secondary' aria-hidden='true'>/</span>}
             </li>
           );
         })}

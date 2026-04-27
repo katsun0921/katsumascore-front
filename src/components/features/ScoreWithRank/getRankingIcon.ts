@@ -50,16 +50,16 @@ type RankColorClasses = { text: string; bg: string }
 export const getRankScoreColorClasses = (rank: RankLabel | null): RankColorClasses => {
   if (!rank) {
     return {
-      text: 'text-[var(--color-text-primary)]',
-      bg: 'bg-[var(--color-text-primary)]',
+      text: 'text-color-primary',
+      bg: 'bg-text-primary',
     };
   }
   const map: Record<RankLabel, RankColorClasses> = {
-    C:  { text: 'text-[var(--color-score-rank-low)]',  bg: 'bg-[var(--color-score-rank-low)]'  },
-    B:  { text: 'text-[var(--color-score-rank-low)]',  bg: 'bg-[var(--color-score-rank-low)]'  },
-    A:  { text: 'text-[var(--color-score-rank-mid)]',  bg: 'bg-[var(--color-score-rank-mid)]'  },
-    S:  { text: 'text-[var(--color-score-rank-high)]', bg: 'bg-[var(--color-score-rank-high)]' },
-    SS: { text: 'text-[var(--color-score-accent)]',    bg: 'bg-[var(--color-score-accent)]'    },
+    C:  { text: 'text-score-rank-low',  bg: 'bg-score-rank-low'  },
+    B:  { text: 'text-score-rank-low',  bg: 'bg-score-rank-low'  },
+    A:  { text: 'text-score-rank-mid',  bg: 'bg-score-rank-mid'  },
+    S:  { text: 'text-score-rank-high', bg: 'bg-score-rank-high' },
+    SS: { text: 'text-score-accent',    bg: 'bg-score-accent'    },
   };
   return map[rank];
 };

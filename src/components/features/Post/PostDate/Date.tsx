@@ -21,7 +21,7 @@ export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
   const updated = updatedAt ? formatDate(updatedAt, locale) : null;
 
   return (
-    <div className='flex flex-col gap-1 text-[var(--font-size-ui-sm)] text-[var(--color-text-secondary)]'>
+    <div className='flex flex-col gap-1 text-[var(--font-size-ui-sm)] text-color-secondary'>
       {updated && (
         <p>
           <time className='inline-block' dateTime={updated.datetime}>

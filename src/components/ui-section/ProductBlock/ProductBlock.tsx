@@ -29,15 +29,15 @@ const SHOPPING_LABELS: Record<string, string> = {
 };
 
 const SITE_BG: Record<string, string> = {
-  amazon_prime: 'bg-[var(--color-amazon)]',
-  netflix: 'bg-[var(--color-netflix)]',
-  amazon: 'bg-[var(--color-amazon-shopping)]',
-  rakuten: 'bg-[var(--color-rakuten)]',
+  amazon_prime: 'bg-amazon',
+  netflix: 'bg-netflix',
+  amazon: 'bg-amazon-shopping',
+  rakuten: 'bg-rakuten',
 };
 
 const borderColor: Record<TProductType, string> = {
-  vod: 'border-l-[var(--color-product-vod)]',
-  shopping: 'border-l-[var(--color-product-commerce)]',
+  vod: 'border-l-product-vod',
+  shopping: 'border-l-product-commerce',
 };
 
 export const ProductBlock = ({
@@ -53,7 +53,7 @@ export const ProductBlock = ({
 
   return (
     <div
-      className={`my-10 border border-[var(--color-border-muted)] border-l-4 ${borderColor[type]} bg-[var(--color-bg)] rounded-md`}
+      className={`my-10 border border-color-border-muted border-l-4 ${borderColor[type]} bg-color-bg rounded-md`}
     >
       <div className='flex flex-col gap-4 p-4 md:flex-row'>
         {imageUrl && (
@@ -68,14 +68,14 @@ export const ProductBlock = ({
           </div>
         )}
         <div className='flex-1 min-w-0'>
-          <span className='inline-block text-caption font-bold px-2 py-1 rounded bg-[var(--color-bg-muted)] text-[var(--color-text-secondary)] mb-2'>
+          <span className='inline-block text-caption font-bold px-2 py-1 rounded bg-color-bg-muted text-color-secondary mb-2'>
             {type === 'vod' ? 'VOD' : '買い物'}
           </span>
-          <p className='text-body font-bold mb-2 text-[var(--color-text-primary)]'>
+          <p className='text-body font-bold mb-2 text-color-primary'>
             {title}
           </p>
           {description && (
-            <p className='text-ui text-[var(--color-text-secondary)] mb-3'>
+            <p className='text-ui text-color-secondary mb-3'>
               {description}
             </p>
           )}
@@ -84,7 +84,7 @@ export const ProductBlock = ({
               {links.map((link, i) => (
                 <li key={i}>
                   <Link
-                    className={`inline-block text-caption px-3 py-2 text-[var(--color-text-inverse)] no-underline rounded font-bold transition-opacity duration-150 hover:opacity-85 ${SITE_BG[link.site] ?? 'bg-[var(--color-bg-muted)]'}`}
+                    className={`inline-block text-caption px-3 py-2 text-color-inverse no-underline rounded font-bold transition-opacity duration-150 hover:opacity-85 ${SITE_BG[link.site] ?? 'bg-color-bg-muted'}`}
                     href={link.url}
                     target='_blank'
                     rel='noopener noreferrer'

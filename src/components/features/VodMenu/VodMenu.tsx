@@ -26,7 +26,7 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
     <div className='relative' ref={ref}>
       <button
         type='button'
-        className='inline-flex items-center gap-2 rounded border border-[var(--color-text-inverse)] px-3 py-2 text-[var(--font-size-ui-lg)] font-medium whitespace-nowrap text-[var(--color-text-inverse)] transition-[background-color,color] duration-200 ease-[ease] hover:bg-[var(--color-text-inverse)] hover:text-[var(--color-header)]'
+        className='inline-flex items-center gap-2 rounded border border-text-inverse px-3 py-2 text-[var(--font-size-ui-lg)] font-medium whitespace-nowrap text-color-inverse transition-[background-color,color] duration-200 ease-[ease] hover:bg-text-inverse hover:text-header'
         aria-expanded={isOpen}
         aria-haspopup='listbox'
         onClick={() => setIsOpen((prev) => !prev)}
@@ -43,7 +43,7 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
 
       {isOpen && (
         <ul
-          className='absolute right-0 top-[calc(100%+var(--space-8))] z-[100] min-w-[180px] m-0 list-none rounded-[6px] border border-[var(--color-border-muted)] bg-[var(--color-bg)] py-2 shadow-[0_4px_12px_var(--color-border-soft)]'
+          className='absolute right-0 top-[calc(100%+var(--space-8))] z-[100] min-w-[180px] m-0 list-none rounded-[6px] border border-color-border-muted bg-color-bg py-2 shadow-[0_4px_12px_var(--color-border-soft)]'
           role='listbox'
           aria-label='配信サービス一覧'
         >

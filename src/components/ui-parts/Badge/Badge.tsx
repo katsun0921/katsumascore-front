@@ -6,12 +6,12 @@ export type TBadgeProps = {
 }
 
 const variantClasses: Record<TBadgeVariant, string> = {
-  default: 'bg-[var(--color-bg-muted)] text-[var(--color-text-primary)] border border-[var(--color-border-muted)]',
-  primary: 'bg-[var(--color-primary)] text-[var(--color-text-inverse)]',
-  cinema: 'bg-[var(--color-category)] text-[var(--color-text-inverse)]',
-  netflix: 'bg-[var(--color-netflix)] text-[var(--color-text-inverse)]',
-  amazon: 'bg-[var(--color-amazon)] text-[var(--color-text-inverse)]',
-  unext: 'bg-[var(--color-unext)] text-[var(--color-text-inverse)] border border-[var(--color-border-muted)]',
+  default: 'bg-color-bg-muted text-color-primary border border-color-border-muted',
+  primary: 'bg-primary text-color-inverse',
+  cinema: 'bg-category text-color-inverse',
+  netflix: 'bg-netflix text-color-inverse',
+  amazon: 'bg-amazon text-color-inverse',
+  unext: 'bg-unext text-color-inverse border border-color-border-muted',
 };
 
 export const Badge = ({ label, variant = 'default' }: TBadgeProps) => {

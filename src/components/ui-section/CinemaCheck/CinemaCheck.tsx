@@ -1,10 +1,10 @@
 import type { CinemaCheckProps } from './CinemaCheck.types';
 
 export const CinemaCheck = ({ badgeLabel, message }: CinemaCheckProps) => (
-  <div className='mt-[var(--space-16)] flex items-center gap-[var(--space-12)] rounded-[6px] border-l-[4px] border-l-[var(--color-category)] bg-[var(--color-bg-muted)] px-[var(--space-16)] py-[var(--space-12)]'>
-    <span className='inline-block whitespace-nowrap rounded-[4px] bg-[var(--color-category)] px-[var(--space-12)] py-[var(--space-4)] text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-inverse)]'>
+  <div className='mt-4 flex items-center gap-3 rounded-[6px] border-l-[4px] border-l-category bg-color-bg-muted px-4 py-3'>
+    <span className='inline-block whitespace-nowrap rounded-[4px] bg-category px-3 py-1 text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-color-inverse'>
       {badgeLabel}
     </span>
-    <p className='m-0 text-[var(--font-size-ui-lg)] text-[var(--color-text-primary)]'>{message}</p>
+    <p className='m-0 text-[var(--font-size-ui-lg)] text-color-primary'>{message}</p>
   </div>
 );

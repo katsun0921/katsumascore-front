@@ -58,16 +58,16 @@ export const ListTemplate = ({
   return (
     <PageLayout>
       {/* Hero — ダーク背景でカテゴリ名を表示 */}
-      <div className='bg-[var(--color-secondary)]'>
+      <div className='bg-secondary'>
         <div className='px-4 pt-3 pb-0'>
           <Breadcrumb items={breadcrumbItems} />
         </div>
         <section className='px-4 py-8 md:py-12'>
           <div className='space-y-2'>
-            <p className='font-ui text-xs tracking-[0.2em] text-[var(--color-score-accent)] uppercase'>
+            <p className='font-ui text-xs tracking-[0.2em] text-score-accent uppercase'>
               {t(messages, ['category', 'label'], locale)}
             </p>
-            <h1 className='font-bold text-[var(--color-text-inverse)]'>
+            <h1 className='font-bold text-color-inverse'>
               {categoryName}
             </h1>
             {categoryDescription && (
@@ -78,7 +78,7 @@ export const ListTemplate = ({
       </div>
 
       {/* Filter */}
-      <div className='py-4 px-4 bg-[var(--color-bg)] border-b border-[var(--color-border)]'>
+      <div className='py-4 px-4 bg-color-bg border-b border-color-border'>
         <ListFilterBar
           options={resolvedFilterOptions}
           activeValue={activeFilter}
@@ -116,8 +116,8 @@ export const ListTemplate = ({
                   className={[
                     'min-w-[40px] h-10 rounded-lg border font-ui text-sm transition-colors',
                     page === currentPage
-                      ? 'bg-[var(--color-category)] border-[var(--color-category)] text-[var(--color-text-inverse)]'
-                      : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:border-[var(--color-category)] hover:text-[var(--color-category)]',
+                      ? 'bg-category border-category text-color-inverse'
+                      : 'bg-color-bg border-color-border text-color-secondary hover:border-category hover:text-category',
                   ].join(' ')}
                 >
                   {page}
@@ -130,18 +130,18 @@ export const ListTemplate = ({
         {/* Sidebar */}
         <aside className='space-y-6'>
           {/* 広告 */}
-          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5'>
-            <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase mb-3'>
+          <div className='rounded-2xl border border-color-border-soft bg-surface p-5'>
+            <p className='font-ui text-xs tracking-[0.16em] text-category uppercase mb-3'>
               {t(messages, ['ad', 'label'], locale)}
             </p>
-            <div className='flex items-center justify-center h-[250px] rounded-lg bg-[var(--color-bg-muted)] text-[var(--color-text-secondary)] text-sm'>
+            <div className='flex items-center justify-center h-[250px] rounded-lg bg-color-bg-muted text-color-secondary text-sm'>
               {t(messages, ['ad', 'placeholder'], locale)}
             </div>
           </div>
 
           {/* スコア別フィルター */}
-          <div className='rounded-2xl border border-[var(--color-border-soft)] bg-[var(--color-surface)] p-5 space-y-3'>
-            <p className='font-ui text-xs tracking-[0.16em] text-[var(--color-category)] uppercase'>
+          <div className='rounded-2xl border border-color-border-soft bg-surface p-5 space-y-3'>
+            <p className='font-ui text-xs tracking-[0.16em] text-category uppercase'>
               {t(messages, ['scoreFilter', 'heading'], locale)}
             </p>
             <ul className='space-y-2'>
@@ -149,7 +149,7 @@ export const ListTemplate = ({
                 <li key={item.value}>
                   <button
                     type='button'
-                    className='flex items-center gap-2 w-full text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] transition-colors'
+                    className='flex items-center gap-2 w-full text-sm text-color-secondary hover:text-color-primary transition-colors'
                   >
                     <span
                       className='font-bold font-ui'

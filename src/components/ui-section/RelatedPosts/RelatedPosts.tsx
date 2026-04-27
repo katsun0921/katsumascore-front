@@ -22,8 +22,8 @@ export const RelatedPosts = ({ posts, kind }: RelatedPostsProps) => {
   if (posts.length === 0) return null;
 
   return (
-    <div className='p-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
-      <p className='text-ui font-bold tracking-[0.08em] text-[var(--color-text-primary)] mb-3'>
+    <div className='p-4 bg-color-bg border border-color-border rounded-lg'>
+      <p className='text-ui font-bold tracking-[0.08em] text-color-primary mb-3'>
         {t(messages, ['heading', 'label'], locale)}
       </p>
       <PostCardListVertical

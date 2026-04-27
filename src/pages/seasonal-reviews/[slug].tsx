@@ -22,7 +22,7 @@ const SeasonalDetailPage = ({ title, html, locale }: SeasonalDetailProps) => {
       </Head>
       <PageLayout>
         <div className='px-4 py-8 max-w-3xl mx-auto'>
-          <h1 className='text-2xl font-bold mb-6 text-[var(--color-text)]'>{title}</h1>
+          <h1 className='text-2xl font-bold mb-6 text-color-primary'>{title}</h1>
           {html ? <PostContent content={html} /> : null}
         </div>
       </PageLayout>
