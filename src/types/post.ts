@@ -9,6 +9,7 @@ export type Post = {
   excerpt: string;
   image: string | null;
   publishedAt: string;
+  lang?: "ja" | "en";
   category?: string;
   score?: number;
   vods?: VodService[];

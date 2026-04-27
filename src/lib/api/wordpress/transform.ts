@@ -1,6 +1,7 @@
 import type { Post } from "@/types/post";
 import { WPPostSchema } from "./schema";
 import type { ParsedWPPost } from "./schema";
+import { detectLang } from "./lang";
 
 export const stripHtml = (html: string): string =>
   html
@@ -30,6 +31,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const category = categories?.[0]?.name;
 
   const rs = wp.acf?.review_score;
+  const lang = wp.link ? detectLang(wp.link) : "ja";
   return {
     id: String(wp.id),
     slug: `/posts/${wp.slug}`,
@@ -38,6 +40,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     content: wp.content.rendered,
     image: image ?? null,
     publishedAt: wp.date.slice(0, 10),
+    lang,
     ...(category !== undefined ? { category } : {}),
     ...(rs !== undefined ? { score: rs } : {}),
   };

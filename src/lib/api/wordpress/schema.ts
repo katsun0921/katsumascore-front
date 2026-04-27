@@ -96,6 +96,7 @@ export const WPPostSchema = z
   .object({
     id: z.number(),
     slug: z.string(),
+    link: z.string().optional(),
     title: renderedBlock,
     content: renderedBlock,
     excerpt: renderedBlock,

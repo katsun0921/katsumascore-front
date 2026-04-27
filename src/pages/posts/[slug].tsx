@@ -143,7 +143,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
 
   const profile = {
     name: 'Katsuma',
-    description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
     avatarUrl: '/images/mock-avatar.webp',
     aboutUrl: '/about',
     social: {

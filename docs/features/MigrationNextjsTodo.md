@@ -126,7 +126,16 @@
 - [ ] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
 - [ ] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
 
-### コンポーネント整理（フェーズ 5）
+### 本番対応（フェーズ 3）
+- [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
+- [ ] Cloudflare Workers デプロイの本番検証
+- [ ] 広告コード（A8.net / admax）を `next/script` で管理
+- [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）
+- [ ] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
+- [ ] ISR Webhook設定（WordPress更新時にrevalidate）
+- [ ] VOD ページは SSR のままとする確認
+
+### コンポーネント整理（フェーズ 4）
 - [ ] CinemaCheck（`ui-section/CinemaCheck` は使用中、`features/CinemaCheck` wrapper は未接続）
 
 ### 未使用コンポーネントの整理
@@ -143,19 +152,19 @@
 - [ ] `ui-parts/CTAButton` — 完全未使用
 - [ ] `ui-parts/Category` — 完全未使用
 - [ ] `ui-parts/VodLink` — 完全未使用
-- [ ] `ui-parts/Affiliate/Admax` — 未使用（Tsutaya / Geo は AdRental で使用中）
-- [ ] `ui-parts/Affiliate/Wowow` — 未使用
-- [ ] `ui-section/ProductBlock` — 完全未使用（Gutenberg確認用途として保持か削除か要判断）
+- [x] `ui-parts/Affiliate/Admax` — 未使用（Tsutaya / Geo は AdRental で使用中）
+- [x] `ui-parts/Affiliate/Wowow` — 未使用
+- [x] `ui-section/ProductBlock` — 完全未使用（Gutenberg確認用途として保持か削除か要判断）
 - [ ] `ui-section/VodIntroduction` → `ui-section/` 内での位置整理
 - [ ] `features/vod/` への整理（`VodMenu`, `VodPanel`, `VodItem` 等）
 - [ ] `features/Post/PostVariants` の整備
-- [ ] `ui-section/PostListRow` コンポーネントの実装（新設）
+- [x] `ui-section/PostListRow` コンポーネントの実装（新設）
 
 ---
 
 ## 📋 今後の予定
 
-### Storybook 品質確認（フェーズ 4）
+### Storybook 品質確認（フェーズ 5）
 - [ ] 全 `ui-parts` コンポーネントに異常系 Story を追加
   - [ ] `LongTitle` — 長いタイトル
   - [ ] `NoImage` — サムネイルなし
@@ -173,16 +182,7 @@
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 - [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
 
-### 本番対応（フェーズ 7）
-- [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
-- [ ] Cloudflare Workers デプロイの本番検証
-- [ ] 広告コード（A8.net / admax）を `next/script` で管理
-- [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）
-- [ ] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
-- [ ] ISR Webhook設定（WordPress更新時にrevalidate）
-- [ ] VOD ページは SSR のままとする確認
-
-### 公開後対応（フェーズ 8）
+### 公開後対応（フェーズ 7）
 - [ ] 全コンポーネントに Storybook Story 作成
 - [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
