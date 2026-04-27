@@ -13,34 +13,34 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const locale = useLocale()
   const [activeId, setActiveId] = useState<string>('')
   const [isContentEnded, setIsContentEnded] = useState(false)
-  const tocRef = useRef<HTMLElement>(null)
-  const tocOffsetRef = useRef<number | null>(null)
+  const placeholderRef = useRef<HTMLDivElement>(null)
+  const navRef = useRef<HTMLElement>(null)
+  const listRef = useRef<HTMLOListElement>(null)
+  const contentBasePaddingTopRef = useRef<number | null>(null)
   const [isTocAtTop, setIsTocAtTop] = useState(false)
+  const isFixed = isTocAtTop && !isContentEnded
 
   useEffect(() => {
-    const toc = tocRef.current
-    if (!toc) return
-    const win = toc.ownerDocument.defaultView
+    const placeholder = placeholderRef.current
+    const nav = navRef.current
+    if (!placeholder || !nav) return
+    const content = document.querySelector<HTMLElement>('#js-content')
+    if (!content) return
+    const win = placeholder.ownerDocument.defaultView
     if (!win) return
 
-    tocOffsetRef.current = toc.getBoundingClientRect().top + win.scrollY
-
     const onScroll = () => {
-      if (tocOffsetRef.current === null) return
-      setIsTocAtTop(win.scrollY >= tocOffsetRef.current)
+      setIsTocAtTop(content.getBoundingClientRect().top <= 60)
     }
 
     const onResize = () => {
-      // stickyを外さずに元のDOM位置を再計算する
-      // tocがstickyの場合 getBoundingClientRect().top は 0 になるため
-      // 親要素の位置から算出する
-      const parent = toc.parentElement
-      if (!parent) return
-      const parentRect = parent.getBoundingClientRect()
-      tocOffsetRef.current = parentRect.top + win.scrollY
-      setIsTocAtTop(win.scrollY >= tocOffsetRef.current)
+      // リサイズ時はstickyを外した状態でplaceholderの高さを再計算する
+      placeholder.style.height = ''
+      placeholder.style.height = `${nav.offsetHeight}px`
+      onScroll()
     }
 
+    onScroll()
     win.addEventListener('scroll', onScroll, { passive: true })
     win.addEventListener('resize', onResize, { passive: true })
     return () => {
@@ -49,28 +49,81 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     }
   }, [])
 
-  // .p-content の bottom が viewport 上端を抜けたら sticky を解除する
+  // toc--fixed 時に本文を押し下げてレイアウトジャンプを防ぐ
   useEffect(() => {
-    const content = document.querySelector('.p-content')
+    const content = document.querySelector<HTMLElement>('#js-content')
+    const nav = navRef.current
+    if (!content || !nav) return
+
+    const win = content.ownerDocument.defaultView
+    if (!win) return
+
+    if (contentBasePaddingTopRef.current === null) {
+      const basePaddingTop = Number.parseFloat(win.getComputedStyle(content).paddingTop) || 0
+      contentBasePaddingTopRef.current = basePaddingTop
+    }
+
+    const applyPaddingTop = () => {
+      const basePaddingTop = contentBasePaddingTopRef.current ?? 0
+      const extraPaddingTop = isFixed ? nav.offsetHeight + 24 * 2 + 56 : 0
+      content.style.paddingTop = `${basePaddingTop + extraPaddingTop}px`
+    }
+
+    applyPaddingTop()
+    win.addEventListener('resize', applyPaddingTop, { passive: true })
+
+    return () => {
+      win.removeEventListener('resize', applyPaddingTop)
+      content.style.paddingTop = `${contentBasePaddingTopRef.current ?? 0}px`
+    }
+  }, [isFixed])
+
+  // #js-content の bottom が viewport 上端を抜けたら sticky を解除する（上下スクロールで可逆）
+  useEffect(() => {
+    const content = document.querySelector<HTMLElement>('#js-content')
     if (!content) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        const isPast = !entry.isIntersecting && entry.boundingClientRect.bottom < 0
-        setIsContentEnded(isPast)
-      },
-      { threshold: 0 }
-    )
+    const win = content.ownerDocument.defaultView
+    if (!win) return
 
-    observer.observe(content)
-    return () => observer.disconnect()
+    const updateContentEnded = () => {
+      const navHeight = navRef.current?.offsetHeight ?? 60
+      setIsContentEnded(content.getBoundingClientRect().bottom < navHeight)
+    }
+
+    updateContentEnded()
+    win.addEventListener('scroll', updateContentEnded, { passive: true })
+    win.addEventListener('resize', updateContentEnded, { passive: true })
+
+    return () => {
+      win.removeEventListener('scroll', updateContentEnded)
+      win.removeEventListener('resize', updateContentEnded)
+    }
   }, [])
+
+  // toc--fixed 時にアクティブアイテム分だけリスト全体を左へ移動する
+  useEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    if (!isFixed) {
+      list.style.setProperty('--toc-active-offset', '0px')
+      return
+    }
+    const activeItem = list.querySelector<HTMLElement>('.toc__item--active')
+    if (!activeItem) {
+      list.style.setProperty('--toc-active-offset', '0px')
+      return
+    }
+    list.style.setProperty('--toc-active-offset', `${activeItem.offsetLeft}px`)
+  }, [activeId, isFixed])
 
 // アクティブ制御（画面中央付近で判定・1つだけ）
   useEffect(() => {
     if (items.length === 0) return
 
-    const headings = Array.from(document.querySelectorAll<HTMLElement>('.p-content h2, .p-content h3, .p-content h4'))
+    const headings = Array.from(
+      document.querySelectorAll<HTMLElement>('#js-content h2, #js-content h3, #js-content h4'),
+    )
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -83,7 +136,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
         }
       },
       {
-        rootMargin: '-30% 0px -55% 0px',
+        rootMargin: '-30% 0px -15% 0px',
         threshold: [0, 0.25, 0.5, 1],
       }
     )
@@ -97,27 +150,28 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   return (
     <>
+      <div ref={placeholderRef} className='toc__placeholder'>
       <nav
-        ref={tocRef}
-        className={['toc', isTocAtTop && !isContentEnded ? 'toc--sticky' : ''].join(' ')}
+        ref={navRef}
+        className={['toc', isFixed ? 'toc--fixed' : ''].join(' ')}
         aria-label={t(messages, ['heading', 'label'], locale)}
       >
         <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
-        <ol className='toc__list'>
+        <ol ref={listRef} className='toc__list'>
           {items.map((item) => (
             <li
               key={item.id}
               className={[
                 'toc__item',
                 `toc__item--level-${item.level}`,
-                activeId === item.id ? 'toc__item--active' : '',
+                isFixed && activeId === item.id ? 'toc__item--active' : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
             >
               <a
                 href={`#${item.id}`}
-                aria-current={activeId === item.id ? 'true' : undefined}
+                aria-current={isFixed && activeId === item.id ? 'true' : undefined}
               >
                 {item.text}
               </a>
@@ -125,6 +179,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
           ))}
         </ol>
       </nav>
+      </div>
     </>
   )
 }
