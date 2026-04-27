@@ -197,10 +197,10 @@ const fontSizeEntries: FontSizeEntry[] = [
   },
   {
     role: 'UI',
-    tokenPc: '--font-size-ui-lg',
-    valuePc: '14px',
-    tokenSp: '--font-size-ui-sm',
-    valueSp: '13px',
+    tokenPc: '--font-size-ui',
+    valuePc: '12–14px (clamp)',
+    tokenSp: '--font-size-ui',
+    valueSp: '12–14px (clamp)',
     sampleText: 'ボタン・ラベル・ナビゲーション',
   },
   {

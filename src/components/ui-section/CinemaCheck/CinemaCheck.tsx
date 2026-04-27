@@ -5,6 +5,6 @@ export const CinemaCheck = ({ badgeLabel, message }: CinemaCheckProps) => (
     <span className='inline-block whitespace-nowrap rounded-[4px] bg-category px-3 py-1 text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-color-inverse'>
       {badgeLabel}
     </span>
-    <p className='m-0 text-[var(--font-size-ui-lg)] text-color-primary'>{message}</p>
+    <p className='m-0 text-ui text-color-primary'>{message}</p>
   </div>
 );

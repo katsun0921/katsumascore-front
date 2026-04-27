@@ -9,7 +9,7 @@ export const VodMenuItem = ({ item }: TVodMenuItemProps) => {
     <li>
       <a
         href={item.href}
-        className='flex items-center justify-between px-4 py-2 text-[var(--font-size-ui-lg)] text-color-primary transition-[background-color] duration-150 ease-[ease] hover:bg-color-bg-muted hover:opacity-100'
+        className='flex items-center justify-between px-4 py-2 text-ui text-color-primary transition-[background-color] duration-150 ease-[ease] hover:bg-color-bg-muted hover:opacity-100'
         target='_blank'
         rel='noopener noreferrer'
       >

@@ -7,7 +7,7 @@ export const VodPanel = (props: VodPanelProps) => {
         <span className='shrink-0 rounded-[4px] bg-category px-3 py-1 text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-color-inverse'>
           {props.badgeLabel}
         </span>
-        <p className='m-0 text-[var(--font-size-ui-lg)] text-color-secondary'>{props.note}</p>
+        <p className='m-0 text-ui text-color-secondary'>{props.note}</p>
       </div>
     );
   }

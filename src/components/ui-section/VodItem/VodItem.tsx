@@ -51,7 +51,7 @@ export const VodItem = ({
         </a>
       )}
       <a
-        className='inline-block rounded bg-primary px-4 py-2 text-center font-bold text-color-inverse [font-size:var(--font-size-ui-lg)] transition-opacity duration-150 hover:opacity-[0.85]'
+        className='inline-block rounded bg-primary px-4 py-2 text-center font-bold text-color-inverse text-ui transition-opacity duration-150 hover:opacity-[0.85]'
         href={streamingUrl}
         target='_blank'
         rel='noopener noreferrer'

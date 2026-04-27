@@ -9,12 +9,12 @@ export type TPaginationProps = {
 }
 
 const btnBase =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-color-bg [font-size:var(--font-size-ui-lg)] text-primary cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-primary hover:text-color-inverse';
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-color-bg text-ui text-primary cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-primary hover:text-color-inverse';
 const btnCurrent =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-primary [font-size:var(--font-size-ui-lg)] font-bold text-color-inverse cursor-default';
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-primary rounded bg-primary text-ui font-bold text-color-inverse cursor-default';
 const btnNav =
   'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-primary rounded bg-color-bg [font-size:var(--font-size-ui-sm)] text-primary cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-primary hover:text-color-inverse';
-const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-lg)] text-primary';
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] text-ui text-primary';
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
   const locale = useLocale();

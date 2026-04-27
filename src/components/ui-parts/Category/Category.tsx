@@ -8,7 +8,7 @@ const sizeClasses: Partial<Record<NonNullable<CategoryProps['size']>, string>> =
 };
 
 export const Category = ({ label, size }: CategoryProps) => {
-  const base = 'inline-block px-5 py-2 [transform:skewX(-8deg)] bg-category text-white text-[var(--font-size-ui-lg)] font-medium text-center';
+  const base = 'inline-block px-5 py-2 [transform:skewX(-8deg)] bg-category text-white text-ui font-medium text-center';
   const extra = size ? (sizeClasses[size] ?? '') : '';
 
   return <div className={[base, extra].filter(Boolean).join(' ')}>{label}</div>;

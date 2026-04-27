@@ -51,7 +51,7 @@ export const getRankScoreColorClasses = (rank: RankLabel | null): RankColorClass
   if (!rank) {
     return {
       text: 'text-color-primary',
-      bg: 'bg-text-primary',
+      bg: 'bg-color-primary',
     };
   }
   const map: Record<RankLabel, RankColorClasses> = {
