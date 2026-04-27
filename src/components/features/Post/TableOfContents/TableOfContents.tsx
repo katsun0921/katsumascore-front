@@ -19,12 +19,13 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const contentBasePaddingTopRef = useRef<number | null>(null)
   const [isTocAtTop, setIsTocAtTop] = useState(false)
   const isFixed = isTocAtTop && !isContentEnded
+  const contentSelector = '#js-content'
 
   useEffect(() => {
     const placeholder = placeholderRef.current
     const nav = navRef.current
     if (!placeholder || !nav) return
-    const content = document.querySelector<HTMLElement>('#js-content')
+    const content = document.querySelector<HTMLElement>(contentSelector)
     if (!content) return
     const win = placeholder.ownerDocument.defaultView
     if (!win) return
@@ -51,7 +52,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   // toc--fixed 時に本文を押し下げてレイアウトジャンプを防ぐ
   useEffect(() => {
-    const content = document.querySelector<HTMLElement>('#js-content')
+    const content = document.querySelector<HTMLElement>(contentSelector)
     const nav = navRef.current
     if (!content || !nav) return
 
@@ -80,7 +81,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   // #js-content の bottom が viewport 上端を抜けたら sticky を解除する（上下スクロールで可逆）
   useEffect(() => {
-    const content = document.querySelector<HTMLElement>('#js-content')
+    const content = document.querySelector<HTMLElement>(contentSelector)
     if (!content) return
 
     const win = content.ownerDocument.defaultView
@@ -122,7 +123,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     if (items.length === 0) return
 
     const headings = Array.from(
-      document.querySelectorAll<HTMLElement>('#js-content h2, #js-content h3, #js-content h4'),
+      document.querySelectorAll<HTMLElement>(`${contentSelector} h2, ${contentSelector} h3, ${contentSelector} h4`),
     )
 
     const observer = new IntersectionObserver(
