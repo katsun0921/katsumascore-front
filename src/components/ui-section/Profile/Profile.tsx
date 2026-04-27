@@ -37,7 +37,7 @@ export const Profile = ({
 
       {/* 説明文 */}
       {description && (
-        <p className='text-[length:var(--font-size-body)] leading-[1.7] text-[var(--color-text-secondary)] mb-3'>
+        <p className='text-body leading-[1.7] text-[var(--color-text-secondary)] mb-3'>
           {description}
         </p>
       )}
@@ -45,7 +45,7 @@ export const Profile = ({
       {/* 管理者の一言コメント */}
       {comment && (
         <div className='mb-3'>
-          <span className='block relative text-[length:var(--font-size-ui)] leading-[1.65] text-[var(--color-text-primary)] bg-[var(--color-surface)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
+          <span className='block relative text-ui leading-[1.65] text-[var(--color-text-primary)] bg-[var(--color-surface)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
             {comment}
           </span>
         </div>
@@ -66,7 +66,7 @@ export const Profile = ({
       <div>
         <Link
           href="/about"
-          className='text-[length:var(--font-size-ui)] text-[var(--color-primary)] hover:underline'
+          className='text-ui text-[var(--color-primary)] hover:underline'
         >
           {t(messages, ['about', 'link'], locale)}
         </Link>

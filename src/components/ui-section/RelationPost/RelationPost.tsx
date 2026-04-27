@@ -6,7 +6,7 @@ export const RelationPost = ({ heading, posts, kind }: RelationPostProps) => {
   const postKind: PostCardKind = 'imgOver';
   return (
     <section>
-      <h2 className='mb-4 text-[length:var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
+      <h2 className='mb-4 text-[var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
         {heading}
       </h2>
       <PostCardListVertical

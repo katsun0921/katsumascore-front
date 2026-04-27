@@ -262,6 +262,7 @@
 
   --font-body: var(--font-body), sans-serif;
   --font-heading: var(--font-heading), serif;
+  --font-ui: var(--font-ui), sans-serif;
 
   /* Spacing — Tailwind p-*, m-*, gap-* で参照（数値はスケール、p-* の実寸は左の --space-{px}） */
   --spacing-0: var(--space-0);
@@ -275,13 +276,13 @@
   --spacing-10: var(--space-40);
   --spacing-12: var(--space-48);
 
-  /* Font Size — Tailwind classes (text-h1, text-body etc) will reference the clamp() tokens below */
-  --font-size-h1: var(--font-size-h1);
-  --font-size-h2: var(--font-size-h2);
-  --font-size-h3: var(--font-size-h3);
-  --font-size-body: var(--font-size-body);
-  --font-size-ui: var(--font-size-ui);
-  --font-size-caption: var(--font-size-caption);
+  /* Font Size utilities */
+  --text-h1: var(--font-size-h1);
+  --text-h2: var(--font-size-h2);
+  --text-h3: var(--font-size-h3);
+  --text-body: var(--font-size-body);
+  --text-ui: var(--font-size-ui);
+  --text-caption: var(--font-size-caption);
 }
 
 body {

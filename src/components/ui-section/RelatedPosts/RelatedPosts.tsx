@@ -23,7 +23,7 @@ export const RelatedPosts = ({ posts, kind }: RelatedPostsProps) => {
 
   return (
     <div className='p-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
-      <p className='text-[length:var(--font-size-ui)] font-bold tracking-[0.08em] text-[var(--color-text-primary)] mb-3'>
+      <p className='text-ui font-bold tracking-[0.08em] text-[var(--color-text-primary)] mb-3'>
         {t(messages, ['heading', 'label'], locale)}
       </p>
       <PostCardListVertical

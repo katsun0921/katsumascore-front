@@ -9,13 +9,13 @@ export const VodMenuItem = ({ item }: TVodMenuItemProps) => {
     <li>
       <a
         href={item.href}
-        className='flex items-center justify-between px-4 py-2 text-[length:var(--font-size-ui-lg)] text-[var(--color-text-primary)] transition-[background-color] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)] hover:opacity-100'
+        className='flex items-center justify-between px-4 py-2 text-[var(--font-size-ui-lg)] text-[var(--color-text-primary)] transition-[background-color] duration-150 ease-[ease] hover:bg-[var(--color-bg-muted)] hover:opacity-100'
         target='_blank'
         rel='noopener noreferrer'
       >
         <span>{item.label}</span>
         <span
-          className='text-[length:var(--font-size-caption-lg)] text-[var(--color-text-muted)]'
+          className='text-[var(--font-size-caption-lg)] text-[var(--color-text-muted)]'
           aria-label={item.status ? '配信中' : '配信なし'}
         >
           {item.status ? '✔' : '✖'}

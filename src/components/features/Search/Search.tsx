@@ -61,7 +61,7 @@ export const Search = ({ onNavigate, className }: Props) => {
         ref={inputRef}
         type='search'
         // search__input クラスは globals.css の .header-search-pc/.header-search-sp セレクタ用に保持
-        className='search__input w-[240px] rounded-[20px] border-2 border-transparent bg-[var(--color-bg)] px-4 py-2 text-[length:var(--font-size-ui-lg)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 ease-[ease] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)]'
+        className='search__input w-[240px] rounded-[20px] border-2 border-transparent bg-[var(--color-bg)] px-4 py-2 text-[var(--font-size-ui-lg)] font-[var(--font-ui)] text-[var(--color-text-primary)] outline-none transition-[border-color,box-shadow] duration-200 ease-[ease] placeholder:text-[var(--color-text-muted)] focus:border-[var(--color-primary)] focus:shadow-[0_0_0_3px_rgba(37,99,235,0.15)]'
         placeholder='タイトルで検索...'
         value={query}
         onChange={e => setQuery(e.target.value)}

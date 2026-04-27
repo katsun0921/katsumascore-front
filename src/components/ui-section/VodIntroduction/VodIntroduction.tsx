@@ -1,5 +1,3 @@
-import Image from 'next/image';
-import Link from 'next/link';
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft';
 import { useLocale } from '@/i18n/provider';
@@ -80,23 +78,10 @@ export const VodIntroduction = ({
           </>
         )}
       </p>
-      <Link
-        href={vodUrl}
-        target='_blank'
-        rel='noopener noreferrer'
-        className='inline-flex items-center gap-3 no-underline text-[var(--color-text-primary)] mb-6 hover:opacity-80'
-      >
-        {vodImageUrl && (
-          <div className='relative w-[120px] h-[60px] shrink-0'>
-            <Image src={vodImageUrl} alt={`${vodName} ${title}`} fill sizes='200px' className='object-contain' />
-          </div>
-        )}
-        <span className='text-body font-medium'>{vodName} {title}</span>
-      </Link>
       <PostCardImgLeft post={{
         id: '',
         slug: vodUrl,
-        title: `${vodName} ${title}`,
+        title: `${vodName}<br>${title}`,
         excerpt: '',
         image: vodImageUrl || '',
         publishedAt

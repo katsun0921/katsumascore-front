@@ -68,14 +68,14 @@ export const ProductBlock = ({
           </div>
         )}
         <div className='flex-1 min-w-0'>
-          <span className='inline-block text-[length:var(--font-size-caption)] font-bold px-2 py-1 rounded bg-[var(--color-bg-muted)] text-[var(--color-text-secondary)] mb-2'>
+          <span className='inline-block text-caption font-bold px-2 py-1 rounded bg-[var(--color-bg-muted)] text-[var(--color-text-secondary)] mb-2'>
             {type === 'vod' ? 'VOD' : '買い物'}
           </span>
-          <p className='text-[length:var(--font-size-body)] font-bold mb-2 text-[var(--color-text-primary)]'>
+          <p className='text-body font-bold mb-2 text-[var(--color-text-primary)]'>
             {title}
           </p>
           {description && (
-            <p className='text-[length:var(--font-size-ui)] text-[var(--color-text-secondary)] mb-3'>
+            <p className='text-ui text-[var(--color-text-secondary)] mb-3'>
               {description}
             </p>
           )}
@@ -84,7 +84,7 @@ export const ProductBlock = ({
               {links.map((link, i) => (
                 <li key={i}>
                   <Link
-                    className={`inline-block text-[length:var(--font-size-caption)] px-3 py-2 text-[var(--color-text-inverse)] no-underline rounded font-bold transition-opacity duration-150 hover:opacity-85 ${SITE_BG[link.site] ?? 'bg-[var(--color-bg-muted)]'}`}
+                    className={`inline-block text-caption px-3 py-2 text-[var(--color-text-inverse)] no-underline rounded font-bold transition-opacity duration-150 hover:opacity-85 ${SITE_BG[link.site] ?? 'bg-[var(--color-bg-muted)]'}`}
                     href={link.url}
                     target='_blank'
                     rel='noopener noreferrer'
