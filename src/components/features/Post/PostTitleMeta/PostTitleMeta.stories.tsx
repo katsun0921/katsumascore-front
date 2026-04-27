@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { TitleMeta } from './PostTitleMeta'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { TitleMeta } from './PostTitleMeta';
 
 const meta: Meta<typeof TitleMeta> = {
   title: 'features/TitleMeta',
@@ -16,20 +16,20 @@ const meta: Meta<typeof TitleMeta> = {
     },
     copyright: '© 吾峠呼世晴/集英社・アニプレックス・ufotable',
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof TitleMeta>
 
-export const Japanese: Story = {}
-export const English: Story = { globals: { locale: 'en' } }
+export const Japanese: Story = {};
+export const English: Story = { globals: { locale: 'en' } };
 export const Minimal: Story = {
   args: {
     titleEn: 'Demon Slayer',
     officialUrl: 'https://kimetsu.com',
     officialSns: undefined,
   },
-}
+};
 export const WithCredits: Story = {
   args: {
     credits: [
@@ -39,7 +39,7 @@ export const WithCredits: Story = {
       { role: '制作', names: ['ufotable'] },
     ],
   },
-}
+};
 
 export const WithActors: Story = {
   args: {
@@ -75,7 +75,7 @@ export const WithActors: Story = {
       },
     ],
   },
-}
+};
 
 export const CreditsAndActors: Story = {
   args: {
@@ -107,4 +107,4 @@ export const CreditsAndActors: Story = {
       x: { link: 'https://x.com/kimetsu_off' },
     },
   },
-}
+};

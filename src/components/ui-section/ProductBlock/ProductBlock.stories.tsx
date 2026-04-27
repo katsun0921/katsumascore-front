@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ProductBlock } from './ProductBlock'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ProductBlock } from './ProductBlock';
 
 /**
  * WordPress ACF + Gutenbergブロックとして記事内に挿入されるコンポーネント。
@@ -10,8 +10,8 @@ const meta: Meta<typeof ProductBlock> = {
   title: 'ui-section/ProductBlock',
   component: ProductBlock,
   tags: ['autodocs'],
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof ProductBlock>
 
@@ -25,7 +25,7 @@ export const VodProduct: Story = {
       { site: 'amazon_prime', url: 'https://amazon.co.jp/watch/123' },
     ],
   },
-}
+};
 
 export const ShoppingProduct: Story = {
   args: {
@@ -37,7 +37,7 @@ export const ShoppingProduct: Story = {
       { site: 'rakuten', url: 'https://books.rakuten.co.jp/rb/123' },
     ],
   },
-}
+};
 
 export const NoImage: Story = {
   args: {
@@ -45,7 +45,7 @@ export const NoImage: Story = {
     title: '進撃の巨人 The Final Season',
     links: [{ site: 'amazon_prime', url: 'https://amazon.co.jp/watch/456' }],
   },
-}
+};
 
 export const WithImage: Story = {
   args: {
@@ -58,7 +58,7 @@ export const WithImage: Story = {
       { site: 'amazon', url: 'https://amazon.co.jp/dp/456' },
     ],
   },
-}
+};
 
 export const NoLinks: Story = {
   args: {
@@ -67,7 +67,7 @@ export const NoLinks: Story = {
     description: 'リンクが存在しないケース。',
     links: [],
   },
-}
+};
 
 export const UnknownSite: Story = {
   args: {
@@ -75,4 +75,4 @@ export const UnknownSite: Story = {
     title: '未知のサイト',
     links: [{ site: 'unknown_vod', url: 'https://example.com' }],
   },
-}
+};

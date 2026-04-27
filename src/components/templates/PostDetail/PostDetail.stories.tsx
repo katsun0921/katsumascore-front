@@ -1,8 +1,8 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PostDetail } from './PostDetail'
-import { mockPost, mockPostNoImage, mockPosts, mockPostContent } from '@/mocks/post'
-import { extractToc } from '@/lib/toc'
-import type { PostDetailData } from './PostDetail.types'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PostDetail } from './PostDetail';
+import { mockPost, mockPostNoImage, mockPosts, mockPostContent } from '@/mocks/post';
+import { extractToc } from '@/lib/toc';
+import type { PostDetailData } from './PostDetail.types';
 
 // ---------------------------------------------------------------------------
 // Base fixture — single.php の全フィールドを含む完全データ
@@ -150,7 +150,7 @@ const basePost: PostDetailData = {
       x: 'https://x.com/Katsun0921',
     },
   },
-}
+};
 
 const meta = {
   title: 'Templates/PostDetail',
@@ -163,9 +163,9 @@ const meta = {
       </div>
     ),
   ],
-} satisfies Meta<typeof PostDetail>
+} satisfies Meta<typeof PostDetail>;
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 // ---------------------------------------------------------------------------
@@ -173,7 +173,7 @@ type Story = StoryObj<typeof meta>
 // ---------------------------------------------------------------------------
 export const Default: Story = {
   args: { post: basePost },
-}
+};
 
 // ---------------------------------------------------------------------------
 // EnLocale — 英語ロケール
@@ -183,7 +183,7 @@ export const EnLocale: Story = {
     post: basePost,
   },
   globals: { locale: 'en' },
-}
+};
 
 // ---------------------------------------------------------------------------
 // NoImage — アイキャッチなし
@@ -196,7 +196,7 @@ export const NoImage: Story = {
       content: mockPostContent.content,
     },
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // CinemaShowing — 劇場公開中（VOD・レンタル非表示）
@@ -213,7 +213,7 @@ export const CinemaShowing: Story = {
       },
     },
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // MinimalData — スコア・ACF系フィールドがすべて空（欠損系）
@@ -225,7 +225,7 @@ export const MinimalData: Story = {
       content: mockPostContent.content,
     },
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // LongTitle — タイトルが極端に長い
@@ -237,7 +237,7 @@ export const LongTitle: Story = {
       title: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを、演出と脚本と音響設計の積み重ねからじっくり読み解いてみる',
     },
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // ManyActors — キャストが多い（Chaos）
@@ -253,7 +253,7 @@ export const ManyActors: Story = {
       })),
     },
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // ManyPostsGroups — 関連投稿グループが多い（Chaos）
@@ -269,4 +269,4 @@ export const ManyPostsGroups: Story = {
       })),
     },
   },
-}
+};

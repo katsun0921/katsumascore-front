@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { SearchResultItem } from './SearchResultItem'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { SearchResultItem } from './SearchResultItem';
 
 const meta: Meta<typeof SearchResultItem> = {
   title: 'Ui-Parts/SearchResultItem',
@@ -17,16 +17,16 @@ const meta: Meta<typeof SearchResultItem> = {
     id: 'item-0',
     onClick: () => {},
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const Active: Story = {
   args: { isActive: true },
-}
+};
 
 export const LongTitle: Story = {
   args: {
@@ -37,7 +37,7 @@ export const LongTitle: Story = {
       type: '映画',
     },
   },
-}
+};
 
 export const ActiveLongTitle: Story = {
   args: {
@@ -49,4 +49,4 @@ export const ActiveLongTitle: Story = {
     },
     isActive: true,
   },
-}
+};

@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { RelationPost } from './RelationPost'
-import type { RelationPostItem } from './RelationPost.types'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { RelationPost } from './RelationPost';
+import type { RelationPostItem } from './RelationPost.types';
 
 const meta: Meta<typeof RelationPost> = {
   title: 'ui-section/RelationPost',
@@ -9,8 +9,8 @@ const meta: Meta<typeof RelationPost> = {
   args: {
     heading: '関連作品',
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
@@ -19,21 +19,21 @@ const mockPosts: RelationPostItem[] = [
   { id: 2, title: 'インセプション', href: '/posts/inception', imageUrl: '/images/mock-image.webp' },
   { id: 3, title: 'ダークナイト', href: '/posts/dark-knight', imageUrl: '/images/mock-image.webp' },
   { id: 4, title: 'プレステージ', href: '/posts/prestige', imageUrl: '/images/mock-image.webp' },
-]
+];
 
 export const Default: Story = {
   args: { posts: mockPosts },
-}
+};
 
 export const ThreeColumn: Story = {
   args: { posts: mockPosts, kind: 'imgLeft' },
-}
+};
 
 export const NoImage: Story = {
   args: {
     posts: mockPosts.map((p) => ({ ...p, imageUrl: undefined })),
   },
-}
+};
 
 export const LongTitle: Story = {
   args: {
@@ -42,11 +42,11 @@ export const LongTitle: Story = {
       { id: 2, title: 'インターステラー', href: '/posts/interstellar', imageUrl: '/images/mock-image.webp' },
     ],
   },
-}
+};
 
 export const SinglePost: Story = {
   args: { posts: [mockPosts[0]] },
-}
+};
 
 export const ManyPosts: Story = {
   args: {
@@ -56,4 +56,4 @@ export const ManyPosts: Story = {
       { id: 6, title: 'テネット', href: '/posts/tenet', imageUrl: '/images/mock-image.webp' },
     ],
   },
-}
+};

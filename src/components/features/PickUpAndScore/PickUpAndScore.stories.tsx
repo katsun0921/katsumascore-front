@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PickUpAndScore } from './PickUpAndScore'
-import type { PickUpPost } from './PickUpAndScore'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PickUpAndScore } from './PickUpAndScore';
+import type { PickUpPost } from './PickUpAndScore';
 
 const meta: Meta<typeof PickUpAndScore> = {
   title: 'Features/PickUpAndScore',
@@ -15,9 +15,9 @@ const meta: Meta<typeof PickUpAndScore> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 const mockPickup: PickUpPost[] = [
@@ -26,7 +26,7 @@ const mockPickup: PickUpPost[] = [
   { slug: '/posts/dark-knight',  title: 'ダークナイト',         thumbnailUrl: '/images/mock-image.webp', score: 4.5 },
   { slug: '/posts/parasite',     title: 'パラサイト 半地下の家族', thumbnailUrl: '/images/mock-image.webp', score: 4.2 },
   { slug: '/posts/arrival',      title: 'メッセージ',           thumbnailUrl: '/images/mock-image.webp', score: 4.0 },
-]
+];
 
 const mockHighScore: PickUpPost[] = [
   { slug: '/posts/shawshank',   title: 'ショーシャンクの空に', thumbnailUrl: '/images/mock-image.webp', score: 4.9 },
@@ -34,7 +34,7 @@ const mockHighScore: PickUpPost[] = [
   { slug: '/posts/schindler',   title: 'シンドラーのリスト',   thumbnailUrl: '/images/mock-image.webp', score: 4.6 },
   { slug: '/posts/spirited',    title: '千と千尋の神隠し',     thumbnailUrl: '/images/mock-image.webp', score: 4.5 },
   { slug: '/posts/your-name',   title: '君の名は。',           thumbnailUrl: '/images/mock-image.webp', score: 4.4 },
-]
+];
 
 // ── PICK UP タブ選択状態（デフォルト）
 export const PickUpActive: Story = {
@@ -42,7 +42,7 @@ export const PickUpActive: Story = {
     pickupPosts: mockPickup,
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── HIGH SCORE タブ選択状態（PICK UPが空 → HIGH SCOREがデフォルト）
 export const HighScoreActive: Story = {
@@ -50,7 +50,7 @@ export const HighScoreActive: Story = {
     pickupPosts: [],
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── PICK UP 未設定 → タブが HIGH SCORE のみ表示
 export const PickUpEmpty: Story = {
@@ -58,7 +58,7 @@ export const PickUpEmpty: Story = {
     pickupPosts: [],
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── 全記事スコア付き
 export const AllWithScore: Story = {
@@ -66,7 +66,7 @@ export const AllWithScore: Story = {
     pickupPosts: mockPickup,
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── スコアありなし混在
 export const MixedScore: Story = {
@@ -78,7 +78,7 @@ export const MixedScore: Story = {
     ],
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── サムネイルなし
 export const NoImage: Story = {
@@ -86,7 +86,7 @@ export const NoImage: Story = {
     pickupPosts: mockPickup.map((p) => ({ ...p, thumbnailUrl: undefined })),
     highScorePosts: mockHighScore.map((p) => ({ ...p, thumbnailUrl: undefined })),
   },
-}
+};
 
 // ── タイトルが長い（2行クランプ確認）
 export const LongTitle: Story = {
@@ -102,7 +102,7 @@ export const LongTitle: Story = {
     ],
     highScorePosts: mockHighScore,
   },
-}
+};
 
 // ── 両方空（非表示確認）
 export const BothEmpty: Story = {
@@ -110,4 +110,4 @@ export const BothEmpty: Story = {
     pickupPosts: [],
     highScorePosts: [],
   },
-}
+};

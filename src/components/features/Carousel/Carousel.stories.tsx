@@ -1,6 +1,6 @@
-import React from 'react'
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Carousel } from './Carousel'
+import React from 'react';
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Carousel } from './Carousel';
 
 const Slide = ({ label, color }: { label: string; color: string }) => (
   <div
@@ -17,7 +17,7 @@ const Slide = ({ label, color }: { label: string; color: string }) => (
   >
     {label}
   </div>
-)
+);
 
 const meta: Meta<typeof Carousel> = {
   title: 'features/Carousel',
@@ -31,19 +31,19 @@ const meta: Meta<typeof Carousel> = {
       <Slide key={3} label='Slide 3' color='#1e1b4b' />,
     ],
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof Carousel>
 
-export const ThreeSlides: Story = {}
+export const ThreeSlides: Story = {};
 export const SingleSlide: Story = {
   args: { items: [<Slide key={1} label='Single' color='#2563eb' />] },
-}
+};
 export const ManySlides: Story = {
   args: {
     items: Array.from({ length: 6 }, (_, i) => (
       <Slide key={i} label={`Slide ${i + 1}`} color={`hsl(${i * 40}, 60%, 50%)`} />
     )),
   },
-}
+};

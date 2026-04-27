@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ReviewSiteScores } from './ReviewSiteScores'
-import type { TReviewSite } from './ReviewSiteScores'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ReviewSiteScores } from './ReviewSiteScores';
+import type { TReviewSite } from './ReviewSiteScores';
 
 const defaultSites: TReviewSite[] = [
   {
@@ -38,7 +38,7 @@ const defaultSites: TReviewSite[] = [
     summary: 'カタルシスを評価する声が多い一方、独り無双の説得力には賛否あり',
     url: 'https://eiga.com/movie/78782/',
   },
-]
+];
 
 const meta: Meta<typeof ReviewSiteScores> = {
   title: 'features/ReviewSiteScores',
@@ -48,12 +48,12 @@ const meta: Meta<typeof ReviewSiteScores> = {
     sites: defaultSites,
     updatedAt: '2026-04-05',
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof ReviewSiteScores>
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const HighScores: Story = {
   args: {
@@ -65,7 +65,7 @@ export const HighScores: Story = {
       { siteId: 'eiga-com', score: 4.3, summary: '娯楽性と完成度のバランスが良いと安定した支持を得ている', url: 'https://example.com/eiga' },
     ] satisfies TReviewSite[],
   },
-}
+};
 
 export const LowScores: Story = {
   args: {
@@ -77,7 +77,7 @@ export const LowScores: Story = {
       { siteId: 'eiga-com', score: 1.5, summary: '期待とのギャップが大きく、厳しいレビューが並んでいる', url: 'https://example.com/eiga' },
     ] satisfies TReviewSite[],
   },
-}
+};
 
 export const English: Story = {
   args: {
@@ -91,7 +91,7 @@ export const English: Story = {
     ] satisfies TReviewSite[],
   },
   globals: { locale: 'en' },
-}
+};
 
 export const WithoutRT: Story = {
   args: {
@@ -101,7 +101,7 @@ export const WithoutRT: Story = {
       { siteId: 'eiga-com', score: 3.7, summary: '娯楽性への支持は強いが、リアリティには意見が分かれる', url: 'https://example.com/eiga' },
     ] satisfies TReviewSite[],
   },
-}
+};
 
 export const LongSummary: Story = {
   args: {
@@ -116,7 +116,7 @@ export const LongSummary: Story = {
       ...defaultSites.slice(1),
     ],
   },
-}
+};
 
 export const RTDivergence: Story = {
   args: {
@@ -127,7 +127,7 @@ export const RTDivergence: Story = {
       { siteId: 'filmarks', score: 3.7, summary: '国内では演者人気もあって一定の満足感が共有されている', url: 'https://example.com/filmarks' },
     ] satisfies TReviewSite[],
   },
-}
+};
 
 export const SingleSite: Story = {
   args: {
@@ -135,4 +135,4 @@ export const SingleSite: Story = {
       { siteId: 'imdb', score: 7.3, summary: '主演の存在感に高評価。プロットの薄さを指摘する声も', url: 'https://example.com/imdb' },
     ],
   },
-}
+};

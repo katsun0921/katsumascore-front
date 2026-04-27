@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Profile } from './Profile'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Profile } from './Profile';
 
 const meta: Meta<typeof Profile> = {
   title: 'ui-section/Profile',
@@ -14,9 +14,9 @@ const meta: Meta<typeof Profile> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 const baseArgs = {
@@ -27,23 +27,23 @@ const baseArgs = {
   social: {
     x: 'https://x.com/Katsun0921',
   },
-}
+};
 
 export const Default: Story = {
   args: baseArgs,
-}
+};
 
 export const NoComment: Story = {
   args: { ...baseArgs, comment: undefined },
-}
+};
 
 export const NoSocial: Story = {
   args: { ...baseArgs, social: undefined },
-}
+};
 
 export const Minimal: Story = {
   args: { ...baseArgs, comment: undefined, social: undefined },
-}
+};
 
 export const LongComment: Story = {
   args: {
@@ -51,9 +51,9 @@ export const LongComment: Story = {
     comment:
       '最近はSF映画にハマってます。特にクリストファー・ノーラン作品は何度見ても飽きません！インターステラーは人生で一番好きな映画です。次はデューンのパート2が楽しみ！皆さんのおすすめも教えてください。',
   },
-}
+};
 
 export const English: Story = {
   args: baseArgs,
   globals: { locale: 'en' },
-}
+};

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Typography } from './Typography'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Typography } from './Typography';
 
 const meta = {
   title: 'Styles/Typography',
@@ -7,9 +7,9 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
   },
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
@@ -17,22 +17,22 @@ export const Overview: Story = {
   args: {
     variant: 'overview',
   },
-}
+};
 
 export const ColorPalette: Story = {
   args: {
     variant: 'palette',
   },
-}
+};
 
 export const FontFamilies: Story = {
   args: {
     variant: 'fonts',
   },
-}
+};
 
 export const FontSizes: Story = {
   args: {
     variant: 'font-sizes',
   },
-}
+};

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { AdBanner } from './AdBanner'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { AdBanner } from './AdBanner';
 
 const meta: Meta<typeof AdBanner> = {
   title: 'Features/AdBanner',
@@ -14,9 +14,9 @@ const meta: Meta<typeof AdBanner> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof AdBanner>
 
 // ── バナー型（300×250 プレースホルダー）
@@ -44,7 +44,7 @@ export const Banner: Story = {
       </a>
     `,
   },
-}
+};
 
 // ── CTAボタン型（U-NEXT）
 export const CtaUnext: Story = {
@@ -54,7 +54,7 @@ export const CtaUnext: Story = {
     url: 'https://video.unext.jp/',
     color: 'var(--color-unext)',
   },
-}
+};
 
 // ── CTAボタン型（Amazon Prime Video）
 export const CtaAmazon: Story = {
@@ -64,7 +64,7 @@ export const CtaAmazon: Story = {
     url: 'https://www.amazon.co.jp/primevideo',
     color: 'var(--color-amazon)',
   },
-}
+};
 
 // ── CTAボタン型（Hulu）
 export const CtaHulu: Story = {
@@ -74,7 +74,7 @@ export const CtaHulu: Story = {
     url: 'https://www.hulu.jp/',
     color: '#1ce783',
   },
-}
+};
 
 // ── CTAボタン型（デフォルトカラー = primary blue）
 export const CtaDefault: Story = {
@@ -83,7 +83,7 @@ export const CtaDefault: Story = {
     label: '動画配信サービスを探す',
     url: '/vod',
   },
-}
+};
 
 // ── CTAボタン型（ラベルが長い・折り返し確認）
 export const CtaLongLabel: Story = {
@@ -93,4 +93,4 @@ export const CtaLongLabel: Story = {
     url: 'https://video.unext.jp/',
     color: 'var(--color-unext)',
   },
-}
+};

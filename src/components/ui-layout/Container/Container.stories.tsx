@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Container } from './Container'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Container } from './Container';
 
 const meta: Meta<typeof Container> = {
   title: 'layout/Container',
@@ -13,10 +13,10 @@ const meta: Meta<typeof Container> = {
     ),
     size: 'lg',
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof Container>
 
-export const Large: Story = { args: { size: 'lg' } }
-export const Full: Story = { args: { size: 'full' } }
+export const Large: Story = { args: { size: 'lg' } };
+export const Full: Story = { args: { size: 'full' } };

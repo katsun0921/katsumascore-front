@@ -1,14 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PostsGroup } from './PostsGroup'
-import { mockPosts, mockPostNoImage } from '@/mocks/post'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PostsGroup } from './PostsGroup';
+import { mockPosts, mockPostNoImage } from '@/mocks/post';
 
 const meta = {
   title: 'Features/PostsGroup',
   component: PostsGroup,
   parameters: { layout: 'padded' },
-} satisfies Meta<typeof PostsGroup>
+} satisfies Meta<typeof PostsGroup>;
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 // ---------------------------------------------------------------------------
@@ -23,7 +23,7 @@ export const SingleGroup: Story = {
       },
     ],
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // WithDescription — 説明文付き
@@ -38,7 +38,7 @@ export const WithDescription: Story = {
       },
     ],
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // MultipleGroups — 複数グループ（RelationPost / 関連ACFグループ相当）
@@ -61,7 +61,7 @@ export const MultipleGroups: Story = {
       },
     ],
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // NoImage — 画像なし投稿を含む
@@ -75,7 +75,7 @@ export const NoImage: Story = {
       },
     ],
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // Empty — 全グループが空の場合は何も表示しない
@@ -87,7 +87,7 @@ export const Empty: Story = {
       { heading: 'グループB', posts: [] },
     ],
   },
-}
+};
 
 // ---------------------------------------------------------------------------
 // TwoColumn — 投稿が2件の場合（3カラムが崩れないことを確認）
@@ -101,4 +101,4 @@ export const TwoColumn: Story = {
       },
     ],
   },
-}
+};

@@ -1,11 +1,11 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { StreamingVod } from './StreamingVod'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { StreamingVod } from './StreamingVod';
 
 const mockServices = [
   { service: 'netflix' as const, url: 'https://netflix.com/watch/123', signupUrl: 'https://netflix.com/signup' },
   { service: 'amazon' as const, url: 'https://amazon.co.jp/watch/123', signupUrl: 'https://amazon.co.jp/prime' },
   { service: 'unext' as const, url: 'https://unext.jp/watch/123', isPaid: true },
-]
+];
 
 const meta: Meta<typeof StreamingVod> = {
   title: 'features/StreamingVod',
@@ -16,14 +16,14 @@ const meta: Meta<typeof StreamingVod> = {
     titleEn: 'Demon Slayer',
     services: mockServices,
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof StreamingVod>
 
-export const Japanese: Story = {}
-export const English: Story = { globals: { locale: 'en' } }
-export const SingleService: Story = { args: { services: [mockServices[0]] } }
+export const Japanese: Story = {};
+export const English: Story = { globals: { locale: 'en' } };
+export const SingleService: Story = { args: { services: [mockServices[0]] } };
 export const AllServices: Story = {
   args: {
     services: [
@@ -32,4 +32,4 @@ export const AllServices: Story = {
       { service: 'dmmtv' as const, url: 'https://dmmtv.jp/watch/123' },
     ],
   },
-}
+};

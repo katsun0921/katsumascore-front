@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { AdRental } from './AdRental'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { AdRental } from './AdRental';
 
 const meta: Meta<typeof AdRental> = {
   title: 'features/AdRental',
@@ -8,10 +8,10 @@ const meta: Meta<typeof AdRental> = {
   args: {
     title: '鬼滅の刃',
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof AdRental>
 
-export const BothServices: Story = {}
-export const English: Story = { globals: { locale: 'en' } }
+export const BothServices: Story = {};
+export const English: Story = { globals: { locale: 'en' } };

@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { DesignRules } from './DesignRules'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { DesignRules } from './DesignRules';
 
 const meta = {
   title: 'Docs/Design Rules',
@@ -15,12 +15,12 @@ const meta = {
       },
     },
   },
-} satisfies Meta
+} satisfies Meta;
 
-export default meta
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
 export const Overview: Story = {
   render: () => <DesignRules />,
-}
+};

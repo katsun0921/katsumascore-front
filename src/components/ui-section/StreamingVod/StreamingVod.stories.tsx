@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { StreamingVod } from './StreamingVod'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { StreamingVod } from './StreamingVod';
 
 const meta: Meta<typeof StreamingVod> = {
   title: 'ui-section/StreamingVod',
@@ -13,12 +13,12 @@ const meta: Meta<typeof StreamingVod> = {
       <div key='3' style={{ padding: '8px', background: 'var(--color-bg-muted)', borderRadius: '6px', textAlign: 'center' }}>U-NEXT</div>,
     ],
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const SingleItem: Story = {
   args: {
@@ -26,7 +26,7 @@ export const SingleItem: Story = {
       <div key='1' style={{ padding: '8px', background: 'var(--color-bg-muted)', borderRadius: '6px', textAlign: 'center' }}>Netflix</div>,
     ],
   },
-}
+};
 
 export const ManyItems: Story = {
   args: {
@@ -36,4 +36,4 @@ export const ManyItems: Story = {
       </div>
     )),
   },
-}
+};

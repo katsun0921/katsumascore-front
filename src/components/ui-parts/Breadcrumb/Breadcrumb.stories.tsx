@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { Breadcrumb } from './Breadcrumb'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { Breadcrumb } from './Breadcrumb';
 
 const meta: Meta<typeof Breadcrumb> = {
   title: 'Ui-Parts/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs'],
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof Breadcrumb>
 
 export const Home: Story = {
   args: { items: [{ label: 'Home', href: '/' }] },
-}
+};
 
 export const Category: Story = {
   args: {
@@ -21,7 +21,7 @@ export const Category: Story = {
       { label: 'アニメ', href: '/category/anime' },
     ],
   },
-}
+};
 
 export const Post: Story = {
   args: {
@@ -31,7 +31,7 @@ export const Post: Story = {
       { label: '鬼滅の刃 刀鍛冶の里編' },
     ],
   },
-}
+};
 
 export const Long: Story = {
   args: {
@@ -43,4 +43,4 @@ export const Long: Story = {
       { label: '鬼滅の刃 柱稽古編 第1話レビュー' },
     ],
   },
-}
+};

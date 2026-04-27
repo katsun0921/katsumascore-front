@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { OfficialSns } from './OfficialSns'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { OfficialSns } from './OfficialSns';
 
 const meta: Meta<typeof OfficialSns> = {
   title: 'features/OfficialSns',
@@ -26,9 +26,9 @@ const meta: Meta<typeof OfficialSns> = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 // ── X のみ
@@ -38,7 +38,7 @@ export const XOnly: Story = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
 // ── YouTube のみ
 export const YouTubeOnly: Story = {
@@ -47,7 +47,7 @@ export const YouTubeOnly: Story = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
 // ── X + YouTube タブ切替
 export const XAndYouTube: Story = {
@@ -58,7 +58,7 @@ export const XAndYouTube: Story = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
 // ── 全タブ（X / YouTube / Instagram）
 export const AllTabs: Story = {
@@ -70,7 +70,7 @@ export const AllTabs: Story = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
 // ── YouTube タブ初期表示
 export const InitialTabYouTube: Story = {
@@ -81,7 +81,7 @@ export const InitialTabYouTube: Story = {
     forceVisible: true,
     forceLoading: false,
   },
-}
+};
 
 // ── Skeleton 強制表示
 export const SkeletonLoading: Story = {
@@ -91,7 +91,7 @@ export const SkeletonLoading: Story = {
     forceVisible: true,
     forceLoading: true,
   },
-}
+};
 
 // ── IntersectionObserver 未発火（ビューポート外）
 export const NotVisible: Story = {
@@ -100,7 +100,7 @@ export const NotVisible: Story = {
     forceVisible: false,
     forceLoading: false,
   },
-}
+};
 
 // ── URL なし → null（非表示確認）
 export const None: Story = {
@@ -109,7 +109,7 @@ export const None: Story = {
     youtubeUrl: undefined,
     instagramUrl: undefined,
   },
-}
+};
 
 // ── 英語ロケール
 export const English: Story = {
@@ -121,4 +121,4 @@ export const English: Story = {
     forceLoading: false,
   },
   globals: { locale: 'en' },
-}
+};

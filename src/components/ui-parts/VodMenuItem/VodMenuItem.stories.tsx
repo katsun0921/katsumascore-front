@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { VodMenuItem } from './VodMenuItem'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { VodMenuItem } from './VodMenuItem';
 
 const meta: Meta<typeof VodMenuItem> = {
   title: 'Ui-Parts/VodMenuItem',
@@ -14,12 +14,12 @@ const meta: Meta<typeof VodMenuItem> = {
       href: 'https://netflix.com',
     },
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Available: Story = {}
+export const Available: Story = {};
 
 export const Unavailable: Story = {
   args: {
@@ -30,7 +30,7 @@ export const Unavailable: Story = {
       href: 'https://unext.jp',
     },
   },
-}
+};
 
 export const LongLabel: Story = {
   args: {
@@ -41,4 +41,4 @@ export const LongLabel: Story = {
       href: 'https://amazon.co.jp/prime-video',
     },
   },
-}
+};

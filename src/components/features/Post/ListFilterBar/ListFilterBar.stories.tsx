@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { ListFilterBar } from './ListFilterBar'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { ListFilterBar } from './ListFilterBar';
 
 const meta: Meta<typeof ListFilterBar> = {
   title: 'features/Post/ListFilterBar',
@@ -15,23 +15,23 @@ const meta: Meta<typeof ListFilterBar> = {
     activeValue: 'all',
     onSelect: () => {},
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Default: Story = {}
+export const Default: Story = {};
 
 export const ActiveMiddle: Story = {
   args: { activeValue: 'anime' },
-}
+};
 
 export const SingleOption: Story = {
   args: {
     options: [{ label: 'すべて', value: 'all' }],
     activeValue: 'all',
   },
-}
+};
 
 export const ManyOptions: Story = {
   args: {
@@ -46,7 +46,7 @@ export const ManyOptions: Story = {
     ],
     activeValue: 'all',
   },
-}
+};
 
 export const LongLabel: Story = {
   args: {
@@ -56,4 +56,4 @@ export const LongLabel: Story = {
     ],
     activeValue: 'all',
   },
-}
+};

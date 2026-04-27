@@ -1,5 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PostRankingItem } from './PostRankingItem'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PostRankingItem } from './PostRankingItem';
 
 const meta: Meta<typeof PostRankingItem> = {
   title: 'features/Post/PostRankingItem',
@@ -18,24 +18,24 @@ const meta: Meta<typeof PostRankingItem> = {
     },
     rank: 1,
   },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof meta>
 
-export const Rank1: Story = {}
+export const Rank1: Story = {};
 
 export const Rank2: Story = {
   args: { rank: 2 },
-}
+};
 
 export const Rank3: Story = {
   args: { rank: 3 },
-}
+};
 
 export const Rank4: Story = {
   args: { rank: 4 },
-}
+};
 
 export const NoImage: Story = {
   args: {
@@ -50,7 +50,7 @@ export const NoImage: Story = {
     },
     rank: 5,
   },
-}
+};
 
 export const NoScore: Story = {
   args: {
@@ -64,7 +64,7 @@ export const NoScore: Story = {
     },
     rank: 6,
   },
-}
+};
 
 export const Col2: Story = {
   args: { columns: 2 },
@@ -80,7 +80,7 @@ export const Col2: Story = {
       </ul>
     ),
   ],
-}
+};
 
 export const Col3: Story = {
   args: { columns: 3 },
@@ -101,7 +101,7 @@ export const Col3: Story = {
       </ul>
     ),
   ],
-}
+};
 
 export const LongTitle: Story = {
   args: {
@@ -116,4 +116,4 @@ export const LongTitle: Story = {
     },
     rank: 7,
   },
-}
+};

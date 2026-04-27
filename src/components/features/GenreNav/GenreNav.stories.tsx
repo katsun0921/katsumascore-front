@@ -1,12 +1,12 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { GenreNav } from './GenreNav'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { GenreNav } from './GenreNav';
 
 const meta: Meta<typeof GenreNav> = {
   title: 'Features/GenreNav',
   component: GenreNav,
   parameters: { layout: 'padded' },
-}
-export default meta
+};
+export default meta;
 
 type Story = StoryObj<typeof GenreNav>
 
@@ -19,25 +19,25 @@ const TYPICAL_TAGS = [
   { slug: 'horror', name: 'ホラー', count: 17 },
   { slug: 'romance', name: 'ラブストーリー', count: 22 },
   { slug: 'suspense', name: 'サスペンス', count: 33 },
-]
+];
 
 export const Default: Story = {
   args: { tags: TYPICAL_TAGS },
-}
+};
 
 export const WithActive: Story = {
   args: { tags: TYPICAL_TAGS, activeSlug: 'anime' },
-}
+};
 
 export const EnglishLocale: Story = {
   globals: { locale: 'en' },
   args: { tags: TYPICAL_TAGS, activeSlug: 'action' },
-}
+};
 
 /** ゼロ件 → null レンダリング確認 */
 export const Empty: Story = {
   args: { tags: [] },
-}
+};
 
 /** アイコンマップにないスラッグ → DEFAULT_ICON にフォールバック */
 export const UnknownSlugs: Story = {
@@ -48,7 +48,7 @@ export const UnknownSlugs: Story = {
       { slug: 'another-unknown', name: '謎ジャンル２', count: 3 },
     ],
   },
-}
+};
 
 /** タグ名が非常に長い（折り返し確認） */
 export const LongNames: Story = {
@@ -60,7 +60,7 @@ export const LongNames: Story = {
       { slug: 'comedy', name: 'コメディ・笑い飯・爆笑傑作選', count: 8 },
     ],
   },
-}
+};
 
 /** Dense: 全15ジャンル */
 export const Dense: Story = {
@@ -84,4 +84,4 @@ export const Dense: Story = {
     ],
     activeSlug: 'sf',
   },
-}
+};

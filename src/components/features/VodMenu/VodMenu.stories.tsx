@@ -11,14 +11,14 @@ const mockServices: TVodMenuService[] = [
 
 const WithNavigationBackground = (Story: React.ComponentType) => {
   useEffect(() => {
-    const el = document.querySelector<HTMLElement>('.sb-show-main')
-    if (el) el.style.background = 'var(--color-navigation)'
+    const el = document.querySelector<HTMLElement>('.sb-show-main');
+    if (el) el.style.background = 'var(--color-navigation)';
     return () => {
-      if (el) el.style.background = ''
-    }
-  }, [])
-  return <Story />
-}
+      if (el) el.style.background = '';
+    };
+  }, []);
+  return <Story />;
+};
 
 const meta: Meta<typeof VodMenu> = {
   title: 'Features/VodMenu',

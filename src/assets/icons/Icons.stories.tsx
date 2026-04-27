@@ -1,22 +1,22 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { PlayIcon } from './PlayIcon'
-import { ChevronDownIcon } from './ChevronDownIcon'
-import { XIcon } from './XIcon'
-import { FacebookIcon } from './FacebookIcon'
-import { RssIcon } from './RssIcon'
-import { StarIcon } from './StarIcon'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { PlayIcon } from './PlayIcon';
+import { ChevronDownIcon } from './ChevronDownIcon';
+import { XIcon } from './XIcon';
+import { FacebookIcon } from './FacebookIcon';
+import { RssIcon } from './RssIcon';
+import { StarIcon } from './StarIcon';
 
 const meta: Meta = {
   title: 'Assets/Icons',
   parameters: {
     layout: 'padded',
   },
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
-const ICON_SIZES = [12, 14, 16, 18, 24, 32] as const
+const ICON_SIZES = [12, 14, 16, 18, 24, 32] as const;
 
 const iconList = [
   { name: 'PlayIcon', usage: 'CTAButton / VodLink / VodMenu', Icon: PlayIcon, fill: 'currentColor' },
@@ -25,7 +25,7 @@ const iconList = [
   { name: 'FacebookIcon', usage: 'Footer', Icon: FacebookIcon, fill: 'currentColor' },
   { name: 'RssIcon', usage: 'Footer', Icon: RssIcon, fill: 'currentColor' },
   { name: 'StarIcon', usage: 'HomeCardScrollList', Icon: StarIcon, fill: 'var(--color-score-accent, #f59e0b)' },
-]
+];
 
 export const All: Story = {
   name: 'すべてのアイコン',
@@ -53,7 +53,7 @@ export const All: Story = {
       ))}
     </div>
   ),
-}
+};
 
 export const Sizes: Story = {
   name: 'サイズバリエーション',
@@ -69,7 +69,7 @@ export const Sizes: Story = {
       ))}
     </div>
   ),
-}
+};
 
 export const OnDark: Story = {
   name: 'ダーク背景',
@@ -83,4 +83,4 @@ export const OnDark: Story = {
       ))}
     </div>
   ),
-}
+};

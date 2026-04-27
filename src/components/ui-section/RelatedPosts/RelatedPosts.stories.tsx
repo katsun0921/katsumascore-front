@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from '@storybook/react-vite'
-import { RelatedPosts } from './RelatedPosts'
-import type { RelatedPostItem } from './RelatedPosts'
+import type { Meta, StoryObj } from '@storybook/react-vite';
+import { RelatedPosts } from './RelatedPosts';
+import type { RelatedPostItem } from './RelatedPosts';
 
 const meta: Meta<typeof RelatedPosts> = {
   title: 'ui-section/RelatedPosts',
@@ -15,9 +15,9 @@ const meta: Meta<typeof RelatedPosts> = {
       </div>
     ),
   ],
-}
+};
 
-export default meta
+export default meta;
 type Story = StoryObj<typeof meta>
 
 const mockPosts: RelatedPostItem[] = [
@@ -26,11 +26,11 @@ const mockPosts: RelatedPostItem[] = [
   { slug: '/posts/dark-knight',     title: 'ダークナイト',               thumbnailUrl: '/images/mock-image.webp', score: 4.5 },
   { slug: '/posts/prestige',        title: 'プレステージ',               thumbnailUrl: '/images/mock-image.webp', score: 3.8 },
   { slug: '/posts/memento',         title: 'メメント',                   thumbnailUrl: '/images/mock-image.webp', score: 3.5 },
-]
+];
 
 export const Default: Story = {
   args: { posts: mockPosts },
-}
+};
 
 export const WithoutScore: Story = {
   args: {
@@ -40,19 +40,19 @@ export const WithoutScore: Story = {
       { slug: '/posts/c', title: 'スコアなし作品B',  thumbnailUrl: '/images/mock-image.webp' },
     ],
   },
-}
+};
 
 export const NoImage: Story = {
   args: {
     posts: mockPosts.map((p) => ({ ...p, thumbnailUrl: undefined })),
   },
-}
+};
 
 export const SinglePost: Story = {
   args: {
     posts: [mockPosts[0]],
   },
-}
+};
 
 export const OverLimit: Story = {
   args: {
@@ -61,7 +61,7 @@ export const OverLimit: Story = {
       { slug: '/posts/tenet', title: 'テネット（6件目・非表示確認）', thumbnailUrl: '/images/mock-image.webp', score: 3.2 },
     ],
   },
-}
+};
 
 export const LongTitle: Story = {
   args: {
@@ -75,13 +75,13 @@ export const LongTitle: Story = {
       ...mockPosts.slice(0, 2),
     ],
   },
-}
+};
 
 export const Empty: Story = {
   args: { posts: [] },
-}
+};
 
 export const English: Story = {
   args: { posts: mockPosts },
   globals: { locale: 'en' },
-}
+};
