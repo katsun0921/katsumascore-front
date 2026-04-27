@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import Link from 'next/link';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 // ── バナー型（A8.net 等のアフィリエイトHTMLを dangerouslySetInnerHTML で挿入）
 type BannerVariant = {
   type: 'banner'
@@ -21,7 +21,7 @@ export type AdBannerProps = BannerVariant | CtaVariant
 
 export const AdBanner = (props: AdBannerProps) => {
    
-  const locale = useLocale()
+  const locale = useLocale();
 
   if (props.type === 'banner') {
     return (
@@ -30,7 +30,7 @@ export const AdBanner = (props: AdBannerProps) => {
         // アフィリエイトバナーHTMLをそのまま注入（A8.net 等の埋め込みコード）
         dangerouslySetInnerHTML={{ __html: props.bannerHtml }}
       />
-    )
+    );
   }
 
   // type === 'cta'
@@ -49,5 +49,5 @@ export const AdBanner = (props: AdBannerProps) => {
         </span>
       </Link>
     </div>
-  )
-}
+  );
+};

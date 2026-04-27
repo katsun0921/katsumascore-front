@@ -1,9 +1,9 @@
-import { ScoreWithRank } from '@/components/features/ScoreWithRank'
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
-import type { TStudioEntry } from '@/components/features/Post/PostTitleMeta'
+import { ScoreWithRank } from '@/components/features/ScoreWithRank';
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
+import type { TStudioEntry } from '@/components/features/Post/PostTitleMeta';
 export type PostHeaderProps = {
   category: string
   titleOfficial: string
@@ -31,15 +31,15 @@ export const PostHeader = ({
   scoreMax = SCORE_DISPLAY_MAX,
   comment,
 }: PostHeaderProps) => {
-  const locale = useLocale()
-  const sep = t(messages, ['meta', 'sep'], locale)
+  const locale = useLocale();
+  const sep = t(messages, ['meta', 'sep'], locale);
 
-  const year = releaseDate && releaseDate.length >= 4 ? releaseDate.slice(0, 4) : undefined
-  const distributors = filmStudios?.map((s) => s.name).join(' / ')
-  const productions = productionStudios?.map((s) => s.name).join(' / ')
+  const year = releaseDate && releaseDate.length >= 4 ? releaseDate.slice(0, 4) : undefined;
+  const distributors = filmStudios?.map((s) => s.name).join(' / ');
+  const productions = productionStudios?.map((s) => s.name).join(' / ');
 
-  const metaParts = [distributors, productions, year, rating].filter(Boolean)
-  const prefix = 'post-header'
+  const metaParts = [distributors, productions, year, rating].filter(Boolean);
+  const prefix = 'post-header';
   return (
     <div className={prefix}>
       <hgroup className={`${prefix}__hgroup`}>
@@ -68,5 +68,5 @@ export const PostHeader = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};

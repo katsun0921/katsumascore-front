@@ -1,14 +1,13 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
-import ProfileImg from '@assets/images/profile.webp'
-import { XIcon } from '@/assets/icons'
+import Image from 'next/image';
+import Link from 'next/link';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
+import ProfileImg from '@assets/images/profile.webp';
+import { XIcon } from '@/assets/icons';
 
 export type ProfileProps = {
   name: string
-  description: string
   comment?: string
   avatarUrl?: string
   aboutUrl: string
@@ -18,16 +17,14 @@ export type ProfileProps = {
 }
 
 export const Profile = ({
-  name,
-  description,
   comment,
-  aboutUrl,
 }: ProfileProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
+  const description = t(messages, ['description'], locale);
 
   return (
     <div className='p-5 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
-      {/* アバター + 名前 */}
+      {/* アバター */}
       <div className='flex items-center gap-3 mb-3'>
         <Image
           src={ProfileImg}
@@ -36,20 +33,19 @@ export const Profile = ({
           height={72}
           className='rounded-full flex-shrink-0 object-cover'
         />
-        <p className='text-[length:var(--font-size-ui)] font-bold tracking-[0.05em] text-[var(--color-text-primary)]'>
-          {name}
-        </p>
       </div>
 
       {/* 説明文 */}
-      <p className='text-[length:var(--font-size-caption)] leading-[1.7] text-[var(--color-text-secondary)] mb-3'>
-        {description}
-      </p>
+      {description && (
+        <p className='text-[length:var(--font-size-body)] leading-[1.7] text-[var(--color-text-secondary)] mb-3'>
+          {description}
+        </p>
+      )}
 
       {/* 管理者の一言コメント */}
       {comment && (
         <div className='mb-3'>
-          <span className='block relative text-[length:var(--font-size-caption)] leading-[1.65] text-[var(--color-text-primary)] bg-[var(--color-surface)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
+          <span className='block relative text-[length:var(--font-size-ui)] leading-[1.65] text-[var(--color-text-primary)] bg-[var(--color-surface)] rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
             {comment}
           </span>
         </div>
@@ -67,6 +63,14 @@ export const Profile = ({
           <XIcon width='16' height='16' aria-hidden='true' />
         </Link>
       </div>
+      <div>
+        <Link
+          href="/about"
+          className='text-[length:var(--font-size-ui)] text-[var(--color-primary)] hover:underline'
+        >
+          {t(messages, ['about', 'link'], locale)}
+        </Link>
+      </div>
     </div>
-  )
-}
+  );
+};

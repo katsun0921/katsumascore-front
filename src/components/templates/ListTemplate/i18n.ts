@@ -29,4 +29,4 @@ export const messages = {
     new: { ja: '新着', en: 'New' },
     streaming: { ja: '配信中', en: 'Streaming' },
   },
-} as const
+} as const;

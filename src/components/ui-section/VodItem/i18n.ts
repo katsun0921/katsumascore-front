@@ -8,4 +8,4 @@ export const messages = {
   signup: {
     text: { ja: '未登録の方はこちらから登録できます。', en: 'If you have not yet registered, you can do so here.' },
   },
-} as const
+} as const;

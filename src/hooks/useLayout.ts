@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import breakpoints from '@/styles/tokens/breakpoints.json'
+import { useEffect, useState } from 'react';
+import breakpoints from '@/styles/tokens/breakpoints.json';
 
 export type Layout = 'sm' | 'lg'
 
@@ -11,27 +11,27 @@ export type Layout = 'sm' | 'lg'
 export const useLayout = (): Layout => {
   const [layout, setLayout] = useState<Layout>(() => {
     // breakpoints.json から px値を数値に変換
-    const breakpointValue = parseInt(breakpoints.md, 10)
-    const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`)
-    return mediaQuery.matches ? 'lg' : 'sm'
-  })
+    const breakpointValue = parseInt(breakpoints.md, 10);
+    const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`);
+    return mediaQuery.matches ? 'lg' : 'sm';
+  });
 
   useEffect(() => {
     // breakpoints.json から px値を数値に変換
-    const breakpointValue = parseInt(breakpoints.md, 10)
-    const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`)
+    const breakpointValue = parseInt(breakpoints.md, 10);
+    const mediaQuery = window.matchMedia(`(min-width: ${breakpointValue}px)`);
 
     const handleChange = (e: MediaQueryListEvent) => {
-      setLayout(e.matches ? 'lg' : 'sm')
-    }
+      setLayout(e.matches ? 'lg' : 'sm');
+    };
 
     // メディアクエリの変更をリッスン
-    mediaQuery.addEventListener('change', handleChange)
+    mediaQuery.addEventListener('change', handleChange);
 
     return () => {
-      mediaQuery.removeEventListener('change', handleChange)
-    }
-  }, [])
+      mediaQuery.removeEventListener('change', handleChange);
+    };
+  }, []);
 
-  return layout
-}
+  return layout;
+};

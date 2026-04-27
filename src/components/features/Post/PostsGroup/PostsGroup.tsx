@@ -1,6 +1,6 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import type { Post } from '@/types/post'
+import Image from 'next/image';
+import Link from 'next/link';
+import type { Post } from '@/types/post';
 export type TPostsGroupItem = {
   heading: string
   description?: string
@@ -32,11 +32,11 @@ const PostThumb = ({ post }: { post: Post }) => (
       <span className='p-posts-group__title'>{post.title}</span>
     </Link>
   </li>
-)
+);
 
 export const PostsGroup = ({ groups }: TPostsGroupProps) => {
-  const validGroups = groups.filter((g) => g.posts.length > 0)
-  if (!validGroups.length) return null
+  const validGroups = groups.filter((g) => g.posts.length > 0);
+  if (!validGroups.length) return null;
 
   return (
     <>
@@ -54,5 +54,5 @@ export const PostsGroup = ({ groups }: TPostsGroupProps) => {
         </section>
       ))}
     </>
-  )
-}
+  );
+};

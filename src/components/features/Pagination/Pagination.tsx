@@ -1,6 +1,6 @@
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export type TPaginationProps = {
   currentPage: number
@@ -9,30 +9,30 @@ export type TPaginationProps = {
 }
 
 const btnBase =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]'
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]';
 const btnCurrent =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] [font-size:var(--font-size-ui-lg)] font-bold text-[var(--color-text-inverse)] cursor-default'
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-2 border border-[var(--color-primary)] rounded bg-[var(--color-primary)] [font-size:var(--font-size-ui-lg)] font-bold text-[var(--color-text-inverse)] cursor-default';
 const btnNav =
-  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-sm)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]'
-const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)]'
+  'inline-flex items-center justify-center min-w-[36px] h-[36px] px-3 border border-[var(--color-primary)] rounded bg-[var(--color-bg)] [font-size:var(--font-size-ui-sm)] text-[var(--color-primary)] cursor-pointer transition-[background-color,color,border-color] duration-150 ease-[ease] hover:border-transparent hover:bg-[var(--color-primary)] hover:text-[var(--color-text-inverse)]';
+const ellipsis = 'inline-flex items-center justify-center min-w-[36px] h-[36px] [font-size:var(--font-size-ui-lg)] text-[var(--color-primary)]';
 
 export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginationProps) => {
-  const locale = useLocale()
-  if (totalPages <= 1) return null
+  const locale = useLocale();
+  if (totalPages <= 1) return null;
 
-  const midSize = 3
-  const startPage = Math.max(1, currentPage - midSize)
-  const endPage = Math.min(totalPages, currentPage + midSize)
+  const midSize = 3;
+  const startPage = Math.max(1, currentPage - midSize);
+  const endPage = Math.min(totalPages, currentPage + midSize);
 
-  const pages: (number | '...')[] = []
+  const pages: (number | '...')[] = [];
   if (startPage > 1) {
-    pages.push(1)
-    if (startPage > 2) pages.push('...')
+    pages.push(1);
+    if (startPage > 2) pages.push('...');
   }
-  for (let i = startPage; i <= endPage; i++) pages.push(i)
+  for (let i = startPage; i <= endPage; i++) pages.push(i);
   if (endPage < totalPages) {
-    if (endPage < totalPages - 1) pages.push('...')
-    pages.push(totalPages)
+    if (endPage < totalPages - 1) pages.push('...');
+    pages.push(totalPages);
   }
 
   return (
@@ -71,5 +71,5 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
         )}
       </ul>
     </nav>
-  )
-}
+  );
+};

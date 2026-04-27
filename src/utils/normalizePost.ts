@@ -18,7 +18,7 @@ export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
     publishedAt: post.date,
     ...(score !== undefined ? { score } : {}),
   };
-}
+};
 
 export const normalizePosts = (posts: WPPost[], locale: string = 'ja'): Post[] =>
   posts.map((post) => normalizePost(post, locale));

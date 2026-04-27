@@ -10,6 +10,6 @@ const NotFound = () => {
       <NotFoundTemplate />
     </>
   );
-}
+};
 
 export default NotFound;

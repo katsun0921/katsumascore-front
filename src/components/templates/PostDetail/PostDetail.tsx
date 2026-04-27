@@ -1,16 +1,16 @@
 import { PageLayout } from '@/components/templates/PageLayout';
-import { PostHeader } from '@/components/features/Post/PostHeader'
-import { PostHero } from '@/components/ui-section/PostPage/PostHero'
-import { TitleMeta } from '@/components/features/Post/PostTitleMeta'
-import { GoodPoint } from '@/components/ui-section/PostPage/PostGoodPoint'
-import { TableOfContents } from '@/components/features/Post/TableOfContents'
-import { PostContent } from '@/components/ui-section/PostPage/PostContent'
-import { ReviewSiteScores } from '@/components/features/ReviewSiteScores'
-import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction'
-import { VodIntroduction } from '@/components/ui-section/VodIntroduction'
-import { ShareButtons } from '@/components/ui-parts/ShareButtons'
-import { Sidebar } from '@/components/ui-layout/Sidebar'
-import type { PostDetailProps } from './PostDetail.types'
+import { PostHeader } from '@/components/features/Post/PostHeader';
+import { PostHero } from '@/components/ui-section/PostPage/PostHero';
+import { TitleMeta } from '@/components/features/Post/PostTitleMeta';
+import { GoodPoint } from '@/components/ui-section/PostPage/PostGoodPoint';
+import { TableOfContents } from '@/components/features/Post/TableOfContents';
+import { PostContent } from '@/components/ui-section/PostPage/PostContent';
+import { ReviewSiteScores } from '@/components/features/ReviewSiteScores';
+import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction';
+import { VodIntroduction } from '@/components/ui-section/VodIntroduction';
+import { ShareButtons } from '@/components/ui-parts/ShareButtons';
+import { Sidebar } from '@/components/ui-layout/Sidebar';
+import type { PostDetailProps } from './PostDetail.types';
 
 export const PostDetail = ({ post, genres }: PostDetailProps) => {
   return (
@@ -115,5 +115,5 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
         </div>
       </div>
     </PageLayout>
-  )
-}
+  );
+};

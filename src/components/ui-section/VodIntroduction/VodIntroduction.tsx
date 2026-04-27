@@ -1,11 +1,11 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { PostCardListVertical } from '@/components/ui-section/PostCard'
-import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import type { Post } from '@/types/post'
-import { messages } from './i18n'
+import Image from 'next/image';
+import Link from 'next/link';
+import { PostCardListVertical } from '@/components/ui-section/PostCard';
+import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import type { Post } from '@/types/post';
+import { messages } from './i18n';
 
 type TWrittenFrom = { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
 
@@ -25,17 +25,17 @@ export const VodIntroduction = ({
   publishedAt,
   relatedPosts = [],
 }: TVodIntroductionProps) => {
-  const locale = useLocale()
-  const title = locale === 'en' ? (titleEn || titleJp) : titleJp
+  const locale = useLocale();
+  const title = locale === 'en' ? (titleEn || titleJp) : titleJp;
 
-  const { vodName, vodUrl, vodImageUrl } = writtenFrom
-  const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP'
+  const { vodName, vodUrl, vodImageUrl } = writtenFrom;
+  const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP';
   const dateStr = new Intl.DateTimeFormat(dateLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date(publishedAt))
-  const text = (path: string[]) => t(messages, path, locale)
+  }).format(new Date(publishedAt));
+  const text = (path: string[]) => t(messages, path, locale);
 
   return (
     <section>
@@ -119,5 +119,5 @@ export const VodIntroduction = ({
         {text(['vod', 'note', 'suffix'])}
       </p>
     </section>
-  )
-}
+  );
+};

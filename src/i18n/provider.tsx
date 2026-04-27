@@ -9,11 +9,11 @@
  * Components consume locale via useLocale().
  */
 
-import { createContext, useContext } from 'react'
-import type { ReactNode } from 'react'
-import type { Locale } from './t'
+import { createContext, useContext } from 'react';
+import type { ReactNode } from 'react';
+import type { Locale } from './t';
 
-const I18nContext = createContext<Locale>('ja')
+const I18nContext = createContext<Locale>('ja');
 
 type Props = {
   locale: Locale
@@ -22,6 +22,6 @@ type Props = {
 
 export const I18nProvider = ({ locale, children }: Props) => (
   <I18nContext.Provider value={locale}>{children}</I18nContext.Provider>
-)
+);
 
-export const useLocale = (): Locale => useContext(I18nContext)
+export const useLocale = (): Locale => useContext(I18nContext);

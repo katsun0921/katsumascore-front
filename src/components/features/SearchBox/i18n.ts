@@ -10,4 +10,4 @@ export const messages = {
   heading: {
     label: { ja: 'サイト内検索', en: 'Search' },
   },
-} as const
+} as const;

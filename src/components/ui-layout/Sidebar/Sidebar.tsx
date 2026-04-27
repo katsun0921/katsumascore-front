@@ -1,15 +1,15 @@
-import { Profile } from '@/components/ui-section/Profile'
-import { AdBanner } from '@/components/features/AdBanner'
-import { RelatedPosts } from '@/components/ui-section/RelatedPosts'
-import { PickUpAndScore } from '@/components/features/PickUpAndScore'
-import { GenreNav } from '@/components/features/GenreNav'
-import { SearchBox } from '@/components/features/SearchBox'
-import { RelationPost } from '@/components/features/RelationPost'
-import { StreamingVod } from '@/components/features/StreamingVod'
-import { AdRental } from '@/components/features/AdRental'
-import { PostsGroup } from '@/components/features/Post/PostsGroup'
-import { useLocale } from '@/i18n/provider'
-import type { SidebarProps } from './Sidebar.types'
+import { Profile } from '@/components/ui-section/Profile';
+import { AdBanner } from '@/components/features/AdBanner';
+import { RelatedPosts } from '@/components/ui-section/RelatedPosts';
+import { PickUpAndScore } from '@/components/features/PickUpAndScore';
+import { GenreNav } from '@/components/features/GenreNav';
+import { SearchBox } from '@/components/features/SearchBox';
+import { RelationPost } from '@/components/features/RelationPost';
+import { StreamingVod } from '@/components/features/StreamingVod';
+import { AdRental } from '@/components/features/AdRental';
+import { PostsGroup } from '@/components/features/Post/PostsGroup';
+import { useLocale } from '@/i18n/provider';
+import type { SidebarProps } from './Sidebar.types';
 
 export const Sidebar = ({
   profile,
@@ -27,7 +27,7 @@ export const Sidebar = ({
   rentalServices,
   postsGroups,
 }: SidebarProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
   return (
     <aside className='flex flex-col gap-8 w-full px-4'>
@@ -80,5 +80,5 @@ export const Sidebar = ({
         <PostsGroup groups={postsGroups} />
       )}
     </aside>
-  )
-}
+  );
+};

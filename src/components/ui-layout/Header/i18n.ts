@@ -24,4 +24,4 @@ export const messages = {
       en: 'Find Streaming',
     },
   },
-} as const
+} as const;

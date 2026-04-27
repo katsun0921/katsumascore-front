@@ -1,16 +1,16 @@
-import React from 'react'
-import { ScoreWithRank } from '@/components/features/ScoreWithRank'
-import { useLocale } from '@/i18n/provider'
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay'
+import React from 'react';
+import { ScoreWithRank } from '@/components/features/ScoreWithRank';
+import { useLocale } from '@/i18n/provider';
+import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay';
 export type TGoodPointProps = {
   points: string[]
   score?: number
 }
 
 export const GoodPoint = ({ points, score }: TGoodPointProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  if (!points.length) return null
+  if (!points.length) return null;
 
   return (
     <section className='good-point'>
@@ -30,5 +30,5 @@ export const GoodPoint = ({ points, score }: TGoodPointProps) => {
         </div>
       )}
     </section>
-  )
-}
+  );
+};

@@ -1,21 +1,21 @@
-'use client'
+'use client';
 
-import { useState, type FormEvent } from 'react'
-import { useRouter } from 'next/router'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useState, type FormEvent } from 'react';
+import { useRouter } from 'next/router';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 export const SearchBox = () => {
-  const [query, setQuery] = useState('')
-  const router = useRouter()
-  const locale = useLocale()
+  const [query, setQuery] = useState('');
+  const router = useRouter();
+  const locale = useLocale();
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const trimmed = query.trim()
-    if (!trimmed) return
-    router.push(`/search?q=${encodeURIComponent(trimmed)}`)
-  }
+    e.preventDefault();
+    const trimmed = query.trim();
+    if (!trimmed) return;
+    router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+  };
 
   return (
     <div className='sidebar-search-box'>
@@ -44,5 +44,5 @@ export const SearchBox = () => {
         </button>
       </form>
     </div>
-  )
-}
+  );
+};

@@ -1,17 +1,17 @@
-import React, { useState } from 'react'
-import type { ReactNode } from 'react'
+import React, { useState } from 'react';
+import type { ReactNode } from 'react';
 export type TCarouselProps = {
   items: ReactNode[]
   label?: string
 }
 
 export const Carousel = ({ items, label }: TCarouselProps) => {
-  const [current, setCurrent] = useState(0)
+  const [current, setCurrent] = useState(0);
 
-  if (!items.length) return null
+  if (!items.length) return null;
 
-  const prev = () => setCurrent((c) => (c - 1 + items.length) % items.length)
-  const next = () => setCurrent((c) => (c + 1) % items.length)
+  const prev = () => setCurrent((c) => (c - 1 + items.length) % items.length);
+  const next = () => setCurrent((c) => (c + 1) % items.length);
 
   return (
     <div className='p-carousel' aria-label={label || 'Carousel'}>
@@ -64,5 +64,5 @@ export const Carousel = ({ items, label }: TCarouselProps) => {
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};

@@ -1,7 +1,7 @@
-import Link from 'next/link'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import Link from 'next/link';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export type TCinemaIntroductionProps = {
   title: string
@@ -18,14 +18,14 @@ export const CinemaIntroduction = ({
   cinemaUrl,
   officialUrl,
 }: TCinemaIntroductionProps) => {
-  const locale = useLocale()
-  const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP'
+  const locale = useLocale();
+  const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP';
   const dateStr = new Intl.DateTimeFormat(dateLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(new Date(publishedAt))
-  const text = (path: string[]) => t(messages, path, locale)
+  }).format(new Date(publishedAt));
+  const text = (path: string[]) => t(messages, path, locale);
 
   return (
     <section>
@@ -72,5 +72,5 @@ export const CinemaIntroduction = ({
         )}
       </p>
     </section>
-  )
-}
+  );
+};

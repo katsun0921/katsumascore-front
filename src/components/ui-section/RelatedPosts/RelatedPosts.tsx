@@ -1,8 +1,8 @@
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import type { PostCardKind } from '@/components/ui-section/PostCard';
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export type RelatedPostItem = {
   slug: string
@@ -17,9 +17,9 @@ export type RelatedPostsProps = {
 }
 
 export const RelatedPosts = ({ posts, kind }: RelatedPostsProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  if (posts.length === 0) return null
+  if (posts.length === 0) return null;
 
   return (
     <div className='p-4 bg-[var(--color-bg)] border border-[var(--color-border)] rounded-lg'>
@@ -39,5 +39,5 @@ export const RelatedPosts = ({ posts, kind }: RelatedPostsProps) => {
         }))}
       />
     </div>
-  )
-}
+  );
+};

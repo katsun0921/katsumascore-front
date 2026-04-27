@@ -4,4 +4,4 @@ export type AdRentalConfig = {
 
 export const adRentalConfig: AdRentalConfig = {
   headingSuffix: 'はレンタルサービスでレンタル中です。',
-}
+};

@@ -1,8 +1,8 @@
-import Link from 'next/link'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { getGenreIcon } from './genreIconMap'
-import { messages } from './i18n'
+import Link from 'next/link';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { getGenreIcon } from './genreIconMap';
+import { messages } from './i18n';
 export type GenreNavTag = {
   slug: string
   name: string
@@ -16,9 +16,9 @@ export type GenreNavProps = {
 }
 
 export const GenreNav = ({ tags, activeSlug }: GenreNavProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  if (tags.length === 0) return null
+  if (tags.length === 0) return null;
 
   return (
     <div className='sidebar-genre-nav'>
@@ -27,8 +27,8 @@ export const GenreNav = ({ tags, activeSlug }: GenreNavProps) => {
       </p>
       <ul className='sidebar-genre-nav__grid'>
         {tags.map((tag) => {
-          const icon = getGenreIcon(tag.slug)
-          const isActive = tag.slug === activeSlug
+          const icon = getGenreIcon(tag.slug);
+          const isActive = tag.slug === activeSlug;
 
           return (
             <li key={tag.slug} className='sidebar-genre-nav__cell'>
@@ -44,9 +44,9 @@ export const GenreNav = ({ tags, activeSlug }: GenreNavProps) => {
                 <span className='sidebar-genre-nav__label'>{tag.name}</span>
               </Link>
             </li>
-          )
+          );
         })}
       </ul>
     </div>
-  )
-}
+  );
+};

@@ -27,4 +27,4 @@ export const messages = {
     facebook: { ja: 'Facebook', en: 'Facebook' },
     line: { ja: 'LINE', en: 'LINE' },
   },
-} as const
+} as const;

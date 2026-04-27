@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getRankingIcon } from '@/components/features/ScoreWithRank/getRankingIcon'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useState } from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { getRankingIcon } from '@/components/features/ScoreWithRank/getRankingIcon';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 export type PickUpPost = {
   slug: string
   title: string
@@ -23,9 +23,9 @@ type Tab = 'pickup' | 'highscore'
 
 // ── 各記事行の共通UI
 const PostRow = ({ post }: { post: PickUpPost }) => {
-  const locale = useLocale()
-  const rank = post.score !== undefined ? getRankingIcon(post.score) : null
-  const altText = t(messages, ['thumbnail', 'alt'], locale)
+  const locale = useLocale();
+  const rank = post.score !== undefined ? getRankingIcon(post.score) : null;
+  const altText = t(messages, ['thumbnail', 'alt'], locale);
 
   return (
     <li className='sidebar-picks__item'>
@@ -60,25 +60,25 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
         </div>
       </Link>
     </li>
-  )
-}
+  );
+};
 
 export const PickUpAndScore = ({
   pickupPosts,
   highScorePosts,
 }: PickUpAndScoreProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
   // PICK UP が空なら HIGH SCORE をデフォルトタブにする
-  const defaultTab: Tab = pickupPosts.length > 0 ? 'pickup' : 'highscore'
-  const [activeTab, setActiveTab] = useState<Tab>(defaultTab)
+  const defaultTab: Tab = pickupPosts.length > 0 ? 'pickup' : 'highscore';
+  const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
 
   // 両方空なら非表示
-  if (pickupPosts.length === 0 && highScorePosts.length === 0) return null
+  if (pickupPosts.length === 0 && highScorePosts.length === 0) return null;
 
-  const showPickupTab    = pickupPosts.length > 0
-  const showHighscoreTab = highScorePosts.length > 0
-  const currentPosts     = activeTab === 'pickup' ? pickupPosts : highScorePosts
+  const showPickupTab    = pickupPosts.length > 0;
+  const showHighscoreTab = highScorePosts.length > 0;
+  const currentPosts     = activeTab === 'pickup' ? pickupPosts : highScorePosts;
 
   return (
     <div className='sidebar-picks'>
@@ -119,5 +119,5 @@ export const PickUpAndScore = ({
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};

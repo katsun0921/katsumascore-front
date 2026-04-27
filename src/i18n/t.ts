@@ -17,27 +17,27 @@ export type LeafNode = { ja: string; en: string }
 export type MessageTree = { [key: string]: MessageTree | LeafNode }
 
 const isLeaf = (node: MessageTree | LeafNode): node is LeafNode =>
-  typeof (node as LeafNode).ja === 'string'
+  typeof (node as LeafNode).ja === 'string';
 
 export const t = (
   messages: MessageTree | LeafNode,
   path: string[],
   locale: Locale = 'ja',
 ): string => {
-  let current: MessageTree | LeafNode = messages
+  let current: MessageTree | LeafNode = messages;
 
   for (const key of path) {
     if (typeof current !== 'object' || current === null || !(key in current)) {
-      console.warn(`[i18n] Missing key: "${path.join('.')}"`)
-      return path[path.length - 1] ?? ''
+      console.warn(`[i18n] Missing key: "${path.join('.')}"`);
+      return path[path.length - 1] ?? '';
     }
-    current = (current as MessageTree)[key]
+    current = (current as MessageTree)[key];
   }
 
   if (!isLeaf(current)) {
-    console.warn(`[i18n] Path "${path.join('.')}" does not point to a leaf node.`)
-    return path[path.length - 1] ?? ''
+    console.warn(`[i18n] Path "${path.join('.')}" does not point to a leaf node.`);
+    return path[path.length - 1] ?? '';
   }
 
-  return current[locale] ?? current['ja']
-}
+  return current[locale] ?? current['ja'];
+};

@@ -1,2 +1,2 @@
-export { CinemaIntroduction } from './CinemaIntroduction'
-export type { TCinemaIntroductionProps } from './CinemaIntroduction'
+export { CinemaIntroduction } from './CinemaIntroduction';
+export type { TCinemaIntroductionProps } from './CinemaIntroduction';

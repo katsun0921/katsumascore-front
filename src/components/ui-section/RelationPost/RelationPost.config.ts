@@ -11,4 +11,4 @@ export const relationPostConfig: Record<RelationPostLocale, RelationPostMessages
   en: {
     heading: 'Related Posts',
   },
-}
+};

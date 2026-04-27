@@ -1,16 +1,16 @@
-import type { Post } from '@/types/post'
-import type { TocItem } from '@/lib/toc'
-import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta'
-import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores'
-import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
-import type { TRentalService } from '@/components/features/AdRental/AdRental'
-import type { TRelationPostItem } from '@/components/features/RelationPost'
-import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
-import type { TVodIntroductionProps } from '@/components/ui-section/VodIntroduction'
-import type { TCinemaIntroductionProps } from '@/components/ui-section/CinemaIntroduction'
-import type { ProfileProps } from '@/components/ui-section/Profile'
-import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore'
-import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav'
+import type { Post } from '@/types/post';
+import type { TocItem } from '@/lib/toc';
+import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta';
+import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores';
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod';
+import type { TRentalService } from '@/components/features/AdRental/AdRental';
+import type { TRelationPostItem } from '@/components/features/RelationPost';
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup';
+import type { TVodIntroductionProps } from '@/components/ui-section/VodIntroduction';
+import type { TCinemaIntroductionProps } from '@/components/ui-section/CinemaIntroduction';
+import type { ProfileProps } from '@/components/ui-section/Profile';
+import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
+import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 
 export type PostDetailData = Post & {
   // コンテンツ

@@ -10,4 +10,4 @@ export const messages = {
     label: { ja: '次のページ', en: 'Next page' },
     text: { ja: '次へ »', en: 'Next »' },
   },
-} as const
+} as const;

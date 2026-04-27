@@ -7,4 +7,4 @@ export const messages = {
     facebook: { ja: 'Facebookでシェア', en: 'Share on Facebook' },
     line: { ja: 'LINEでシェア', en: 'Share on LINE' },
   },
-} as const
+} as const;

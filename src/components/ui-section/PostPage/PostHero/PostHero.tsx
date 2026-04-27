@@ -1,8 +1,8 @@
-import Image from 'next/image'
-import { VideoEmbed } from '@/components/ui-parts/VideoEmbed'
-import { t } from '@/i18n/t'
-import { useLocale } from '@/i18n/provider'
-import { messages } from './i18n'
+import Image from 'next/image';
+import { VideoEmbed } from '@/components/ui-parts/VideoEmbed';
+import { t } from '@/i18n/t';
+import { useLocale } from '@/i18n/provider';
+import { messages } from './i18n';
 export type PostHeroProps = {
   title: string
   trailerYoutubeId?: string
@@ -14,11 +14,11 @@ export type PostHeroProps = {
 }
 
 export const PostHero = (props: PostHeroProps) => {
-  const locale = useLocale()
-  const prefixClassName = 'post-hero'
+  const locale = useLocale();
+  const prefixClassName = 'post-hero';
   const videoUrl = props.trailerYoutubeId
     ? `https://www.youtube.com/embed/${props.trailerYoutubeId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`
-    : undefined
+    : undefined;
 
   return (
     <section className={prefixClassName}>
@@ -62,5 +62,5 @@ export const PostHero = (props: PostHeroProps) => {
         )}
       </div>
     </section>
-  )
-}
+  );
+};

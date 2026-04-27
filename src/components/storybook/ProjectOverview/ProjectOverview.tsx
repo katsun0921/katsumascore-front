@@ -1,37 +1,37 @@
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export const ProjectOverview = () => {
-  const locale = useLocale()
+  const locale = useLocale();
   const pillars = [
     messages.pillars.headlessWordpress,
     messages.pillars.storybookFirstUi,
     messages.pillars.roleBasedStyling,
-  ]
+  ];
   const directoryGuide = [
     messages.directoryGuide.ui,
     messages.directoryGuide.features,
     messages.directoryGuide.layout,
     messages.directoryGuide.templates,
     messages.directoryGuide.docs,
-  ]
+  ];
   const sectionEntries = [
     messages.sections.purpose,
     messages.sections.reading,
     messages.sections.rules,
-  ]
+  ];
   const flowSteps = [
     messages.flow.steps.first,
     messages.flow.steps.second,
     messages.flow.steps.third,
     messages.flow.steps.fourth,
-  ]
+  ];
   const nextSteps = [
     messages.nextSteps.designRules,
     messages.nextSteps.typography,
     messages.nextSteps.chaos,
-  ]
+  ];
 
   return (
     <div className='sb-project-overview'>
@@ -109,5 +109,5 @@ export const ProjectOverview = () => {
         ))}
       </section>
     </div>
-  )
-}
+  );
+};

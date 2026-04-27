@@ -1,4 +1,4 @@
-import { publicAssetUrl } from '@/lib/publicAssetUrl'
+import { publicAssetUrl } from '@/lib/publicAssetUrl';
 
 /**
  * スコア値に基づいてランキングアイコンのパスを返す
@@ -27,22 +27,22 @@ const RANK_MAP: RankRange[] = [
   { min: 3.0, max: 4.0, icon: 'icon-rank-a.png', label: 'A' },
   { min: 4.0, max: 4.5, icon: 'icon-rank-s.png', label: 'S' },
   { min: 4.5, max: 5.0, icon: 'icon-rank-ss.png', label: 'SS' },
-]
+];
 
-const ICONS_BASE_PATH = '/images/icons/'
+const ICONS_BASE_PATH = '/images/icons/';
 
 export const getRankingIcon = (value: number): { src: string; label: RankLabel } | null => {
   for (const range of RANK_MAP) {
     if (value >= range.min && value < range.max) {
-      return { src: publicAssetUrl(`${ICONS_BASE_PATH}${range.icon}`), label: range.label }
+      return { src: publicAssetUrl(`${ICONS_BASE_PATH}${range.icon}`), label: range.label };
     }
   }
   // 最大値 5.0 の場合
   if (value === 5.0) {
-    return { src: publicAssetUrl(`${ICONS_BASE_PATH}icon-rank-ss.png`), label: 'SS' }
+    return { src: publicAssetUrl(`${ICONS_BASE_PATH}icon-rank-ss.png`), label: 'SS' };
   }
-  return null
-}
+  return null;
+};
 
 type RankColorClasses = { text: string; bg: string }
 
@@ -52,7 +52,7 @@ export const getRankScoreColorClasses = (rank: RankLabel | null): RankColorClass
     return {
       text: 'text-[var(--color-text-primary)]',
       bg: 'bg-[var(--color-text-primary)]',
-    }
+    };
   }
   const map: Record<RankLabel, RankColorClasses> = {
     C:  { text: 'text-[var(--color-score-rank-low)]',  bg: 'bg-[var(--color-score-rank-low)]'  },
@@ -60,6 +60,6 @@ export const getRankScoreColorClasses = (rank: RankLabel | null): RankColorClass
     A:  { text: 'text-[var(--color-score-rank-mid)]',  bg: 'bg-[var(--color-score-rank-mid)]'  },
     S:  { text: 'text-[var(--color-score-rank-high)]', bg: 'bg-[var(--color-score-rank-high)]' },
     SS: { text: 'text-[var(--color-score-accent)]',    bg: 'bg-[var(--color-score-accent)]'    },
-  }
-  return map[rank]
-}
+  };
+  return map[rank];
+};

@@ -1,4 +1,5 @@
 export const messages = {
+  description: { ja: '独自スコアでレビューするブログを運営しています。', en: '' },
   avatar: {
     alt: { ja: 'プロフィール画像', en: 'Profile image' },
   },
@@ -6,6 +7,6 @@ export const messages = {
     label: { ja: '一言コメント', en: 'Comment' },
   },
   about: {
-    link: { ja: '詳しいプロフィール', en: 'About me' },
+    link: { ja: 'このサイトについて詳しく知る', en: 'About This Site' },
   },
-} as const
+} as const;

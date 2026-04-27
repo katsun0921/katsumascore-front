@@ -1,11 +1,11 @@
-import type { TRelationPostItem } from '@/components/features/RelationPost'
-import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod'
-import type { TRentalService } from '@/components/features/AdRental/AdRental'
-import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup'
-import type { ProfileProps } from '@/components/ui-section/Profile'
-import type { AdBannerProps } from '@/components/features/AdBanner/AdBanner'
-import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore'
-import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav'
+import type { TRelationPostItem } from '@/components/features/RelationPost';
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod';
+import type { TRentalService } from '@/components/features/AdRental/AdRental';
+import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup';
+import type { ProfileProps } from '@/components/ui-section/Profile';
+import type { AdBannerProps } from '@/components/features/AdBanner/AdBanner';
+import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
+import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 export type SidebarProps = {
   // ❶ プロフィールカード
   profile?: ProfileProps

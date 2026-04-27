@@ -5,11 +5,11 @@ type CategoryProps = {
 
 const sizeClasses: Partial<Record<NonNullable<CategoryProps['size']>, string>> = {
   small: 'px-5 py-2 text-[length:var(--font-size-caption-lg)] leading-[var(--font-size-caption-lg)]',
-}
+};
 
 export const Category = ({ label, size }: CategoryProps) => {
-  const base = 'inline-block px-5 py-2 [transform:skewX(-8deg)] bg-[var(--color-category)] text-white text-[length:var(--font-size-ui-lg)] font-medium text-center'
-  const extra = size ? (sizeClasses[size] ?? '') : ''
+  const base = 'inline-block px-5 py-2 [transform:skewX(-8deg)] bg-[var(--color-category)] text-white text-[length:var(--font-size-ui-lg)] font-medium text-center';
+  const extra = size ? (sizeClasses[size] ?? '') : '';
 
-  return <div className={[base, extra].filter(Boolean).join(' ')}>{label}</div>
-}
+  return <div className={[base, extra].filter(Boolean).join(' ')}>{label}</div>;
+};

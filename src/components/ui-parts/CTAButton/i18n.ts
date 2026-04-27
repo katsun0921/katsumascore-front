@@ -5,4 +5,4 @@ export const messages = {
       en: 'Streaming',
     },
   },
-} as const
+} as const;

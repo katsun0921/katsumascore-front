@@ -1,6 +1,6 @@
-import { TsutayaAd } from '@/components/ui-parts/Affiliate/Tsutaya'
-import { GeoAd } from '@/components/ui-parts/Affiliate/Geo'
-import type { AdRentalProps } from './AdRental.types'
+import { TsutayaAd } from '@/components/ui-parts/Affiliate/Tsutaya';
+import { GeoAd } from '@/components/ui-parts/Affiliate/Geo';
+import type { AdRentalProps } from './AdRental.types';
 
 export const AdRental = ({ heading }: AdRentalProps) => (
   <div className='mt-[var(--space-32)]'>
@@ -16,4 +16,4 @@ export const AdRental = ({ heading }: AdRentalProps) => (
       </li>
     </ul>
   </div>
-)
+);

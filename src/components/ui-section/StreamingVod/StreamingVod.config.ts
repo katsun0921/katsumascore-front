@@ -17,4 +17,4 @@ export const streamingVodConfig: Record<StreamingVodLocale, StreamingVodMessages
     headingPrefix: 'You can access ',
     headingSuffix: ' through various video distribution services.',
   },
-}
+};

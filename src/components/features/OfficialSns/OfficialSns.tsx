@@ -1,9 +1,9 @@
-'use client'
+'use client';
 
-import { useEffect, useRef, useState } from 'react'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useEffect, useRef, useState } from 'react';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 export type TabId = 'x' | 'youtube' | 'instagram'
 
 export type OfficialSnsProps = {
@@ -24,44 +24,44 @@ export type OfficialSnsProps = {
 // X アカウント URL からスクリーンネームを抽出
 const extractXScreenName = (url: string): string | null => {
   try {
-    const pathname = new URL(url).pathname
-    const name = pathname.replace(/^\//, '').split('/')[0]
-    return name || null
+    const pathname = new URL(url).pathname;
+    const name = pathname.replace(/^\//, '').split('/')[0];
+    return name || null;
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 // YouTube の通常 URL / 短縮 URL から embed URL を生成
 const toYoutubeEmbedUrl = (url: string): string | null => {
   try {
-    const parsed = new URL(url)
-    let videoId: string | null = null
+    const parsed = new URL(url);
+    let videoId: string | null = null;
 
     if (parsed.hostname === 'youtu.be') {
-      videoId = parsed.pathname.replace(/^\//, '')
+      videoId = parsed.pathname.replace(/^\//, '');
     } else if (parsed.hostname.includes('youtube.com')) {
-      videoId = parsed.searchParams.get('v')
+      videoId = parsed.searchParams.get('v');
     }
 
     return videoId
       ? `https://www.youtube.com/embed/${videoId}?rel=0`
-      : null
+      : null;
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 // Instagram アカウント URL からユーザー名を抽出
 const extractInstagramUsername = (url: string): string | null => {
   try {
-    const pathname = new URL(url).pathname
-    const name = pathname.replace(/^\//, '').split('/')[0]
-    return name || null
+    const pathname = new URL(url).pathname;
+    const name = pathname.replace(/^\//, '').split('/')[0];
+    return name || null;
   } catch {
-    return null
+    return null;
   }
-}
+};
 
 export const OfficialSns = ({
   snsUrl,
@@ -71,58 +71,58 @@ export const OfficialSns = ({
   forceVisible = false,
   forceLoading = false,
 }: OfficialSnsProps) => {
-  const locale = useLocale()
-  const containerRef = useRef<HTMLDivElement>(null)
-  const [isVisible, setIsVisible] = useState(forceVisible)
-  const [isLoading, setIsLoading] = useState(true)
+  const locale = useLocale();
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(forceVisible);
+  const [isLoading, setIsLoading] = useState(true);
 
   // 利用可能なタブを導出
-  const xScreenName = snsUrl ? extractXScreenName(snsUrl) : null
-  const youtubeEmbedUrl = youtubeUrl ? toYoutubeEmbedUrl(youtubeUrl) : null
-  const instagramUsername = instagramUrl ? extractInstagramUsername(instagramUrl) : null
+  const xScreenName = snsUrl ? extractXScreenName(snsUrl) : null;
+  const youtubeEmbedUrl = youtubeUrl ? toYoutubeEmbedUrl(youtubeUrl) : null;
+  const instagramUsername = instagramUrl ? extractInstagramUsername(instagramUrl) : null;
 
   const availableTabs: TabId[] = [
     ...(xScreenName ? (['x'] as TabId[]) : []),
     ...(youtubeEmbedUrl ? (['youtube'] as TabId[]) : []),
     ...(instagramUsername ? (['instagram'] as TabId[]) : []),
-  ]
+  ];
 
   const defaultTab: TabId =
     initialTab && availableTabs.includes(initialTab)
       ? initialTab
-      : availableTabs[0] ?? 'x'
+      : availableTabs[0] ?? 'x';
 
-  const [activeTab, setActiveTab] = useState<TabId>(defaultTab)
+  const [activeTab, setActiveTab] = useState<TabId>(defaultTab);
 
   // タブ切替時に Skeleton をリセット
   const handleTabChange = (tab: TabId) => {
-    if (tab === activeTab) return
-    setActiveTab(tab)
-    setIsLoading(true)
-  }
+    if (tab === activeTab) return;
+    setActiveTab(tab);
+    setIsLoading(true);
+  };
 
   // IntersectionObserver で遅延読み込み
   useEffect(() => {
-    if (forceVisible || availableTabs.length === 0) return
+    if (forceVisible || availableTabs.length === 0) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
+          setIsVisible(true);
+          observer.disconnect();
         }
       },
       { rootMargin: '200px' },
-    )
+    );
 
-    if (containerRef.current) observer.observe(containerRef.current)
-    return () => observer.disconnect()
+    if (containerRef.current) observer.observe(containerRef.current);
+    return () => observer.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
-  if (availableTabs.length === 0) return null
+  if (availableTabs.length === 0) return null;
 
-  const showSkeleton = forceLoading || isLoading
+  const showSkeleton = forceLoading || isLoading;
 
   return (
     <div className='official-sns' ref={containerRef}>
@@ -224,5 +224,5 @@ export const OfficialSns = ({
         )}
       </div>
     </div>
-  )
-}
+  );
+};

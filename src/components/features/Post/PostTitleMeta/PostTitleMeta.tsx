@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { OfficialSns } from '@/components/features/OfficialSns'
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import Link from 'next/link';
+import { OfficialSns } from '@/components/features/OfficialSns';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 export type TStudioEntry = {
   name: string
   href?: string
@@ -43,22 +43,22 @@ export const TitleMeta = ({
   credits,
   actors,
 }: TTitleMetaProps) => {
-  const locale = useLocale()
-  let parsedDate: string | null = null
+  const locale = useLocale();
+  let parsedDate: string | null = null;
   if (releaseDate && releaseDate.length === 8) {
-    const y = releaseDate.slice(0, 4)
-    const m = releaseDate.slice(4, 6)
-    const d = releaseDate.slice(6, 8)
+    const y = releaseDate.slice(0, 4);
+    const m = releaseDate.slice(4, 6);
+    const d = releaseDate.slice(6, 8);
     parsedDate =
       locale === 'en'
         ? new Date(`${y}-${m}-${d}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-        : `${y}${t(messages, ['date', 'yearSuffix'], locale)}${parseInt(m)}${t(messages, ['date', 'monthSuffix'], locale)}${parseInt(d)}${t(messages, ['date', 'daySuffix'], locale)}`
+        : `${y}${t(messages, ['date', 'yearSuffix'], locale)}${parseInt(m)}${t(messages, ['date', 'monthSuffix'], locale)}${parseInt(d)}${t(messages, ['date', 'daySuffix'], locale)}`;
   }
 
-  const hasSns = officialSns && Object.values(officialSns).some((v) => v?.link)
-  const hasCredits = credits && credits.length > 0
-  const hasActors = actors && actors.length > 0
-  const hasOfficialInfo = officialUrl || hasSns || parsedDate
+  const hasSns = officialSns && Object.values(officialSns).some((v) => v?.link);
+  const hasCredits = credits && credits.length > 0;
+  const hasActors = actors && actors.length > 0;
+  const hasOfficialInfo = officialUrl || hasSns || parsedDate;
 
   return (
     <div className='p-title-meta'>
@@ -162,5 +162,5 @@ export const TitleMeta = ({
         </div>
       )}
     </div>
-  )
-}
+  );
+};

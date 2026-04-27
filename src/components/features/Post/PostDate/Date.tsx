@@ -1,4 +1,4 @@
-import { useLocale } from '@/i18n/provider'
+import { useLocale } from '@/i18n/provider';
 
 export type TDateProps = {
   publishedAt: string
@@ -6,19 +6,19 @@ export type TDateProps = {
 }
 
 const formatDate = (dateStr: string, locale: 'ja' | 'en'): { display: string; datetime: string } => {
-  const date = new Date(dateStr)
-  const datetime = date.toISOString().split('T')[0]
+  const date = new Date(dateStr);
+  const datetime = date.toISOString().split('T')[0];
   const display =
     locale === 'en'
       ? date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-      : `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`
-  return { display, datetime }
-}
+      : `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
+  return { display, datetime };
+};
 
 export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
-  const locale = useLocale()
-  const published = formatDate(publishedAt, locale)
-  const updated = updatedAt ? formatDate(updatedAt, locale) : null
+  const locale = useLocale();
+  const published = formatDate(publishedAt, locale);
+  const updated = updatedAt ? formatDate(updatedAt, locale) : null;
 
   return (
     <div className='flex flex-col gap-1 text-[length:var(--font-size-ui-sm)] text-[var(--color-text-secondary)]'>
@@ -35,5 +35,5 @@ export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
         </time>
       </p>
     </div>
-  )
-}
+  );
+};

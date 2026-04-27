@@ -5,7 +5,7 @@ export type VideoEmbedProps = {
 }
 
 export const VideoEmbed = ({ videoUrl, embedCode, title }: VideoEmbedProps) => {
-  if (!videoUrl && !embedCode) return null
+  if (!videoUrl && !embedCode) return null;
 
   return (
     <div className='w-full'>
@@ -25,5 +25,5 @@ export const VideoEmbed = ({ videoUrl, embedCode, title }: VideoEmbedProps) => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

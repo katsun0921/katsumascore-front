@@ -67,34 +67,11 @@ npm run build
 
 ## 環境変数（本番）
 
-### 必須
+§1（本番環境変数・シークレット運用）は、専用ドキュメントへ分離した。
 
-| 変数 | 説明 |
-|------|------|
-| `WP_API_URL` | WordPress REST のベース URL。**末尾は `/wp-json/wp/v2`（末尾スラッシュなし推奨）**。未設定時は `wpFetch` が即 `null` を返す。 |
-
-参照: [`.env.example`](../../.env.example)（ローカル用。本番は上記ドメインに置き換える）
-
-**本番の例（値はデプロイ環境のシークレットに設定）:**
-
-```bash
-WP_API_URL=https://katsumascore.blog/wp-json/wp/v2
-NEXT_PUBLIC_WP_BASE_URL=https://katsumascore.blog
-```
-
-### 本番で値の整合が必要な関連変数
-
-API 直結ではないが、ページ内容・サイトマップ・ホーム構成に影響する。
-
-| 変数 | 用途 |
-|------|------|
-| `NEXT_PUBLIC_WP_BASE_URL` | WP サイトの公開 URL（画像・リンク等） |
-| `NEXT_PUBLIC_SITE_URL` | フロントの正規 URL（OG・canonical 等） |
-| `WP_SEASONAL_REVIEW_PARENT_ID` | 季節レビュー親固定ページ ID（[`seasonal-reviews/`](../../src/pages/seasonal-reviews/index.tsx)、[`server-sitemap.xml`](../../src/pages/server-sitemap.xml.tsx)） |
-| `WP_TOP_PAGE_SLUG` | トップ相当固定ページのスラッグ（既定: `top`）([`top.tsx`](../../src/pages/top.tsx)) |
-| `WP_FEATURED_CATEGORY_SLUG` | 特集カテゴリスラッグ（既定: `featured`）([`featured.tsx`](../../src/pages/featured.tsx)) |
-| `WP_ANIME_CATEGORY_ID` | 数値 ID が分かる場合はアニメカテゴリに使用（未設定時はスラッグ `anime` 等で解決）([`homeStaticProps.ts`](../../src/lib/homeStaticProps.ts)) |
-| `WP_MOVIE_CATEGORY_SLUG` | 映画カテゴリスラッグ（既定: `movie-ja`） |
+- 手順・運用: [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md)
+- チェック更新先: [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md)
+- ローカル雛形: [`.env.example`](../../.env.example)
 
 ---
 
@@ -244,6 +221,9 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 ## 関連（フェーズ 7・その他）
 
 - [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md) — TODO チェックリスト（進捗はここを更新）
+- [wordpress_production_api_operations_log.md](./wordpress_production_api_operations_log.md) — 実行ログ（証跡）
+- [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md) — §1 本番環境変数・シークレット運用
+- [polylang_rest_lang_issue.md](./polylang_rest_lang_issue.md) — §2.1 Polylang `lang` 判定の現状と切り分け
 - [README.md](../../README.md) — 「本番対応（フェーズ 7）」: ISR Webhook、Cloudflare 本番検証
 - [docs/migration-plan.md](../migration-plan.md) — フェーズ 7 の詳細項目（広告・パフォーマンス等は別途）
 - [docs/archive/api-integration-plan.md](../archive/api-integration-plan.md) — lib/api 基盤・ページ接続の完了記録（参考）

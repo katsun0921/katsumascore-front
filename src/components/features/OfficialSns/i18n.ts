@@ -11,4 +11,4 @@ export const messages = {
   iframe: {
     youtubeTitle: { ja: '公式 YouTube', en: 'Official YouTube' },
   },
-} as const
+} as const;

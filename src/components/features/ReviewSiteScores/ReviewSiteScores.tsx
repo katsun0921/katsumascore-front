@@ -1,5 +1,5 @@
-import React from 'react'
-import { useLocale } from '@/i18n/provider'
+import React from 'react';
+import { useLocale } from '@/i18n/provider';
 export type ReviewSiteId = 'imdb' | 'rt-critics' | 'rt-audience' | 'filmarks' | 'eiga-com'
 
 export type TReviewSite = {
@@ -18,7 +18,7 @@ export type TReviewSiteScoresProps = {
   publishedDate?: string
 }
 
-const SITE_ORDER: ReviewSiteId[] = ['imdb', 'rt-critics', 'rt-audience', 'filmarks', 'eiga-com']
+const SITE_ORDER: ReviewSiteId[] = ['imdb', 'rt-critics', 'rt-audience', 'filmarks', 'eiga-com'];
 
 const SITE_CONFIG: Record<
   ReviewSiteId,
@@ -59,50 +59,50 @@ const SITE_CONFIG: Record<
     unit: ' /5',
     modifier: 'p-review-scores__fill--eiga-com',
   },
-}
+};
 
 const formatDate = (value: string, locale: 'ja' | 'en') => {
-  let date: Date
+  let date: Date;
 
   if (/^\d{8}$/.test(value)) {
-    date = new Date(Number(value.slice(0, 4)), Number(value.slice(4, 6)) - 1, Number(value.slice(6, 8)))
+    date = new Date(Number(value.slice(0, 4)), Number(value.slice(4, 6)) - 1, Number(value.slice(6, 8)));
   } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const [year, month, day] = value.split('-').map(Number)
-    date = new Date(year, month - 1, day)
+    const [year, month, day] = value.split('-').map(Number);
+    date = new Date(year, month - 1, day);
   } else {
-    date = new Date(value)
+    date = new Date(value);
   }
 
   if (Number.isNaN(date.getTime())) {
-    return value
+    return value;
   }
 
   return new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'ja-JP', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-  }).format(date)
-}
+  }).format(date);
+};
 
 const formatScore = (score: number, maxScore: number) => {
-  if (maxScore === 100) return String(Math.round(score))
-  return Number.isInteger(score) ? String(score) : score.toFixed(1)
-}
+  if (maxScore === 100) return String(Math.round(score));
+  return Number.isInteger(score) ? String(score) : score.toFixed(1);
+};
 
 export const ReviewSiteScores = ({
   sites,
   updatedAt,
   publishedDate,
 }: TReviewSiteScoresProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
   const validSites = sites
     .filter((site) => site.score > 0)
-    .sort((a, b) => SITE_ORDER.indexOf(a.siteId) - SITE_ORDER.indexOf(b.siteId))
+    .sort((a, b) => SITE_ORDER.indexOf(a.siteId) - SITE_ORDER.indexOf(b.siteId));
 
-  if (!validSites.length) return null
+  if (!validSites.length) return null;
 
-  const datedAt = updatedAt ?? publishedDate
-  const formattedDate = datedAt ? formatDate(datedAt, locale) : null
+  const datedAt = updatedAt ?? publishedDate;
+  const formattedDate = datedAt ? formatDate(datedAt, locale) : null;
 
   return (
     <section className='p-review-scores'>
@@ -111,12 +111,12 @@ export const ReviewSiteScores = ({
       </h2>
       <ul className='p-review-scores__list'>
         {validSites.map((site) => {
-          const config = SITE_CONFIG[site.siteId]
-          const maxScore = site.maxScore ?? config.maxScore
-          const unit = site.unit ?? config.unit
-          const label = site.label ?? (locale === 'en' ? config.labelEn : config.labelJa)
-          const fillPercent = Math.max(0, Math.min((site.score / maxScore) * 100, 100))
-          const scoreText = `${formatScore(site.score, maxScore)}${unit}`
+          const config = SITE_CONFIG[site.siteId];
+          const maxScore = site.maxScore ?? config.maxScore;
+          const unit = site.unit ?? config.unit;
+          const label = site.label ?? (locale === 'en' ? config.labelEn : config.labelJa);
+          const fillPercent = Math.max(0, Math.min((site.score / maxScore) * 100, 100));
+          const scoreText = `${formatScore(site.score, maxScore)}${unit}`;
 
           return (
             <li key={site.siteId} className='p-review-scores__item'>
@@ -148,7 +148,7 @@ export const ReviewSiteScores = ({
               </div>
               <p className='p-review-scores__summary'>{site.summary}</p>
             </li>
-          )
+          );
         })}
       </ul>
       {formattedDate && (
@@ -159,5 +159,5 @@ export const ReviewSiteScores = ({
         </p>
       )}
     </section>
-  )
-}
+  );
+};

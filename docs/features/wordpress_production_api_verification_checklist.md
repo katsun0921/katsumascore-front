@@ -47,8 +47,8 @@
 
 - [x] ACF が **5.11 以降**である（または同等の REST 露出がコードで担保されている）
 - [x] 投稿用フィールドグループで **Show in REST API** が **Yes**（ロケーションが通常の**投稿**を含む）
-- [ ] テーマ／プラグインに `acf/settings/rest_api_enabled` → `__return_false` が**無い**
-- [ ] キャッシュ・最適化プラグインをフラッシュし、REST レスポンスで `acf` が落ちていない
+- [x] テーマ／プラグインに `acf/settings/rest_api_enabled` → `__return_false` が**無い**
+- [x] キャッシュ・最適化プラグインをフラッシュし、REST レスポンスで `acf` が落ちていない
 - [x] ブラウザで `.../wp/v2/posts/<ID>?_embed=1&acf_format=standard&lang=ja` を開き **`acf` がオブジェクト**で `review_score` 等が入っている
 - [x] 取得した 1 件以上で ACF・レビュー系が [`wordpress.transform.ts`](../../src/lib/api/wordpress.transform.ts) と整合している
 
@@ -84,5 +84,4 @@
 
 <!-- 日付・担当・ステージング URL・ブロッカーなど -->
 
-- 2026-04-26: `verify:wp-api` / `verify:wp-section2` は本番 `WP_API_URL` で成功。Polylang は `lang=ja/en` 先頭スラッグ一致の警告あり（要切り分け継続）。
-- 2026-04-26: §4 ローカルスモークは `WP_FEATURED_CATEGORY_SLUG=anime` / `WP_SEASONAL_REVIEW_PARENT_ID=10481` を付与して確認。`/posts/[slug]` は実在スラッグでも 404 が継続（未解決）。
+- 詳細ログ: [wordpress_production_api_operations_log.md](./wordpress_production_api_operations_log.md)

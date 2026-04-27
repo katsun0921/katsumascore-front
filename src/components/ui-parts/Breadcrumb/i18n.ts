@@ -5,4 +5,4 @@ export const messages = {
   separator: {
     aria: { ja: 'セパレーター', en: 'separator' },
   },
-} as const
+} as const;

@@ -1,4 +1,4 @@
-import type { VodPanelProps } from './VodPanel.types'
+import type { VodPanelProps } from './VodPanel.types';
 
 export const VodPanel = (props: VodPanelProps) => {
   if (props.variant === 'cinema') {
@@ -9,7 +9,7 @@ export const VodPanel = (props: VodPanelProps) => {
         </span>
         <p className='m-0 text-[length:var(--font-size-ui-lg)] text-[var(--color-text-secondary)]'>{props.note}</p>
       </div>
-    )
+    );
   }
 
   return (
@@ -25,5 +25,5 @@ export const VodPanel = (props: VodPanelProps) => {
         ))}
       </ul>
     </div>
-  )
-}
+  );
+};

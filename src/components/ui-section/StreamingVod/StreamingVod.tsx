@@ -1,4 +1,4 @@
-import type { StreamingVodProps } from './StreamingVod.types'
+import type { StreamingVodProps } from './StreamingVod.types';
 
 export const StreamingVod = ({ heading, items }: StreamingVodProps) => (
   <section className='mt-[var(--space-32)]'>
@@ -11,4 +11,4 @@ export const StreamingVod = ({ heading, items }: StreamingVodProps) => (
       ))}
     </ul>
   </section>
-)
+);

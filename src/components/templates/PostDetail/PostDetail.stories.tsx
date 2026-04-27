@@ -143,7 +143,6 @@ const basePost: PostDetailData = {
   shareUrl: 'https://example.com/posts/hanataba-review',
   profile: {
     name: 'Katsuma',
-    description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
     comment: '最近はSF映画にハマってます。特にクリストファー・ノーラン作品は何度見ても飽きません！',
     avatarUrl: '/images/mock-avatar.webp',
     aboutUrl: '/about',

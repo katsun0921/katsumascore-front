@@ -1,4 +1,4 @@
-import type { PostCardKind } from '@/components/ui-section/PostCard'
+import type { PostCardKind } from '@/components/ui-section/PostCard';
 
 export type RelationPostItem = {
   id: number

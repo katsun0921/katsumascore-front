@@ -5,4 +5,4 @@ export const messages = {
   thumbnail: {
     alt: { ja: '記事サムネイル', en: 'Article thumbnail' },
   },
-} as const
+} as const;

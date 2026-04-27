@@ -84,6 +84,7 @@ const eslintConfig = defineConfig([
     files: ['src/**/*.ts', 'src/**/*.tsx'],
     ignores: ['**/*.stories.tsx', '**/*.stories.ts'],
     rules: {
+      semi: ['error', 'always'],
       'no-restricted-syntax': [
         'error',
         {

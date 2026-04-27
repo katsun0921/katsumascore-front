@@ -1,6 +1,6 @@
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export type TShareButtonsProps = {
   url: string
@@ -8,9 +8,9 @@ export type TShareButtonsProps = {
 }
 
 export const ShareButtons = ({ url, title }: TShareButtonsProps) => {
-  const locale = useLocale()
-  const encodedUrl = encodeURIComponent(url)
-  const encodedTitle = encodeURIComponent(title)
+  const locale = useLocale();
+  const encodedUrl = encodeURIComponent(url);
+  const encodedTitle = encodeURIComponent(title);
 
   return (
     <div className='flex flex-wrap items-center gap-3'>
@@ -53,5 +53,5 @@ export const ShareButtons = ({ url, title }: TShareButtonsProps) => {
         </li>
       </ul>
     </div>
-  )
-}
+  );
+};

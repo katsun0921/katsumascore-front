@@ -6,23 +6,23 @@
  */
 const viteBaseUrl = (): string => {
   try {
-    const env = (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env
-    const base = env?.BASE_URL
-    if (typeof base === 'string') return base
+    const env = (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env;
+    const base = env?.BASE_URL;
+    if (typeof base === 'string') return base;
   } catch {
     /* non-Vite */
   }
-  return '/'
-}
+  return '/';
+};
 
 export const publicAssetUrl = (path: string): string => {
   if (/^https?:\/\//i.test(path)) {
-    return path
+    return path;
   }
-  const clean = path.startsWith('/') ? path : `/${path}`
-  const base = viteBaseUrl()
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  const base = viteBaseUrl();
   if (base !== '/' && base !== '') {
-    return `${base.replace(/\/$/, '')}${clean}`
+    return `${base.replace(/\/$/, '')}${clean}`;
   }
-  return clean
-}
+  return clean;
+};

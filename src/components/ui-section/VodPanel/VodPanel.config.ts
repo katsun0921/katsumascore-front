@@ -20,4 +20,4 @@ export const vodPanelConfig: Record<VodPanelLocale, VodPanelMessages> = {
     listHeading: 'Streaming Services',
     listHeadingSuffix: '',
   },
-}
+};

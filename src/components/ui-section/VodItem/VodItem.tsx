@@ -1,7 +1,7 @@
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/lib/vod'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/lib/vod';
+import { messages } from './i18n';
 
 /** @deprecated VodService を使用してください */
 export type TVodService = VodService
@@ -23,10 +23,10 @@ export const VodItem = ({
   unregisteredText,
   isPaid = false,
 }: TVodItemProps) => {
-  const locale = useLocale()
-  const label = VOD_LABEL[service]
-  const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale)
-  const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale)
+  const locale = useLocale();
+  const label = VOD_LABEL[service];
+  const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale);
+  const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale);
 
   return (
     <div
@@ -59,5 +59,5 @@ export const VodItem = ({
         {defaultStreamingText}
       </a>
     </div>
-  )
-}
+  );
+};

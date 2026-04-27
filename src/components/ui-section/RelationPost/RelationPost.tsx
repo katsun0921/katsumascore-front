@@ -1,9 +1,9 @@
-import type { PostCardKind } from '@/components/ui-section/PostCard'
+import type { PostCardKind } from '@/components/ui-section/PostCard';
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
-import type { RelationPostProps } from './RelationPost.types'
+import type { RelationPostProps } from './RelationPost.types';
 
 export const RelationPost = ({ heading, posts, kind }: RelationPostProps) => {
-  const postKind: PostCardKind = 'imgOver'
+  const postKind: PostCardKind = 'imgOver';
   return (
     <section>
       <h2 className='mb-4 text-[length:var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-[var(--color-text-primary)]'>
@@ -21,5 +21,5 @@ export const RelationPost = ({ heading, posts, kind }: RelationPostProps) => {
         }))}
       />
     </section>
-  )
-}
+  );
+};

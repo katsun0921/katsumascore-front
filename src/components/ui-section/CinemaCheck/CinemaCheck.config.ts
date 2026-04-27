@@ -17,4 +17,4 @@ export const cinemaCheckConfig: Record<CinemaCheckLocale, CinemaCheckMessages> =
     fallbackTitle: 'This title',
     messageSuffix: ' is currently showing in theaters.',
   },
-}
+};

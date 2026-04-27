@@ -12,12 +12,12 @@ const variantClasses: Record<TBadgeVariant, string> = {
   netflix: 'bg-[var(--color-netflix)] text-[var(--color-text-inverse)]',
   amazon: 'bg-[var(--color-amazon)] text-[var(--color-text-inverse)]',
   unext: 'bg-[var(--color-unext)] text-[var(--color-text-inverse)] border border-[var(--color-border-muted)]',
-}
+};
 
 export const Badge = ({ label, variant = 'default' }: TBadgeProps) => {
   return (
     <span className={`inline-block rounded-[3px] px-3 py-1 text-[length:var(--font-size-caption-lg)] font-bold leading-[1.4] ${variantClasses[variant]}`}>
       {label}
     </span>
-  )
-}
+  );
+};

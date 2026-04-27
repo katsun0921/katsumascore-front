@@ -55,4 +55,4 @@ export const messages = {
       en: ' site for the latest information.',
     },
   },
-} as const
+} as const;

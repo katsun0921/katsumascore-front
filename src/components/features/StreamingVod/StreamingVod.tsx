@@ -1,8 +1,8 @@
-import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod'
-import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config'
-import { VodItem } from '@/components/ui-section/VodItem'
-import { useLocale } from '@/i18n/provider'
-import type { VodService as TVodService } from '@/lib/vod'
+import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod';
+import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config';
+import { VodItem } from '@/components/ui-section/VodItem';
+import { useLocale } from '@/i18n/provider';
+import type { VodService as TVodService } from '@/lib/vod';
 
 export type TStreamingVodEntry = {
   service: TVodService
@@ -18,13 +18,13 @@ export type TStreamingVodProps = {
 }
 
 export const StreamingVod = ({ titleJp, titleEn, services }: TStreamingVodProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  if (!services.length) return null
+  if (!services.length) return null;
 
-  const title = locale === 'en' ? titleEn : titleJp
-  const { defaultHeading, headingPrefix, headingSuffix } = streamingVodConfig[locale]
-  const heading = title ? `${headingPrefix}${title}${headingSuffix}` : defaultHeading
+  const title = locale === 'en' ? titleEn : titleJp;
+  const { defaultHeading, headingPrefix, headingSuffix } = streamingVodConfig[locale];
+  const heading = title ? `${headingPrefix}${title}${headingSuffix}` : defaultHeading;
   const items = services.map((entry, index) => (
     <VodItem
       key={`${entry.service}-${index}`}
@@ -33,7 +33,7 @@ export const StreamingVod = ({ titleJp, titleEn, services }: TStreamingVodProps)
       signupUrl={entry.signupUrl}
       isPaid={entry.isPaid}
     />
-  ))
+  ));
 
-  return <StreamingVodSection heading={heading} items={items} />
-}
+  return <StreamingVodSection heading={heading} items={items} />;
+};

@@ -1,6 +1,6 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { publicAssetUrl } from '@/lib/publicAssetUrl'
+import Image from 'next/image';
+import Link from 'next/link';
+import { publicAssetUrl } from '@/lib/publicAssetUrl';
 
 export type TProductType = 'vod' | 'shopping'
 
@@ -21,24 +21,24 @@ export type TProductBlockProps = {
 const VOD_LABELS: Record<string, string> = {
   amazon_prime: 'Amazon Prime Video',
   netflix: 'Netflix',
-}
+};
 
 const SHOPPING_LABELS: Record<string, string> = {
   amazon: 'Amazon',
   rakuten: '楽天',
-}
+};
 
 const SITE_BG: Record<string, string> = {
   amazon_prime: 'bg-[var(--color-amazon)]',
   netflix: 'bg-[var(--color-netflix)]',
   amazon: 'bg-[var(--color-amazon-shopping)]',
   rakuten: 'bg-[var(--color-rakuten)]',
-}
+};
 
 const borderColor: Record<TProductType, string> = {
   vod: 'border-l-[var(--color-product-vod)]',
   shopping: 'border-l-[var(--color-product-commerce)]',
-}
+};
 
 export const ProductBlock = ({
   type,
@@ -48,8 +48,8 @@ export const ProductBlock = ({
   imageAlt,
   links,
 }: TProductBlockProps) => {
-  const siteLabels = type === 'vod' ? VOD_LABELS : SHOPPING_LABELS
-  const linkCta = type === 'vod' ? 'で視聴' : 'で購入'
+  const siteLabels = type === 'vod' ? VOD_LABELS : SHOPPING_LABELS;
+  const linkCta = type === 'vod' ? 'で視聴' : 'で購入';
 
   return (
     <div
@@ -98,5 +98,5 @@ export const ProductBlock = ({
         </div>
       </div>
     </div>
-  )
-}
+  );
+};

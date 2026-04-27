@@ -1,7 +1,7 @@
-import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost'
-import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config'
-import { useLocale } from '@/i18n/provider'
-import type { PostCardKind } from '@/components/ui-section/PostCard'
+import { RelationPost as RelationPostSection } from '@/components/ui-section/RelationPost';
+import { relationPostConfig } from '@/components/ui-section/RelationPost/RelationPost.config';
+import { useLocale } from '@/i18n/provider';
+import type { PostCardKind } from '@/components/ui-section/PostCard';
 
 export type TRelationPostItem = {
   id: number
@@ -17,9 +17,9 @@ export type TRelationPostProps = {
 }
 
 export const RelationPost = ({ posts, kind }: TRelationPostProps) => {
-  const locale = useLocale()
+  const locale = useLocale();
 
-  if (!posts.length) return null
+  if (!posts.length) return null;
 
-  return <RelationPostSection heading={relationPostConfig[locale].heading} posts={posts} kind={kind} />
-}
+  return <RelationPostSection heading={relationPostConfig[locale].heading} posts={posts} kind={kind} />;
+};

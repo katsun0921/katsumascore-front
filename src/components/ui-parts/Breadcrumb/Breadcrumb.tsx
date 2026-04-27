@@ -1,6 +1,6 @@
-import { useLocale } from '@/i18n/provider'
-import { t } from '@/i18n/t'
-import { messages } from './i18n'
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 
 export type TBreadcrumbItem = {
   label: string
@@ -12,14 +12,14 @@ export type TBreadcrumbProps = {
 }
 
 export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
-  const locale = useLocale()
-  if (!items.length) return null
+  const locale = useLocale();
+  if (!items.length) return null;
 
   return (
     <nav aria-label={t(messages, ['nav', 'label'], locale)}>
       <ol className='flex flex-wrap items-center gap-1 p-0 m-0 text-[length:var(--font-size-ui-sm)]'>
         {items.map((item, index) => {
-          const isLast = index === items.length - 1
+          const isLast = index === items.length - 1;
           return (
             <li key={index} className='flex items-center gap-1'>
               {!isLast && item.href ? (
@@ -36,9 +36,9 @@ export const Breadcrumb = ({ items }: TBreadcrumbProps) => {
               )}
               {!isLast && <span className='text-[var(--color-text-secondary)]' aria-hidden='true'>/</span>}
             </li>
-          )
+          );
         })}
       </ol>
     </nav>
-  )
-}
+  );
+};
