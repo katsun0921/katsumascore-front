@@ -18,9 +18,6 @@ export type PostDetailData = Post & {
   titleEn?: string
   updatedAt?: string
 
-  // PostHeader 用メタ情報
-  rating?: string
-
   // PostHero 用
   trailerYoutubeId?: string
   trailerEmbedCode?: string

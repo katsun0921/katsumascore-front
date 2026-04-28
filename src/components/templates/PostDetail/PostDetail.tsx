@@ -25,7 +25,6 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
           filmStudios={post.TitleMeta?.filmStudios}
           productionStudios={post.TitleMeta?.productionStudios}
           releaseDate={post.TitleMeta?.releaseDate}
-          rating={post.rating}
           copyright={post.TitleMeta?.copyright}
           score={post.score}
           comment={post.authorComment}

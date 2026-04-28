@@ -11,7 +11,6 @@ const basePost: PostDetailData = {
   ...mockPost,
   title: '花束みたいな恋をした',
   titleEn: 'A Bouquet of Clumsy Words',
-  rating: 'G',
   authorComment: '東京の空気と若者のリアルな感情を丁寧に描いた、令和の恋愛映画の傑作。余韻が長く残る作品。',
   trailerYoutubeId: 'hLRMHi73BzQ',
   updatedAt: '2026-04-03',
