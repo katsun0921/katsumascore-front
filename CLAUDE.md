@@ -143,6 +143,7 @@ components/
 - `<img>` タグの使用 → `<Image>` from `next/image` を使用
 - `style` propの直接使用 → featuresからのpropsとして受け取る場合のみ許可
 - `function` キーワードによる関数宣言 → Arrow関数のみ使用する（`.tsx` / `.ts` すべてに適用）
+- 三項演算子・条件分岐の複雑化 → `const x = a > 0 ? b : c` のような単純な三項演算子と、1回のみの `if / else` のみを許可する。ネストした三項演算子・複数の `if-else if` チェーン・`switch` 文は禁止
 
 ---
 
