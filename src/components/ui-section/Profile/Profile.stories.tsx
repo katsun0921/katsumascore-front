@@ -20,13 +20,7 @@ export default meta;
 type Story = StoryObj<typeof meta>
 
 const baseArgs = {
-  name: 'Katsuma',
   comment: '最近はSF映画にハマってます。特にクリストファー・ノーラン作品は何度見ても飽きません！',
-  avatarUrl: '/images/mock-avatar.webp',
-  aboutUrl: '/about',
-  social: {
-    x: 'https://x.com/Katsun0921',
-  },
 };
 
 export const Default: Story = {
@@ -38,11 +32,11 @@ export const NoComment: Story = {
 };
 
 export const NoSocial: Story = {
-  args: { ...baseArgs, social: undefined },
+  args: baseArgs,
 };
 
 export const Minimal: Story = {
-  args: { ...baseArgs, comment: undefined, social: undefined },
+  args: { ...baseArgs, comment: undefined },
 };
 
 export const LongComment: Story = {

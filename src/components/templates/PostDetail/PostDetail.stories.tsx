@@ -142,13 +142,7 @@ const basePost: PostDetailData = {
   ],
   shareUrl: 'https://example.com/posts/hanataba-review',
   profile: {
-    name: 'Katsuma',
     comment: '最近はSF映画にハマってます。特にクリストファー・ノーラン作品は何度見ても飽きません！',
-    avatarUrl: '/images/mock-avatar.webp',
-    aboutUrl: '/about',
-    social: {
-      x: 'https://x.com/Katsun0921',
-    },
   },
 };
 

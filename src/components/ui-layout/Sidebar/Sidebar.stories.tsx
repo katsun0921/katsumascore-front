@@ -38,14 +38,7 @@ const mockPostsGroups = [
 ];
 
 const mockProfile = {
-  name: 'Katsuma',
-  description: '映画好きのKatsumaが独自スコアでレビューするブログ。年間200本以上鑑賞。',
   comment: '最近はSF映画にハマってます！インターステラーは何度見ても泣けます。',
-  avatarUrl: '/images/mock-avatar.webp',
-  aboutUrl: '/about',
-  social: {
-    x: 'https://x.com/Katsun0921',
-  },
 };
 
 // ── ❶ Profile + ❻ 関連記事 + ❷ VOD + ❹ レンタル + ❼ PostsGroup 全部入り

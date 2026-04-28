@@ -5,15 +5,10 @@ import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import ProfileImg from '@assets/images/profile.webp';
 import { XIcon } from '@/assets/icons';
+import { profileConfig } from './Profile.config';
 
 export type ProfileProps = {
-  name: string
   comment?: string
-  avatarUrl?: string
-  aboutUrl: string
-  social?: {
-    x?: string
-  }
 }
 
 export const Profile = ({
@@ -23,53 +18,61 @@ export const Profile = ({
   const description = t(messages, ['description'], locale);
 
   return (
-    <div className='p-5 bg-color-bg border border-color-border rounded-lg'>
-      {/* アバター */}
-      <div className='flex items-center gap-3 mb-3'>
+    <div className='p-5 bg-color-bg border border-color-border rounded-lg flex flex-col gap-5'>
+      <div className='flex items-center gap-3'>
         <Image
           src={ProfileImg}
           alt={t(messages, ['avatar', 'alt'], locale)}
           width={72}
           height={72}
-          className='rounded-full flex-shrink-0 object-cover'
+          className='rounded-full flex-shrink-0 object-cover ring-2 ring-color-border'
         />
-      </div>
-      {/* SNSリンク */}
-      <div className='flex gap-2 mb-3'>
-        <Link
-          href="https://x.com/Katsun0921"
-          target='_blank'
-          rel='noreferrer'
-          className='flex items-center justify-center w-8 h-8 rounded-full bg-x text-color-inverse transition-[opacity,transform] duration-200 ease hover:opacity-80 hover:scale-110'
-          aria-label='X (Twitter)'
-        >
-          <XIcon width='16' height='16' aria-hidden='true' />
-        </Link>
+
+        <div className='flex flex-col'>
+          <p className='text-ui font-medium text-color-primary'>
+            {profileConfig.admin}
+          </p>
+        </div>
       </div>
 
-      {/* 管理者の一言コメント */}
       {comment && (
-        <div className='mb-3'>
-          <span className='block relative text-ui leading-[1.65] text-color-primary bg-surface rounded-[0_8px_8px_8px] p-3 before:content-[""] before:absolute before:top-0 before:-left-2 before:border-[0_8px_8px_0] before:border-solid before:border-[transparent_var(--color-surface)_transparent_transparent]'>
-            {comment}
+        <div className='border-t border-color-border pt-3'>
+          <span className='block text-ui text-color-secondary mb-1'>
+            From Review
           </span>
+          <p className='italic text-color-secondary line-clamp-3'>
+            “{comment}”
+          </p>
         </div>
       )}
 
-      {/* 説明文 */}
       {description && (
-        <p className='text-body leading-[1.7] text-color-secondary mb-3'>
+        <p className='text-body text-color-secondary leading-relaxed'>
           {description}
         </p>
       )}
-      <div>
-        <Link
-          href="/about"
-          className='text-ui text-primary hover:underline'
-        >
-          {t(messages, ['about', 'link'], locale)}
-        </Link>
-      </div>
+      <Link
+        href={profileConfig.aboutUrl}
+        className='inline-block bg-primary text-color-inverse text-ui font-medium px-4 py-2.5 rounded-md text-center transition hover:opacity-90'
+        aria-label='スコアの仕組みを見る'
+      >
+        {t(messages, ['about', 'link'], locale)}
+      </Link>
+
+        <div className='flex items-center gap-2'>
+          <span className='text-ui text-color-secondary tracking-wide'>
+            Follow Me
+          </span>
+          <Link
+            href={profileConfig.social.x}
+            target='_blank'
+            rel='noreferrer'
+            className='flex items-center justify-center w-8 h-8 rounded-full bg-x text-color-inverse transition-[opacity,transform] duration-200 ease hover:opacity-80 hover:scale-110'
+            aria-label='X (Twitter)'
+          >
+            <XIcon width='16' height='16' aria-hidden='true' />
+          </Link>
+        </div>
     </div>
   );
 };

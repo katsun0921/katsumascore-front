@@ -142,12 +142,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
   }));
 
   const profile = {
-    name: 'Katsuma',
-    avatarUrl: '/images/mock-avatar.webp',
-    aboutUrl: '/about',
-    social: {
-      x: 'https://x.com/Katsun0921',
-    },
   };
 
   return {
