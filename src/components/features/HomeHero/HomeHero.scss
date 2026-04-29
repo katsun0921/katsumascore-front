@@ -2,6 +2,21 @@
 
 .homeHero {
   position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      to top,
+      rgba(10, 6, 24, 0.9) 0%,
+      rgba(10, 6, 24, 0.6) 40%,
+      rgba(10, 6, 24, 0.2) 70%
+    );
+  }
 
   /* ─── 背景 ─── */
   &__bg {
@@ -38,26 +53,29 @@
     opacity: 0.8;
     pointer-events: none;
     @include layout-md {
-      height: clamp(364px, 50vw, calc(464px + (48px * 2)));
+      height: clamp(364px, 50vw, calc(364px + (48px * 2)));
     }
   }
 
   /* ─── レイアウト ─── */
   &__inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    padding: 48px 20px 40px;
-    gap: 40px;
+    padding: 36px 20px 24px;
+    gap: 20px;
 
     @include layout-md {
       flex-direction: row;
-      padding: 48px 56px;
-      gap: 64px;
+      align-items: flex-end;
+      padding-top: 48px;
+      padding-bottom: 56px;
+      padding-inline: 56px;
+      gap: 48px;
     }
   }
 
@@ -65,80 +83,82 @@
   &__left {
     display: flex;
     flex-direction: column;
-    gap: 32px;
-    align-items: center;
-    text-align: center;
+    gap: 20px;
+    align-items: flex-start;
+    text-align: left;
     z-index: 2;
+    width: 100%;
 
     @include layout-md {
       flex: 1;
-      max-width: 480px;
-      align-items: flex-start;
-      text-align: left;
+      max-width: 520px;
     }
   }
 
   /* スコアブロック */
   &__scoreBlock {
     display: flex;
-    align-items: center;
-    gap: 20px;
+    align-items: flex-start;
     opacity: 0;
   }
 
-  &__hexWrap {
-    position: relative;
-    width: 96px;
-    height: 96px;
-    flex-shrink: 0;
-
-    svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-  }
-
-  &__hexPath {
-    fill: none;
-    stroke: var(--color-score-accent);
-    stroke-width: 2;
-    stroke-dasharray: 400;
-    stroke-dashoffset: 400;
-  }
-
-  &__scoreVal {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-ui);
-    font-size: 32px;
-    font-weight: 900;
-    color: var(--color-score-accent);
-  }
-
-  &__scoreMeta {
+  &__scoreCard {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
+    min-width: 132px;
+    padding: 12px 18px;
+    border-radius: 12px;
+    border: 1px solid rgba(var(--color-white-rgb), 0.28);
+    background: linear-gradient(180deg, rgba(20, 18, 35, 0.78) 0%, rgba(20, 18, 35, 0.58) 100%);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.38);
+    backdrop-filter: blur(8px);
   }
 
   &__scoreLabel {
     font-family: var(--font-ui);
     font-size: 10px;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(var(--color-white-rgb), 0.55);
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: rgba(var(--color-white-rgb), 0.72);
+  }
+
+  &__scoreVal {
+    font-family: var(--font-ui);
+    font-size: 38px;
+    font-weight: 900;
+    line-height: 1;
+    color: var(--color-score-accent);
+    text-shadow: 0 0 14px rgba(255, 70, 216, 0.4);
+  }
+
+  &__rank--ss .homeHero__scoreVal,
+  &__rank--ss .homeHero__scoreRank {
+    color: var(--color-score-accent);
+  }
+
+  &__rank--s .homeHero__scoreVal,
+  &__rank--s .homeHero__scoreRank {
+    color: var(--color-score-rank-high);
+  }
+
+  &__rank--a .homeHero__scoreVal,
+  &__rank--a .homeHero__scoreRank {
+    color: var(--color-score-rank-mid);
+  }
+
+  &__rank--b .homeHero__scoreVal,
+  &__rank--b .homeHero__scoreRank,
+  &__rank--c .homeHero__scoreVal,
+  &__rank--c .homeHero__scoreRank {
+    color: var(--color-score-rank-low);
   }
 
   &__scoreRank {
     font-family: var(--font-ui);
-    font-size: 13px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.14em;
     color: var(--color-score-accent);
   }
 
@@ -148,13 +168,30 @@
     flex-direction: column;
     gap: 0;
     opacity: 0;
+    max-width: 520px;
   }
 
   &__copy {
-    font-size: 13px;
-    letter-spacing: 0.14em;
-    color: rgba(var(--color-white-rgb), 0.55);
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0.06em;
+    color: rgba(var(--color-white-rgb), 0.9);
     margin-bottom: 8px;
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.55);
+  }
+
+  &__copySub {
+    display: none;
+    margin: 0 0 8px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: rgba(var(--color-white-rgb), 0.72);
+
+    @include layout-md {
+      display: block;
+    }
   }
 
   &__title {
@@ -163,8 +200,11 @@
     font-weight: 700;
     color: var(--color-text-inverse);
     line-height: 1.15;
-    white-space: nowrap;
-    margin-bottom: 20px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    margin: 0 0 16px;
+    text-shadow: 0 6px 24px rgba(0, 0, 0, 0.58);
   }
 
   &__readReview {
@@ -178,10 +218,12 @@
     text-transform: uppercase;
     color: var(--color-score-accent);
     text-decoration: none;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(255, 45, 252, 0.3);
-    transition: border-color 0.2s;
-    align-self: center;
+    padding: 10px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 45, 252, 0.58);
+    background: rgba(17, 14, 30, 0.46);
+    transition: border-color 0.2s, background-color 0.2s, color 0.2s;
+    align-self: flex-start;
 
     @include layout-md {
       align-self: flex-start;
@@ -189,6 +231,8 @@
 
     &:hover {
       border-color: var(--color-score-accent);
+      background: rgba(255, 45, 252, 0.22);
+      color: var(--color-text-inverse);
     }
   }
 
@@ -204,6 +248,11 @@
   /* ─── Right: Swiper ─── */
   &__right {
     flex-shrink: 0;
+    align-self: center;
+
+    @include layout-md {
+      align-self: flex-end;
+    }
   }
 
   &__swiper {
@@ -222,5 +271,9 @@
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
     background: var(--color-surface-dark);
     position: relative;
+  }
+
+  &__swiperImage {
+    object-fit: cover;
   }
 }

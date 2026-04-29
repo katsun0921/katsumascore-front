@@ -9,6 +9,7 @@ import type { Swiper as SwiperInstance } from 'swiper';
 import { gsap } from 'gsap';
 import 'swiper/swiper.css';
 import 'swiper/css/effect-cards';
+
 export type HomeHeroSlide = {
   title: string;
   copy: string;
@@ -24,12 +25,12 @@ export type HomeHeroProps = {
 
 const SWIPER_MODULES = [EffectCards, Autoplay];
 
-const RANK_COLORS: Record<string, string> = {
-  SS: 'var(--color-score-accent)',
-  S:  'var(--color-score-rank-high)',
-  A:  'var(--color-score-rank-mid)',
-  B:  'var(--color-score-rank-low)',
-  C:  'var(--color-score-rank-low)',
+const RANK_CLASS_MAP: Record<HomeHeroSlide['rank'], string> = {
+  SS: 'homeHero__rank--ss',
+  S: 'homeHero__rank--s',
+  A: 'homeHero__rank--a',
+  B: 'homeHero__rank--b',
+  C: 'homeHero__rank--c',
 };
 
 export const HomeHero = ({ slides }: HomeHeroProps) => {
@@ -37,7 +38,6 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
 
   const scoreBlockRef    = useRef<HTMLDivElement>(null);
   const textBlockRef     = useRef<HTMLDivElement>(null);
-  const hexPathRef       = useRef<SVGPathElement>(null);
   const scoreNumRef      = useRef<HTMLDivElement>(null);
   const swiperRef        = useRef<SwiperInstance | null>(null);
   const tlRef            = useRef<gsap.core.Timeline | null>(null);
@@ -46,6 +46,8 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const prefixClassName = 'homeHero';
 
   const current = slides[activeIndex] ?? slides[0];
+  const rankClassName = RANK_CLASS_MAP[current.rank] ?? RANK_CLASS_MAP.A;
+  const shortCopy = current.copy.length > 22 ? `${current.copy.slice(0, 22)}...` : current.copy;
 
   const animateOut = (onComplete: () => void) => {
     if (tlRef.current) tlRef.current.kill();
@@ -53,7 +55,6 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
       opacity: 0, y: 12, duration: 0.25,
       onComplete,
     });
-    gsap.set(hexPathRef.current, { strokeDashoffset: 400 });
   };
 
   const animateIn = (score: number) => {
@@ -62,8 +63,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
     const counter = { val: 0 };
     const tl = gsap.timeline();
     tlRef.current = tl;
-    tl.to(hexPathRef.current, { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
-      .to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '-=0.4')
+    tl.to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '+=0.05')
       .to(counter, {
         val: score,
         duration: 1.0,
@@ -78,7 +78,6 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   // 初回登場
   useEffect(() => {
     gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
-    gsap.set(hexPathRef.current, { strokeDashoffset: 400 });
     const initTl = gsap.timeline({ delay: 0.3 });
     initTl.call(() => {
       hasInitializedRef.current = true;
@@ -128,36 +127,25 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
         {/* Left: テキスト */}
         <div className={`${prefixClassName}__left`}>
           {/* スコア */}
-          <div className={`${prefixClassName}__scoreBlock`} ref={scoreBlockRef}>
-            <div className={`${prefixClassName}__hexWrap`}>
-              <svg viewBox='0 0 100 100' aria-label={`スコア ${current.score} ランク ${current.rank}`}>
-                <path
-                  ref={hexPathRef}
-                  className={`${prefixClassName}__hexPath`}
-                  d='M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z'
-                />
-              </svg>
-              <div
-                ref={scoreNumRef}
-                className={`${prefixClassName}__scoreVal`}
-                style={{ color: RANK_COLORS[current.rank] }}
-              >
+          <div className={`${prefixClassName}__scoreBlock ${rankClassName}`} ref={scoreBlockRef}>
+            <div className={`${prefixClassName}__scoreCard`}>
+              <span className={`${prefixClassName}__scoreLabel`}>KATSUMASCORE</span>
+              <div ref={scoreNumRef} className={`${prefixClassName}__scoreVal`}>
                 {current.score.toFixed(1)}
               </div>
-            </div>
-            <div className={`${prefixClassName}__scoreMeta`}>
-              <span className={`${prefixClassName}__scoreRank`} style={{ color: RANK_COLORS[current.rank] }}>
+              <span className={`${prefixClassName}__scoreRank`}>
                 {current.rank} RANK
               </span>
-            </div>
+            </div>            
           </div>
 
           {/* テキスト */}
           <div className={`${prefixClassName}__textBlock`} ref={textBlockRef}>
-            <p className={`${prefixClassName}__copy`}>{current.copy}</p>
+            <p className={`${prefixClassName}__copy`}>{shortCopy}</p>
+            <p className={`${prefixClassName}__copySub`}>詳細レビューは下部へ</p>
             <h2 className={`${prefixClassName}__title`}>{current.title}</h2>
             <Link href={current.href} className={`${prefixClassName}__readReview`}>
-              レビューを読む
+              レビューを読む →
             </Link>
           </div>
         </div>
@@ -185,7 +173,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
                   alt={slide.title}
                   fill
                   sizes='(max-width: 767px) 220px, 260px'
-                  style={{ objectFit: 'cover' }}
+                  className={`${prefixClassName}__swiperImage`}
                   loading={i === 0 ? 'eager' : 'lazy'}
                 />
               </SwiperSlide>
