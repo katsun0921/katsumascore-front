@@ -33,6 +33,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const rs = wp.acf?.review_score;
   const acfLang = wp.acf?.lang;
   const lang = detectLang(wp.link, acfLang);
+  const isFeatured = wp.acf?.display_settings?.is_featured === true;
   return {
     id: String(wp.id),
     slug: `/posts/${wp.slug}`,
@@ -44,6 +45,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     lang,
     ...(category !== undefined ? { category } : {}),
     ...(rs !== undefined ? { score: rs } : {}),
+    ...(isFeatured ? { isFeatured } : {}),
   };
 };
 

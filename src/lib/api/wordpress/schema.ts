@@ -60,6 +60,13 @@ const rentalRowSchema = z.object({
   url: z.string(),
 });
 
+const displaySettingsSchema = z
+  .object({
+    is_featured: looseBool.optional(),
+  })
+  .passthrough()
+  .optional();
+
 const wpPostAcfObjectSchema = z
   .object({
     lang: z.enum(["ja", "en"]).optional(),
@@ -82,6 +89,7 @@ const wpPostAcfObjectSchema = z
     rental_services: z.array(rentalRowSchema).optional(),
     release_date: z.string().optional(),
     copyright: z.string().optional(),
+    display_settings: displaySettingsSchema,
   })
   .passthrough();
 

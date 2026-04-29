@@ -14,6 +14,7 @@ import {
   getPostsByTagId,
   getCategoryBySlug,
   getChildPages,
+  getFeaturedPages,
 } from "@/lib/api/wordpress";
 import { stripHtml } from "@/lib/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/lib/buildVodFinderItems";
@@ -122,7 +123,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const animeCategoryId = resolveAnimeCategoryId(categories);
 
-  const [animeRaw, movieCategory, recommendBlockRows, seasonalChildren] = await Promise.all([
+  const [animeRaw, movieCategory, recommendBlockRows, seasonalChildren, featuredPages] = await Promise.all([
     animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId, lang }) : Promise.resolve([]),
     getCategoryBySlug(movieSlug, lang),
     Promise.all(
@@ -138,18 +139,28 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
       ? getChildPages(Number(seasonalParentRaw), lang)
       : Promise.resolve([]),
+    getFeaturedPages(lang),
   ]);
 
   const animePosts = toMappedPosts(animeRaw, lang);
   const recommendBlocks = recommendBlockRows.filter((b) => b.posts.length > 0);
 
-  const movieRaw = movieCategory
+  const featuredItemsFromPages: FeaturedItem[] = featuredPages.map((p, i) => ({
+    label: "FEATURED",
+    title: stripHtml(p.title.rendered),
+    description: stripHtml(p.title.rendered),
+    href: `/${p.slug}`,
+    isPrimary: i === 0,
+  }));
+
+  const movieRaw = featuredItemsFromPages.length === 0 && movieCategory
     ? await getPosts({ per_page: 6, category: movieCategory.id, lang })
     : [];
   const moviePosts = toMappedPosts(movieRaw, lang);
   const featuredSource =
     moviePosts.length > 0 ? moviePosts : [...pool].sort(sortByDateDesc).slice(0, 6);
-  const featuredItems = toFeaturedItems(featuredSource);
+  const featuredItems =
+    featuredItemsFromPages.length > 0 ? featuredItemsFromPages : toFeaturedItems(featuredSource);
 
   const seasonItems = mapWpPagesToSeasonItems(seasonalChildren);
 

@@ -158,9 +158,6 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
             <h2 className={`${prefixClassName}__title`}>{current.title}</h2>
             <Link href={current.href} className={`${prefixClassName}__readReview`}>
               レビューを読む
-              <span className={`${prefixClassName}__readReviewArrow`} aria-hidden='true'>
-                →
-              </span>
             </Link>
           </div>
         </div>

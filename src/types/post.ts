@@ -12,6 +12,7 @@ export type Post = {
   lang?: "ja" | "en";
   category?: string;
   score?: number;
+  isFeatured?: boolean;
   vods?: VodService[];
   year?: number;
 };

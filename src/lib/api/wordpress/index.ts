@@ -14,7 +14,7 @@ export { getCategories, getCategoryBySlug } from "./endpoints/categories";
 
 export { getTags, pickRandomTags } from "./endpoints/tags";
 
-export { getChildPages, getPageBySlug } from "./endpoints/pages";
+export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
 export { stripHtml, mapWPPostToPost, parseWPPostUnknown } from "./transform";
 

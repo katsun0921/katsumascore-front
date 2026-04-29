@@ -2,6 +2,36 @@ import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
 
+type WPPageWithAcf = {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  link?: string;
+  acf?: {
+    display_settings?: {
+      is_featured?: boolean;
+      feature_priority?: number | string;
+      feature_type?: string;
+    };
+  };
+};
+
+const BASE_URL = process.env.WP_API_URL?.replace(/\/+$/, "") ?? "";
+
+export const getFeaturedPages = async (lang?: string): Promise<WPPageWithAcf[]> => {
+  if (!BASE_URL) return [];
+  const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,acf" });
+  if (lang) params.set("lang", lang);
+  try {
+    const res = await fetch(`${BASE_URL}/pages?${params.toString()}`);
+    if (!res.ok) return [];
+    const data: WPPageWithAcf[] = await res.json();
+    return data.filter((p) => p.acf?.display_settings?.is_featured === true);
+  } catch {
+    return [];
+  }
+};
+
 type WPPage = components["schemas"]["WPPage"];
 
 type PagesQuery = {

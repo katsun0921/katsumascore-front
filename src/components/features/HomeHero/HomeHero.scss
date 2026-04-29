@@ -10,12 +10,15 @@
     display: grid;
     right: 50%;
     top: 0;
+    width: 100vw;
     transform: translateX(50%);
     > * {
       grid-area: 1 / -1;
     }
     @include layout-md {
+      width: 30vw;
       transform: translateX(0%);
+      top: 0;
       right: 26%;
     }
   }
@@ -65,6 +68,7 @@
     gap: 32px;
     align-items: center;
     text-align: center;
+    z-index: 2;
 
     @include layout-md {
       flex: 1;
@@ -159,6 +163,7 @@
     font-weight: 700;
     color: var(--color-text-inverse);
     line-height: 1.15;
+    white-space: nowrap;
     margin-bottom: 20px;
   }
 
@@ -199,11 +204,6 @@
   /* ─── Right: Swiper ─── */
   &__right {
     flex-shrink: 0;
-    order: -1;
-
-    @include layout-md {
-      order: 0;
-    }
   }
 
   &__swiper {
