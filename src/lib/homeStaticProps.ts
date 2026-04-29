@@ -26,15 +26,15 @@ const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
 const sortByScoreDesc = (a: Post, b: Post) => (b.score ?? 0) - (a.score ?? 0);
 const sortByDateDesc = (a: Post, b: Post) => b.publishedAt.localeCompare(a.publishedAt);
 
-const toMappedPosts = (raw: unknown[]): Post[] => {
+const toMappedPosts = (raw: unknown[], locale?: string): Post[] => {
   const out: Post[] = [];
   for (const item of raw) {
     const m = mapWPPostToPost(item);
-    if (m) {
-      const { content, ...rest } = m;
-      void content;
-      out.push(rest);
-    }
+    if (!m) continue;
+    if (locale && m.lang && m.lang !== locale) continue;
+    const { content, ...rest } = m;
+    void content;
+    out.push(rest);
   }
   return out;
 };
@@ -114,7 +114,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     pickRandomTags(3, lang),
   ]);
 
-  const pool = toMappedPosts(poolRaw);
+  const pool = toMappedPosts(poolRaw, lang);
 
   const rankingPosts = [...pool].sort(sortByScoreDesc).slice(0, 10);
   const latestPosts = [...pool].sort(sortByDateDesc).slice(0, 8);
@@ -130,7 +130,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
         const raw = await getPostsByTagId(tag.id, { per_page: 6, lang });
         return {
           tag: tag.name,
-          posts: toMappedPosts(raw),
+          posts: toMappedPosts(raw, lang),
           seeAllHref: `/search?q=${encodeURIComponent(tag.name)}`,
         } satisfies RecommendBlock;
       }),
@@ -140,13 +140,13 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
       : Promise.resolve([]),
   ]);
 
-  const animePosts = toMappedPosts(animeRaw);
+  const animePosts = toMappedPosts(animeRaw, lang);
   const recommendBlocks = recommendBlockRows.filter((b) => b.posts.length > 0);
 
   const movieRaw = movieCategory
     ? await getPosts({ per_page: 6, category: movieCategory.id, lang })
     : [];
-  const moviePosts = toMappedPosts(movieRaw);
+  const moviePosts = toMappedPosts(movieRaw, lang);
   const featuredSource =
     moviePosts.length > 0 ? moviePosts : [...pool].sort(sortByDateDesc).slice(0, 6);
   const featuredItems = toFeaturedItems(featuredSource);

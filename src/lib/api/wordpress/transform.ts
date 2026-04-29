@@ -31,7 +31,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const category = categories?.[0]?.name;
 
   const rs = wp.acf?.review_score;
-  const lang = wp.link ? detectLang(wp.link) : "ja";
+  const acfLang = wp.acf?.lang;
+  const lang = detectLang(wp.link, acfLang);
   return {
     id: String(wp.id),
     slug: `/posts/${wp.slug}`,

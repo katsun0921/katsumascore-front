@@ -10,7 +10,7 @@ import type { WpFetchOptions, WpPostsPagedResult } from "../client";
 type WPPost = components["schemas"]["WPPost"];
 
 const FIELDS =
-  "id,slug,title,excerpt,content,date,modified,featured_media,acf,_links,_embedded";
+  "id,slug,link,title,excerpt,content,date,modified,featured_media,acf,_links,_embedded";
 
 type PostsQuery = {
   page?: number;

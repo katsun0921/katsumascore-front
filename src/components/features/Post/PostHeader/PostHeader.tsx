@@ -11,7 +11,6 @@ export type PostHeaderProps = {
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]
   releaseDate?: string  // 'YYYYMMDD'
-  rating?: string
   copyright?: string
   // PostHeroScore から移動
   score?: number
@@ -25,7 +24,6 @@ export const PostHeader = ({
   filmStudios,
   productionStudios,
   releaseDate,
-  rating,
   copyright,
   score,
   scoreMax = SCORE_DISPLAY_MAX,
@@ -38,7 +36,7 @@ export const PostHeader = ({
   const distributors = filmStudios?.map((s) => s.name).join(' / ');
   const productions = productionStudios?.map((s) => s.name).join(' / ');
 
-  const metaParts = [distributors, productions, year, rating].filter(Boolean);
+  const metaParts = [distributors, productions, year].filter(Boolean);
   const prefix = 'post-header';
   return (
     <div className={prefix}>

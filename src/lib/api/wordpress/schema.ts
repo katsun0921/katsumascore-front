@@ -50,7 +50,7 @@ const actorFieldSchema = z
     name: z.string().optional(),
     character: z.string().optional(),
     description: z.string().optional(),
-    actor: z.union([z.number(), z.string()]).optional(),
+    actor: z.union([z.number(), z.string(), z.boolean()]).optional(),
     role: z.string().optional(),
   })
   .passthrough();
@@ -62,6 +62,7 @@ const rentalRowSchema = z.object({
 
 const wpPostAcfObjectSchema = z
   .object({
+    lang: z.enum(["ja", "en"]).optional(),
     review_score: optionalReviewScore,
     title_jp: z.string().optional(),
     title_en: z.string().optional(),

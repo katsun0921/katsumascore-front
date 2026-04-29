@@ -196,7 +196,7 @@ export const buildPostDetailFromWp = ({
     summaryText.length > 0
       ? {
           text: summaryText,
-          refUrl: parsed.acf?.official_url?.trim() || undefined,
+          ...(parsed.acf?.official_url?.trim() ? { refUrl: parsed.acf.official_url.trim() } : {}),
           refLabel: locale === "en" ? "Official site" : "公式サイト",
         }
       : undefined;
@@ -208,10 +208,10 @@ export const buildPostDetailFromWp = ({
     parseOfficialSns(parsed.acf?.official_sns) ||
     acf?.copyright
       ? {
-          officialUrl: parsed.acf?.official_url?.trim(),
-          copyright: typeof acf?.copyright === "string" ? acf.copyright : undefined,
-          releaseDate: releaseDate && releaseDate.length === 8 ? releaseDate : undefined,
-          officialSns: parseOfficialSns(parsed.acf?.official_sns),
+          ...(parsed.acf?.official_url?.trim() ? { officialUrl: parsed.acf.official_url.trim() } : {}),
+          ...(typeof acf?.copyright === "string" ? { copyright: acf.copyright } : {}),
+          ...(releaseDate && releaseDate.length === 8 ? { releaseDate } : {}),
+          ...(parseOfficialSns(parsed.acf?.official_sns) ? { officialSns: parseOfficialSns(parsed.acf?.official_sns) } : {}),
         }
       : undefined;
 
@@ -220,7 +220,6 @@ export const buildPostDetailFromWp = ({
     parsed.acf?.trailer_youtube?.trim() ||
     (typeof acf?.youtube_id === "string" ? acf.youtube_id.trim() : undefined);
   const updatedAt = parsed.modified?.slice(0, 10);
-  const rating = parsed.acf?.rating?.trim();
   const authorComment = parsed.acf?.author_comment?.trim();
   const goodPoints = splitGoodPoints(parsed.acf?.good_point_filed);
   const actors = mapActors(parsed);
@@ -231,7 +230,6 @@ export const buildPostDetailFromWp = ({
     ...base,
     ...(titleEn ? { titleEn } : {}),
     ...(updatedAt ? { updatedAt } : {}),
-    ...(rating ? { rating } : {}),
     ...(trailerYoutubeId ? { trailerYoutubeId } : {}),
     ...(authorComment ? { authorComment } : {}),
     ...(goodPoints ? { goodPoints } : {}),

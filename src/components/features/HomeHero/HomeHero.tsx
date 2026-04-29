@@ -113,6 +113,8 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
               key={slide.image}
               src={slide.image}
               alt=''
+              fill
+              sizes='100vw'
               className={`${prefixClassName}__bgImg${i === activeIndex ? ' is-active' : ''}`}
               priority={i === 0}
             />
@@ -179,7 +181,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
             onSwiper={(swiper) => { swiperRef.current = swiper; swiper.autoplay.start(); }}
             onRealIndexChange={(swiper) => handleSlideChange(swiper.realIndex)}
           >
-            {slides.map((slide) => (
+            {slides.map((slide, i) => (
               <SwiperSlide key={slide.image} className={`${prefixClassName}__swiperSlide`}>
                 <Image
                   src={slide.image}
@@ -187,6 +189,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
                   fill
                   sizes='(max-width: 767px) 220px, 260px'
                   style={{ objectFit: 'cover' }}
+                  loading={i === 0 ? 'eager' : 'lazy'}
                 />
               </SwiperSlide>
             ))}

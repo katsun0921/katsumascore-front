@@ -14,7 +14,6 @@ const meta: Meta<typeof PostHeader> = {
     filmStudios: [{ name: 'ライオンズゲート' }],
     productionStudios: [{ name: 'アメリカ' }],
     releaseDate: '20191127',
-    rating: 'PG12',
   },
 };
 
@@ -43,7 +42,6 @@ export const MinimalMeta: Story = {
     filmStudios: undefined,
     productionStudios: undefined,
     releaseDate: undefined,
-    rating: undefined,
   },
 };
 

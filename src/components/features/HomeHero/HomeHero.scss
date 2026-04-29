@@ -24,21 +24,19 @@
     object-fit: contain;
     opacity: 0;
     transition: opacity 1s ease;
-    height: 123vw;
-    max-width: none;
     &.is-active {
       opacity: 1;
-    }
-    @include layout-md {
-      height: clamp(364px, 50vw, calc(464px + (48px * 2)));
     }
   }
 
   &__bgOverlay {
     position: relative;
-    height: 100%;
+    height: 123vw;
     opacity: 0.8;
     pointer-events: none;
+    @include layout-md {
+      height: clamp(364px, 50vw, calc(464px + (48px * 2)));
+    }
   }
 
   /* ─── レイアウト ─── */
