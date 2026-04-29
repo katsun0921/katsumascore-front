@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.1** ― 代替案更新  
-> katsumascore.blog ｜ 2026年3月30日
+> **v1.2** ― レンダリング方式ルールを追加  
+> katsumascore.blog ｜ 2026年4月29日
 
 ---
 
@@ -103,7 +103,28 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 
 ---
 
-## 4. VOD在庫API（SSR設計）
+## 4. レンダリング方式
+
+### 4.1 ページ種別ごとの方式
+
+| ページ種別 | レンダリング方式 | Pages Router実装 |
+|-----------|----------------|-----------------|
+| 固定ページ | SSG | `getStaticProps` |
+| LP / 特集 | SSG | `getStaticProps` |
+| 記事 | ISR | `getStaticProps` + `revalidate` |
+| TOP | ISR + 動的取得 | `getStaticProps` + `revalidate` + client-side fetch |
+| VOD | SSR | `getServerSideProps` |
+
+### 4.2 適用ルール
+
+- ページファイルの先頭コメントに方式を明記する（例: `// Rendering: ISR`）
+- ISRの `revalidate` デフォルトは **60秒**。ページ要件に応じて調整する
+- SSGページで動的データが必要な場合は client-side fetch（SWR）を使う
+- SSRは VODページのみに限定する。パフォーマンス上の理由から他ページへの拡大を禁止する
+
+---
+
+## 5. VOD在庫API（SSR設計）
 
 ### 4.1 概要
 
@@ -132,7 +153,7 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 5. 実装ロードマップ
+## 6. 実装ロードマップ
 
 | ステップ | 作業内容 | 優先度 |
 |---|---|---|
@@ -150,7 +171,7 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 6. 代替案（Workers値上げ・無料枠超過時）
+## 7. 代替案（Workers値上げ・無料枠超過時）
 
 Cloudflare Workersの料金体系変更または無料枠（10万リクエスト/日）超過が発生した場合の構成。コードの大幅変更は不要で、設定変更とGitHub Actionsのデプロイ先変更のみで対応できる。
 
@@ -178,21 +199,21 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
 
 ---
 
-## 7. 注意事項・既知の制約
+## 8. 注意事項・既知の制約
 
-### 7.1 Next.js on Cloudflare Workersの制約
+### 8.1 Next.js on Cloudflare Workersの制約
 
 - Node.js APIの一部（`fs`・`child_process`等）はWorkersランタイムで動作しない
 - Workers Freeプランのバンドルサイズ上限は3MiB（Paidは10MiB）
 - fetch cacheの2MB制限あり（`no-store`は別エラーになるため設定注意）
 
-### 7.2 Pages Router採用理由
+### 8.2 Pages Router採用理由
 
 - App RouterのRSC・`use client`/`use server`・Server Actionsの複雑さを回避
 - `unstable_cache` / `cache()` などの不安定なAPIを避ける
 - Pages RouterはOpenNextのCloudflareアダプターでの動作実績が豊富
 
-### 7.3 ACFフィールドのREST API公開設定
+### 8.3 ACFフィールドのREST API公開設定
 
 ACF Proの各フィールドをWP REST APIで取得するには、WordPressの`functions.php`で明示的に公開設定が必要。
 
@@ -202,4 +223,4 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 
 ---
 
-*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.1 ｜ katsumascore.blog ｜ 2026年3月30日*
+*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.2 ｜ katsumascore.blog ｜ 2026年4月29日*

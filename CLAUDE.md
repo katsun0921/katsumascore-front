@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v4.1 ― ui → ui-parts に統一
-> 2026年4月19日
+> v4.2 ― レンダリング方式ルールを追加
+> 2026年4月29日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -376,6 +376,25 @@ PostSection → 意味（ui-section/）
 Template → 画面（templates/）
 
 👉 variantではなく構造で解決する
+
+---
+
+## ■ レンダリング方式（厳守）
+
+| ページ種別 | レンダリング方式 | 備考 |
+|-----------|----------------|------|
+| 固定ページ | SSG | `getStaticProps` / App Router: `generateStaticParams` |
+| LP / 特集 | SSG | 同上 |
+| 記事 | ISR | `revalidate` を設定する |
+| TOP | ISR + 動的取得 | ベースはISR、パーソナライズ等は client-side fetch |
+| VOD | SSR | `getServerSideProps` / App Router: `dynamic = 'force-dynamic'` |
+
+### 適用ルール
+
+- ページファイル（`pages/` または `app/`）には必ずレンダリング方式をコメントで明記する
+- ISRの `revalidate` 値はページごとに要件定義で決定する（デフォルト: 60秒）
+- SSGページで動的データが必要な場合は client-side fetch（SWR / React Query）を使う
+- SSRはVODページのみに限定する。パフォーマンス上の理由から他ページへの拡大を禁止する
 
 ---
 
