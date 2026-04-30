@@ -182,6 +182,18 @@
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 - [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
 
+### リニューアル施策（フェーズ 8）
+
+- [ ] Franchise（シリーズ）特集ページの実装（[設計書](./franchise_acf_design.md)）
+  - [ ] WordPress 側: franchise taxonomy + ACF フィールド設定
+  - [ ] `lib/api/wordpress.ts` に `getPostsByFranchise(slug)` を追加
+  - [ ] `transformPost()` で franchise ACF フィールドを正規化
+  - [ ] `pages/franchise/[slug].tsx` の新規作成（ISR）
+  - [ ] FranchiseTemplate の実装（Hero / 概要 / ハイライト / 年表 / 作品一覧 / スコア比較 / CTA）
+  - [ ] SEO: title = シリーズ名 + ガイド、description = シリーズ概要要約
+
+---
+
 ### 公開後対応（フェーズ 7）
 - [ ] 全コンポーネントに Storybook Story 作成
 - [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
