@@ -200,3 +200,20 @@ npm run deploy
 ## 移行進捗
 
 詳細なフェーズ別 TODO: [Todo.md](./docs/features/MigrationNextjsTodo.md)
+
+---
+
+## リニューアル後 TODO
+
+### taxonomy 見直し（actor / director）
+
+リニューアル時点では `actor` / `director` / `company` を taxonomy として運用するが、将来的には entity（CPT）への移行を予定。
+
+| 現状 URL | 将来 URL |
+|---|---|
+| `/ja/actor/{slug}` | `/ja/person/{slug}` |
+| `/ja/director/{slug}` | `/ja/person/{slug}` |
+
+- slug は変更しない（301 リダイレクトで吸収）
+- 移行タイミングは CPT 導入後に別途判断する
+- 詳細設計: [ディレクトリ / URL / データ設計まとめ](./docs/katsumascore_directory_strategy.md)
