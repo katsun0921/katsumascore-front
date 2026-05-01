@@ -120,10 +120,10 @@
 ## 🚧 作業中
 
 ### ページ API 接続（フェーズ 2 残）
-- [ ] `lib/api/wordpress.types.ts` の作成（`WPPost` / `NormalizedPost` 等の型定義を集約）
-- [ ] `null` / 欠損を前提とした型設計の確認・修正
-- [ ] `pages/posts/[slug].tsx`: `getStaticProps` + `revalidate` への切り替え検討（現在 SSR）
-- [ ] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
+- [x] `lib/api/wordpress.types.ts` の作成（`WPPost` / `NormalizedPost` 等の型定義を集約）
+- [x] `null` / 欠損を前提とした型設計の確認・修正
+- [x] `pages/posts/[slug].tsx`: `getStaticProps` + `revalidate` への切り替え検討（現在 SSR）
+- [x] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
 - [x] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
 
 ### 本番対応（フェーズ 3）

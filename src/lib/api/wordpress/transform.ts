@@ -37,6 +37,19 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const acfLang = wp.acf?.lang;
   const lang = detectLang(wp.link, acfLang);
   const isFeatured = wp.acf?.display_settings?.is_featured === true;
+
+  const acf = wp.acf;
+  const vodList: import("@/lib/vod").VodService[] = [];
+  if (acf?.streaming_vod_netflix) vodList.push("netflix");
+  if (acf?.streaming_vod_amazon) vodList.push("amazon");
+  if (acf?.streaming_vod_unext) vodList.push("unext");
+  const vods = vodList.length > 0 ? vodList : undefined;
+
+  const releaseYear = wp.acf?.release_date
+    ? Number.parseInt(wp.acf.release_date.slice(0, 4), 10)
+    : undefined;
+  const year = releaseYear !== undefined && Number.isFinite(releaseYear) ? releaseYear : undefined;
+
   return {
     id: String(wp.id),
     slug: getPostUrl(type, wp.slug, lang),
@@ -50,6 +63,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     ...(category !== undefined ? { category } : {}),
     ...(rs !== undefined ? { score: rs } : {}),
     ...(isFeatured ? { isFeatured } : {}),
+    ...(vods && vods.length > 0 ? { vods } : {}),
+    ...(year !== undefined ? { year } : {}),
   };
 };
 

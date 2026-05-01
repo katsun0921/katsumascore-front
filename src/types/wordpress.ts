@@ -5,6 +5,13 @@ export type WPCategory = components["schemas"]["WPCategory"];
 export type WPTag = components["schemas"]["WPTag"];
 export type WPPage = components["schemas"]["WPPage"];
 
+export type { ParsedWPPost } from "@/lib/api/wordpress/schema";
+export type {
+  WpFetchOptions,
+  WpPostsListMeta,
+  WpPostsPagedResult,
+} from "@/lib/api/wordpress/client";
+
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 
 export const getScoreRank = (score: 1 | 2 | 3 | 4 | 5): ScoreRank => {
