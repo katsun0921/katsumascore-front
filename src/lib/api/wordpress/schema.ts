@@ -24,7 +24,7 @@ export const WPEmbeddedSchema = z
   .object({
     "wp:featuredmedia": z.array(featuredMediaItemSchema).optional(),
     "wp:term": z
-      .array(z.array(z.object({ name: z.string() }).passthrough()))
+      .array(z.array(z.object({ name: z.string(), slug: z.string().optional() }).passthrough()))
       .optional(),
   })
   .passthrough();
