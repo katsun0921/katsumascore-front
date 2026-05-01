@@ -126,16 +126,7 @@
 - [x] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
 - [x] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
 
-### 本番対応（フェーズ 3）
-- [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
-- [ ] Cloudflare Workers デプロイの本番検証
-- [ ] 広告コード（A8.net / admax）を `next/script` で管理
-- [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）
-- [ ] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
-- [ ] ISR Webhook設定（WordPress更新時にrevalidate）
-- [ ] VOD ページは SSR のままとする確認
-
-### コンポーネント整理（フェーズ 4）
+### コンポーネント整理（フェーズ 3）
 - [ ] CinemaCheck（`ui-section/CinemaCheck` は使用中、`features/CinemaCheck` wrapper は未接続）
 
 ### 未使用コンポーネントの整理
@@ -159,6 +150,15 @@
 - [ ] `features/vod/` への整理（`VodMenu`, `VodPanel`, `VodItem` 等）
 - [ ] `features/Post/PostVariants` の整備
 - [x] `ui-section/PostListRow` コンポーネントの実装（新設）
+
+### 本番対応（フェーズ 4）
+- [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
+- [ ] Cloudflare Workers デプロイの本番検証
+- [ ] 広告コード（A8.net / admax）を `next/script` で管理
+- [ ] Facebook ページ埋め込みの CSS クラス管理（`style` prop 禁止対応）
+- [ ] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
+- [ ] ISR Webhook設定（WordPress更新時にrevalidate）
+- [ ] VOD ページは SSR のままとする確認
 
 ---
 
