@@ -2,6 +2,7 @@ import type { Post } from "@/types/post";
 import { WPPostSchema } from "./schema";
 import type { ParsedWPPost } from "./schema";
 import { detectLang } from "./lang";
+import { getPostUrl, resolvePostType } from "@/lib/route";
 
 export const stripHtml = (html: string): string =>
   html
@@ -29,6 +30,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const terms = wp._embedded?.["wp:term"];
   const categories = Array.isArray(terms) ? terms[0] : undefined;
   const category = categories?.[0]?.name;
+  const categorySlug = categories?.[0]?.slug;
+  const type = resolvePostType(categorySlug);
 
   const rs = wp.acf?.review_score;
   const acfLang = wp.acf?.lang;
@@ -36,13 +39,14 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const isFeatured = wp.acf?.display_settings?.is_featured === true;
   return {
     id: String(wp.id),
-    slug: `/posts/${wp.slug}`,
+    slug: getPostUrl(type, wp.slug, lang),
     title: titleFromWp(wp),
     excerpt: stripHtml(wp.excerpt.rendered),
     content: wp.content.rendered,
     image: image ?? null,
     publishedAt: wp.date.slice(0, 10),
     lang,
+    type,
     ...(category !== undefined ? { category } : {}),
     ...(rs !== undefined ? { score: rs } : {}),
     ...(isFeatured ? { isFeatured } : {}),
