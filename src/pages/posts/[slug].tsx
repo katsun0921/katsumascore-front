@@ -6,14 +6,14 @@ import {
   getPosts,
   getRelatedPosts,
   mapWPPostToPost,
-} from '@/lib/api/wordpress';
-import { extractToc } from '@/lib/toc';
-import { pickRandom } from '@/lib/highscore';
+} from '@/libs/api/wordpress';
+import { extractToc } from '@/libs/toc';
+import { pickRandom } from '@/libs/highscore';
 import {
   buildPostDetailFromWp,
   extractRelationPostIds,
   extractPostsGroupSpecsFromWp,
-} from '@/lib/buildPostDetailFromWp';
+} from '@/libs/buildPostDetailFromWp';
 import { PostDetail } from '@/components/templates/PostDetail';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import { I18nProvider } from '@/i18n/provider';

@@ -1,4 +1,4 @@
-import { VOD_COLOR_VAR, VOD_LABEL } from '@/lib/vod';
+import { VOD_COLOR_VAR, VOD_LABEL } from '@/libs/vod';
 import type { VodDotsProps } from './VodDots.types';
 
 export const VodDots = ({ vods, max = 3, className }: VodDotsProps) => {

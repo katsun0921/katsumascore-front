@@ -10,7 +10,7 @@ import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction';
 import { VodIntroduction } from '@/components/ui-section/VodIntroduction';
 import { ShareButtons } from '@/components/ui-parts/ShareButtons';
 import { Sidebar } from '@/components/ui-layout/Sidebar';
-import { PostDate } from '@/components/features/Post/PostDate';
+import { PostDate } from '@/components/ui-section/PostDate';
 import type { PostDetailProps } from './PostDetail.types';
 
 export const PostDetail = ({ post, genres }: PostDetailProps) => {

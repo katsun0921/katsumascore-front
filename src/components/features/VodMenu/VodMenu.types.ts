@@ -1,4 +1,4 @@
-import type { VodService as TVodService } from '@/lib/vod';
+import type { VodService as TVodService } from '@/libs/vod';
 
 export type TVodMenuService = {
   service: TVodService;

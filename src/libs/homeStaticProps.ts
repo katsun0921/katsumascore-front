@@ -15,9 +15,9 @@ import {
   getCategoryBySlug,
   getChildPages,
   getFeaturedPages,
-} from "@/lib/api/wordpress";
-import { stripHtml } from "@/lib/api/wordpress";
-import { buildVodFinderItemsFromConfig } from "@/lib/buildVodFinderItems";
+} from "@/libs/api/wordpress";
+import { stripHtml } from "@/libs/api/wordpress";
+import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;

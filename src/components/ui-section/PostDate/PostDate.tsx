@@ -1,19 +1,12 @@
 import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { formatDate } from '@/utils/formatDate';
+import { messages } from './i18n';
 
 export type TDateProps = {
   publishedAt: string
   updatedAt?: string
 }
-
-const formatDate = (dateStr: string, locale: 'ja' | 'en'): { display: string; datetime: string } => {
-  const date = new Date(dateStr);
-  const datetime = date.toISOString().split('T')[0];
-  const display =
-    locale === 'en'
-      ? date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
-      : `${date.getFullYear()}年${date.getMonth() + 1}月${date.getDate()}日`;
-  return { display, datetime };
-};
 
 export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
   const locale = useLocale();
@@ -25,13 +18,13 @@ export const PostDate = ({ publishedAt, updatedAt }: TDateProps) => {
       {updated && (
         <p>
           <time className='inline-block' dateTime={updated.datetime}>
-            {locale === 'en' ? `Last update: ${updated.display}` : `最終更新日: ${updated.display}`}
+            {`${t(messages, ['label', 'updatedAt'], locale)}: ${updated.display}`}
           </time>
         </p>
       )}
       <p>
         <time className='inline-block' dateTime={published.datetime}>
-          {locale === 'en' ? `Publication date: ${published.display}` : `公開日: ${published.display}`}
+          {`${t(messages, ['label', 'publishedAt'], locale)}: ${published.display}`}
         </time>
       </p>
     </div>

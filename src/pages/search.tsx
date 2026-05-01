@@ -4,7 +4,7 @@ import { I18nProvider } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Locale } from '@/i18n/t';
 import { searchPageMessages } from '@/i18n/searchPageMessages';
-import { searchPosts, mapWPPostToPost } from '@/lib/api/wordpress';
+import { searchPosts, mapWPPostToPost } from '@/libs/api/wordpress';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import type { Post } from '@/types/post';

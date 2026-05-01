@@ -1,7 +1,7 @@
 import React from 'react';
 import { ScoreWithRank } from '@/components/features/ScoreWithRank';
 import { useLocale } from '@/i18n/provider';
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay';
+import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 export type TGoodPointProps = {
   points: string[]
   score?: number

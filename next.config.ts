@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
-import { legacyGenrePathCategorySlugPattern } from "./src/lib/taxonomyRoutes";
+import { legacyGenrePathCategorySlugPattern } from "./src/libs/taxonomyRoutes";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,

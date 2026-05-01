@@ -1,16 +1,16 @@
-import type { components } from "@/lib/api/wordpress/generated/wp-schema";
+import type { components } from "@/libs/api/wordpress/generated/wp-schema";
 
 export type WPPost = components["schemas"]["WPPost"];
 export type WPCategory = components["schemas"]["WPCategory"];
 export type WPTag = components["schemas"]["WPTag"];
 export type WPPage = components["schemas"]["WPPage"];
 
-export type { ParsedWPPost } from "@/lib/api/wordpress/schema";
+export type { ParsedWPPost } from "@/libs/api/wordpress/schema";
 export type {
   WpFetchOptions,
   WpPostsListMeta,
   WpPostsPagedResult,
-} from "@/lib/api/wordpress/client";
+} from "@/libs/api/wordpress/client";
 
 export type ScoreRank = "SS" | "S" | "A" | "B" | "C";
 

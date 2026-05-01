@@ -4,8 +4,8 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getChildPages, getPageBySlug } from '@/lib/api/wordpress';
-import { stripHtml } from '@/lib/api/wordpress';
+import { getChildPages, getPageBySlug } from '@/libs/api/wordpress';
+import { stripHtml } from '@/libs/api/wordpress';
 
 type SeasonalDetailProps = {
   title: string;

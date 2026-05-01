@@ -132,7 +132,7 @@
 ### 未使用コンポーネントの整理
 - [ ] `features/Pagination` — 未接続（ListTemplate等への接続またはui-section移行）
 - [x] `features/Carousel` — 削除済み
-- [ ] `features/Post/PostDate` — 完全未使用（削除または接続先の検討）
+- [x] `features/Post/PostDate` — `ui-section/PostDate` へ移動済み
 - [ ] `features/VodPanel` — 完全未使用（`ui-section/VodPanel`との重複整理）
 - [ ] `features/OfficialSns` — 適切なレイヤーへ移動または削除
 - [ ] `features/PickUpAndScore` — 適切なレイヤーへ移動

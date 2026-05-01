@@ -1,5 +1,5 @@
 import { ScoreWithRank } from '@/components/features/ScoreWithRank';
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay';
+import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';

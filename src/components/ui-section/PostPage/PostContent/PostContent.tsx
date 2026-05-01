@@ -1,5 +1,5 @@
 import type { PostContentData } from '@/types/post';
-import { publicAssetUrl } from '@/lib/publicAssetUrl';
+import { publicAssetUrl } from '@/libs/publicAssetUrl';
 /** 本文HTML内の `/images/...` を Storybook サブパス配信でも解決できるようにする */
 const rewritePublicImageSrc = (html: string): string => {
   return html.replace(/src="(\/images\/[^"]+)"/g, (_, path: string) => {

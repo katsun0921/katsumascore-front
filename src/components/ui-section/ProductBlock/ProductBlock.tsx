@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { publicAssetUrl } from '@/lib/publicAssetUrl';
+import { publicAssetUrl } from '@/libs/publicAssetUrl';
 
 export type TProductType = 'vod' | 'shopping'
 

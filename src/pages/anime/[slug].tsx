@@ -3,8 +3,8 @@ import { PostDetail } from '@/components/templates/PostDetail';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { makeGetStaticPaths, makeGetStaticProps } from '@/lib/loadPostDetailPage';
-import type { PostDetailPageProps } from '@/lib/loadPostDetailPage';
+import { makeGetStaticPaths, makeGetStaticProps } from '@/libs/loadPostDetailPage';
+import type { PostDetailPageProps } from '@/libs/loadPostDetailPage';
 
 const AnimePage = ({ post, locale, genres }: PostDetailPageProps) => {
   const currentLocale = (locale ?? 'ja') as Locale;

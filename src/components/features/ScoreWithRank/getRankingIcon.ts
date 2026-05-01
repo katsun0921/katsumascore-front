@@ -1,4 +1,4 @@
-import { publicAssetUrl } from '@/lib/publicAssetUrl';
+import { publicAssetUrl } from '@/libs/publicAssetUrl';
 
 /**
  * スコア値に基づいてランキングアイコンのパスを返す

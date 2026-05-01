@@ -6,9 +6,9 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getGenres } from '@/lib/api/wordpress';
-import { loadGenreListPage } from '@/lib/loadGenreListPage';
-import { getTaxonomyUrl } from '@/lib/route';
+import { getGenres } from '@/libs/api/wordpress';
+import { loadGenreListPage } from '@/libs/loadGenreListPage';
+import { getTaxonomyUrl } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [

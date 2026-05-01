@@ -1,35 +1,34 @@
-// SSG/ISR: revalidate 60s. Genre taxonomy（WP カスタム）アーカイブ用ローダー。
-import { genreDisplayLabel, getGenres, getPostsWithMeta } from "@/lib/api/wordpress";
-import { normalizePosts } from "@/lib/utils/normalizePost";
+import { getCategories, getPostsWithMeta } from "@/libs/api/wordpress";
+import { normalizePosts } from "@/utils/normalizePost";
 import type { Post } from "@/types/post";
 
-export const GENRE_LIST_PER_PAGE = 12;
+export const CATEGORY_LIST_PER_PAGE = 12;
 
-export type GenreListPageResult =
+export type CategoryListPageResult =
   | { notFound: true }
   | {
-      genreName: string;
+      categoryName: string;
       slug: string;
       posts: Post[];
       currentPage: number;
       totalPages: number;
     };
 
-export const loadGenreListPage = async (
+export const loadCategoryListPage = async (
   slug: string,
   locale: string,
   page: number,
-): Promise<GenreListPageResult> => {
+): Promise<CategoryListPageResult> => {
   const currentLocale = locale === "en" ? "en" : "ja";
-  const genres = await getGenres(currentLocale);
-  const genre = genres.find((g) => g.slug === slug);
-  if (!genre) return { notFound: true };
+  const categories = await getCategories(currentLocale);
+  const category = categories.find((c) => c.slug === slug);
+  if (!category) return { notFound: true };
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
   const fetched = await getPostsWithMeta({
-    genre: genre.slug,
+    category: category.id,
     page: safePage,
-    per_page: GENRE_LIST_PER_PAGE,
+    per_page: CATEGORY_LIST_PER_PAGE,
     lang: currentLocale,
   });
   if (!fetched) return { notFound: true };
@@ -38,8 +37,8 @@ export const loadGenreListPage = async (
   if (safePage > totalPages) return { notFound: true };
 
   return {
-    genreName: genreDisplayLabel(genre, currentLocale),
-    slug: genre.slug,
+    categoryName: category.name,
+    slug: category.slug,
     posts: normalizePosts(fetched.items, currentLocale),
     currentPage: safePage,
     totalPages,

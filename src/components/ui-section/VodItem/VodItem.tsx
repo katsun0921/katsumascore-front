@@ -1,6 +1,6 @@
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
-import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/lib/vod';
+import { type VodService, VOD_BORDER_CLASS, VOD_LABEL } from '@/libs/vod';
 import { messages } from './i18n';
 
 /** @deprecated VodService を使用してください */

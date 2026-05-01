@@ -4,8 +4,8 @@ import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getCategoryBySlug, getPostsWithMeta } from '@/lib/api/wordpress';
-import { normalizePosts } from '@/lib/utils/normalizePost';
+import { getCategoryBySlug, getPostsWithMeta } from '@/libs/api/wordpress';
+import { normalizePosts } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
@@ -57,7 +57,7 @@ const FeaturedPage = ({ categoryName, posts, locale }: FeaturedPageProps) => {
 export default FeaturedPage;
 
 export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale }) => {
-  const currentLocale = (locale === 'en' ? 'en' : 'ja') as import('@/lib/api/wordpress/lang').Locale;
+  const currentLocale = (locale === 'en' ? 'en' : 'ja') as import('@/libs/api/wordpress/lang').Locale;
   const lang = currentLocale === 'en' ? 'en' : 'ja';
   const slug = process.env.WP_FEATURED_CATEGORY_SLUG ?? 'featured';
   const category = await getCategoryBySlug(slug, lang);

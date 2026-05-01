@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocale } from '@/i18n/provider';
+import { formatDate } from '@/utils/formatDate';
 export type ReviewSiteId = 'imdb' | 'rt-critics' | 'rt-audience' | 'filmarks' | 'eiga-com'
 
 export type TReviewSite = {
@@ -61,28 +62,6 @@ const SITE_CONFIG: Record<
   },
 };
 
-const formatDate = (value: string, locale: 'ja' | 'en') => {
-  let date: Date;
-
-  if (/^\d{8}$/.test(value)) {
-    date = new Date(Number(value.slice(0, 4)), Number(value.slice(4, 6)) - 1, Number(value.slice(6, 8)));
-  } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-    const [year, month, day] = value.split('-').map(Number);
-    date = new Date(year, month - 1, day);
-  } else {
-    date = new Date(value);
-  }
-
-  if (Number.isNaN(date.getTime())) {
-    return value;
-  }
-
-  return new Intl.DateTimeFormat(locale === 'en' ? 'en-US' : 'ja-JP', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  }).format(date);
-};
 
 const formatScore = (score: number, maxScore: number) => {
   if (maxScore === 100) return String(Math.round(score));
@@ -102,7 +81,7 @@ export const ReviewSiteScores = ({
   if (!validSites.length) return null;
 
   const datedAt = updatedAt ?? publishedDate;
-  const formattedDate = datedAt ? formatDate(datedAt, locale) : null;
+  const formattedDate = datedAt ? formatDate(datedAt, locale).display : null;
 
   return (
     <section className='p-review-scores'>

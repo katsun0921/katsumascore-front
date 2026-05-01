@@ -4,7 +4,7 @@
  *   VERIFY_WP_SECTION2_RELAX_ACF=1 — validate first ja post only and exit 0 with warnings (ACF item stays manual).
  * Usage: WP_API_URL=https://... npx tsx scripts/verify-wp-section2.ts
  */
-import { WPPostSchema, mapWPPostToPost, parseWPPostUnknown } from "@/lib/api/wordpress";
+import { WPPostSchema, mapWPPostToPost, parseWPPostUnknown } from "@/libs/api/wordpress";
 
 const UA =
   "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";

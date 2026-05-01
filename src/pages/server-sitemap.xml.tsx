@@ -1,5 +1,5 @@
 import type { GetServerSideProps } from 'next';
-import { getPosts, getCategories, getChildPages } from '@/lib/api/wordpress';
+import { getPosts, getCategories, getChildPages } from '@/libs/api/wordpress';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 

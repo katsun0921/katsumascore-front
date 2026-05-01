@@ -75,9 +75,10 @@ UIの配置・レイアウトを定義する
 - 見た目の完成単位
 
 ### ■ ルール
-- ロジック禁止
 - データはpropsで受け取る
-- hooks禁止
+- state禁止（データを変化させない）
+- hooks は「表示のための読み取り専用」に限り許可（例: `useLocale()` / `useTheme()`）
+- propsを書き換えるロジック・副作用禁止
 
 ### ■ 例外：WordPress ACF ブロック
 `ProductBlock` はWordPress ACF + Gutenbergブロックとして挿入されるコンポーネント。  
@@ -167,17 +168,17 @@ import { PostCard } from '@/components/features/Post/PostCard/PostCard';
 
 # ■ 判断基準（最重要）
 
-## ■ Q1：ロジックを持つか？
+## ■ Q1：propsを書き換えるロジック・state・副作用を持つか？
 → YES：features  
 → NO：次へ
 
-## ■ Q2：意味を持つUIか？
+## ■ Q2：意味を持つUIか？（読み取り専用hooksは許可）
 → YES：ui-section  
 → NO：次へ
 
 ## ■ Q3：レイアウトか？
 → YES：ui-layout  
-→ NO：ui
+→ NO：ui-parts
 
 ---
 

@@ -7,14 +7,14 @@ import {
   getPosts,
   getRelatedPosts,
   mapWPPostToPost,
-} from '@/lib/api/wordpress';
-import { extractToc } from '@/lib/toc';
-import { pickRandom } from '@/lib/highscore';
+} from '@/libs/api/wordpress';
+import { extractToc } from '@/libs/toc';
+import { pickRandom } from '@/libs/highscore';
 import {
   buildPostDetailFromWp,
   extractRelationPostIds,
   extractPostsGroupSpecsFromWp,
-} from '@/lib/buildPostDetailFromWp';
+} from '@/libs/buildPostDetailFromWp';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 import type { Post } from '@/types/post';

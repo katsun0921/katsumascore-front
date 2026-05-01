@@ -2,7 +2,7 @@ import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { HomeTemplate } from '@/components/templates/HomeTemplate';
 import type { HomeTemplateProps } from '@/components/templates/HomeTemplate/HomeTemplate.types';
-import { loadHomeTemplateProps } from '@/lib/homeStaticProps';
+import { loadHomeTemplateProps } from '@/libs/homeStaticProps';
 
 type Props = HomeTemplateProps;
 

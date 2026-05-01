@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { SCORE_DISPLAY_MAX } from '@/lib/scoreDisplay';
+import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 import { ScoreWithRank } from './ScoreWithRank';
 
 const meta: Meta<typeof ScoreWithRank> = {

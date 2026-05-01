@@ -1,8 +1,8 @@
-import type { VodService } from '@/lib/vod';
-import type { PostType } from '@/lib/route';
+import type { VodService } from '@/libs/vod';
+import type { PostType } from '@/libs/route';
 
-export type { VodService } from '@/lib/vod';
-export type { PostType } from '@/lib/route';
+export type { VodService } from '@/libs/vod';
+export type { PostType } from '@/libs/route';
 
 export type Post = {
   id: string;

@@ -1,4 +1,4 @@
-import type { VodService } from '@/lib/vod';
+import type { VodService } from '@/libs/vod';
 
 export type VodDotsProps = {
   vods: VodService[];

@@ -1,5 +1,5 @@
 import type { Post } from '@/types/post';
-import type { TocItem } from '@/lib/toc';
+import type { TocItem } from '@/libs/toc';
 import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta';
 import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores';
 import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod';

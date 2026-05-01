@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TableOfContents } from './TableOfContents';
-import type { TocItem } from '@/lib/toc';
+import type { TocItem } from '@/libs/toc';
 
 const meta: Meta<typeof TableOfContents> = {
   title: 'Features/Post/TableOfContents',

@@ -1,24 +1,18 @@
-import { publicAssetUrl } from '@/lib/publicAssetUrl';
-import type { Post } from '@/types/post';
 import type { WPPost } from '@/types/wordpress';
+import type { Post } from '@/types/post';
+import type { Locale } from '@/libs/api/wordpress/lang';
+import { mapWPPostToPost } from '@/libs/api/wordpress';
 
-export const normalizePost = (post: WPPost, locale: string = 'ja'): Post => {
-  const title =
-    locale === 'ja'
-      ? post.acf?.title_jp || post.title.rendered || ''
-      : post.acf?.title_en || post.title.rendered || '';
-
-  const score = typeof post.acf?.review_score === 'number' ? post.acf.review_score : undefined;
-  return {
-    id: String(post.id),
-    slug: `/posts/${post.slug}`,
-    title,
-    excerpt: post.excerpt?.rendered ?? '',
-    image: post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? publicAssetUrl('/images/mock-image.webp'),
-    publishedAt: post.date,
-    ...(score !== undefined ? { score } : {}),
-  };
+/** WP REST の記事配列を一覧用 Post に正規化し、locale で言語フィルタをかける */
+export const normalizePosts = (wpPosts: WPPost[], locale: Locale): Post[] => {
+  const out: Post[] = [];
+  for (const p of wpPosts) {
+    const m = mapWPPostToPost(p);
+    if (!m) continue;
+    if (m.lang && m.lang !== locale) continue;
+    const { content, ...rest } = m;
+    void content;
+    out.push(rest);
+  }
+  return out;
 };
-
-export const normalizePosts = (posts: WPPost[], locale: string = 'ja'): Post[] =>
-  posts.map((post) => normalizePost(post, locale));

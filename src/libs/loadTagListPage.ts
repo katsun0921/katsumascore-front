@@ -1,6 +1,6 @@
 // SSG/ISR: revalidate 60s. Shared loader for tag-based list pages.
-import { getTags, getPostsWithMeta } from '@/lib/api/wordpress';
-import { normalizePosts } from '@/lib/utils/normalizePost';
+import { getTags, getPostsWithMeta } from '@/libs/api/wordpress';
+import { normalizePosts } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
 
 export const TAG_LIST_PER_PAGE = 12;

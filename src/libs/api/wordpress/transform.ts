@@ -2,7 +2,7 @@ import type { Post } from "@/types/post";
 import { WPPostSchema } from "./schema";
 import type { ParsedWPPost } from "./schema";
 import { detectLang } from "./lang";
-import { getPostUrl, resolvePostType } from "@/lib/route";
+import { getPostUrl, resolvePostType } from "@/libs/route";
 
 export const stripHtml = (html: string): string =>
   html
@@ -39,7 +39,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const isFeatured = wp.acf?.display_settings?.is_featured === true;
 
   const acf = wp.acf;
-  const vodList: import("@/lib/vod").VodService[] = [];
+  const vodList: import("@/libs/vod").VodService[] = [];
   if (acf?.streaming_vod_netflix) vodList.push("netflix");
   if (acf?.streaming_vod_amazon) vodList.push("amazon");
   if (acf?.streaming_vod_unext) vodList.push("unext");

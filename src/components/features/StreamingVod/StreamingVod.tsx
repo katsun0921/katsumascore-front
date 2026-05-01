@@ -2,7 +2,7 @@ import { StreamingVod as StreamingVodSection } from '@/components/ui-section/Str
 import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config';
 import { VodItem } from '@/components/ui-section/VodItem';
 import { useLocale } from '@/i18n/provider';
-import type { VodService as TVodService } from '@/lib/vod';
+import type { VodService as TVodService } from '@/libs/vod';
 
 export type TStreamingVodEntry = {
   service: TVodService
