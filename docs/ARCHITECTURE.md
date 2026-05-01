@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.2** ― レンダリング方式ルールを追加  
-> katsumascore.blog ｜ 2026年4月29日
+> **v1.3** ― WordPress Taxonomy（コンテンツ分類）を追記  
+> katsumascore.blog ｜ 2026年5月1日
 
 ---
 
@@ -124,13 +124,173 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 
 ---
 
-## 5. VOD在庫API（SSR設計）
+## 5. WordPress Taxonomy（コンテンツ分類）
 
-### 4.1 概要
+WordPress リニューアルに伴い、投稿の分類は以下の4 taxonomy で運用する。フロント（Next.js）では locale（`/ja` / `/en`）と REST の `lang` パラメーターで言語を切り替え、表示ラベルは ACF の `name_ja` / `name_en` を正とする。
+
+### 5.1 概要
+
+| taxonomy | 種類 | 件数（整理後） | 備考 |
+|---|---|---|---|
+| `category` | WP標準 | 3件 | 29件 → 3件にスリム化 |
+| `genre` | カスタム（新設） | 18ターム | `post_tag` から移行・新設（一覧は §5.4） |
+| `post_tag` | WP標準 | 60件 | 175件 → 60件に整理 |
+| `country` | カスタム（新設） | 16カ国 | category サブカテゴリから移行 |
+
+### 5.2 設計思想
+
+**分類ルール**
+
+| taxonomy | 役割 | URL（例） | SEO上の位置づけ |
+|---|---|---|---|
+| `category` | コンテンツ種別（映画・アニメ・ドラマ） | `/ja/category/{slug}` | 主導線 |
+| `genre` | 内容・形式による分類 | `/ja/genre/{slug}` | 主導線 |
+| `post_tag` | 視聴体験・感情・特徴 | `/ja/tag/{slug}` | 回遊導線 |
+| `country` | 制作国 | `/ja/country/{slug}` | 補助導線 |
+
+**言語設計**
+
+- slug は言語共通（例: `action` / `us`）
+- Next.js の locale と REST の `lang` でフィルタリング
+- 日英ラベルは ACF Pro の `name_ja` / `name_en` で WordPress 管理
+
+### 5.3 Category
+
+**整理**: 整理前 29件 → 整理後 3件。
+
+| name_ja | name_en | slug | 件数（参考） |
+|---|---|---|---|
+| 映画 | Movie | `movie-ja` | 995件 |
+| アニメ | Anime | `anime` | 83件 |
+| ドラマ | Drama | `drama` | 1件 |
+
+**主な移行・削除**: `Movie`（movie-en）を `映画`（movie-ja）へマージ後削除、`Anime`（anime-en）を `アニメ`（anime）へマージ後削除。劇場版・OVA・Cinema カテゴリ削除。国サブカテゴリ（16件）は country taxonomy へ移行済みのため削除。count=0 のカテゴリ（動画・ゲーム・舞台・Uncategorized・Drama-en 等）削除。
+
+**ACF（term）**
+
+| フィールド名 | ACFキー | 型 | 必須 |
+|---|---|---|---|
+| 日本語名 | `field_category_name_ja` | text | ✅ |
+| English Name | `field_category_name_en` | text | ✅ |
+
+### 5.4 Genre（新設）
+
+ACF Pro 6.1 以降のカスタムタクソノミーで新設。既存 `post_tag` から genre 相当のタームを移行。`post` / `series` に紐付け。
+
+**注:** `superhero` は genre から tag へ変更。`animation` は category で管理するため genre から除外。
+
+| slug | name_ja | name_en |
+|---|---|---|
+| `action` | アクション | Action |
+| `adventure` | アドベンチャー | Adventure |
+| `animation` | アニメーション | Animation |
+| `comedy` | コメディ | Comedy |
+| `drama` | ドラマ | Drama |
+| `fantasy` | ファンタジー | Fantasy |
+| `horror` | ホラー | Horror |
+| `musical` | ミュージカル | Musical |
+| `mystery` | ミステリー | Mystery |
+| `neo-noir` | ネオ・ノワール | Neo-Noir |
+| `period-drama` | 時代劇 | Period Drama |
+| `psychological-thriller` | サイコスリラー | Psychological Thriller |
+| `sci-fi` | SF | Sci-Fi |
+| `sports` | スポーツ | Sports |
+| `spy-action` | スパイアクション | Spy Action |
+| `survival` | サバイバル | Survival |
+| `thriller` | スリラー | Thriller |
+| `zombie` | ゾンビ | Zombie |
+
+**ACF**
+
+| フィールド名 | ACFキー | 型 | 必須 |
+|---|---|---|---|
+| 日本語名 | `field_genre_name_ja` | text | ✅ |
+| English Name | `field_genre_name_en` | text | ✅ |
+| Genre（投稿紐付け） | `field_genre_post` | taxonomy（checkbox） | ✅ |
+
+### 5.5 Post Tag
+
+**整理**: 175件 → 60件。genre taxonomy へ17件移行、ja/en 重複統合74件、削除23件、残り60件を維持。
+
+**ACF（term）**
+
+| フィールド名 | ACFキー | 型 | 必須 |
+|---|---|---|---|
+| 日本語名 | `field_tag_name_ja` | text | ❌ |
+| English Name | `field_tag_name_en` | text | ❌ |
+
+60件の slug 一覧は運用リファレンスとして `docs/archive/katsumascore_taxonomy_summary.md` の Post Tag 節を参照する。
+
+### 5.6 Country（新設）
+
+ACF Pro 6.1 以降のカスタムタクソノミー。slug は **ISO 3166-1 alpha-2**。既存 category サブカテゴリから投稿を移行後にサブカテゴリ削除。`post` のみ紐付け（series / franchise は対象外）。
+
+| slug | name_ja | name_en | 件数（参考） |
+|---|---|---|---|
+| `us` | アメリカ | United States | 196件 |
+| `jp` | 日本 | Japan | 30件 |
+| `gb` | イギリス | United Kingdom | 6件 |
+| `au` | オーストラリア | Australia | 4件 |
+| `cn` | 中国 | China | 4件 |
+| `es` | スペイン | Spain | 4件 |
+| `in` | インド | India | 2件 |
+| `de` | ドイツ | Germany | 2件 |
+| `kr` | 韓国 | South Korea | 2件 |
+| `ca` | カナダ | Canada | 2件 |
+| `fr` | フランス | France | 1件 |
+| `tw` | 台湾 | Taiwan | 1件 |
+| `cz` | チェコ | Czech Republic | 1件 |
+| `fi` | フィンランド | Finland | 1件 |
+| `se` | スウェーデン | Sweden | 1件 |
+| `no` | ノルウェー | Norway | 1件 |
+
+**ACF**
+
+| フィールド名 | ACFキー | 型 | 必須 |
+|---|---|---|---|
+| 日本語名 | `field_country_name_ja` | text | ✅ |
+| English Name | `field_country_name_en` | text | ✅ |
+| Country（投稿紐付け） | `field_country_post` | taxonomy（checkbox） | ❌ |
+
+### 5.7 運用ルール
+
+**投稿登録時**
+
+| taxonomy | 必須 | 複数選択 |
+|---|---|---|
+| `category` | ✅ | ❌（1つ） |
+| `genre` | ✅ | ✅（1〜2つ推奨） |
+| `post_tag` | ❌ | ✅ |
+| `country` | ❌ | ✅（合作映画対応） |
+
+**NG例**: genre と tag の重複登録、「映画」「おすすめ」など曖昧なタグ、country に ISO 以外の slug。
+
+### 5.8 ACF JSON（リポジトリ内の定義ファイル）
+
+| ファイル | 内容 |
+|---|---|
+| `acf-genre-taxonomy.json` | genre taxonomy 定義 + name_ja/name_en + 投稿紐付け |
+| `acf-country-taxonomy.json` | country taxonomy 定義 + name_ja/name_en + 投稿紐付け |
+| `acf-category-names.json` | category term の name_ja/name_en |
+
+### 5.9 REST API（例）
+
+```
+GET /wp-json/wp/v2/genre           → genre 一覧（acf.name_ja / acf.name_en）
+GET /wp-json/wp/v2/country         → country 一覧（acf.name_ja / acf.name_en）
+GET /wp-json/wp/v2/posts?genre=action&lang=ja  → ja のアクション映画一覧
+GET /wp-json/wp/v2/posts?country=us&lang=ja    → ja のアメリカ映画一覧
+```
+
+---
+
+## 6. VOD在庫API（SSR設計）
+
+### 6.1 概要
 
 Netflix・Amazon Prime・U-NEXTの在庫状況をリアルタイムで確認するAPIをCloudflare Workers上でSSR提供する。既存Python scraper（Cloud Run）で収集したデータをCloudflare KVに保存し、フロントからSSRで取得する構成。
 
-### 4.2 エンドポイント
+### 6.2 エンドポイント
 
 ```
 GET /api/vod?slug={post-slug}
@@ -144,7 +304,7 @@ GET /api/vod?slug={post-slug}
 | `is_cinema` | boolean | 劇場公開中（VOD非表示フラグ） |
 | `updated_at` | string（ISO8601） | 最終確認日時（Cloud Runが更新） |
 
-### 4.3 データフロー
+### 6.3 データフロー
 
 1. Cloud Scheduler（週1回）→ Cloud Run（Python scraper）が各VODサービスのURL確認
 2. 確認結果をCloudflare KV（またはCloud Storage）に書き込み
@@ -153,7 +313,7 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 6. 実装ロードマップ
+## 7. 実装ロードマップ
 
 | ステップ | 作業内容 | 優先度 |
 |---|---|---|
@@ -171,11 +331,11 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 7. 代替案（Workers値上げ・無料枠超過時）
+## 8. 代替案（Workers値上げ・無料枠超過時）
 
 Cloudflare Workersの料金体系変更または無料枠（10万リクエスト/日）超過が発生した場合の構成。コードの大幅変更は不要で、設定変更とGitHub Actionsのデプロイ先変更のみで対応できる。
 
-### 6.1 代替構成
+### 8.1 代替構成
 
 ```
 [ ConoHa Wing ]
@@ -186,7 +346,7 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
   api.katsumascore.blog    VOD在庫API のみ継続
 ```
 
-### 6.2 切り替え手順
+### 8.2 切り替え手順
 
 1. `next.config.ts` に `output: 'export'` を追加（1行のみ）
 2. GitHub Actionsのデプロイ先をCloudflare WorkersからConoHa Wing（rsync）に変更
@@ -199,21 +359,21 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
 
 ---
 
-## 8. 注意事項・既知の制約
+## 9. 注意事項・既知の制約
 
-### 8.1 Next.js on Cloudflare Workersの制約
+### 9.1 Next.js on Cloudflare Workersの制約
 
 - Node.js APIの一部（`fs`・`child_process`等）はWorkersランタイムで動作しない
 - Workers Freeプランのバンドルサイズ上限は3MiB（Paidは10MiB）
 - fetch cacheの2MB制限あり（`no-store`は別エラーになるため設定注意）
 
-### 8.2 Pages Router採用理由
+### 9.2 Pages Router採用理由
 
 - App RouterのRSC・`use client`/`use server`・Server Actionsの複雑さを回避
 - `unstable_cache` / `cache()` などの不安定なAPIを避ける
 - Pages RouterはOpenNextのCloudflareアダプターでの動作実績が豊富
 
-### 8.3 ACFフィールドのREST API公開設定
+### 9.3 ACFフィールドのREST API公開設定
 
 ACF Proの各フィールドをWP REST APIで取得するには、WordPressの`functions.php`で明示的に公開設定が必要。
 
@@ -223,4 +383,4 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 
 ---
 
-*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.2 ｜ katsumascore.blog ｜ 2026年4月29日*
+*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.3 ｜ katsumascore.blog ｜ 2026年5月1日*

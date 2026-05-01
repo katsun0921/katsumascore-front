@@ -26,6 +26,18 @@ const nextConfig: NextConfig = {
         destination: "/404",
         permanent: false,
       },
+      // 月別アーカイブ
+      {
+        source: "/:year(\\d{4})/:month(\\d{2})",
+        destination: "/404",
+        permanent: false,
+      },
+      // タグアーカイブ
+      {
+        source: "/tag/:slug",
+        destination: "/404",
+        permanent: false,
+      },
     ];
   },
   sassOptions: {

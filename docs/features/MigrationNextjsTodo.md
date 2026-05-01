@@ -124,7 +124,7 @@
 - [ ] `null` / 欠損を前提とした型設計の確認・修正
 - [ ] `pages/posts/[slug].tsx`: `getStaticProps` + `revalidate` への切り替え検討（現在 SSR）
 - [ ] アーカイブリダイレクト: `next.config.ts` に `/author/:slug` → `/404` リダイレクト追加
-- [ ] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
+- [x] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
 
 ### 本番対応（フェーズ 3）
 - [ ] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
