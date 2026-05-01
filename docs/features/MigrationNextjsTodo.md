@@ -182,6 +182,14 @@
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 - [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
 
+### 公開後対応（フェーズ 7）
+- [ ] 全コンポーネントに Storybook Story 作成
+- [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
+- [ ] Lighthouse スコア確認（Performance / SEO / A11y）
+- [ ] WordPress との表示比較（主要ページ）
+- [ ] パフォーマンス最適化・アクセシビリティ対応
+- [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
+
 ### リニューアル施策（フェーズ 8）
 
 - [ ] Franchise（シリーズ）特集ページの実装（[設計書](./franchise_acf_design.md)）
@@ -193,11 +201,10 @@
   - [ ] SEO: title = シリーズ名 + ガイド、description = シリーズ概要要約
 
 ---
+### taxonomy 見直し（リニューアル後）
 
-### 公開後対応（フェーズ 7）
-- [ ] 全コンポーネントに Storybook Story 作成
-- [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
-- [ ] Lighthouse スコア確認（Performance / SEO / A11y）
-- [ ] WordPress との表示比較（主要ページ）
-- [ ] パフォーマンス最適化・アクセシビリティ対応
-- [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
+- [ ] `actor` / `director` taxonomy の entity（CPT）移行
+  - 現状: `/ja/actor/{slug}` / `/ja/director/{slug}` を taxonomy として運用（リニューアル時点）
+  - 将来目標: `/ja/person/{slug}` に統合
+  - 移行条件: CPT 導入・301 リダイレクト実装・slug 変更なし
+- [ ] `company` taxonomy の entity（CPT）移行（同上）
