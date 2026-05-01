@@ -20,6 +20,7 @@ export const getEntityUrl = (type: EntityType, slug: string, lang = DEFAULT_LOCA
 
 // WP category slug → PostType mapping. Extend when actual WP slugs are known.
 const WP_CATEGORY_TO_POST_TYPE: Partial<Record<string, PostType>> = {
+  'movie-ja': 'movie',
   movie: 'movie',
   anime: 'anime',
   drama: 'drama',

@@ -1,5 +1,12 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { getPostBySlug, getPosts, getTags, getRelatedPosts, mapWPPostToPost } from '@/lib/api/wordpress';
+import {
+  genreDisplayLabel,
+  getGenres,
+  getPostBySlug,
+  getPosts,
+  getRelatedPosts,
+  mapWPPostToPost,
+} from '@/lib/api/wordpress';
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import {
@@ -65,7 +72,8 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
 
-  const wpPost = await getPostBySlug(slug, locale);
+  const loc = locale ?? 'ja';
+  const wpPost = await getPostBySlug(slug, loc);
   if (!wpPost) return { notFound: true };
 
   const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
@@ -104,7 +112,6 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
     }))
     .filter((g) => g.posts.length > 0);
 
-  const loc = locale ?? 'ja';
   const detail = buildPostDetailFromWp({
     wp: wpPost,
     locale: loc,
@@ -116,9 +123,9 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
   const post = detail;
   const toc = extractToc(post.content);
 
-  const [allHighScore, allTags] = await Promise.all([
-    getPosts({ per_page: 100, lang: locale }),
-    getTags(locale),
+  const [allHighScore, allGenres] = await Promise.all([
+    getPosts({ per_page: 100, lang: loc }),
+    getGenres(loc),
   ]);
 
   const highScorePosts = pickRandom(
@@ -135,10 +142,10 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
     5,
   );
 
-  const genres = allTags.map((tag) => ({
-    slug: tag.slug,
-    name: tag.name,
-    count: tag.count,
+  const genres = allGenres.map((g) => ({
+    slug: g.slug,
+    name: genreDisplayLabel(g, loc),
+    count: g.count,
   }));
 
   const profile = {
@@ -147,7 +154,7 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
   return {
     props: {
       post: { ...post, toc, highScorePosts, profile },
-      locale: locale ?? 'ja',
+      locale: loc,
       genres,
     },
     revalidate: 60,

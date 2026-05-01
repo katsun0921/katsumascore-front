@@ -11,7 +11,7 @@ export type GenreNavTag = {
 
 export type GenreNavProps = {
   tags: GenreNavTag[]
-  /** カテゴリ・タグアーカイブページで現在のタグをハイライト */
+  /** genre アーカイブページで現在のスラッグをハイライト */
   activeSlug?: string
 }
 
@@ -33,7 +33,7 @@ export const GenreNav = ({ tags, activeSlug }: GenreNavProps) => {
           return (
             <li key={tag.slug} className='sidebar-genre-nav__cell'>
               <Link
-                href={`/tag/${tag.slug}`}
+                href={`/genre/${tag.slug}`}
                 className={[
                   'sidebar-genre-nav__link',
                   isActive ? 'sidebar-genre-nav__link--active' : '',

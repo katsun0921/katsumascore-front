@@ -201,10 +201,33 @@
   - [ ] SEO: title = シリーズ名 + ガイド、description = シリーズ概要要約
 
 ---
-### taxonomy 見直し（リニューアル後）
 
-- [ ] `actor` / `director` taxonomy の entity（CPT）移行
-  - 現状: `/ja/actor/{slug}` / `/ja/director/{slug}` を taxonomy として運用（リニューアル時点）
-  - 将来目標: `/ja/person/{slug}` に統合
-  - 移行条件: CPT 導入・301 リダイレクト実装・slug 変更なし
-- [ ] `company` taxonomy の entity（CPT）移行（同上）
+### 🔴 最優先: Entity統合（person / company）CPT 移行（[設計書](../renewal/entity_design_complete.md)）
+
+> actor / director / company を taxonomy から CPT へ移行し、人・企業を「分類」ではなく「主役」として扱う。
+
+#### Phase 1 — taxonomy 運用（現状）
+- [x] `/ja/actor/{slug}` / `/ja/director/{slug}` を taxonomy として運用中
+
+#### Phase 2 — CPT 導入（WordPress + フロントエンド）
+- [ ] WordPress 側: `person` CPT + ACF フィールド設定（name / slug / roles / bio / image）
+- [ ] WordPress 側: `company` CPT + ACF フィールド設定（name / slug / roles / description / logo）
+- [ ] WordPress 側: Post に `cast` / `director` / `production_companies` / `distributors` の relationship フィールド追加
+- [ ] `lib/api/wordpress/generated/wp-schema.d.ts` を再生成（person / company エンドポイント追加）
+- [ ] `lib/api/wordpress/endpoints/persons.ts` 新設（`getPerson` / `getPersonBySlug` / `getPersonsByRole`）
+- [ ] `lib/api/wordpress/endpoints/companies.ts` 新設（`getCompany` / `getCompanyBySlug`）
+- [ ] `lib/api/wordpress/transform.ts` に person / company の正規化処理を追加
+- [ ] `src/lib/route.ts` に `getEntityUrl(type, slug, lang)` を追加
+- [ ] `pages/person/[slug].tsx` 新設（ISR）— プロフィール / 出演作品 / 監督作品 / 平均スコア
+- [ ] `pages/company/[slug].tsx` 新設（ISR）— 概要 / 制作作品 / 配給作品
+- [ ] PersonTemplate / CompanyTemplate の実装
+- [ ] Breadcrumb 対応（Home > Person > Name / Home > Company > Name）
+- [ ] SEO: entity ページを index 対象・内部リンクのハブ化・canonical 統一
+
+#### Phase 3 — 完全移行（リダイレクト）
+- [ ] `next.config.ts` に 301 リダイレクト追加
+  - `/actor/:slug` → `/person/:slug`
+  - `/director/:slug` → `/person/:slug`
+  - `/production/:slug` → `/company/:slug`
+  - `/distributor/:slug` → `/company/:slug`
+- [ ] slug 固定・重複禁止の確認（移行後に変更禁止）

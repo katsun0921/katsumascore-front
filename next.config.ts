@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
+import { legacyGenrePathCategorySlugPattern } from "./src/lib/taxonomyRoutes";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -20,7 +21,18 @@ const nextConfig: NextConfig = {
     defaultLocale: 'ja',
   },
   async redirects() {
+    const legacyGenre = legacyGenrePathCategorySlugPattern;
     return [
+      {
+        source: `/genre/:slug(${legacyGenre})`,
+        destination: "/categories/:slug",
+        permanent: true,
+      },
+      {
+        source: `/en/genre/:slug(${legacyGenre})`,
+        destination: "/en/categories/:slug",
+        permanent: true,
+      },
       {
         source: "/author/:slug",
         destination: "/404",

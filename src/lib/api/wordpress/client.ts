@@ -7,7 +7,8 @@ const normalizeWpApiBaseUrl = (raw: string | undefined): string | undefined => {
   return t.replace(/\/+$/, "");
 };
 
-const BASE_URL = normalizeWpApiBaseUrl(process.env.WP_API_URL);
+/** OpenAPI クライアントと生 fetch の共通ベース（通常 `.../wp-json/wp/v2`） */
+export const wpApiBaseUrl = normalizeWpApiBaseUrl(process.env.WP_API_URL);
 
 /** `_embed` / `acf_format` を既定値として付与するミドルウェア */
 const defaultParamsMiddleware: Parameters<
@@ -22,8 +23,8 @@ const defaultParamsMiddleware: Parameters<
 };
 
 const buildClient = () => {
-  if (!BASE_URL) return null;
-  const client = createClient<paths>({ baseUrl: BASE_URL });
+  if (!wpApiBaseUrl) return null;
+  const client = createClient<paths>({ baseUrl: wpApiBaseUrl });
   client.use(defaultParamsMiddleware);
   return client;
 };

@@ -1,6 +1,13 @@
 // ISR: revalidate 60s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { getPostBySlug, getPosts, getTags, getRelatedPosts, mapWPPostToPost } from '@/lib/api/wordpress';
+import {
+  genreDisplayLabel,
+  getGenres,
+  getPostBySlug,
+  getPosts,
+  getRelatedPosts,
+  mapWPPostToPost,
+} from '@/lib/api/wordpress';
 import { extractToc } from '@/lib/toc';
 import { pickRandom } from '@/lib/highscore';
 import {
@@ -47,7 +54,8 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const slug = params?.slug;
     if (typeof slug !== 'string') return { notFound: true };
 
-    const wpPost = await getPostBySlug(slug, locale);
+    const loc = locale ?? 'ja';
+    const wpPost = await getPostBySlug(slug, loc);
     if (!wpPost) return { notFound: true };
 
     const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
@@ -86,7 +94,6 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       }))
       .filter((g) => g.posts.length > 0);
 
-    const loc = locale ?? 'ja';
     const detail = buildPostDetailFromWp({
       wp: wpPost,
       locale: loc,
@@ -97,9 +104,9 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     const toc = extractToc(detail.content);
 
-    const [allHighScore, allTags] = await Promise.all([
-      getPosts({ per_page: 100, lang: locale }),
-      getTags(locale),
+    const [allHighScore, allGenres] = await Promise.all([
+      getPosts({ per_page: 100, lang: loc }),
+      getGenres(loc),
     ]);
 
     const highScorePosts = pickRandom(
@@ -116,10 +123,10 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       5,
     );
 
-    const genres = allTags.map((tag) => ({
-      slug: tag.slug,
-      name: tag.name,
-      count: tag.count,
+    const genres = allGenres.map((g) => ({
+      slug: g.slug,
+      name: genreDisplayLabel(g, loc),
+      count: g.count,
     }));
 
     return {

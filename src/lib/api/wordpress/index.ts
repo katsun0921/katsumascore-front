@@ -14,6 +14,14 @@ export { getCategories, getCategoryBySlug } from "./endpoints/categories";
 
 export { getTags, pickRandomTags } from "./endpoints/tags";
 
+export {
+  getGenres,
+  getGenreBySlug,
+  genreDisplayLabel,
+  normalizeGenreTermAcf,
+} from "./endpoints/genre";
+export type { WPGenreTerm } from "./endpoints/genre";
+
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
 export { stripHtml, mapWPPostToPost, parseWPPostUnknown } from "./transform";

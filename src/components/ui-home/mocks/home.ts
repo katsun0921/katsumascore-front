@@ -232,7 +232,7 @@ export const mockHighScorePosts: Post[] = [
 export const mockRecommendBlocks: RecommendBlock[] = [
   {
     tag: 'SF',
-    seeAllHref: '/genre/sf',
+    seeAllHref: '/genre/sci-fi',
     posts: [
       { id: '40', slug: '/posts/voyager', title: 'ヴォイジャー', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2021-05-01', category: '映画', score: 2.5 },
       { id: '41', slug: '/posts/companion', title: 'コンパニオン', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2025-01-01', category: '映画', score: 3.3, vods: ['amazon'] },

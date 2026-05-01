@@ -1,4 +1,4 @@
-// ISR: revalidate 60s
+// ISR: revalidate 60s — genre taxonomy ページネーション
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -6,8 +6,8 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getCategories } from '@/lib/api/wordpress';
-import { loadCategoryListPage } from '@/lib/loadCategoryListPage';
+import { getGenres } from '@/lib/api/wordpress';
+import { loadGenreListPage } from '@/lib/loadGenreListPage';
 import { getTaxonomyUrl } from '@/lib/route';
 import type { Post } from '@/types/post';
 
@@ -18,7 +18,7 @@ const FILTER_OPTIONS = [
 ];
 
 type GenrePagedProps = {
-  categoryName: string;
+  genreName: string;
   slug: string;
   posts: Post[];
   currentPage: number;
@@ -32,7 +32,14 @@ const sortPosts = (posts: Post[], filter: string): Post[] => {
   return posts;
 };
 
-const GenrePagedPage = ({ categoryName, slug, posts, currentPage, totalPages, locale }: GenrePagedProps) => {
+const GenrePagedPage = ({
+  genreName,
+  slug,
+  posts,
+  currentPage,
+  totalPages,
+  locale,
+}: GenrePagedProps) => {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('score');
   const sortedPosts = sortPosts(posts, activeFilter);
@@ -46,12 +53,14 @@ const GenrePagedPage = ({ categoryName, slug, posts, currentPage, totalPages, lo
   return (
     <I18nProvider locale={loc}>
       <Head>
-        <title>{categoryName} ({currentPage}/{totalPages}) | KatsumaScore</title>
-        <meta name='description' content={`${categoryName}の記事一覧 — スコアで選ぶ`} />
+        <title>
+          {genreName} ({currentPage}/{totalPages}) | KatsumaScore
+        </title>
+        <meta name='description' content={`${genreName}の記事一覧 — スコアで選ぶ`} />
       </Head>
       <ListTemplate
-        categoryName={categoryName}
-        categoryDescription={`今観るべき${categoryName}作品を、スコアで選ぶ`}
+        categoryName={genreName}
+        categoryDescription={`今観るべき${genreName}作品を、スコアで選ぶ`}
         posts={sortedPosts}
         filterOptions={FILTER_OPTIONS}
         activeFilter={activeFilter}
@@ -71,12 +80,12 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
 
   for (const loc of locales) {
     const lang = loc === 'en' ? 'en' : 'ja';
-    const categories = await getCategories(lang);
-    for (const category of categories) {
-      const first = await loadCategoryListPage(category.slug, loc, 1);
+    const genres = await getGenres(lang);
+    for (const genre of genres) {
+      const first = await loadGenreListPage(genre.slug, loc, 1);
       if ('notFound' in first) continue;
       for (let p = 2; p <= first.totalPages; p += 1) {
-        paths.push({ params: { slug: category.slug, page: String(p) }, locale: loc });
+        paths.push({ params: { slug: genre.slug, page: String(p) }, locale: loc });
       }
     }
   }
@@ -92,12 +101,12 @@ export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, 
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
   const currentLocale = locale ?? 'ja';
-  const data = await loadCategoryListPage(slug, currentLocale, pageNum);
+  const data = await loadGenreListPage(slug, currentLocale, pageNum);
   if ('notFound' in data) return { notFound: true };
 
   return {
     props: {
-      categoryName: data.categoryName,
+      genreName: data.genreName,
       slug: data.slug,
       posts: data.posts,
       currentPage: data.currentPage,
