@@ -182,6 +182,14 @@
 - [ ] Lighthouse スコア確認（Performance / SEO / A11y）
 - [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
 
+### taxonomy 見直し（リニューアル後）
+
+- [ ] `actor` / `director` taxonomy の entity（CPT）移行
+  - 現状: `/ja/actor/{slug}` / `/ja/director/{slug}` を taxonomy として運用（リニューアル時点）
+  - 将来目標: `/ja/person/{slug}` に統合
+  - 移行条件: CPT 導入・301 リダイレクト実装・slug 変更なし
+- [ ] `company` taxonomy の entity（CPT）移行（同上）
+
 ### 公開後対応（フェーズ 7）
 - [ ] 全コンポーネントに Storybook Story 作成
 - [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
