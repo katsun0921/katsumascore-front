@@ -194,9 +194,36 @@ npm run deploy
 | [Todo.md](./docs/features/MigrationNextjsTodo.md) | 移行進捗 TODO（フェーズ別チェックリスト） |
 | [docs/archive/wordpress-to-nextjs-migration.md](./docs/archive/wordpress-to-nextjs-migration.md) | WordPress → Next.js 移行手順（アーカイブ・2026-04 実装完了時点） |
 | [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md) | VODパーソナライズ & 通知機能設計 |
+| [docs/features/wpgraphql-acf-evaluation.md](./docs/features/wpgraphql-acf-evaluation.md) | WPGraphQL for ACF 導入評価（現リリース見送り・カスタムポストタイプ追加時に再検討） |
 
 ---
 
 ## 移行進捗
 
 詳細なフェーズ別 TODO: [Todo.md](./docs/features/MigrationNextjsTodo.md)
+
+---
+
+## 今後の予定
+
+### カスタムポストタイプの追加
+
+現在は映画・アニメ・ドラマを単一のポストタイプで管理しているが、以下のカスタムポストタイプの追加を予定している。
+
+| ポストタイプ | 内容 |
+|---|---|
+| VOD | 配信サービスごとの在庫・料金情報 |
+| フランチャイズ | シリーズ・シーズンのグループ管理 |
+| アクター | 俳優・声優の情報と出演作品の関連付け |
+
+### WPGraphQL for ACF への移行検討
+
+カスタムポストタイプの追加に伴い ACF フィールドの種類と複雑度が増加するタイミングで、
+WordPress REST API から **WPGraphQL for ACF** への移行を検討する。
+
+主な改善効果:
+- 一覧ページでの `content` 過剰取得の解消
+- 詳細ページの関連記事取得を単一 GraphQL クエリに統合
+- ACF フィールドの型を GraphQL スキーマから自動生成（Zod の手動メンテ削減）
+
+詳細: [docs/features/wpgraphql-acf-evaluation.md](./docs/features/wpgraphql-acf-evaluation.md)
