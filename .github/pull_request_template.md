@@ -41,7 +41,7 @@
 - [ ] Tailwind のデフォルトカラー（`bg-blue-500` 等）を使用していない
 - [ ] カラーは CSS 変数経由（`bg-[var(--color-xxx)]`）で指定した
 - [ ] arbitrary value（`p-[14px]` 等）を使用していない
-- [ ] `@media` のブレークポイント値を直書きしていない（Tailwind プレフィックス or `globals.css` で管理）
+- [ ] `@media` のブレークポイント値を直書きしていない（Tailwind プレフィックス または `globals.css` で管理）
 - [ ] `<a href>` ではなく `<Link>` を使用した
 - [ ] `<img>` ではなく `<Image>` を使用した
 
