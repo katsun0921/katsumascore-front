@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v4.2 ― レンダリング方式ルールを追加
-> 2026年4月29日
+> v4.3 ― PR 記述言語ルールを追加
+> 2026年5月1日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -10,6 +10,30 @@
 - WordPress → Next.js移行ガイド
 - フロントエンド設計規約
 - Storybook設計ルール
+
+---
+
+## ■ GitHub 運用ルール
+
+### PR 記述言語（必須）
+
+**PR のタイトル・本文はすべて日本語で記述する。**
+
+| 項目 | ルール |
+|------|--------|
+| タイトル | `feature:` または `bug:` prefix + 日本語要約 |
+| 概要 | 日本語で記述 |
+| コード変更サマリー | 日本語で記述 |
+
+```
+✅ 正しい例
+タイトル: feature: PostCard コンポーネントを追加
+概要: 記事一覧ページでサムネイル付きカードを表示するために PostCard を新規作成した。
+
+❌ 禁止例
+タイトル: feat: Add PostCard component
+概要: Added PostCard component for displaying article thumbnails.
+```
 
 ---
 
