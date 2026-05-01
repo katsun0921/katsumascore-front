@@ -194,6 +194,7 @@ npm run deploy
 | [Todo.md](./docs/features/MigrationNextjsTodo.md) | 移行進捗 TODO（フェーズ別チェックリスト） |
 | [docs/archive/wordpress-to-nextjs-migration.md](./docs/archive/wordpress-to-nextjs-migration.md) | WordPress → Next.js 移行手順（アーカイブ・2026-04 実装完了時点） |
 | [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md) | VODパーソナライズ & 通知機能設計 |
+| [docs/features/franchise_acf_design.md](./docs/features/franchise_acf_design.md) | Franchise（シリーズ）ACF設計 ― リニューアル後施策 |
 | [docs/features/wpgraphql-acf-evaluation.md](./docs/features/wpgraphql-acf-evaluation.md) | WPGraphQL for ACF 導入評価（現リリース見送り・カスタムポストタイプ追加時に再検討） |
 
 ---
