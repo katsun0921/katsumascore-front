@@ -1,0 +1,136 @@
+name: PR Description Generator
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get diff info
+        id: diff
+        run: |
+          BASE=${{ github.event.pull_request.base.sha }}
+          HEAD=${{ github.event.pull_request.head.sha }}
+
+          STAT=$(git diff "$BASE"..."$HEAD" --stat | tail -1)
+          FILES=$(git diff "$BASE"..."$HEAD" --name-only | sed 's/^/- /' | head -50)
+
+          echo "stat=$STAT" >> $GITHUB_OUTPUT
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Update PR body with template
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const pull_number = context.payload.pull_request.number;
+            const stat = `${{ steps.diff.outputs.stat }}`;
+            const files = `${{ steps.diff.outputs.files }}`;
+
+            const body = `## 変更種別
+
+            - [ ] feature: 新機能
+            - [ ] bug: バグ修正
+            - [ ] refactor: リファクタリング（機能変更なし）
+            - [ ] style: スタイル変更（ロジック変更なし）
+            - [ ] docs: ドキュメント
+            - [ ] chore: ビルド / 依存関係 / 設定
+            - [ ] test: テスト追加 / 修正
+
+            ---
+
+            ## 概要
+
+            <!-- 何を・なぜ変更したかを日本語で記述する -->
+
+            ---
+
+            ## コード変更サマリー
+
+            **変更統計:** ${stat}
+
+            **変更ファイル:**
+            ${files}
+
+            ---
+
+            ## レイヤー設計チェック
+
+            - [ ] コンポーネントを正しいレイヤーに配置した（ui-parts / ui-layout / ui-section / ui-home / features / templates）
+            - [ ] 1ディレクトリ1コンポーネントルールを守った
+            - [ ] ui-parts / ui-layout / ui-section / ui-home に hooks / state を含めていない
+            - [ ] コンポーネント内で fetch を使用していない
+            - [ ] Arrow 関数のみを使用した（\`function\` キーワード禁止）
+            - [ ] 三項演算子・条件分岐がシンプルな範囲に収まっている
+
+            ---
+
+            ## スタイリングチェック
+
+            - [ ] ハードコードカラー（\`#xxxxxx\`）を使用していない
+            - [ ] Tailwind のデフォルトカラー（\`bg-blue-500\` 等）を使用していない
+            - [ ] カラーは CSS 変数経由（\`bg-[var(--color-xxx)]\`）で指定した
+            - [ ] arbitrary value（\`p-[14px]\` 等）を使用していない
+            - [ ] \`@media\` のブレークポイント値を直書きしていない（Tailwind プレフィックス または \`globals.css\` で管理）
+            - [ ] \`<a href>\` ではなく \`<Link>\` を使用した
+            - [ ] \`<img>\` ではなく \`<Image>\` を使用した
+
+            ---
+
+            ## Storybook チェック
+
+            - [ ] 新規コンポーネントに Story を追加した
+            - [ ] 異常系（LongTitle / NoImage / MixedData / Dense / Extreme）を含めた
+            - [ ] 既存 Story に影響がないことを確認した（Chromatic で確認）
+
+            ---
+
+            ## i18n チェック
+
+            - [ ] 日本語 / 英語のハードコードがない（\`i18n.ts\` で管理）
+            - [ ] 翻訳は \`ja\` / \`en\` 両キーを定義した
+
+            ---
+
+            ## レンダリング方式チェック（ページ変更がある場合）
+
+            - [ ] ページファイルにレンダリング方式をコメントで明記した
+            - [ ] ISR を使用する場合は \`revalidate\` 値を設定した
+            - [ ] SSR は VOD ページのみに限定した
+
+            ---
+
+            ## スクリーンショット（UI 変更がある場合）
+
+            | Before | After |
+            |--------|-------|
+            |        |       |
+
+            ---
+
+            ## 関連 Issue
+
+            <!-- Closes #xxx -->`;
+
+            await github.rest.pulls.update({
+              owner,
+              repo,
+              pull_number,
+              body
+            });
