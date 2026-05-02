@@ -36,13 +36,20 @@ const looseBool = z.preprocess((v: unknown) => {
   return Boolean(v);
 }, z.boolean());
 
-const acfSummaryGroupSchema = z
-  .object({
-    summary_jp: z.string().optional(),
-    summary_en: z.string().optional(),
-  })
-  .passthrough()
-  .optional();
+/** 本番で `acf_summary_group: null` が返ると子 object 型と不一致になり ACF 全体の parse が落ちるため正規化する */
+const acfSummaryGroupSchema = z.preprocess(
+  (v) => {
+    if (v == null || v === false) return undefined;
+    return v;
+  },
+  z
+    .object({
+      summary_jp: z.string().optional(),
+      summary_en: z.string().optional(),
+    })
+    .passthrough()
+    .optional(),
+);
 
 /** REST では `name` ではなく `character` + `actor`(ID) + `description` になることがある */
 const actorFieldSchema = z
@@ -85,10 +92,27 @@ const wpPostAcfObjectSchema = z
     trailer_youtube_id: z.string().optional(),
     trailer_youtube: z.string().optional(),
     rating: z.string().optional(),
-    author_comment: z.string().optional(),
+    /** 本番で数値や空が混ざると string 解釈で ACF 全体の parse が落ちるため緩める */
+    author_comment: z.preprocess(
+      (v) => {
+        if (v == null || v === "") return undefined;
+        if (typeof v === "number" && Number.isFinite(v)) return String(v);
+        return v;
+      },
+      z.string().optional(),
+    ),
     rental_services: z.array(rentalRowSchema).optional(),
     release_date: z.string().optional(),
     copyright: z.string().optional(),
+    /** タイトル上のタグライン（本番 post meta / ACF キー名 `tagline`） */
+    tagline: z.preprocess(
+      (v) => {
+        if (v == null || v === "") return undefined;
+        if (typeof v === "number" && Number.isFinite(v)) return String(v);
+        return v;
+      },
+      z.string().optional(),
+    ),
     display_settings: displaySettingsSchema,
   })
   .passthrough();
@@ -112,6 +136,13 @@ export const WPPostSchema = z
     date: z.string(),
     modified: z.string().optional(),
     featured_media: z.number(),
+    meta: z.preprocess(
+      (v) => {
+        if (v == null || typeof v !== "object" || Array.isArray(v)) return undefined;
+        return v;
+      },
+      z.record(z.string(), z.unknown()).optional(),
+    ),
     _embedded: WPEmbeddedSchema.optional(),
     acf: acfFromRest,
   })

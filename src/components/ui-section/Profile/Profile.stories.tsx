@@ -47,6 +47,14 @@ export const LongComment: Story = {
   },
 };
 
+export const WithPostExcerpt: Story = {
+  args: {
+    ...baseArgs,
+    excerpt:
+      '本作は原作ファンにも評判の映像化。前半の世界観構築とラストの展開が見どころ。',
+  },
+};
+
 export const English: Story = {
   args: baseArgs,
   globals: { locale: 'en' },

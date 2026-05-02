@@ -10,8 +10,9 @@ import type { WpFetchOptions, WpPostsPagedResult } from "../client";
 
 type WPPost = components["schemas"]["WPPost"];
 
+/** `video_code` 等のカスタムメタは `meta` を要求しないと REST に含まれない */
 const FIELDS =
-  "id,slug,link,title,excerpt,content,date,modified,featured_media,acf,_links,_embedded";
+  "id,slug,link,title,excerpt,content,date,modified,featured_media,acf,meta,_links,_embedded";
 
 type PostsQuery = {
   page?: number;

@@ -36,7 +36,10 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
           trailerYoutubeId={post.trailerYoutubeId}
           trailerEmbedCode={post.trailerEmbedCode}
           posterUrl={post.image ?? ''}
+          tagline={post.authorComment}
           description={post.summary?.text ?? ''}
+          refUrl={post.summary?.refUrl}
+          refLabel={post.summary?.refLabel}
         />
       </div>
       {/* body: 最大幅・中央・flex（md以上） */}

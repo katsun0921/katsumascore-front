@@ -8,10 +8,13 @@ import { XIcon } from '@/assets/icons';
 import { profileConfig } from './Profile.config';
 
 export type ProfileProps = {
+  /** 投稿の抜粋（WP excerpt） */
+  excerpt?: string
   comment?: string
 }
 
 export const Profile = ({
+  excerpt,
   comment,
 }: ProfileProps) => {
   const locale = useLocale();
@@ -34,6 +37,15 @@ export const Profile = ({
           </p>
         </div>
       </div>
+
+      {excerpt && (
+        <div className='border-t border-color-border pt-3'>
+          <span className='block text-ui text-color-secondary mb-1'>
+            {t(messages, ['excerpt', 'label'], locale)}
+          </span>
+          <p className='text-body text-color-secondary leading-relaxed line-clamp-4'>{excerpt}</p>
+        </div>
+      )}
 
       {comment && (
         <div className='border-t border-color-border pt-3'>

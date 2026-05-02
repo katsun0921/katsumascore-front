@@ -9,9 +9,10 @@ type Props = {
   post: Post;
   rank?: number;
   className?: string;
+  highlightKeyword?: string;
 };
 
-export const PostCardImgLeft = ({ post, rank, className }: Props) => (
+export const PostCardImgLeft = ({ post, rank, className, highlightKeyword }: Props) => (
   <PostCardContainer className={className}>
     <Link
       href={post.slug}
@@ -24,6 +25,7 @@ export const PostCardImgLeft = ({ post, rank, className }: Props) => (
         title={post.title}
         excerpt={post.excerpt}
         className='content-center min-h-full'
+        highlightKeyword={highlightKeyword}
       />
     </Link>
   </PostCardContainer>

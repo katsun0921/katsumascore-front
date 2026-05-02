@@ -142,6 +142,28 @@ const buildRentalServices = (wp: ParsedWPPost): TRentalService[] | undefined => 
   return undefined;
 };
 
+/** WP が URL / ID 混在で返す trailer フィールドから YouTube の video id を取得 */
+const extractYoutubeVideoId = (raw: string | undefined): string | undefined => {
+  if (!raw?.trim()) return undefined;
+  const t = raw.trim();
+  if (/^[\w-]{11}$/.test(t) && !/^https?:\/\//i.test(t)) return t;
+  const q = t.match(/[?&]v=([\w-]{11})/);
+  if (q?.[1]) return q[1];
+  const shortm = t.match(/youtu\.be\/([\w-]{11})/);
+  if (shortm?.[1]) return shortm[1];
+  const emb = t.match(/youtube\.com\/embed\/([\w-]{11})/);
+  if (emb?.[1]) return emb[1];
+  const sh = t.match(/youtube\.com\/shorts\/([\w-]{11})/);
+  if (sh?.[1]) return sh[1];
+  return undefined;
+};
+
+const scalarToTrimmedString = (v: unknown): string => {
+  if (typeof v === "string") return v.trim();
+  if (typeof v === "number" && Number.isFinite(v)) return String(v).trim();
+  return "";
+};
+
 const extractPostsGroupIds = (acf: Record<string, unknown> | undefined): { heading: string; ids: number[] }[] => {
   if (!acf) return [];
   const raw = acf.posts_groups ?? acf.post_groups ?? acf.related_groups;
@@ -181,23 +203,61 @@ export const buildPostDetailFromWp = ({
   const titleEnRaw = parsed.acf?.title_en?.trim();
   const titleEn = titleEnRaw ? stripHtml(titleEnRaw) : undefined;
 
-  const summaryJp = parsed.acf?.acf_summary_group?.summary_jp;
-  const summaryEn = parsed.acf?.acf_summary_group?.summary_en;
-  const summaryText =
-    locale === "en"
-      ? (summaryEn?.trim() ? stripHtml(summaryEn) : summaryJp?.trim() ? stripHtml(summaryJp) : "")
-      : summaryJp?.trim()
-        ? stripHtml(summaryJp)
-        : summaryEn?.trim()
-          ? stripHtml(summaryEn)
-          : "";
+  const sg = parsed.acf?.acf_summary_group as Record<string, unknown> | undefined;
+
+  const snippetFrom = (raw: unknown): string => {
+    if (typeof raw !== "string") return "";
+    const t = raw.trim();
+    if (!t) return "";
+    return stripHtml(t);
+  };
+
+  /** グループ内・ルート ACF の両方からあらすじ本文を拾う（テーマ acf-summary.php は acf_summary_text 中心） */
+  const summaryJpFromFields = (): string => {
+    const fromGroup =
+      snippetFrom(sg?.summary_jp) ||
+      snippetFrom(sg?.acf_summary_text) ||
+      snippetFrom(sg?.acf_summary_text_jp);
+    if (fromGroup) return fromGroup;
+    if (!acf) return "";
+    return snippetFrom(acf.acf_summary_text) || snippetFrom(acf.summary_jp);
+  };
+
+  const summaryEnFromFields = (): string => {
+    const fromGroup = snippetFrom(sg?.summary_en) || snippetFrom(sg?.acf_summary_text_en);
+    if (fromGroup) return fromGroup;
+    if (!acf) return "";
+    return snippetFrom(acf.summary_en);
+  };
+
+  const jpText = summaryJpFromFields();
+  const enText = summaryEnFromFields();
+  let summaryText = "";
+  if (locale === "en") {
+    summaryText = enText || jpText;
+  } else {
+    summaryText = jpText || enText;
+  }
+
+  if (!summaryText.trim() && base.excerpt.trim()) {
+    summaryText = base.excerpt;
+  }
+
+  const officialUrl = parsed.acf?.official_url?.trim();
+  const groupRefUrl = typeof sg?.acf_ref_url === "string" ? sg.acf_ref_url.trim() : "";
+  const groupRefLabelRaw = typeof sg?.acf_summary_ref === "string" ? sg.acf_summary_ref.trim() : "";
+  const citeUrl = officialUrl || groupRefUrl;
+  let citeLabel: string | undefined;
+  if (citeUrl) {
+    if (groupRefLabelRaw) citeLabel = stripHtml(groupRefLabelRaw);
+    else citeLabel = locale === "en" ? "Official site" : "公式サイト";
+  }
 
   const summary =
     summaryText.length > 0
       ? {
           text: summaryText,
-          ...(parsed.acf?.official_url?.trim() ? { refUrl: parsed.acf.official_url.trim() } : {}),
-          refLabel: locale === "en" ? "Official site" : "公式サイト",
+          ...(citeUrl ? { refUrl: citeUrl, ...(citeLabel ? { refLabel: citeLabel } : {}) } : {}),
         }
       : undefined;
 
@@ -215,22 +275,61 @@ export const buildPostDetailFromWp = ({
         }
       : undefined;
 
-  const trailerYoutubeId =
-    parsed.acf?.trailer_youtube_id?.trim() ||
-    parsed.acf?.trailer_youtube?.trim() ||
-    (typeof acf?.youtube_id === "string" ? acf.youtube_id.trim() : undefined);
+  const metaRecord =
+    parsed.meta && typeof parsed.meta === "object" && !Array.isArray(parsed.meta)
+      ? (parsed.meta as Record<string, unknown>)
+      : undefined;
+
+  /** タグライン: REST の post meta は `tagline`（ACF 側も同一キーの場合あり） */
+  const taglineRaw =
+    scalarToTrimmedString(metaRecord?.tagline) || scalarToTrimmedString(acf?.tagline);
+  const authorComment = taglineRaw.length > 0 ? stripHtml(taglineRaw) : undefined;
+
+  const videoCodeFromMeta =
+    typeof metaRecord?.video_code === "string" && metaRecord.video_code.trim()
+      ? metaRecord.video_code.trim()
+      : undefined;
+  let videoCodeFromAcf: string | undefined;
+  if (typeof acf?.video_code === "string" && acf.video_code.trim()) {
+    videoCodeFromAcf = acf.video_code.trim();
+  } else if (typeof acf?.trailer_embed === "string" && acf.trailer_embed.trim()) {
+    videoCodeFromAcf = acf.trailer_embed.trim();
+  }
+  const trailerEmbedCode = videoCodeFromMeta ?? videoCodeFromAcf;
+
+  const idCandidates = [
+    parsed.acf?.trailer_youtube_id,
+    parsed.acf?.trailer_youtube,
+    typeof acf?.youtube_id === "string" ? acf.youtube_id : undefined,
+  ];
+  let trailerYoutubeId: string | undefined;
+  for (const c of idCandidates) {
+    if (typeof c !== "string" || !c.trim()) continue;
+    const id = extractYoutubeVideoId(c.trim());
+    if (id) {
+      trailerYoutubeId = id;
+      break;
+    }
+  }
+
   const updatedAt = parsed.modified?.slice(0, 10);
-  const authorComment = parsed.acf?.author_comment?.trim();
   const goodPoints = splitGoodPoints(parsed.acf?.good_point_filed);
   const actors = mapActors(parsed);
   const streamingVods = buildStreamingVods(parsed);
   const rentalServices = buildRentalServices(parsed);
 
+  const trailerVideo: { trailerEmbedCode?: string; trailerYoutubeId?: string } = {};
+  if (trailerEmbedCode) {
+    trailerVideo.trailerEmbedCode = trailerEmbedCode;
+  } else if (trailerYoutubeId) {
+    trailerVideo.trailerYoutubeId = trailerYoutubeId;
+  }
+
   return {
     ...base,
     ...(titleEn ? { titleEn } : {}),
     ...(updatedAt ? { updatedAt } : {}),
-    ...(trailerYoutubeId ? { trailerYoutubeId } : {}),
+    ...trailerVideo,
     ...(authorComment ? { authorComment } : {}),
     ...(goodPoints ? { goodPoints } : {}),
     ...(summary ? { summary } : {}),

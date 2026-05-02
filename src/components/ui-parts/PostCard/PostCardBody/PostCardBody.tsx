@@ -1,4 +1,6 @@
-import type { PostCardBodyProps } from './PostCardBody.types';
+import type { ReactNode } from "react";
+import { HighlightText } from "@/components/ui-parts/HighlightText";
+import type { PostCardBodyProps } from "./PostCardBody.types";
 
 const BR_TAG_PATTERN = /<br\s*\/?>/i;
 
@@ -19,8 +21,15 @@ export const PostCardBody = ({
   excerpt,
   category,
   className,
+  highlightKeyword,
 }: PostCardBodyProps) => {
-  const titleContent = BR_TAG_PATTERN.test(title) ? renderTitleWithLineBreaks(title) : title;
+  let titleContent: ReactNode = title;
+  if (BR_TAG_PATTERN.test(title)) {
+    titleContent = renderTitleWithLineBreaks(title);
+  }
+  if (highlightKeyword?.trim() && !BR_TAG_PATTERN.test(title)) {
+    titleContent = <HighlightText text={title} keyword={highlightKeyword} />;
+  }
 
   return (
     <div className={['postCard__body grid gap-3 px-4 pb-5 pt-4 md:p-5', className].filter(Boolean).join(' ')}>

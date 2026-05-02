@@ -129,9 +129,16 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       count: g.count,
     }));
 
+    const excerptTrimmed = detail.excerpt.trim();
+    const commentTrimmed = detail.authorComment?.trim() ?? "";
+    const profile = {
+      ...(excerptTrimmed.length > 0 ? { excerpt: excerptTrimmed } : {}),
+      ...(commentTrimmed.length > 0 ? { comment: commentTrimmed } : {}),
+    };
+
     return {
       props: {
-        post: { ...detail, toc, highScorePosts, profile: {} },
+        post: { ...detail, toc, highScorePosts, profile },
         locale: loc,
         genres,
       },

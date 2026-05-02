@@ -6,6 +6,9 @@ export const messages = {
   comment: {
     label: { ja: '一言コメント', en: 'Comment' },
   },
+  excerpt: {
+    label: { ja: 'リード', en: 'Summary' },
+  },
   about: {
     link: { ja: 'このサイトについて詳しく知る', en: 'About This Site' },
   },

@@ -148,7 +148,11 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params, locale }) 
     count: g.count,
   }));
 
+  const excerptTrimmed = post.excerpt.trim();
+  const commentTrimmed = post.authorComment?.trim() ?? "";
   const profile = {
+    ...(excerptTrimmed.length > 0 ? { excerpt: excerptTrimmed } : {}),
+    ...(commentTrimmed.length > 0 ? { comment: commentTrimmed } : {}),
   };
 
   return {

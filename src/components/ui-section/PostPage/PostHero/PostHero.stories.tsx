@@ -25,6 +25,12 @@ type Story = StoryObj<typeof PostHero>
 
 export const Default: Story = {};
 
+export const WithTagline: Story = {
+  args: {
+    tagline: '「犯人はこの部屋にいる」— 史上最高の本格ミステリ映画',
+  },
+};
+
 export const LongTitle: Story = {
   args: {
     title: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',

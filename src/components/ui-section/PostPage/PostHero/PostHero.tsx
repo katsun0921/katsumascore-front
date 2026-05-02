@@ -8,6 +8,7 @@ export type PostHeroProps = {
   trailerYoutubeId?: string
   trailerEmbedCode?: string
   posterUrl: string
+  tagline?: string
   description: string
   refUrl?: string
   refLabel?: string
@@ -33,6 +34,9 @@ export const PostHero = (props: PostHeroProps) => {
       )}
       <div className={`${prefixClassName}__summary`}>
         <h2 className={`${prefixClassName}__heading`}>{t(messages, ['heading'], locale)}</h2>
+        {props.tagline && (
+          <p className={`${prefixClassName}__tagline`}>{props.tagline}</p>
+        )}
         <blockquote className={`${prefixClassName}__quote`}>
           <p className={`${prefixClassName}__quote-text`}>{props.description}</p>
           {(props.refUrl || props.refLabel) && (
