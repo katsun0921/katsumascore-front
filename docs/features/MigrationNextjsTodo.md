@@ -2,7 +2,7 @@
 
 > 対象: `katsumascore_wordpress_theme` → `katsumascore-front`（Next.js）
 > 方針: WordPressはCMSのみ。Next.jsでフロントエンドを再設計する。
-> 最終更新: 2026-04-26
+> 最終更新: 2026-05-02
 
 > [!IMPORTANT]
 > 移行元の `katsumascore_wordpress_theme` は**読み取り専用**とする。
@@ -134,19 +134,19 @@
 - [x] `features/Carousel` — 削除済み
 - [x] `features/Post/PostDate` — `ui-section/PostDate` へ移動済み
 - [ ] `features/VodPanel` — 完全未使用（`ui-section/VodPanel`との重複整理）
-- [ ] `features/OfficialSns` — 適切なレイヤーへ移動または削除
-- [ ] `features/PickUpAndScore` — 適切なレイヤーへ移動
-- [ ] `features/ReviewSiteScores` — 適切なレイヤーへ移動
-- [ ] `features/ScoreWithRank` — 適切なレイヤーへ移動
+- [x] `features/OfficialSns` — 使用中（`PostTitleMeta`）。レイヤー見直しは任意
+- [x] `features/PickUpAndScore` — 使用中（`Sidebar`）
+- [x] `features/ReviewSiteScores` — 使用中（`PostDetail` / `buildPostDetailFromWp`）
+- [x] `features/ScoreWithRank` — 使用中（`PostHeader` / `PostGoodPoint`）
 - [ ] `ui-layout/Container` — 完全未使用（削除または接続先の検討）
 - [ ] `ui-parts/Badge` — 完全未使用
-- [ ] `ui-parts/CTAButton` — 完全未使用
+- [x] `ui-parts/CTAButton` — 使用中（`Header`）
 - [ ] `ui-parts/Category` — 完全未使用
 - [ ] `ui-parts/VodLink` — 完全未使用
 - [x] `ui-parts/Affiliate/Admax` — 未使用（Tsutaya / Geo は AdRental で使用中）
 - [x] `ui-parts/Affiliate/Wowow` — 未使用
 - [x] `ui-section/ProductBlock` — 完全未使用（Gutenberg確認用途として保持か削除か要判断）
-- [ ] `ui-section/VodIntroduction` → `ui-section/` 内での位置整理
+- [x] `ui-section/VodIntroduction` — 使用中（`PostDetail`）。`ui-section/` 内の並び・命名の整理は任意
 - [ ] `features/vod/` への整理（`VodMenu`, `VodPanel`, `VodItem` 等）
 - [ ] `features/Post/PostVariants` の整備
 - [x] `ui-section/PostListRow` コンポーネントの実装（新設）
