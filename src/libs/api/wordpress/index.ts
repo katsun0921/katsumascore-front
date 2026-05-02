@@ -30,6 +30,10 @@ export {
   parseWPPostUnknown,
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
+  extractFilmStudioLinksFromParsedWp,
+  extractProductionStudioLinksFromParsedWp,
+  extractDirectorTermNamesFromParsedWp,
+  extractActorTermNamesFromParsedWp,
 } from "./transform";
 export type { PostTaxonomyLink } from "./transform";
 

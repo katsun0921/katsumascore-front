@@ -27,6 +27,10 @@ export type PostDetailData = Post & {
   heroGenres?: PostTaxonomyLink[]
   /** `_embed` の wp:term（post_tag）から抽出 */
   heroTags?: PostTaxonomyLink[]
+  /** `_embed` の wp:term（film_studio / 配給会社）から抽出 */
+  heroFilmStudios?: PostTaxonomyLink[]
+  /** `_embed` の wp:term（production_studio / 制作会社）から抽出 */
+  heroProductionStudios?: PostTaxonomyLink[]
 
   // p-info ブロック（post-review.php 相当）
   videoCode?: string

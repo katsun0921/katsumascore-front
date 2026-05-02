@@ -9,7 +9,8 @@ export type TReviewSite = {
   score: number
   maxScore?: number
   unit?: string
-  summary: string
+  /** CMS に要約がない場合は省略可（スコアのみ表示） */
+  summary?: string
   url?: string
 }
 
@@ -96,6 +97,7 @@ export const ReviewSiteScores = ({
           const label = site.label ?? (locale === 'en' ? config.labelEn : config.labelJa);
           const fillPercent = Math.max(0, Math.min((site.score / maxScore) * 100, 100));
           const scoreText = `${formatScore(site.score, maxScore)}${unit}`;
+          const summaryText = site.summary?.trim();
 
           return (
             <li key={site.siteId} className='p-review-scores__item'>
@@ -125,7 +127,7 @@ export const ReviewSiteScores = ({
                   </span>
                 )}
               </div>
-              <p className='p-review-scores__summary'>{site.summary}</p>
+              {summaryText ? <p className='p-review-scores__summary'>{summaryText}</p> : null}
             </li>
           );
         })}

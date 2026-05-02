@@ -38,12 +38,14 @@ const basePost: PostDetailData = {
       instagram: { link: 'https://instagram.com/hanataba_movie' },
     },
     filmStudios: [
-      { name: 'Sony Pictures Entertainment', href: '/film-studio/sony' },
+      { name: 'Sony Pictures Entertainment', href: '/film_studio/sony-pictures-entertainment' },
     ],
     productionStudios: [
-      { name: 'アミューズ', href: '/production-studio/amuse' },
+      { name: 'アミューズ', href: '/production_studio/amuse' },
     ],
   },
+  heroFilmStudios: [{ slug: 'sony-pictures-entertainment', name: 'Sony Pictures Entertainment' }],
+  heroProductionStudios: [{ slug: 'amuse', name: 'アミューズ' }],
   credits: [
     {
       role: '監督',

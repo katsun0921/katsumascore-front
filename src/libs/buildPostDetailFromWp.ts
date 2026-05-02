@@ -1,5 +1,6 @@
 import type { PostDetailData } from "@/components/templates/PostDetail/PostDetail.types";
-import type { TActor, TTitleMetaProps } from "@/components/features/Post/PostTitleMeta";
+import type { TReviewSite } from "@/components/features/ReviewSiteScores/ReviewSiteScores";
+import type { TActor, TCreditEntry, TTitleMetaProps } from "@/components/features/Post/PostTitleMeta";
 import type { TRelationPostItem } from "@/components/features/RelationPost";
 import type { TStreamingVodEntry } from "@/components/features/StreamingVod";
 import type { TRentalService } from "@/components/features/AdRental";
@@ -11,6 +12,10 @@ import {
   mapWPPostToPost,
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
+  extractFilmStudioLinksFromParsedWp,
+  extractProductionStudioLinksFromParsedWp,
+  extractDirectorTermNamesFromParsedWp,
+  extractActorTermNamesFromParsedWp,
 } from "@/libs/api/wordpress";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://katsumascore.blog";
@@ -337,18 +342,140 @@ const splitGoodPoints = (raw: unknown): string[] | undefined => {
   return parts.length > 0 ? parts : undefined;
 };
 
+/** ACF `director` の表記ゆれ（文字列 / 配列 / リレーション風オブジェクト）を名前配列へ */
+const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
+  if (raw == null) return [];
+  if (typeof raw === "string") {
+    return raw
+      .split(/[,、\n|]/)
+      .map((s) => stripHtml(s).trim())
+      .filter(Boolean);
+  }
+  if (Array.isArray(raw)) {
+    const out: string[] = [];
+    for (const item of raw) {
+      if (typeof item === "string") {
+        const t = stripHtml(item).trim();
+        if (t) out.push(t);
+        continue;
+      }
+      if (item && typeof item === "object") {
+        const o = item as Record<string, unknown>;
+        const name = typeof o.name === "string" ? stripHtml(o.name).trim() : "";
+        let titleRendered = "";
+        if (typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
+          titleRendered = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
+        }
+        if (!titleRendered && typeof o.title === "string") {
+          titleRendered = stripHtml(o.title).trim();
+        }
+        const postTitle = typeof o.post_title === "string" ? stripHtml(o.post_title).trim() : "";
+        const chosen = name || titleRendered || postTitle;
+        if (chosen) out.push(chosen);
+      }
+    }
+    return out;
+  }
+  return [];
+};
+
+const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
+  const fromTerms = extractDirectorTermNamesFromParsedWp(wp);
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  const fromAcf = collectDirectorNamesFromAcf(acf?.director);
+  const seen = new Set<string>();
+  const names: string[] = [];
+  for (const n of [...fromTerms, ...fromAcf]) {
+    const k = n.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    names.push(n);
+  }
+  if (names.length === 0) return undefined;
+  const role = locale === "en" ? "Director" : "監督";
+  return [{ role, names }];
+};
+
+/** ACF リピータ1行の `actor`（リレーション）から表示名を取る。純粋な数値 ID のみは解決不能のため undefined */
+const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
+  if (raw == null) return undefined;
+  if (typeof raw === "string") {
+    const t = stripHtml(raw).trim();
+    if (!t) return undefined;
+    if (/^\d+$/.test(t)) return undefined;
+    return t;
+  }
+  if (typeof raw === "number" && Number.isFinite(raw)) return undefined;
+  if (typeof raw === "object") {
+    const o = raw as Record<string, unknown>;
+    const name = typeof o.name === "string" ? stripHtml(o.name).trim() : "";
+    let titleRendered = "";
+    if (typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
+      titleRendered = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
+    }
+    if (!titleRendered && typeof o.title === "string") {
+      titleRendered = stripHtml(o.title).trim();
+    }
+    const postTitle = typeof o.post_title === "string" ? stripHtml(o.post_title).trim() : "";
+    const chosen = name || titleRendered || postTitle;
+    return chosen || undefined;
+  }
+  return undefined;
+};
+
+const pickActorsRowsFromAcf = (acf: Record<string, unknown> | undefined): unknown[] => {
+  if (!acf) return [];
+  const candidates = [acf.actors_filed, acf.actors_field, acf.cast];
+  for (const v of candidates) {
+    if (Array.isArray(v) && v.length > 0) return v;
+  }
+  return [];
+};
+
+/** `_embedded['wp:term']` の actor タクソノミーから term ID → name のマップを構築 */
+const buildActorTermIdMap = (wp: ParsedWPPost): Map<number, string> => {
+  const map = new Map<number, string>();
+  const groups = wp._embedded?.["wp:term"];
+  if (!Array.isArray(groups)) return map;
+  for (const group of groups) {
+    if (!Array.isArray(group)) continue;
+    for (const term of group) {
+      const t = term as Record<string, unknown>;
+      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
+      const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
+      if (tax !== "actor" && tax !== "actors") continue;
+      const id = typeof t.id === "number" ? t.id : undefined;
+      const name = typeof t.name === "string" ? t.name.trim() : "";
+      if (id !== undefined && name) map.set(id, name);
+    }
+  }
+  return map;
+};
+
 const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
-  const rows = wp.acf?.actors_filed;
-  if (!Array.isArray(rows) || rows.length === 0) return undefined;
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  const rows = pickActorsRowsFromAcf(acf);
+  const actorTermIdMap = buildActorTermIdMap(wp);
   const out: TActor[] = [];
+  const seenNames = new Set<string>();
+
   for (const row of rows) {
-    const ext = row as {
-      name?: unknown;
-      role?: unknown;
-      character?: unknown;
-      description?: unknown;
-    };
-    const nameStr = typeof ext.name === "string" && ext.name.trim() ? ext.name.trim() : undefined;
+    if (!row || typeof row !== "object") continue;
+    const ext = row as Record<string, unknown>;
+    let nameStr: string | undefined;
+    if (typeof ext.name === "string" && ext.name.trim()) {
+      nameStr = ext.name.trim();
+    }
+    if (!nameStr) {
+      nameStr = pickActorDisplayNameFromUnknown(ext.actor);
+    }
+    // actor が数値 term ID の場合、_embedded の actor タームから名前を解決する
+    if (!nameStr && typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
+      nameStr = actorTermIdMap.get(ext.actor as number);
+    }
+    if (!nameStr && typeof ext.actor_name === "string" && ext.actor_name.trim()) {
+      nameStr = ext.actor_name.trim();
+    }
     const charStr =
       typeof ext.character === "string" && ext.character.trim() ? ext.character.trim() : undefined;
     const roleStr = typeof ext.role === "string" && ext.role.trim() ? ext.role.trim() : undefined;
@@ -361,7 +488,16 @@ const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
       ...(nameStr ? { actorName: nameStr } : {}),
       ...(descStr ? { description: descStr } : {}),
     });
+    if (nameStr) seenNames.add(nameStr.toLowerCase());
   }
+
+  for (const termName of extractActorTermNamesFromParsedWp(wp)) {
+    const k = termName.toLowerCase();
+    if (seenNames.has(k)) continue;
+    seenNames.add(k);
+    out.push({ actorName: termName });
+  }
+
   return out.length > 0 ? out : undefined;
 };
 
@@ -425,6 +561,78 @@ const extractPostsGroupIds = (acf: Record<string, unknown> | undefined): { headi
     if (heading && ids.size > 0) groups.push({ heading, ids: [...ids] });
   }
   return groups;
+};
+
+/** 本番 ACF: `imdb` / `rotten_tomatoes` / `filmakrs`（Filmarks の表記）/ `eiga_com` の `{ score, site_url, score_audience? }` */
+type WpExternalScoreBlock = {
+  score?: unknown
+  site_url?: unknown
+  score_audience?: unknown
+}
+
+const acfExternalScoreToPositiveNumber = (v: unknown): number => {
+  if (v == null || v === "") return 0;
+  const n = typeof v === "string" ? Number.parseFloat(v.trim()) : Number(v);
+  if (!Number.isFinite(n) || n <= 0) return 0;
+  return n;
+};
+
+const acfExternalScoreUrl = (o: WpExternalScoreBlock): string | undefined => {
+  const u = o.site_url;
+  if (typeof u !== "string") return undefined;
+  const t = u.trim();
+  if (!t || !HTTP_URL_RE.test(t)) return undefined;
+  return t;
+};
+
+const asExternalScoreBlock = (raw: unknown): WpExternalScoreBlock | null => {
+  if (!raw || typeof raw !== "object") return null;
+  return raw as WpExternalScoreBlock;
+};
+
+const buildReviewSiteScoresFromAcf = (
+  acf: Record<string, unknown> | undefined,
+  meta: { updatedAt?: string; publishedDate?: string },
+): NonNullable<PostDetailData["reviewSiteScores"]> | undefined => {
+  if (!acf) return undefined;
+  const sites: TReviewSite[] = [];
+
+  const imdb = asExternalScoreBlock(acf.imdb);
+  if (imdb) {
+    const score = acfExternalScoreToPositiveNumber(imdb.score);
+    const url = acfExternalScoreUrl(imdb);
+    if (score > 0) sites.push({ siteId: "imdb", score, ...(url ? { url } : {}) });
+  }
+
+  const rt = asExternalScoreBlock(acf.rotten_tomatoes);
+  if (rt) {
+    const url = acfExternalScoreUrl(rt);
+    const critics = acfExternalScoreToPositiveNumber(rt.score);
+    if (critics > 0) sites.push({ siteId: "rt-critics", score: critics, ...(url ? { url } : {}) });
+    const audience = acfExternalScoreToPositiveNumber(rt.score_audience);
+    if (audience > 0) sites.push({ siteId: "rt-audience", score: audience, ...(url ? { url } : {}) });
+  }
+
+  const filmarksBlock = asExternalScoreBlock(acf.filmarks) ?? asExternalScoreBlock(acf.filmakrs);
+  if (filmarksBlock) {
+    const score = acfExternalScoreToPositiveNumber(filmarksBlock.score);
+    const url = acfExternalScoreUrl(filmarksBlock);
+    if (score > 0) sites.push({ siteId: "filmarks", score, ...(url ? { url } : {}) });
+  }
+
+  const eiga = asExternalScoreBlock(acf.eiga_com);
+  if (eiga) {
+    const score = acfExternalScoreToPositiveNumber(eiga.score);
+    const url = acfExternalScoreUrl(eiga);
+    if (score > 0) sites.push({ siteId: "eiga-com", score, ...(url ? { url } : {}) });
+  }
+
+  if (sites.length === 0) return undefined;
+  return {
+    sites,
+    ...(meta.updatedAt ? { updatedAt: meta.updatedAt } : {}),
+    ...(meta.publishedDate ? { publishedDate: meta.publishedDate } : {}),
+  };
 };
 
 export type BuildPostDetailFromWpInput = {
@@ -511,16 +719,24 @@ export const buildPostDetailFromWp = ({
     ""
   ).trim() || undefined;
   const officialSnsParsed = parseOfficialSns(parsed.acf?.official_sns);
+  const titleMetaFilmStudios = extractFilmStudioLinksFromParsedWp(parsed)
+    .map((s) => ({ name: s.name, href: `/film_studio/${s.slug}` }));
+  const titleMetaProductionStudios = extractProductionStudioLinksFromParsedWp(parsed)
+    .map((s) => ({ name: s.name, href: `/production_studio/${s.slug}` }));
   const titleMeta: Omit<TTitleMetaProps, "locale"> | undefined =
     parsed.acf?.official_url ||
     releaseDate ||
     officialSnsParsed ||
-    acf?.copyright
+    acf?.copyright ||
+    titleMetaFilmStudios.length > 0 ||
+    titleMetaProductionStudios.length > 0
       ? {
           ...(parsed.acf?.official_url?.trim() ? { officialUrl: parsed.acf.official_url.trim() } : {}),
           ...(typeof acf?.copyright === "string" ? { copyright: acf.copyright } : {}),
           ...(releaseDate && releaseDate.length === 8 ? { releaseDate } : {}),
           ...(officialSnsParsed ? { officialSns: officialSnsParsed } : {}),
+          ...(titleMetaFilmStudios.length > 0 ? { filmStudios: titleMetaFilmStudios } : {}),
+          ...(titleMetaProductionStudios.length > 0 ? { productionStudios: titleMetaProductionStudios } : {}),
         }
       : undefined;
 
@@ -564,7 +780,13 @@ export const buildPostDetailFromWp = ({
   }
 
   const updatedAt = parsed.modified?.slice(0, 10);
+  const publishedDate = parsed.date?.slice(0, 10);
+  const reviewSiteScores = buildReviewSiteScoresFromAcf(acf, {
+    ...(updatedAt ? { updatedAt } : {}),
+    ...(publishedDate ? { publishedDate } : {}),
+  });
   const goodPoints = splitGoodPoints(acf?.good_point_filed);
+  const credits = mapCreditsFromParsedWp(parsed, locale);
   const actors = mapActors(parsed);
   const streamingVods = buildStreamingVods(parsed);
   const rentalServices = buildRentalServices(parsed);
@@ -578,6 +800,8 @@ export const buildPostDetailFromWp = ({
 
   const heroGenres = extractGenreLinksFromParsedWp(parsed);
   const heroTags = extractPostTagLinksFromParsedWp(parsed);
+  const heroFilmStudios = extractFilmStudioLinksFromParsedWp(parsed);
+  const heroProductionStudios = extractProductionStudioLinksFromParsedWp(parsed);
 
   return {
     ...base,
@@ -588,6 +812,7 @@ export const buildPostDetailFromWp = ({
     ...(goodPoints ? { goodPoints } : {}),
     ...(summary ? { summary } : {}),
     ...(titleMeta ? { TitleMeta: titleMeta } : {}),
+    ...(credits ? { credits } : {}),
     ...(actors ? { actors } : {}),
     isCinemaShowing: Boolean(parsed.acf?.is_cinema_showing),
     ...(streamingVods ? { streamingVods } : {}),
@@ -596,6 +821,9 @@ export const buildPostDetailFromWp = ({
     ...(postsGroups && postsGroups.length > 0 ? { postsGroups } : {}),
     ...(heroGenres.length > 0 ? { heroGenres } : {}),
     ...(heroTags.length > 0 ? { heroTags } : {}),
+    ...(heroFilmStudios.length > 0 ? { heroFilmStudios } : {}),
+    ...(heroProductionStudios.length > 0 ? { heroProductionStudios } : {}),
+    ...(reviewSiteScores ? { reviewSiteScores } : {}),
     shareUrl: `${SITE_URL.replace(/\/$/, "")}${base.slug}`,
   };
 };

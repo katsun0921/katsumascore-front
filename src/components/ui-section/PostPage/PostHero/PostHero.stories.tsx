@@ -44,6 +44,24 @@ export const WithGenresAndTags: Story = {
   },
 };
 
+export const WithStudiosGenresAndTags: Story = {
+  args: {
+    productionStudios: [
+      { slug: 'media-resonance', name: 'メディア・リゾナンス' },
+      { slug: 't-studio', name: 'Tストゥディオ' },
+    ],
+    filmStudios: [
+      { slug: 'lionsgate', name: 'ライオンズゲート' },
+    ],
+    genres: [
+      { slug: 'mystery', name: 'ミステリー' },
+    ],
+    tags: [
+      { slug: 'knives-out', name: 'ナイブズ・アウト' },
+    ],
+  },
+};
+
 export const LongTitle: Story = {
   args: {
     title: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',

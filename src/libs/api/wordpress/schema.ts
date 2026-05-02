@@ -51,13 +51,13 @@ const acfSummaryGroupSchema = z.preprocess(
     .optional(),
 );
 
-/** REST では `name` ではなく `character` + `actor`(ID) + `description` になることがある */
+/** REST では `name` 空で `actor` が ID / 投稿オブジェクトになることがある（オブジェクトは unknown で通す） */
 const actorFieldSchema = z
   .object({
     name: z.string().optional(),
     character: z.string().optional(),
     description: z.string().optional(),
-    actor: z.union([z.number(), z.string(), z.boolean()]).optional(),
+    actor: z.unknown().optional(),
     role: z.string().optional(),
   })
   .passthrough();
