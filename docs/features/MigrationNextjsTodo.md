@@ -133,7 +133,7 @@
 - [x] `features/Pagination` — 未接続（ListTemplate等への接続またはui-section移行）
 - [x] `features/Carousel` — 削除済み
 - [x] `features/Post/PostDate` — `ui-section/PostDate` へ移動済み
-- [ ] `features/VodPanel` — 完全未使用（`ui-section/VodPanel`との重複整理）
+- [x] `features/VodPanel` — 削除済み（`ui-section/VodPanel` のみ）
 - [x] `features/OfficialSns` — 使用中（`PostTitleMeta`）。レイヤー見直しは任意
 - [x] `features/PickUpAndScore` — 使用中（`Sidebar`）
 - [x] `features/ReviewSiteScores` — 使用中（`PostDetail` / `buildPostDetailFromWp`）
@@ -147,7 +147,7 @@
 - [x] `ui-parts/Affiliate/Wowow` — 未使用
 - [x] `ui-section/ProductBlock` — 完全未使用（Gutenberg確認用途として保持か削除か要判断）
 - [x] `ui-section/VodIntroduction` — 使用中（`PostDetail`）。`ui-section/` 内の並び・命名の整理は任意
-- [ ] `features/vod/` への整理（`VodMenu`, `VodPanel`, `VodItem` 等）
+- [ ] `features/vod/` への整理（`VodMenu`, `VodItem` 等）
 - [ ] `features/Post/PostVariants` の整備
 - [x] `ui-section/PostListRow` コンポーネントの実装（新設）
 
