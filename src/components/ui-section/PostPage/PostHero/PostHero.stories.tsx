@@ -31,6 +31,19 @@ export const WithTagline: Story = {
   },
 };
 
+export const WithGenresAndTags: Story = {
+  args: {
+    genres: [
+      { slug: 'mystery', name: 'ミステリー' },
+      { slug: 'comedy', name: 'コメディ' },
+    ],
+    tags: [
+      { slug: 'knives-out', name: 'ナイブズ・アウト' },
+      { slug: 'benoit-blanc', name: 'ブノワ・ブラン' },
+    ],
+  },
+};
+
 export const LongTitle: Story = {
   args: {
     title: '劇場版『機動戦士ガンダム ジークアクス』はなぜここまで観客の感情を揺さぶるのかを演出と脚本から読み解く',

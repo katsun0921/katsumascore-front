@@ -24,7 +24,14 @@ export type { WPGenreTerm } from "./endpoints/genre";
 
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
-export { stripHtml, mapWPPostToPost, parseWPPostUnknown } from "./transform";
+export {
+  stripHtml,
+  mapWPPostToPost,
+  parseWPPostUnknown,
+  extractGenreLinksFromParsedWp,
+  extractPostTagLinksFromParsedWp,
+} from "./transform";
+export type { PostTaxonomyLink } from "./transform";
 
 export { WPPostSchema, WPCategorySchema, WPTagSchema, WPEmbeddedSchema, parseWPPost } from "./schema";
 export type { ParsedWPPost } from "./schema";

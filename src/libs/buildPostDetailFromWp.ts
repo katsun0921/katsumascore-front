@@ -5,7 +5,13 @@ import type { TStreamingVodEntry } from "@/components/features/StreamingVod";
 import type { TRentalService } from "@/components/features/AdRental";
 import type { TPostsGroupItem } from "@/components/features/Post/PostsGroup";
 import type { ParsedWPPost } from "@/libs/api/wordpress";
-import { parseWPPostUnknown, stripHtml, mapWPPostToPost } from "@/libs/api/wordpress";
+import {
+  parseWPPostUnknown,
+  stripHtml,
+  mapWPPostToPost,
+  extractGenreLinksFromParsedWp,
+  extractPostTagLinksFromParsedWp,
+} from "@/libs/api/wordpress";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://katsumascore.blog";
 
@@ -47,42 +53,283 @@ export const extractRelationPostIds = (acf: Record<string, unknown> | undefined)
   return [...ids];
 };
 
+const HTTP_URL_RE = /^https?:\/\//i;
+
+const extractSnsLink = (val: unknown): string | undefined => {
+  if (typeof val === "string") {
+    const t = val.trim();
+    return HTTP_URL_RE.test(t) ? t : undefined;
+  }
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as { link?: unknown; url?: unknown; href?: unknown };
+  const candidates = [o.link, o.url, o.href];
+  for (const c of candidates) {
+    if (typeof c === "string" && HTTP_URL_RE.test(c.trim())) return c.trim();
+  }
+  return undefined;
+};
+
+type OfficialSnsEntry = NonNullable<TTitleMetaProps["officialSns"]>[string];
+
+/** CMS 埋め込みスニペットから &lt;script&gt; を除く（widgets / embed.js はフロントで読み込む） */
+const stripSnsEmbedScripts = (html: string): string =>
+  html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").trim();
+
+const extractXEmbedHtmlFromString = (raw: string): string | undefined => {
+  const t = raw.trim();
+  if (!/twitter-tweet/i.test(t)) return undefined;
+  return stripSnsEmbedScripts(t);
+};
+
+const extractXEmbedHtmlFromObject = (val: unknown): string | undefined => {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  const keys = ["embed", "embed_code", "code", "html", "oembed", "iframe_code", "value", "tweet_embed"];
+  for (const key of keys) {
+    const h = o[key];
+    if (typeof h === "string" && /twitter-tweet/i.test(h)) return stripSnsEmbedScripts(h.trim());
+  }
+  return undefined;
+};
+
+const extractInstagramEmbedHtmlFromString = (raw: string): string | undefined => {
+  const t = raw.trim();
+  if (!/instagram-media/i.test(t) && !/data-instgrm-permalink/i.test(t)) return undefined;
+  return stripSnsEmbedScripts(t);
+};
+
+const extractInstagramEmbedHtmlFromObject = (val: unknown): string | undefined => {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  const keys = ["embed", "embed_code", "code", "html", "oembed", "iframe_code", "value"];
+  for (const key of keys) {
+    const h = o[key];
+    if (typeof h === "string" && (/instagram-media/i.test(h) || /data-instgrm-permalink/i.test(h))) {
+      return stripSnsEmbedScripts(h.trim());
+    }
+  }
+  return undefined;
+};
+
+/** 埋め込み HTML から投稿・リールのパーマリンク（link 未入力時の補完用） */
+const extractPermalinkFromInstagramEmbedHtml = (html: string): string | undefined => {
+  const m = html.match(/data-instgrm-permalink="([^"]+)"/i);
+  if (m?.[1]) return m[1].replace(/&amp;/g, "&").trim();
+  const m2 = html.match(
+    /href="(https?:\/\/(?:www\.)?instagram\.com\/(?:p|reel)\/[^"/]+)/i,
+  );
+  if (m2?.[1]) return m2[1].replace(/&amp;/g, "&").trim();
+  return undefined;
+};
+
+const extractTikTokEmbedHtmlFromString = (raw: string): string | undefined => {
+  const t = raw.trim();
+  if (!/tiktok-embed/i.test(t) && !/tiktok\.com\/embed\//i.test(t)) return undefined;
+  return stripSnsEmbedScripts(t);
+};
+
+const extractTikTokEmbedHtmlFromObject = (val: unknown): string | undefined => {
+  if (!val || typeof val !== "object") return undefined;
+  const o = val as Record<string, unknown>;
+  const keys = ["embed", "embed_code", "code", "html", "oembed", "iframe_code", "value"];
+  for (const key of keys) {
+    const h = o[key];
+    if (typeof h === "string" && (/tiktok-embed/i.test(h) || /tiktok\.com\/embed\//i.test(h))) {
+      return stripSnsEmbedScripts(h.trim());
+    }
+  }
+  return undefined;
+};
+
+const isTikTokVideoUrl = (url: string): boolean => {
+  try {
+    const u = new URL(url.trim());
+    if (!u.hostname.includes("tiktok.com")) return false;
+    return (
+      /\/video\/\d+/i.test(u.pathname) ||
+      /\/embed\/v2\/\d+/i.test(u.pathname) ||
+      /\/embed\/\d+/i.test(u.pathname)
+    );
+  } catch {
+    return false;
+  }
+};
+
+/** blockquote 内の status リンク（フォールバック・正規化用） */
+const extractStatusUrlFromTweetEmbed = (html: string): string | undefined => {
+  const m = html.match(
+    /href="(https?:\/\/(?:twitter\.com|x\.com)\/[^"\\/]+\/status\/\d+[^"]*)"/i,
+  );
+  if (!m?.[1]) return undefined;
+  return m[1].replace(/&amp;/g, "&");
+};
+
+const mergeOfficialSnsEntry = (base: OfficialSnsEntry, add: OfficialSnsEntry): OfficialSnsEntry => {
+  const merged: OfficialSnsEntry = {};
+  const link = base.link ?? add.link;
+  const embedHtml = base.embedHtml ?? add.embedHtml;
+  if (link) merged.link = link;
+  if (embedHtml) merged.embedHtml = embedHtml;
+  return merged;
+};
+
+/** WP・ACF の表記ゆれ（twitter / Youtube 等）を TitleMeta が参照するキーへ寄せる */
+const canonicalOfficialSnsKeys = (out: Record<string, OfficialSnsEntry>): Record<string, OfficialSnsEntry> => {
+  const merged: Record<string, OfficialSnsEntry> = {};
+  for (const [k, v] of Object.entries(out)) {
+    const link = v?.link?.trim();
+    const embedHtml = v?.embedHtml?.trim();
+    const linkOk = Boolean(link && HTTP_URL_RE.test(link));
+    if (!embedHtml && !linkOk) continue;
+    const lower = k.toLowerCase().replace(/\s+/g, "_");
+    let canon = k;
+    if (lower === "twitter" || lower === "x") canon = "x";
+    else if (lower === "youtube" || lower === "youtube_channel") canon = "youtube_channel";
+    else if (lower === "instagram") canon = "instagram";
+    else if (lower === "tiktok" || lower === "tik_tok") canon = "tiktok";
+    else if (embedHtml && /twitter-tweet/i.test(embedHtml)) canon = "x";
+    else if (embedHtml && (/tiktok-embed/i.test(embedHtml) || /tiktok\.com\/embed\//i.test(embedHtml))) {
+      canon = "tiktok";
+    }
+    else if (embedHtml && (/instagram-media/i.test(embedHtml) || /data-instgrm-permalink/i.test(embedHtml))) {
+      canon = "instagram";
+    }
+    else if (linkOk && link && isTikTokVideoUrl(link)) canon = "tiktok";
+    const next: OfficialSnsEntry = { ...(linkOk ? { link } : {}), ...(embedHtml ? { embedHtml } : {}) };
+    merged[canon] = merged[canon] ? mergeOfficialSnsEntry(merged[canon], next) : next;
+  }
+  return merged;
+};
+
+const parseOfficialSnsObjectShape = (raw: Record<string, unknown>): Record<string, OfficialSnsEntry> => {
+  const out: Record<string, OfficialSnsEntry> = {};
+  for (const [k, val] of Object.entries(raw)) {
+    if (typeof val === "string") {
+      const t = val.trim();
+      const xEmbed = extractXEmbedHtmlFromString(t);
+      if (xEmbed) {
+        const statusUrl = extractStatusUrlFromTweetEmbed(xEmbed);
+        out[k] = statusUrl ? { embedHtml: xEmbed, link: statusUrl } : { embedHtml: xEmbed };
+        continue;
+      }
+      const tiktokEmbed = extractTikTokEmbedHtmlFromString(t);
+      if (tiktokEmbed) {
+        out[k] = { embedHtml: tiktokEmbed };
+        continue;
+      }
+      const igEmbed = extractInstagramEmbedHtmlFromString(t);
+      if (igEmbed) {
+        const perm = extractPermalinkFromInstagramEmbedHtml(igEmbed);
+        out[k] = perm ? { embedHtml: igEmbed, link: perm } : { embedHtml: igEmbed };
+        continue;
+      }
+      if (HTTP_URL_RE.test(t)) {
+        out[k] = { link: t };
+      }
+      continue;
+    }
+    const embedHtmlX = extractXEmbedHtmlFromObject(val);
+    const embedHtmlTikTok = extractTikTokEmbedHtmlFromObject(val);
+    const embedHtmlIg = extractInstagramEmbedHtmlFromObject(val);
+    const embedHtml = embedHtmlX ?? embedHtmlTikTok ?? embedHtmlIg;
+    const link = extractSnsLink(val);
+    const entry: OfficialSnsEntry = {};
+    if (link) entry.link = link;
+    if (embedHtml) {
+      entry.embedHtml = embedHtml;
+      const statusUrl = extractStatusUrlFromTweetEmbed(embedHtml);
+      if (statusUrl && !entry.link) entry.link = statusUrl;
+      if (!entry.link) {
+        const igPerm = extractPermalinkFromInstagramEmbedHtml(embedHtml);
+        if (igPerm) entry.link = igPerm;
+      }
+    }
+    if (entry.link || entry.embedHtml) out[k] = entry;
+  }
+  return canonicalOfficialSnsKeys(out);
+};
+
+const parseOfficialSnsArrayShape = (raw: unknown[]): Record<string, OfficialSnsEntry> => {
+  const out: Record<string, OfficialSnsEntry> = {};
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+    const row = item as Record<string, unknown>;
+    const platformRaw = row.platform ?? row.name ?? row.field ?? row.key;
+    const platform = typeof platformRaw === "string" ? platformRaw.trim() : "";
+    const link = extractSnsLink(row) ?? extractSnsLink({ link: row.link, url: row.url, href: row.href });
+    const rowEmbedX = extractXEmbedHtmlFromObject(row);
+    const rowEmbedTt = extractTikTokEmbedHtmlFromObject(row);
+    const rowEmbedIg = extractInstagramEmbedHtmlFromObject(row);
+    const embedHtml = rowEmbedX ?? rowEmbedTt ?? rowEmbedIg;
+    if (!platform || (!link && !embedHtml)) continue;
+    const entry: OfficialSnsEntry = {};
+    if (link) entry.link = link;
+    if (embedHtml) {
+      entry.embedHtml = embedHtml;
+      const statusUrl = extractStatusUrlFromTweetEmbed(embedHtml);
+      if (statusUrl && !entry.link) entry.link = statusUrl;
+      if (!entry.link) {
+        const igPerm = extractPermalinkFromInstagramEmbedHtml(embedHtml);
+        if (igPerm) entry.link = igPerm;
+      }
+    }
+    out[platform] = entry;
+  }
+  return canonicalOfficialSnsKeys(out);
+};
+
 const parseOfficialSns = (raw: unknown): TTitleMetaProps["officialSns"] => {
   if (raw == null) return undefined;
+  if (Array.isArray(raw)) {
+    const out = parseOfficialSnsArrayShape(raw);
+    return Object.keys(out).length > 0 ? out : undefined;
+  }
   if (typeof raw === "string") {
     const t = raw.trim();
     if (!t) return undefined;
     try {
       const j = JSON.parse(t) as Record<string, unknown>;
-      const out: Record<string, { link?: string }> = {};
-      for (const [k, val] of Object.entries(j)) {
-        if (typeof val === "string" && val.startsWith("http")) out[k] = { link: val };
-        else if (val && typeof val === "object" && "url" in val && typeof (val as { url: unknown }).url === "string") {
-          out[k] = { link: (val as { url: string }).url };
-        }
-      }
+      const out = parseOfficialSnsObjectShape(j);
       return Object.keys(out).length > 0 ? out : undefined;
     } catch {
-      if (t.startsWith("http")) return { web: { link: t } };
+      if (HTTP_URL_RE.test(t)) return { web: { link: t } };
+      const xEmb = extractXEmbedHtmlFromString(t);
+      if (xEmb) {
+        const statusUrl = extractStatusUrlFromTweetEmbed(xEmb);
+        return { x: statusUrl ? { embedHtml: xEmb, link: statusUrl } : { embedHtml: xEmb } };
+      }
+      const ttEmb = extractTikTokEmbedHtmlFromString(t);
+      if (ttEmb) return { tiktok: { embedHtml: ttEmb } };
+      const igEmb = extractInstagramEmbedHtmlFromString(t);
+      if (igEmb) {
+        const perm = extractPermalinkFromInstagramEmbedHtml(igEmb);
+        return { instagram: perm ? { embedHtml: igEmb, link: perm } : { embedHtml: igEmb } };
+      }
       return undefined;
     }
   }
   if (typeof raw === "object") {
-    const out: Record<string, { link?: string }> = {};
-    for (const [k, val] of Object.entries(raw as Record<string, unknown>)) {
-      if (typeof val === "string" && val.startsWith("http")) out[k] = { link: val };
-      else if (val && typeof val === "object") {
-        const link = (val as { link?: unknown; url?: unknown }).link ?? (val as { url?: unknown }).url;
-        if (typeof link === "string") out[k] = { link };
-      }
-    }
+    const out = parseOfficialSnsObjectShape(raw as Record<string, unknown>);
     return Object.keys(out).length > 0 ? out : undefined;
   }
   return undefined;
 };
 
-const splitGoodPoints = (raw: string | undefined): string[] | undefined => {
-  if (!raw?.trim()) return undefined;
+const splitGoodPoints = (raw: unknown): string[] | undefined => {
+  // ACF repeater形式: [{good_point_text: string}, ...]
+  if (Array.isArray(raw)) {
+    const parts = raw
+      .map((r) => {
+        if (typeof r === "object" && r !== null && "good_point_text" in r) {
+          return stripHtml(String((r as Record<string, unknown>).good_point_text)).trim();
+        }
+        return typeof r === "string" ? stripHtml(r).trim() : "";
+      })
+      .filter(Boolean);
+    return parts.length > 0 ? parts : undefined;
+  }
+  // 旧形式: 改行 or | 区切りの文字列
+  if (typeof raw !== "string" || !raw.trim()) return undefined;
   const parts = raw
     .split(/\r?\n|\|/)
     .map((s) => stripHtml(s).trim())
@@ -107,11 +354,11 @@ const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
     const roleStr = typeof ext.role === "string" && ext.role.trim() ? ext.role.trim() : undefined;
     const descStr =
       typeof ext.description === "string" && ext.description.trim() ? ext.description.trim() : undefined;
-    const actorName = nameStr ?? charStr ?? "";
-    if (!actorName && !charStr && !descStr) continue;
+    const displayCharacter = roleStr ?? charStr;
+    if (!displayCharacter && !nameStr && !descStr) continue;
     out.push({
-      character: roleStr ?? charStr,
-      actorName: actorName || charStr || "—",
+      ...(displayCharacter ? { character: displayCharacter } : {}),
+      ...(nameStr ? { actorName: nameStr } : {}),
       ...(descStr ? { description: descStr } : {}),
     });
   }
@@ -239,10 +486,6 @@ export const buildPostDetailFromWp = ({
     summaryText = jpText || enText;
   }
 
-  if (!summaryText.trim() && base.excerpt.trim()) {
-    summaryText = base.excerpt;
-  }
-
   const officialUrl = parsed.acf?.official_url?.trim();
   const groupRefUrl = typeof sg?.acf_ref_url === "string" ? sg.acf_ref_url.trim() : "";
   const groupRefLabelRaw = typeof sg?.acf_summary_ref === "string" ? sg.acf_summary_ref.trim() : "";
@@ -261,17 +504,23 @@ export const buildPostDetailFromWp = ({
         }
       : undefined;
 
-  const releaseDate = parsed.acf?.release_date?.trim();
+  const releaseGroup = acf?.release as Record<string, unknown> | undefined;
+  const releaseDate = (
+    (typeof releaseGroup?.release_date === "string" ? releaseGroup.release_date : "") ||
+    parsed.acf?.release_date?.trim() ||
+    ""
+  ).trim() || undefined;
+  const officialSnsParsed = parseOfficialSns(parsed.acf?.official_sns);
   const titleMeta: Omit<TTitleMetaProps, "locale"> | undefined =
     parsed.acf?.official_url ||
     releaseDate ||
-    parseOfficialSns(parsed.acf?.official_sns) ||
+    officialSnsParsed ||
     acf?.copyright
       ? {
           ...(parsed.acf?.official_url?.trim() ? { officialUrl: parsed.acf.official_url.trim() } : {}),
           ...(typeof acf?.copyright === "string" ? { copyright: acf.copyright } : {}),
           ...(releaseDate && releaseDate.length === 8 ? { releaseDate } : {}),
-          ...(parseOfficialSns(parsed.acf?.official_sns) ? { officialSns: parseOfficialSns(parsed.acf?.official_sns) } : {}),
+          ...(officialSnsParsed ? { officialSns: officialSnsParsed } : {}),
         }
       : undefined;
 
@@ -280,9 +529,11 @@ export const buildPostDetailFromWp = ({
       ? (parsed.meta as Record<string, unknown>)
       : undefined;
 
-  /** タグライン: REST の post meta は `tagline`（ACF 側も同一キーの場合あり） */
+  /** タグライン: ACF キー名は `tagline_filed` */
   const taglineRaw =
-    scalarToTrimmedString(metaRecord?.tagline) || scalarToTrimmedString(acf?.tagline);
+    scalarToTrimmedString(acf?.tagline_filed) ||
+    scalarToTrimmedString(metaRecord?.tagline) ||
+    scalarToTrimmedString(acf?.tagline);
   const authorComment = taglineRaw.length > 0 ? stripHtml(taglineRaw) : undefined;
 
   const videoCodeFromMeta =
@@ -313,7 +564,7 @@ export const buildPostDetailFromWp = ({
   }
 
   const updatedAt = parsed.modified?.slice(0, 10);
-  const goodPoints = splitGoodPoints(parsed.acf?.good_point_filed);
+  const goodPoints = splitGoodPoints(acf?.good_point_filed);
   const actors = mapActors(parsed);
   const streamingVods = buildStreamingVods(parsed);
   const rentalServices = buildRentalServices(parsed);
@@ -324,6 +575,9 @@ export const buildPostDetailFromWp = ({
   } else if (trailerYoutubeId) {
     trailerVideo.trailerYoutubeId = trailerYoutubeId;
   }
+
+  const heroGenres = extractGenreLinksFromParsedWp(parsed);
+  const heroTags = extractPostTagLinksFromParsedWp(parsed);
 
   return {
     ...base,
@@ -340,6 +594,8 @@ export const buildPostDetailFromWp = ({
     ...(rentalServices ? { rentalServices } : {}),
     ...(relationPosts && relationPosts.length > 0 ? { relationPosts } : {}),
     ...(postsGroups && postsGroups.length > 0 ? { postsGroups } : {}),
+    ...(heroGenres.length > 0 ? { heroGenres } : {}),
+    ...(heroTags.length > 0 ? { heroTags } : {}),
     shareUrl: `${SITE_URL.replace(/\/$/, "")}${base.slug}`,
   };
 };

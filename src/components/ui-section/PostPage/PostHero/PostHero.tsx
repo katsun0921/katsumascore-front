@@ -1,5 +1,7 @@
 import Image from 'next/image';
+import Link from 'next/link';
 import { VideoEmbed } from '@/components/ui-parts/VideoEmbed';
+import type { PostTaxonomyLink } from '@/libs/api/wordpress';
 import { t } from '@/i18n/t';
 import { useLocale } from '@/i18n/provider';
 import { messages } from './i18n';
@@ -12,6 +14,8 @@ export type PostHeroProps = {
   description: string
   refUrl?: string
   refLabel?: string
+  genres?: PostTaxonomyLink[]
+  tags?: PostTaxonomyLink[]
 }
 
 export const PostHero = (props: PostHeroProps) => {
@@ -32,11 +36,44 @@ export const PostHero = (props: PostHeroProps) => {
           />
         </div>
       )}
+        {((props.genres && props.genres.length > 0) || (props.tags && props.tags.length > 0)) && (
+          <div className={`${prefixClassName}__taxonomies`}>
+            {props.genres && props.genres.length > 0 && (
+              <div className={`${prefixClassName}__taxonomy`}>
+                <span className={`${prefixClassName}__taxonomy-label`}>
+                  {t(messages, ['genre', 'label'], locale)}
+                </span>
+                <ul className={`${prefixClassName}__taxonomy-list`}>
+                  {props.genres.map((g) => (
+                    <li key={g.slug} className={`${prefixClassName}__taxonomy-item`}>
+                      <Link href={`/genre/${g.slug}`} className={`${prefixClassName}__taxonomy-link`}>
+                        {g.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {props.tags && props.tags.length > 0 && (
+              <div className={`${prefixClassName}__taxonomy`}>
+                <span className={`${prefixClassName}__taxonomy-label`}>
+                  {t(messages, ['tag', 'label'], locale)}
+                </span>
+                <ul className={`${prefixClassName}__taxonomy-list`}>
+                  {props.tags.map((tag) => (
+                    <li key={tag.slug} className={`${prefixClassName}__taxonomy-item`}>
+                      <Link href={`/tag/${tag.slug}`} className={`${prefixClassName}__taxonomy-link`}>
+                        {tag.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       <div className={`${prefixClassName}__summary`}>
         <h2 className={`${prefixClassName}__heading`}>{t(messages, ['heading'], locale)}</h2>
-        {props.tagline && (
-          <p className={`${prefixClassName}__tagline`}>{props.tagline}</p>
-        )}
         <blockquote className={`${prefixClassName}__quote`}>
           <p className={`${prefixClassName}__quote-text`}>{props.description}</p>
           {(props.refUrl || props.refLabel) && (

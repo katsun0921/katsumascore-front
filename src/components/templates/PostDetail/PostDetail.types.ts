@@ -11,6 +11,7 @@ import type { TCinemaIntroductionProps } from '@/components/ui-section/CinemaInt
 import type { ProfileProps } from '@/components/ui-section/Profile';
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
+import type { PostTaxonomyLink } from '@/libs/api/wordpress';
 
 export type PostDetailData = Post & {
   // コンテンツ
@@ -22,6 +23,10 @@ export type PostDetailData = Post & {
   trailerYoutubeId?: string
   trailerEmbedCode?: string
   authorComment?: string
+  /** `_embed` の wp:term（genre）から抽出 */
+  heroGenres?: PostTaxonomyLink[]
+  /** `_embed` の wp:term（post_tag）から抽出 */
+  heroTags?: PostTaxonomyLink[]
 
   // p-info ブロック（post-review.php 相当）
   videoCode?: string

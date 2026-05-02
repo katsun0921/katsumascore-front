@@ -6,6 +6,7 @@ import { GoodPoint } from '@/components/ui-section/PostPage/PostGoodPoint';
 import { TableOfContents } from '@/components/features/Post/TableOfContents';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { ReviewSiteScores } from '@/components/features/ReviewSiteScores';
+import { CinemaCheck } from '@/components/features/CinemaCheck';
 import { CinemaIntroduction } from '@/components/ui-section/CinemaIntroduction';
 import { VodIntroduction } from '@/components/ui-section/VodIntroduction';
 import { ShareButtons } from '@/components/ui-parts/ShareButtons';
@@ -40,6 +41,8 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
           description={post.summary?.text ?? ''}
           refUrl={post.summary?.refUrl}
           refLabel={post.summary?.refLabel}
+          genres={post.heroGenres}
+          tags={post.heroTags}
         />
       </div>
       {/* body: 最大幅・中央・flex（md以上） */}
@@ -47,6 +50,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 px-4'>
+          <CinemaCheck isCinemaShowing={post.isCinemaShowing ?? false} titleJp={post.title} />
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section

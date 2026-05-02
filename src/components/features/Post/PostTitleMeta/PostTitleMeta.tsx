@@ -17,10 +17,17 @@ export type TCreditEntry = {
 
 export type TActor = {
   character?: string
-  actorName: string
+  actorName?: string
   actorUrl?: string
   description?: string
   otherWorks?: { title: string; href: string; character?: string; score?: number }[]
+}
+
+/** ACF 公式SNS1件（リンク / X・TikTok 等の埋め込みHTML） */
+export type TOfficialSnsEntry = {
+  link?: string
+  /** X: twitter-tweet / Instagram: instagram-media / TikTok: tiktok-embed 等（&lt;script&gt; は正規化時に除去） */
+  embedHtml?: string
 }
 
 export type TTitleMetaProps = {
@@ -28,7 +35,7 @@ export type TTitleMetaProps = {
   officialUrl?: string
   copyright?: string
   releaseDate?: string
-  officialSns?: Record<string, { link?: string }>
+  officialSns?: Record<string, TOfficialSnsEntry>
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
@@ -55,10 +62,19 @@ export const TitleMeta = ({
         : `${y}${t(messages, ['date', 'yearSuffix'], locale)}${parseInt(m)}${t(messages, ['date', 'monthSuffix'], locale)}${parseInt(d)}${t(messages, ['date', 'daySuffix'], locale)}`;
   }
 
-  const hasSns = officialSns && Object.values(officialSns).some((v) => v?.link);
+  /** 埋め込みウィジェット対応プラットフォーム（twitter 等は build で x に正規化済み） */
+  const hasEmbeddableOfficialSns = Boolean(
+    officialSns?.x?.link ||
+      officialSns?.x?.embedHtml ||
+      officialSns?.youtube_channel?.link ||
+      officialSns?.instagram?.link ||
+      officialSns?.instagram?.embedHtml ||
+      officialSns?.tiktok?.link ||
+      officialSns?.tiktok?.embedHtml,
+  );
   const hasCredits = credits && credits.length > 0;
   const hasActors = actors && actors.length > 0;
-  const hasOfficialInfo = officialUrl || hasSns || parsedDate;
+  const hasOfficialInfo = officialUrl || hasEmbeddableOfficialSns || parsedDate;
 
   return (
     <div className='flex flex-col gap-6'>
@@ -89,15 +105,17 @@ export const TitleMeta = ({
                     <span>{t(messages, ['actor', 'labelRole'], locale)}</span>
                   </div>
                 )}
-                <div className='text-h3 font-bold leading-[1.4] text-color-primary'>
-                  {actor.actorUrl ? (
-                    <Link href={actor.actorUrl} className='text-inherit no-underline hover:underline'>
-                      {actor.actorName}
-                    </Link>
-                  ) : (
-                    actor.actorName
-                  )}
-                </div>
+                {actor.actorName && (
+                  <div className='text-h3 font-bold leading-[1.4] text-color-primary'>
+                    {actor.actorUrl ? (
+                      <Link href={actor.actorUrl} className='text-inherit no-underline hover:underline'>
+                        {actor.actorName}
+                      </Link>
+                    ) : (
+                      actor.actorName
+                    )}
+                  </div>
+                )}
                 {actor.description && (
                   <p className='mt-2 text-color-secondary leading-[1.6]'>{actor.description}</p>
                 )}
@@ -152,15 +170,19 @@ export const TitleMeta = ({
             </div>
           )}
 
-          {hasSns && (
+          {hasEmbeddableOfficialSns && (
             <div className='mb-5 last:mb-0'>
               <div className='mb-2 text-ui font-bold tracking-[0.05em] text-color-secondary'>
                 {t(messages, ['terms', 'officialSns'], locale)}
               </div>
               <OfficialSns
                 snsUrl={officialSns?.x?.link}
+                xEmbedHtml={officialSns?.x?.embedHtml}
                 youtubeUrl={officialSns?.youtube_channel?.link}
                 instagramUrl={officialSns?.instagram?.link}
+                instagramEmbedHtml={officialSns?.instagram?.embedHtml}
+                tiktokUrl={officialSns?.tiktok?.link}
+                tiktokEmbedHtml={officialSns?.tiktok?.embedHtml}
                 forceVisible
               />
             </div>

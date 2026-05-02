@@ -64,6 +64,26 @@
   }
 
   // ── iframe 共通 ──
+  &__x-widget {
+    width: 100%;
+    min-height: 120px;
+  }
+
+  &__fallback-link {
+    display: inline-block;
+    font-size: var(--font-size-ui);
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
+  &__official-link {
+    display: inline-block;
+    margin-top: var(--space-4);
+    font-size: var(--font-size-ui);
+    color: var(--color-accent);
+    text-decoration: underline;
+  }
+
   &__iframe {
     display: block;
     width: 100%;
@@ -81,6 +101,12 @@
 
     &--instagram {
       height: 480px;
+    }
+
+    &--tiktok {
+      min-height: 480px;
+      height: 740px;
+      max-width: 100%;
     }
   }
 }
