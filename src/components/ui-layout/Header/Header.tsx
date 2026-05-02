@@ -13,28 +13,30 @@ export const Header = () => {
   const prefixClassName = 'header';
 
   return (
-    <header className={`${prefixClassName} bg-header`} role='banner'>
-      <Link href='/' className={`${prefixClassName}__logo hover:opacity-80 transition-opacity duration-200`}>
-        <Image
-          src='/images/logo.webp'
-          alt={t(messages, ['logo', 'alt'], locale)}
-          width={120}
-          height={40}
-          unoptimized
-          className='block h-9 w-auto md:h-10'
-        />
-      </Link>
+    <header className='w-full bg-header' role='banner'>
+      <div className={prefixClassName}>
+        <Link href='/' className={`${prefixClassName}__logo hover:opacity-80 transition-opacity duration-200`}>
+          <Image
+            src='/images/logo.webp'
+            alt={t(messages, ['logo', 'alt'], locale)}
+            width={120}
+            height={40}
+            unoptimized
+            className='block h-9 w-auto md:h-10'
+          />
+        </Link>
 
-      <div className={`${prefixClassName}__search`}>
-        <Search onNavigate={router.push} className={`${prefixClassName}-search`} />
-      </div>
+        <div className={`${prefixClassName}__search`}>
+          <Search onNavigate={router.push} className={`${prefixClassName}-search`} />
+        </div>
 
-      <div className={`${prefixClassName}__cta`}>
-        <CTAButton href='/vod' fullWidth />
-      </div>
+        <div className={`${prefixClassName}__cta`}>
+          <CTAButton href='/vod' fullWidth />
+        </div>
 
-      <div className={`${prefixClassName}__nav`}>
-        <HeaderNav />
+        <div className={`${prefixClassName}__nav`}>
+          <HeaderNav />
+        </div>
       </div>
     </header>
   );

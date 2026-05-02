@@ -142,6 +142,7 @@
 
   /* ─── Size Tokens ──────────────────────────────────────────────── */
   --size-post-card-overlay-height: 320px;
+  --size-header-inner-max: 800px;
 
   /* ─── Font Size Tokens ─────────────────────────────────────────
      PC / SP分離。コンポーネントは必ずこのtokenを使う。

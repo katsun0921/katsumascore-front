@@ -36,6 +36,8 @@
   }
 
   @include layout-md {
+    max-width: var(--size-header-inner-max);
+    margin-inline: auto;
     grid-template-areas: "logo search cta nav";
     grid-template-columns: auto 1fr auto auto;
     column-gap: var(--space-32);
