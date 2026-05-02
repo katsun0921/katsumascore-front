@@ -39,22 +39,11 @@ export const Profile = ({
       </div>
 
       {excerpt && (
-        <div className='border-t border-color-border pt-3'>
+        <div className='border-t border-b border-color-border py-3'>
           <span className='block text-ui text-color-secondary mb-1'>
             {t(messages, ['excerpt', 'label'], locale)}
           </span>
-          <p className='text-body text-color-secondary leading-relaxed '>{excerpt}</p>
-        </div>
-      )}
-
-      {comment && (
-        <div className='border-t border-color-border pt-3'>
-          <span className='block text-ui text-color-secondary mb-1'>
-            From Review
-          </span>
-          <p className='italic text-color-secondary line-clamp-3'>
-            “{comment}”
-          </p>
+          <p className='italic text-body text-color-secondary leading-relaxed '>{excerpt}</p>
         </div>
       )}
 
