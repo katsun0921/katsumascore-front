@@ -41,7 +41,7 @@ export const PostHeader = ({
   return (
     <div className={prefix}>
       <hgroup className={`${prefix}__hgroup`}>
-        {comment && <p className={`${prefix}__comment`}>{comment}</p>}
+        {comment && <p className={`${prefix}__tagline`}>{comment}</p>}
         <h1 className={`${prefix}__title-main`}>{titleOfficial}</h1>
       </hgroup>
       <div className={`${prefix}__lower`}>

@@ -127,7 +127,7 @@
 - [x] アーカイブリダイレクト: 月別アーカイブ・タグアーカイブのリダイレクト設定
 
 ### コンポーネント整理（フェーズ 3）
-- [ ] CinemaCheck（`ui-section/CinemaCheck` は使用中、`features/CinemaCheck` wrapper は未接続）
+- [x] CinemaCheck（`PostDetail` で `features/CinemaCheck` を表示・`ui-section` は wrapper 経由）
 
 ### 未使用コンポーネントの整理
 - [ ] `features/Pagination` — 未接続（ListTemplate等への接続またはui-section移行）
