@@ -44,8 +44,6 @@ const basePost: PostDetailData = {
       { name: 'アミューズ', href: '/production_studio/amuse' },
     ],
   },
-  heroFilmStudios: [{ slug: 'sony-pictures-entertainment', name: 'Sony Pictures Entertainment' }],
-  heroProductionStudios: [{ slug: 'amuse', name: 'アミューズ' }],
   credits: [
     {
       role: '監督',

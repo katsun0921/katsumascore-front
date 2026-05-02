@@ -41,8 +41,6 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
           description={post.summary?.text ?? ''}
           refUrl={post.summary?.refUrl}
           refLabel={post.summary?.refLabel}
-          productionStudios={post.heroProductionStudios}
-          filmStudios={post.heroFilmStudios}
           genres={post.heroGenres}
           tags={post.heroTags}
         />

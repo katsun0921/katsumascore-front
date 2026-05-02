@@ -6,10 +6,4 @@ export const messages = {
   tag: {
     label: { ja: 'タグ', en: 'Tags' },
   },
-  productionStudio: {
-    label: { ja: '制作会社', en: 'Production' },
-  },
-  distributor: {
-    label: { ja: '配給会社', en: 'Distribution' },
-  },
 } as const;

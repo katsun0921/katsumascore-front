@@ -15,10 +15,6 @@ export type PostHeroProps = {
   description: string
   refUrl?: string
   refLabel?: string
-  /** wp:term `production_studio`（制作会社） */
-  productionStudios?: PostTaxonomyLink[]
-  /** wp:term `film_studio`（配給会社） */
-  filmStudios?: PostTaxonomyLink[]
   genres?: PostTaxonomyLink[]
   tags?: PostTaxonomyLink[]
 }
@@ -30,11 +26,9 @@ export const PostHero = (props: PostHeroProps) => {
     ? `https://www.youtube.com/embed/${props.trailerYoutubeId}?autoplay=1&mute=1&controls=1&modestbranding=1&rel=0`
     : undefined;
 
-  const hasProductionStudios = Boolean(props.productionStudios && props.productionStudios.length > 0);
-  const hasFilmStudios = Boolean(props.filmStudios && props.filmStudios.length > 0);
   const hasGenres = Boolean(props.genres && props.genres.length > 0);
   const hasTags = Boolean(props.tags && props.tags.length > 0);
-  const hasTaxonomies = hasProductionStudios || hasFilmStudios || hasGenres || hasTags;
+  const hasTaxonomies = hasGenres || hasTags;
 
   return (
     <section className={prefixClassName}>
@@ -49,38 +43,6 @@ export const PostHero = (props: PostHeroProps) => {
       )}
         {hasTaxonomies && (
           <div className={`${prefixClassName}__taxonomies`}>
-            {hasProductionStudios && (
-              <div className={`${prefixClassName}__taxonomy`}>
-                <span className={`${prefixClassName}__taxonomy-label`}>
-                  {t(messages, ['productionStudio', 'label'], locale)}
-                </span>
-                <ul className={`${prefixClassName}__taxonomy-list`}>
-                  {props.productionStudios?.map((s) => (
-                    <li key={s.slug} className={`${prefixClassName}__taxonomy-item`}>
-                      <Link href={`/production_studio/${s.slug}`} className={`${prefixClassName}__taxonomy-link`}>
-                        {s.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {hasFilmStudios && (
-              <div className={`${prefixClassName}__taxonomy`}>
-                <span className={`${prefixClassName}__taxonomy-label`}>
-                  {t(messages, ['distributor', 'label'], locale)}
-                </span>
-                <ul className={`${prefixClassName}__taxonomy-list`}>
-                  {props.filmStudios?.map((s) => (
-                    <li key={s.slug} className={`${prefixClassName}__taxonomy-item`}>
-                      <Link href={`/film_studio/${s.slug}`} className={`${prefixClassName}__taxonomy-link`}>
-                        {s.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
             {hasGenres && (
               <div className={`${prefixClassName}__taxonomy`}>
                 <span className={`${prefixClassName}__taxonomy-label`}>

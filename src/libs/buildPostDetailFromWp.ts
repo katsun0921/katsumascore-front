@@ -800,8 +800,6 @@ export const buildPostDetailFromWp = ({
 
   const heroGenres = extractGenreLinksFromParsedWp(parsed);
   const heroTags = extractPostTagLinksFromParsedWp(parsed);
-  const heroFilmStudios = extractFilmStudioLinksFromParsedWp(parsed);
-  const heroProductionStudios = extractProductionStudioLinksFromParsedWp(parsed);
 
   return {
     ...base,
@@ -821,8 +819,6 @@ export const buildPostDetailFromWp = ({
     ...(postsGroups && postsGroups.length > 0 ? { postsGroups } : {}),
     ...(heroGenres.length > 0 ? { heroGenres } : {}),
     ...(heroTags.length > 0 ? { heroTags } : {}),
-    ...(heroFilmStudios.length > 0 ? { heroFilmStudios } : {}),
-    ...(heroProductionStudios.length > 0 ? { heroProductionStudios } : {}),
     ...(reviewSiteScores ? { reviewSiteScores } : {}),
     shareUrl: `${SITE_URL.replace(/\/$/, "")}${base.slug}`,
   };
