@@ -43,7 +43,7 @@ export const Profile = ({
           <span className='block text-ui text-color-secondary mb-1'>
             {t(messages, ['excerpt', 'label'], locale)}
           </span>
-          <p className='text-body text-color-secondary leading-relaxed line-clamp-4'>{excerpt}</p>
+          <p className='text-body text-color-secondary leading-relaxed '>{excerpt}</p>
         </div>
       )}
 

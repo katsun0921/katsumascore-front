@@ -21,7 +21,7 @@
 
   &__summary {
     grid-area: summary;
-    @include layout-md { 
+    @include layout-md {
       padding-left: var(--space-16);
     }
   }
@@ -76,7 +76,7 @@
     font-style: normal;
 
     a {
-      color: var(--color-primary);
+      color: var(--color-text-inverse);
       text-decoration: none;
 
       &:hover { text-decoration: underline; }

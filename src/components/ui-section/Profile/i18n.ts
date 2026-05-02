@@ -7,7 +7,7 @@ export const messages = {
     label: { ja: '一言コメント', en: 'Comment' },
   },
   excerpt: {
-    label: { ja: 'リード', en: 'Summary' },
+    label: { ja: '管理者の簡単な作品紹介', en: "A brief introduction to the admin's work" },
   },
   about: {
     link: { ja: 'このサイトについて詳しく知る', en: 'About This Site' },
