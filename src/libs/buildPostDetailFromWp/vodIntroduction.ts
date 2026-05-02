@@ -49,11 +49,21 @@ const resolveVodTermFromEmbedded = (
   return undefined;
 };
 
+const getWatchedVodRecord = (acf: Record<string, unknown>): Record<string, unknown> | undefined => {
+  const sv = acf.streaming_vod;
+  if (!sv || typeof sv !== "object" || Array.isArray(sv)) return undefined;
+  const wv = (sv as Record<string, unknown>).watched_vod;
+  if (!wv || typeof wv !== "object" || Array.isArray(wv)) return undefined;
+  return wv as Record<string, unknown>;
+};
+
 const resolveVodServiceFromAcf = (
   wp: ParsedWPPost,
   acf: Record<string, unknown>,
 ): { name: string; slug: string } | undefined => {
-  const raw = acf.streaming_vod_watched_vod_watched_vod_name;
+  const wv = getWatchedVodRecord(acf);
+  if (!wv) return undefined;
+  const raw = wv.watched_vod_name;
   if (raw && typeof raw === "object" && !Array.isArray(raw)) {
     const o = raw as Record<string, unknown>;
     const name = typeof o.name === "string" ? o.name.trim() : "";
@@ -74,21 +84,24 @@ export const buildVodIntroductionPayload = (
 ): PostDetailData["vodIntroduction"] | undefined => {
   if (!acf) return undefined;
   if (!acfTruthy(acf.is_vod_streaming)) return undefined;
-  if (acfTruthy(acf.cinema_info_filed_is_cinema_watched)) return undefined;
+  const cinemaFiled = acf.cinema_info_filed;
+  if (
+    cinemaFiled &&
+    typeof cinemaFiled === "object" &&
+    !Array.isArray(cinemaFiled) &&
+    acfTruthy((cinemaFiled as Record<string, unknown>).is_cinema_watched)
+  ) return undefined;
 
   const vodMeta = resolveVodServiceFromAcf(parsed, acf);
   if (!vodMeta?.name) return undefined;
 
+  const wv = getWatchedVodRecord(acf)!;
   const vodUrlRaw =
-    typeof acf.streaming_vod_watched_vod_watched_vod_url === "string"
-      ? acf.streaming_vod_watched_vod_watched_vod_url.trim()
-      : "";
+    typeof wv.watched_vod_url === "string" ? wv.watched_vod_url.trim() : "";
   const vodUrl = HTTP_URL_RE.test(vodUrlRaw) ? vodUrlRaw : undefined;
-  const isAffiliate = acfTruthy(acf.streaming_vod_watched_vod_is_affiliate_code);
+  const isAffiliate = acfTruthy(wv.is_affiliate_code);
   const affiliateCode =
-    typeof acf.streaming_vod_watched_vod_affiliate_code === "string"
-      ? acf.streaming_vod_watched_vod_affiliate_code.trim()
-      : "";
+    typeof wv.affiliate_code === "string" ? wv.affiliate_code.trim() : "";
 
   if (!vodUrl && !(isAffiliate && affiliateCode.length > 0)) return undefined;
 
@@ -123,6 +136,13 @@ export const extractVodIntroductionRelatedPostsTermId = (wp: unknown): number | 
   const acf = parsed.acf as Record<string, unknown> | undefined;
   if (!acf) return undefined;
   if (!acfTruthy(acf.is_vod_streaming)) return undefined;
-  if (acfTruthy(acf.cinema_info_filed_is_cinema_watched)) return undefined;
-  return pickVodTermId(acf.streaming_vod_watched_vod_watched_vod_name);
+  const cinemaFiled = acf.cinema_info_filed;
+  if (
+    cinemaFiled &&
+    typeof cinemaFiled === "object" &&
+    !Array.isArray(cinemaFiled) &&
+    acfTruthy((cinemaFiled as Record<string, unknown>).is_cinema_watched)
+  ) return undefined;
+  const wv = getWatchedVodRecord(acf);
+  return wv ? pickVodTermId(wv.watched_vod_name) : undefined;
 };
