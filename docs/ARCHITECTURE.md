@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.3** ― WordPress Taxonomy（コンテンツ分類）を追記  
-> katsumascore.blog ｜ 2026年5月1日
+> **v1.4** ― Search System を追記  
+> katsumascore.blog ｜ 2026年5月2日
 
 ---
 
@@ -383,4 +383,120 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 
 ---
 
-*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.3 ｜ katsumascore.blog ｜ 2026年5月1日*
+---
+
+## 10. Search System
+
+### 10.1 概要
+
+検索は2つの入口を持つ。ヘッダーのインクリメンタル検索（ドロップダウン）と、`/search?q=` の検索結果ページ。
+
+| 入口 | コンポーネント | データソース |
+|---|---|---|
+| ヘッダー検索 | `features/Search` | モックデータ（WP API接続は TODO） |
+| 検索結果ページ | `pages/search.tsx` + `SearchResultTemplate` | `/api/search`（API Route）経由でWP REST API |
+
+### 10.2 ファイル構成
+
+```
+src/
+├── pages/
+│   ├── search.tsx                        ← 検索結果ページ（CSR）
+│   └── api/
+│       └── search.ts                     ← API Route（WP REST APIへのプロキシ）
+│
+├── components/
+│   ├── features/
+│   │   ├── Search/                       ← ヘッダー用インクリメンタル検索
+│   │   │   ├── Search.tsx                  UI + キーボード操作（aria combobox）
+│   │   │   ├── useSearch.ts                状態管理・デバウンス（現在モック）
+│   │   │   └── index.ts
+│   │   └── SearchBox/                    ← サイドバー用キーワード入力 → /search へ遷移
+│   │       ├── SearchBox.tsx
+│   │       ├── i18n.ts
+│   │       └── index.ts
+│   │
+│   ├── templates/
+│   │   └── SearchResultTemplate/         ← 検索結果ページの画面構造
+│   │       ├── SearchResultTemplate.tsx
+│   │       └── SearchResultTemplate.types.ts
+│   │
+│   └── ui-parts/
+│       ├── SearchResultItem/             ← ヘッダードロップダウンの1件分
+│       └── HighlightText/               ← キーワードハイライト（dangerouslySetInnerHTML不使用）
+│
+├── libs/
+│   └── searchRelevance.ts               ← スコアリング・次元フィルタ・並び替え
+│
+├── i18n/
+│   └── searchPageMessages.ts            ← 検索ページのi18nメッセージ
+│
+└── types/
+    └── search.ts                        ← SearchResult型（ヘッダー検索用）
+```
+
+### 10.3 データフロー
+
+**検索結果ページ（`/search?q=xxx`）**
+
+```
+ブラウザ（search.tsx）
+  → GET /api/search?q=xxx&lang=ja     ← 同一オリジン（CORSなし）
+      └── API Route（api/search.ts）
+            → GET WP_API_URL/posts?search=xxx&lang=ja&_embed&acf_format=standard
+                  ← WordPress REST API（katsumascore.blog）
+  ← raw WP JSON[]
+  → prepareSearchResults()             ← スコアリング・フィルタ・並び替え
+  → mapWPPostToPost()                  ← 正規化
+  → SearchResultTemplate に渡す
+```
+
+**ヘッダー検索（インクリメンタル）**
+
+```
+ユーザー入力（300ms デバウンス）
+  → useSearch → searchMock()          ← 現在モックデータ
+  → Search.tsx がドロップダウン表示
+  → 選択 → onNavigate(href) で遷移
+```
+
+> `WP_API_URL` はサーバー専用環境変数のため、CSR（ブラウザ）から直接参照できない。
+> API Route をプロキシとして挟むことでCORSを回避し、サーバー側で `WP_API_URL` を使う。
+
+### 10.4 スコアリング（`searchRelevance.ts`）
+
+| フィールド | スコア |
+|---|---|
+| タイトル一致（title / title_jp / title_en） | +10 |
+| 出演者一致（actors_filed） | +5 |
+| 監督一致（taxonomy: director） | +4 |
+| ジャンル一致（taxonomy: genre） | +3 |
+
+スコアが同点の場合はタイトルの五十音順でソート。
+
+### 10.5 次元フィルタ
+
+検索結果ページのフィルターバーで絞り込める。
+
+| フィルタ値 | 表示 | 条件 |
+|---|---|---|
+| `all` | すべて | 制限なし |
+| `actor` | 出演者 | actor マッチを含む結果のみ |
+| `director` | 監督 | director マッチを含む結果のみ |
+| `genre` | ジャンル | genre マッチを含む結果のみ |
+
+### 10.6 HighlightText
+
+`dangerouslySetInnerHTML` + DOMPurify を使わず、`text.split(regex)` でパーツに分割してReactで `<mark>` を返す方式を採用。XSSリスクなし。
+
+### 10.7 今後の対応（TODO）
+
+| 項目 | 内容 |
+|---|---|
+| ヘッダー検索のWP API接続 | `useSearch` のモックを `/api/search` に差し替える |
+| WordPress側の検索拡張 | ACFフィールド（actor / director）を `posts_search` フィルタで検索対象に追加 |
+| ページネーション | 検索結果ページに件数表示・ページ送りを追加 |
+
+---
+
+*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.4 ｜ katsumascore.blog ｜ 2026年5月2日*
