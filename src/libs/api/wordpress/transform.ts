@@ -25,6 +25,49 @@ export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
   return parsed.success ? parsed.data : null;
 };
 
+type TermLike = { name?: unknown; slug?: unknown; taxonomy?: unknown };
+
+const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLowerCase();
+
+const GENRE_TAXONOMIES = new Set(["genre", "genres"]);
+const POST_TAG_TAXONOMIES = new Set(["post_tag", "tag"]);
+
+export type PostTaxonomyLink = {
+  name: string
+  slug: string
+};
+
+const extractTaxonomyLinks = (wp: ParsedWPPost, taxes: Set<string>): PostTaxonomyLink[] => {
+  const groups = wp._embedded?.["wp:term"];
+  if (!Array.isArray(groups)) return [];
+  const seen = new Set<string>();
+  const out: PostTaxonomyLink[] = [];
+  for (const group of groups) {
+    if (!Array.isArray(group)) continue;
+    for (const term of group) {
+      const t = term as TermLike;
+      const name = typeof t.name === "string" ? t.name.trim() : "";
+      const slug = typeof t.slug === "string" ? t.slug.trim() : "";
+      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
+      if (!name || !slug) continue;
+      const tax = normalizeTaxonomy(taxRaw);
+      if (!taxes.has(tax)) continue;
+      if (seen.has(slug)) continue;
+      seen.add(slug);
+      out.push({ name, slug });
+    }
+  }
+  return out;
+};
+
+/** `_embedded['wp:term']` から genre / genres タクソノミーのリンク用データを抽出 */
+export const extractGenreLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, GENRE_TAXONOMIES);
+
+/** `_embedded['wp:term']` から post_tag（および tag）のリンク用データを抽出 */
+export const extractPostTagLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, POST_TAG_TAXONOMIES);
+
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {
   const image = wp._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
   const terms = wp._embedded?.["wp:term"];

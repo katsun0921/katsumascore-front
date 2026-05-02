@@ -82,7 +82,7 @@ const wpPostAcfObjectSchema = z
     title_en: z.string().optional(),
     acf_summary_group: acfSummaryGroupSchema,
     actors_filed: z.array(actorFieldSchema).optional(),
-    good_point_filed: z.string().optional(),
+    good_point_filed: z.unknown().optional(),
     official_url: z.string().optional(),
     official_sns: z.union([z.string(), z.record(z.string(), z.unknown())]).optional(),
     streaming_vod_netflix: looseBool.optional(),
