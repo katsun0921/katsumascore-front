@@ -116,7 +116,6 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
             titleJp={post.title}
             titleEn={post.titleEn}
             streamingVods={post.streamingVods}
-            rentalServices={post.rentalServices}
             postsGroups={post.postsGroups}
             genres={genres}
           />

@@ -23,10 +23,6 @@ const mockStreamingVods = [
   { service: 'amazon' as const, url: 'https://amazon.co.jp/prime-video' },
 ];
 
-const mockRentalServices = [
-  { service: 'tsutaya' as const, url: 'https://tsutaya.com' },
-];
-
 const mockPostsGroups = [
   {
     heading: 'こちらもおすすめです！',
@@ -50,7 +46,6 @@ export const Default: Story = {
     isCinemaShowing: false,
     relationPosts: mockRelationPosts,
     streamingVods: mockStreamingVods,
-    rentalServices: mockRentalServices,
     postsGroups: mockPostsGroups,
   },
 };
@@ -71,7 +66,7 @@ export const EnLocale: Story = {
   globals: { locale: 'en' },
 };
 
-// ── 関連記事のみ（VOD・レンタルなし）
+// ── 関連記事のみ（VODなし。レンタルは固定枠のため表示）
 export const RelatedOnly: Story = {
   args: {
     relationPosts: mockRelationPosts,
