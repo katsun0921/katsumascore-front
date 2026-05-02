@@ -1,4 +1,5 @@
 import { PageLayout } from '@/components/templates/PageLayout';
+import { Breadcrumbs } from '@/components/features/Breadcrumbs';
 import { PostHeader } from '@/components/features/Post/PostHeader';
 import { PostHero } from '@/components/ui-section/PostPage/PostHero';
 import { TitleMeta } from '@/components/features/Post/PostTitleMeta';
@@ -18,6 +19,15 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
   return (
     <PageLayout>
       <div className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-primary-dark))] px-4 pb-4'>
+        <div className='pt-3 pb-0'>
+          <Breadcrumbs
+            title={post.title}
+            category={post.category}
+            type={post.type}
+            lang={post.lang}
+          />
+        </div>
+
         {/* ── title.php 相当 ── */}
         <PostHeader
           category={post.category ?? ''}
