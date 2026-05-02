@@ -27,8 +27,6 @@ const brandColors: Swatch[] = [
   { name: 'Secondary', token: '--color-secondary', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Accent', token: '--color-accent', value: '#6d28d9', textColor: '#ffffff' },
   { name: 'Accent Strong', token: '--color-accent-strong', value: '#ff2dfc' },
-  { name: 'Category', token: '--color-category', value: '#5c39f2', textColor: '#ffffff' },
-  { name: 'Category Hover', token: '--color-category-hover', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Header', token: '--color-header', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Navigation', token: '--color-navigation', value: '#1e1b4b', textColor: '#ffffff' },
   { name: 'Footer', token: '--color-footer', value: '#0e011c', textColor: '#ffffff' },

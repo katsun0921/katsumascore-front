@@ -12,7 +12,7 @@ export default meta;
 type Story = StoryObj<typeof meta>
 
 // ---------------------------------------------------------------------------
-// SingleGroup — シリーズ・カテゴリ・タグ単一グループ
+// SingleGroup — シリーズ・ジャンル・タグ単一グループ
 // ---------------------------------------------------------------------------
 export const SingleGroup: Story = {
   args: {

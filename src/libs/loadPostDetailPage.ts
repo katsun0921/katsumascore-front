@@ -14,6 +14,7 @@ import {
   buildPostDetailFromWp,
   extractRelationPostIds,
   extractPostsGroupSpecsFromWp,
+  extractVodIntroductionRelatedPostsTermId,
 } from '@/libs/buildPostDetailFromWp';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
@@ -83,6 +84,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const postsGroups: TPostsGroupItem[] = groupSpecs
       .map((g) => ({
         heading: g.heading,
+        ...(g.description ? { description: g.description } : {}),
         posts: g.ids
           .map((id) => {
             const raw = relatedRaw.find((p) => p.id === id);
@@ -94,11 +96,25 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       }))
       .filter((g) => g.posts.length > 0);
 
+    const vodTermId = extractVodIntroductionRelatedPostsTermId(wpPost);
+    let vodRelatedPosts: Post[] | undefined;
+    if (vodTermId !== undefined) {
+      const vodFetched = await getPosts({ per_page: 12, lang: loc, vod: vodTermId });
+      const mapped = vodFetched
+        .filter((p) => p.id !== wpPost.id)
+        .map((p) => mapWPPostToPost(p))
+        .filter((m): m is NonNullable<typeof m> => m !== null)
+        .map(toListPost);
+      const picked = pickRandom(mapped, 3);
+      if (picked.length > 0) vodRelatedPosts = picked;
+    }
+
     const detail = buildPostDetailFromWp({
       wp: wpPost,
       locale: loc,
       relationPosts: relationPosts.length > 0 ? relationPosts : undefined,
       postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
+      vodRelatedPosts,
     });
     if (!detail) return { notFound: true };
 

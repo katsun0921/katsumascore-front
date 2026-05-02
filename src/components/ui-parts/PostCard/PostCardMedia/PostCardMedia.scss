@@ -2,7 +2,7 @@
   &__media {
     position: relative;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--color-secondary), var(--color-category));
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
   }
 
   &__image {
@@ -21,7 +21,7 @@
         color-mix(in srgb, var(--color-text-inverse) 15%, transparent),
         transparent 45%
       ),
-      linear-gradient(135deg, var(--color-secondary), var(--color-category));
+      linear-gradient(135deg, var(--color-secondary), var(--color-accent));
     color: var(--color-text-inverse);
   }
 

@@ -22,6 +22,8 @@ type PostsQuery = {
   tags?: number;
   /** カスタム taxonomy `genre` のスラッグ（OpenAPI 未定義のためクエリは生 URL で付与） */
   genre?: string;
+  /** カスタム taxonomy `vod` のターム ID（OpenAPI 未定義のためクエリは生 URL で付与） */
+  vod?: number;
   slug?: string;
   search?: string;
   include?: string;
@@ -35,6 +37,7 @@ type PostsParams = {
   category?: number;
   tags?: number;
   genre?: string;
+  vod?: number;
 };
 
 const buildPostsQuery = (params: PostsParams): PostsQuery => {
@@ -45,6 +48,7 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   if (params.category) q.categories = params.category;
   if (params.tags) q.tags = params.tags;
   if (params.genre) q.genre = params.genre;
+  if (params.vod !== undefined) q.vod = params.vod;
   return q;
 };
 
@@ -59,6 +63,7 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   if (q.categories !== undefined) sp.set("categories", String(q.categories));
   if (q.tags !== undefined) sp.set("tags", String(q.tags));
   if (q.genre) sp.set("genre", q.genre);
+  if (q.vod !== undefined) sp.set("vod", String(q.vod));
   if (q.slug) sp.set("slug", q.slug);
   if (q.search) sp.set("search", q.search);
   if (q.include) sp.set("include", q.include);
@@ -102,14 +107,15 @@ const fetchPosts = async (
   query: PostsQuery,
   options?: WpFetchOptions,
 ): Promise<WPPost[] | null> => {
-  if (query.genre) {
+  if (query.genre || query.vod !== undefined) {
     const paged = await fetchPostsWithMetaOverHttp(query, options);
     return paged?.items ?? null;
   }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
-  const { genre: _g, ...openapiQuery } = query;
+  const { genre: _g, vod: _vod, ...openapiQuery } = query;
   void _g;
+  void _vod;
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -138,15 +144,16 @@ const fetchPostsWithMeta = async (
   query: PostsQuery,
   options?: WpFetchOptions,
 ): Promise<WpPostsPagedResult<WPPost> | null> => {
-  if (query.genre) return fetchPostsWithMetaOverHttp(query, options);
+  if (query.genre || query.vod !== undefined) return fetchPostsWithMetaOverHttp(query, options);
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const { genre: _g2, ...openapiQueryPaged } = query;
+      const { genre: _g2, vod: _vod2, ...openapiQueryPaged } = query;
       void _g2;
+      void _vod2;
       const { data, response } = await wpClient.GET("/posts", {
         params: { query: openapiQueryPaged },
         signal: controller.signal,
@@ -196,7 +203,7 @@ export const getRelatedPosts = async (
   options?: WpFetchOptions,
 ): Promise<WPPost[]> => {
   if (ids.length === 0) return [];
-  return (await fetchPosts({ include: ids.join(","), _fields: FIELDS }, options)) ?? [];
+  return (await fetchPosts({ include: ids.join(","), per_page: Math.min(ids.length, 100), _fields: FIELDS }, options)) ?? [];
 };
 
 export const searchPosts = async (

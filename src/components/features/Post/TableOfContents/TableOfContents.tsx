@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { TocItem } from '@/libs/toc';
@@ -12,16 +12,21 @@ export type TableOfContentsProps = {
 export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const locale = useLocale();
   const [activeId, setActiveId] = useState<string>('');
-  const [isContentEnded, setIsContentEnded] = useState(false);
+  const [isFixed, setIsFixed] = useState(false);
   const placeholderRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
   const innerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
-  const [isTocAtTop, setIsTocAtTop] = useState(false);
-  const isFixed = isTocAtTop && !isContentEnded;
-  const isFixedRef = useRef(false);
   const preFixedNavHeightRef = useRef(0);
   const contentSelector = '#js-content';
+  const getFixedBarHeight = useCallback(() => {
+    const nav = navRef.current;
+    if (!nav) return 60;
+    const rawHeight = getComputedStyle(nav).getPropertyValue('--toc-fixed-bar-height');
+    const height = Number.parseFloat(rawHeight);
+    if (Number.isFinite(height)) return height;
+    return 60;
+  }, []);
 
   useEffect(() => {
     const content = document.querySelector<HTMLElement>(contentSelector);
@@ -30,7 +35,9 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     if (!win) return;
 
     const onScroll = () => {
-      setIsTocAtTop(content.getBoundingClientRect().top <= 60);
+      const fixedBarHeight = getFixedBarHeight();
+      const rect = content.getBoundingClientRect();
+      setIsFixed(rect.top <= fixedBarHeight && rect.bottom > fixedBarHeight);
     };
 
     onScroll();
@@ -38,66 +45,40 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     return () => {
       win.removeEventListener('scroll', onScroll);
     };
-  }, []);
+  }, [getFixedBarHeight]);
 
-  // toc--fixed 時は position:fixed 適用前の nav 高さを inline で維持し、placeholder を同期
+  // toc--fixed 時は position:fixed 適用前の nav 高さを placeholder で維持する
   useLayoutEffect(() => {
-    isFixedRef.current = isFixed;
     const placeholder = placeholderRef.current;
     const nav = navRef.current;
     if (!placeholder || !nav) return;
 
-    const syncLayout = () => {
-      if (!isFixed) {
-        nav.style.height = '';
-        preFixedNavHeightRef.current = nav.offsetHeight;
-      } else {
-        const innerH = innerRef.current?.offsetHeight ?? 60;
-        const stored = preFixedNavHeightRef.current;
-        nav.style.height = `${stored + innerH}px`;
-      }
+    if (!isFixed) {
+      // fixed 解除直後: placeholder をまだクリアせず nav の自然な高さを計測してからクリア
       placeholder.style.height = '';
-      const ph = nav.offsetHeight;
-      if (ph > 0) {
-        placeholder.style.height = `${ph}px`;
+      const h = nav.offsetHeight;
+      preFixedNavHeightRef.current = h;
+    } else {
+      const stored = preFixedNavHeightRef.current;
+      if (stored > 0) {
+        placeholder.style.height = `${stored}px`;
       }
+    }
+
+    const syncResize = () => {
+      if (isFixed) return;
+      placeholder.style.height = '';
+      const h = nav.offsetHeight;
+      preFixedNavHeightRef.current = h;
     };
 
-    syncLayout();
     const win = placeholder.ownerDocument.defaultView;
     if (!win) return;
-    win.addEventListener('resize', syncLayout, { passive: true });
+    win.addEventListener('resize', syncResize, { passive: true });
     return () => {
-      win.removeEventListener('resize', syncLayout);
-      placeholder.style.height = '';
-      nav.style.height = '';
+      win.removeEventListener('resize', syncResize);
     };
   }, [isFixed, items]);
-
-  // #js-content の bottom が viewport 上端を抜けたら sticky を解除する（上下スクロールで可逆）
-  useEffect(() => {
-    const content = document.querySelector<HTMLElement>(contentSelector);
-    if (!content) return;
-
-    const win = content.ownerDocument.defaultView;
-    if (!win) return;
-
-    const updateContentEnded = () => {
-      const threshold = isFixedRef.current
-        ? (innerRef.current?.offsetHeight ?? 60)
-        : (navRef.current?.offsetHeight ?? 60);
-      setIsContentEnded(content.getBoundingClientRect().bottom < threshold);
-    };
-
-    updateContentEnded();
-    win.addEventListener('scroll', updateContentEnded, { passive: true });
-    win.addEventListener('resize', updateContentEnded, { passive: true });
-
-    return () => {
-      win.removeEventListener('scroll', updateContentEnded);
-      win.removeEventListener('resize', updateContentEnded);
-    };
-  }, []);
 
   // toc--fixed 時にアクティブアイテム分だけリスト全体を左へ移動する
   useEffect(() => {

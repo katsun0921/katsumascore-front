@@ -14,6 +14,8 @@ export type TVodIntroductionProps = {
   publishedAt: string
   updatedAt?: string
   relatedPosts?: Post[]
+  /** ACF `streaming_vod_watched_vod_affiliate_code`（テーマでは生 HTML を出力） */
+  affiliateHtml?: string
 }
 
 export const VodIntroduction = ({
@@ -22,6 +24,7 @@ export const VodIntroduction = ({
   writtenFrom,
   publishedAt,
   relatedPosts = [],
+  affiliateHtml,
 }: TVodIntroductionProps) => {
   const locale = useLocale();
   const title = locale === 'en' ? (titleEn || titleJp) : titleJp;
@@ -78,14 +81,21 @@ export const VodIntroduction = ({
           </>
         )}
       </p>
-      <PostCardImgLeft post={{
-        id: '',
-        slug: vodUrl,
-        title: `${vodName}<br>${title}`,
-        excerpt: '',
-        image: vodImageUrl || '',
-        publishedAt
-      }} />
+      {affiliateHtml ? (
+        <div
+          className='mb-4'
+          dangerouslySetInnerHTML={{ __html: affiliateHtml }}
+        />
+      ) : (
+        <PostCardImgLeft post={{
+          id: '',
+          slug: vodUrl,
+          title: `${vodName}<br>${title}`,
+          excerpt: '',
+          image: vodImageUrl || '',
+          publishedAt
+        }} />
+      )}
       {relatedPosts.length > 0 && (
         <div className='mt-6'>
           <h3 className='font-heading text-body font-bold mb-3'>

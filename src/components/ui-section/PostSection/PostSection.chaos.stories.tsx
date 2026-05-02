@@ -81,8 +81,8 @@ export const ChaosSections: Story = {
 // ---------------------------------------------------------------------------
 // ChaosWithEmpty
 // What it tests: one empty section adjacent to one populated section.
-//   Simulates a category page where the first category has 0 articles
-//   (e.g., a new category created in WordPress but not yet used).
+//   Simulates a list/archive page where the first section has 0 posts
+//   (e.g., a new taxonomy term in WordPress but not yet used).
 //
 // Layout risks:
 //   - Empty section renders PostCardListVertical's empty list inside PostSection

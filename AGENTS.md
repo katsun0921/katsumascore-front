@@ -222,7 +222,6 @@ src/
 │   │   ├── Badge/
 │   │   ├── Breadcrumb/
 │   │   ├── CTAButton/
-│   │   ├── Category/
 │   │   ├── Heading/
 │   │   ├── PostCard/           ← Container / Media / Body / Skeleton 等の基礎部品
 │   │   ├── Score/

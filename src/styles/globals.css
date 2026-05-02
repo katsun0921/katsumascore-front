@@ -40,8 +40,6 @@
   --color-header: var(--color-secondary);
   --color-navigation: var(--color-secondary);
   --color-footer: #0e011c;
-  --color-category: #5c39f2;
-  --color-category-hover: var(--color-secondary);
 
   /* Background */
   --color-bg: #ffffff;
@@ -187,8 +185,6 @@
   --color-header: var(--color-header);
   --color-navigation: var(--color-navigation);
   --color-footer: var(--color-footer);
-  --color-category: var(--color-category);
-  --color-category-hover: var(--color-category-hover);
 
   /* Background */
   --color-bg: var(--color-bg);

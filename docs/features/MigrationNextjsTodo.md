@@ -141,7 +141,7 @@
 - [ ] `ui-layout/Container` — 完全未使用（削除または接続先の検討）
 - [ ] `ui-parts/Badge` — 完全未使用
 - [x] `ui-parts/CTAButton` — 使用中（`Header`）
-- [ ] `ui-parts/Category` — 完全未使用
+- [x] `ui-parts/Category` — 完全未使用
 - [ ] `ui-parts/VodLink` — 完全未使用
 - [x] `ui-parts/Affiliate/Admax` — 未使用（Tsutaya / Geo は AdRental で使用中）
 - [x] `ui-parts/Affiliate/Wowow` — 未使用

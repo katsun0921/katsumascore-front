@@ -26,18 +26,18 @@
     transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 
     &:hover {
-      border-color: var(--color-category);
-      color: var(--color-category);
+      border-color: var(--color-accent);
+      color: var(--color-accent);
     }
 
     &--active {
-      background: var(--color-category);
-      border-color: var(--color-category);
+      background: var(--color-accent);
+      border-color: var(--color-accent);
       color: var(--color-text-inverse);
 
       &:hover {
-        background: var(--color-category-hover);
-        border-color: var(--color-category-hover);
+        background: var(--color-secondary);
+        border-color: var(--color-secondary);
         color: var(--color-text-inverse);
       }
     }

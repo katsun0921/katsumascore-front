@@ -83,7 +83,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
             url={post.shareUrl ?? post.slug}
             title={post.title}
           />
-          {/* ── acf-review-site-scores.php 相当 ── */}
+
           {post.reviewSiteScores && (
             <ReviewSiteScores
               sites={post.reviewSiteScores.sites}

@@ -51,7 +51,7 @@ export const ManyOptions: Story = {
 export const LongLabel: Story = {
   args: {
     options: [
-      { label: 'すべてのカテゴリーを表示する', value: 'all' },
+      { label: 'すべてのジャンルを表示する', value: 'all' },
       { label: '映画（劇場公開作品）', value: 'movie' },
     ],
     activeValue: 'all',

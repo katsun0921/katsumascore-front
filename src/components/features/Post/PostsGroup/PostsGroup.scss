@@ -8,7 +8,7 @@
     font-family: var(--font-ja-heading), serif;
     font-style: italic;
     text-transform: uppercase;
-    font-size: var(--font-size-h)1;
+    font-size: var(--font-size-h1);
     line-height: 2rem;
     color: var(--color-secondary);
     padding-bottom: var(--space-16);
@@ -19,7 +19,7 @@
     &::before {
       content: '';
       display: block;
-      background-color: var(--color-category);
+      background-color: var(--color-accent);
       position: absolute;
       bottom: 0;
       left: 0;
@@ -64,6 +64,7 @@
 
   &__thumb {
     position: relative;
+    aspect-ratio: 16 / 9;
     background: var(--color-surface);
     overflow: hidden;
   }
