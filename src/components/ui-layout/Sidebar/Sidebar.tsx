@@ -1,5 +1,5 @@
 import { Profile } from '@/components/ui-section/Profile';
-import { AdBanner } from '@/components/features/AdBanner';
+import { AdBanner } from '@/components/ui-section/AdBanner';
 import { RelatedPosts } from '@/components/ui-section/RelatedPosts';
 import { PickUpAndScore } from '@/components/features/PickUpAndScore';
 import { GenreNav } from '@/components/features/GenreNav';
@@ -13,7 +13,6 @@ import type { SidebarProps } from './Sidebar.types';
 
 export const Sidebar = ({
   profile,
-  adBanner,
   relatedPosts,
   pickupPosts = [],
   highScorePosts = [],
@@ -50,8 +49,8 @@ export const Sidebar = ({
         />
       )}
 
-      {/* ❹ 広告バナー（VOD CTA） */}
-      {adBanner && <AdBanner {...adBanner} />}
+      {/* ❹ 固定広告バナー */}
+      <AdBanner />
 
       {/* ❺ 関連記事（サイドバー専用リスト） */}
       {relatedPosts && relatedPosts.length > 0 && (

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { TocItem } from '@/libs/toc';
@@ -15,69 +15,64 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
   const [isContentEnded, setIsContentEnded] = useState(false);
   const placeholderRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLElement>(null);
+  const innerRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
-  const contentBasePaddingTopRef = useRef<number | null>(null);
   const [isTocAtTop, setIsTocAtTop] = useState(false);
   const isFixed = isTocAtTop && !isContentEnded;
+  const isFixedRef = useRef(false);
+  const preFixedNavHeightRef = useRef(0);
   const contentSelector = '#js-content';
 
   useEffect(() => {
-    const placeholder = placeholderRef.current;
-    const nav = navRef.current;
-    if (!placeholder || !nav) return;
     const content = document.querySelector<HTMLElement>(contentSelector);
     if (!content) return;
-    const win = placeholder.ownerDocument.defaultView;
+    const win = content.ownerDocument.defaultView;
     if (!win) return;
 
     const onScroll = () => {
       setIsTocAtTop(content.getBoundingClientRect().top <= 60);
     };
 
-    const onResize = () => {
-      // リサイズ時はstickyを外した状態でplaceholderの高さを再計算する
-      placeholder.style.height = '';
-      placeholder.style.height = `${nav.offsetHeight}px`;
-      onScroll();
-    };
-
     onScroll();
     win.addEventListener('scroll', onScroll, { passive: true });
-    win.addEventListener('resize', onResize, { passive: true });
     return () => {
       win.removeEventListener('scroll', onScroll);
-      win.removeEventListener('resize', onResize);
     };
   }, []);
 
-  // toc--fixed 時に本文を押し下げてレイアウトジャンプを防ぐ
-  useEffect(() => {
-    const content = document.querySelector<HTMLElement>(contentSelector);
+  // toc--fixed 時は position:fixed 適用前の nav 高さを inline で維持し、placeholder を同期
+  useLayoutEffect(() => {
+    isFixedRef.current = isFixed;
+    const placeholder = placeholderRef.current;
     const nav = navRef.current;
-    if (!content || !nav) return;
+    if (!placeholder || !nav) return;
 
-    const win = content.ownerDocument.defaultView;
+    const syncLayout = () => {
+      if (!isFixed) {
+        nav.style.height = '';
+        preFixedNavHeightRef.current = nav.offsetHeight;
+      } else {
+        const innerH = innerRef.current?.offsetHeight ?? 60;
+        const stored = preFixedNavHeightRef.current;
+        nav.style.height = `${stored + innerH}px`;
+      }
+      placeholder.style.height = '';
+      const ph = nav.offsetHeight;
+      if (ph > 0) {
+        placeholder.style.height = `${ph}px`;
+      }
+    };
+
+    syncLayout();
+    const win = placeholder.ownerDocument.defaultView;
     if (!win) return;
-
-    if (contentBasePaddingTopRef.current === null) {
-      const basePaddingTop = Number.parseFloat(win.getComputedStyle(content).paddingTop) || 0;
-      contentBasePaddingTopRef.current = basePaddingTop;
-    }
-
-    const applyPaddingTop = () => {
-      const basePaddingTop = contentBasePaddingTopRef.current ?? 0;
-      const extraPaddingTop = isFixed ? nav.offsetHeight + 24 * 2 + 56 : 0;
-      content.style.paddingTop = `${basePaddingTop + extraPaddingTop}px`;
-    };
-
-    applyPaddingTop();
-    win.addEventListener('resize', applyPaddingTop, { passive: true });
-
+    win.addEventListener('resize', syncLayout, { passive: true });
     return () => {
-      win.removeEventListener('resize', applyPaddingTop);
-      content.style.paddingTop = `${contentBasePaddingTopRef.current ?? 0}px`;
+      win.removeEventListener('resize', syncLayout);
+      placeholder.style.height = '';
+      nav.style.height = '';
     };
-  }, [isFixed]);
+  }, [isFixed, items]);
 
   // #js-content の bottom が viewport 上端を抜けたら sticky を解除する（上下スクロールで可逆）
   useEffect(() => {
@@ -88,8 +83,10 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
     if (!win) return;
 
     const updateContentEnded = () => {
-      const navHeight = navRef.current?.offsetHeight ?? 60;
-      setIsContentEnded(content.getBoundingClientRect().bottom < navHeight);
+      const threshold = isFixedRef.current
+        ? (innerRef.current?.offsetHeight ?? 60)
+        : (navRef.current?.offsetHeight ?? 60);
+      setIsContentEnded(content.getBoundingClientRect().bottom < threshold);
     };
 
     updateContentEnded();
@@ -157,28 +154,30 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
         className={['toc', isFixed ? 'toc--fixed' : ''].join(' ')}
         aria-label={t(messages, ['heading', 'label'], locale)}
       >
-        <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
-        <ol ref={listRef} className='toc__list'>
-          {items.map((item) => (
-            <li
-              key={item.id}
-              className={[
-                'toc__item',
-                `toc__item--level-${item.level}`,
-                isFixed && activeId === item.id ? 'toc__item--active' : '',
-              ]
-                .filter(Boolean)
-                .join(' ')}
-            >
-              <a
-                href={`#${item.id}`}
-                aria-current={isFixed && activeId === item.id ? 'true' : undefined}
+        <div ref={innerRef} className='toc__inner'>
+          <p className='toc__heading'>{t(messages, ['heading', 'label'], locale)}</p>
+          <ol ref={listRef} className='toc__list'>
+            {items.map((item) => (
+              <li
+                key={item.id}
+                className={[
+                  'toc__item',
+                  `toc__item--level-${item.level}`,
+                  isFixed && activeId === item.id ? 'toc__item--active' : '',
+                ]
+                  .filter(Boolean)
+                  .join(' ')}
               >
-                {item.text}
-              </a>
-            </li>
-          ))}
-        </ol>
+                <a
+                  href={`#${item.id}`}
+                  aria-current={isFixed && activeId === item.id ? 'true' : undefined}
+                >
+                  {item.text}
+                </a>
+              </li>
+            ))}
+          </ol>
+        </div>
       </nav>
       </div>
     </>

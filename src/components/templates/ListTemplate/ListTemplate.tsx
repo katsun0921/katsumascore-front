@@ -3,6 +3,7 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostRankingItem } from '@/components/features/Post/PostRankingItem';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
+import { Pagination } from '@/components/features/Pagination';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
@@ -104,27 +105,11 @@ export const ListTemplate = ({
             </section>
           )}
 
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <nav className='flex justify-center gap-2' aria-label={t(messages, ['pagination', 'ariaLabel'], locale)}>
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  type='button'
-                  onClick={() => handlePageChange(page)}
-                  aria-current={page === currentPage ? 'page' : undefined}
-                  className={[
-                    'min-w-[40px] h-10 rounded-lg border font-ui text-sm transition-colors',
-                    page === currentPage
-                      ? 'bg-category border-category text-color-inverse'
-                      : 'bg-color-bg border-color-border text-color-secondary hover:border-category hover:text-category',
-                  ].join(' ')}
-                >
-                  {page}
-                </button>
-              ))}
-            </nav>
-          )}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
 
         {/* Sidebar */}

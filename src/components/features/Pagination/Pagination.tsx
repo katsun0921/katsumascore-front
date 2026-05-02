@@ -36,7 +36,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: TPaginatio
   }
 
   return (
-    <nav className='mt-8' aria-label={t(messages, ['nav', 'label'], locale)}>
+    <nav aria-label={t(messages, ['nav', 'label'], locale)}>
       <ul className='flex flex-wrap items-center justify-center gap-1 p-0 m-0'>
         {currentPage > 1 && (
           <li>

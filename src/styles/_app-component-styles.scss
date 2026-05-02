@@ -1,5 +1,4 @@
 /* Next.js 16: global SCSS は Custom App（および Storybook preview）からのみ読み込む */
-@use "../components/features/AdBanner/AdBanner";
 @use "../components/features/GenreNav/GenreNav";
 @use "../components/features/HomePageEmbeds/HomePageEmbeds";
 @use "../components/features/HomeHero/HomeHero";
@@ -30,6 +29,7 @@
 @use "../components/ui-parts/PostCard/PostCardBody/PostCardBody";
 @use "../components/ui-parts/PostCard/PostCardMedia/PostCardMedia";
 @use "../components/ui-parts/PostCard/PostCardSkeleton/PostCardSkeleton";
+@use "../components/ui-section/AdBanner/AdBanner";
 @use "../components/ui-section/PostCard/PostCardImgOverlay/PostCardImgOverlay";
 @use "../components/ui-section/PostPage/PostContent/PostContent";
 @use "../components/ui-section/PostPage/PostGoodPoint/PostGoodPoint";

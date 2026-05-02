@@ -8,9 +8,6 @@ export const messages = {
   ranking: {
     heading: { ja: 'ランキング', en: 'Ranking' },
   },
-  pagination: {
-    ariaLabel: { ja: 'ページネーション', en: 'Pagination' },
-  },
   ad: {
     label: { ja: 'Ad', en: 'Ad' },
     placeholder: { ja: '300×250', en: '300×250' },

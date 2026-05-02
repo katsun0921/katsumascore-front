@@ -130,7 +130,7 @@
 - [x] CinemaCheck（`PostDetail` で `features/CinemaCheck` を表示・`ui-section` は wrapper 経由）
 
 ### 未使用コンポーネントの整理
-- [ ] `features/Pagination` — 未接続（ListTemplate等への接続またはui-section移行）
+- [x] `features/Pagination` — 未接続（ListTemplate等への接続またはui-section移行）
 - [x] `features/Carousel` — 削除済み
 - [x] `features/Post/PostDate` — `ui-section/PostDate` へ移動済み
 - [ ] `features/VodPanel` — 完全未使用（`ui-section/VodPanel`との重複整理）
