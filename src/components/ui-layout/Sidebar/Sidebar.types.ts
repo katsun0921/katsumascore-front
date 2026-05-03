@@ -24,8 +24,7 @@ export type SidebarProps = {
 
   // VOD（acf-streaming-vod.php 相当）・タイトル（レンタル見出し用）
   isCinemaShowing?: boolean
-  titleJp?: string
-  titleEn?: string
+  title?: string
   streamingVods?: TStreamingVodEntry[]
 
   // 関連投稿グループ（PostsGroup 相当）

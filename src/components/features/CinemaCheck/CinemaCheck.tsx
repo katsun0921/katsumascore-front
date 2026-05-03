@@ -4,16 +4,16 @@ import { useLocale } from '@/i18n/provider';
 
 export type TCinemaCheckProps = {
   isCinemaShowing: boolean
-  titleJp?: string
+  title?: string
 }
 
-export const CinemaCheck = ({ isCinemaShowing, titleJp }: TCinemaCheckProps) => {
+export const CinemaCheck = ({ isCinemaShowing, title }: TCinemaCheckProps) => {
   const locale = useLocale();
 
   if (!isCinemaShowing) return null;
 
   const { badgeLabel, fallbackTitle, messageSuffix } = cinemaCheckConfig[locale];
-  const message = `${titleJp || fallbackTitle}${messageSuffix}`;
+  const message = `${title || fallbackTitle}${messageSuffix}`;
 
   return <CinemaCheckSection badgeLabel={badgeLabel} message={message} />;
 };

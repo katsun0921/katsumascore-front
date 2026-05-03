@@ -24,39 +24,34 @@ const SITE_ORDER: ReviewSiteId[] = ['imdb', 'rt-critics', 'rt-audience', 'filmar
 
 const SITE_CONFIG: Record<
   ReviewSiteId,
-  { labelJa: string; labelEn: string; maxScore: number; unit: string; modifier: string }
+  { labels: { ja: string; en: string }; maxScore: number; unit: string; modifier: string }
 > = {
   imdb: {
-    labelJa: 'IMDb',
-    labelEn: 'IMDb',
+    labels: { ja: 'IMDb', en: 'IMDb' },
     maxScore: 10,
     unit: ' /10',
     modifier: 'p-review-scores__fill--imdb',
   },
   'rt-critics': {
-    labelJa: 'RT 批評家',
-    labelEn: 'RT Critics',
+    labels: { ja: 'RT 批評家', en: 'RT Critics' },
     maxScore: 100,
     unit: '%',
     modifier: 'p-review-scores__fill--rt',
   },
   'rt-audience': {
-    labelJa: 'RT 観客',
-    labelEn: 'RT Audience',
+    labels: { ja: 'RT 観客', en: 'RT Audience' },
     maxScore: 100,
     unit: '%',
     modifier: 'p-review-scores__fill--rt-audience',
   },
   filmarks: {
-    labelJa: 'Filmarks',
-    labelEn: 'Filmarks',
+    labels: { ja: 'Filmarks', en: 'Filmarks' },
     maxScore: 5,
     unit: ' /5',
     modifier: 'p-review-scores__fill--filmarks',
   },
   'eiga-com': {
-    labelJa: '映画.com',
-    labelEn: 'Eiga.com',
+    labels: { ja: '映画.com', en: 'Eiga.com' },
     maxScore: 5,
     unit: ' /5',
     modifier: 'p-review-scores__fill--eiga-com',
@@ -94,7 +89,7 @@ export const ReviewSiteScores = ({
           const config = SITE_CONFIG[site.siteId];
           const maxScore = site.maxScore ?? config.maxScore;
           const unit = site.unit ?? config.unit;
-          const label = site.label ?? (locale === 'en' ? config.labelEn : config.labelJa);
+          const label = site.label ?? (locale === 'en' ? config.labels.en : config.labels.ja);
           const fillPercent = Math.max(0, Math.min((site.score / maxScore) * 100, 100));
           const scoreText = `${formatScore(site.score, maxScore)}${unit}`;
           const summaryText = site.summary?.trim();

@@ -20,8 +20,7 @@ export const Sidebar = ({
   activeGenreSlug,
   relationPosts,
   isCinemaShowing,
-  titleJp,
-  titleEn,
+  title,
   streamingVods,
   postsGroups,
 }: SidebarProps) => {
@@ -36,8 +35,7 @@ export const Sidebar = ({
       {/* ❷ VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
       {!isCinemaShowing && streamingVods && streamingVods.length > 0 && (
         <StreamingVod
-          titleJp={titleJp ?? ''}
-          titleEn={titleEn}
+          title={title ?? ''}
           services={streamingVods}
         />
       )}
@@ -45,7 +43,7 @@ export const Sidebar = ({
       {/* ❹ レンタル広告（固定アフィリエイト。劇場公開中・英語ロケールは非表示） */}
       {!isCinemaShowing && locale !== 'en' && (
         <AdRental
-          title={titleJp ?? ''}
+          title={title ?? ''}
         />
       )}
 

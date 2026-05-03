@@ -7,7 +7,7 @@ const meta: Meta<typeof CinemaCheck> = {
   tags: ['autodocs'],
   args: {
     isCinemaShowing: true,
-    titleJp: '鬼滅の刃 柱稽古編',
+    title: '鬼滅の刃 柱稽古編',
   },
 };
 export default meta;
@@ -19,7 +19,7 @@ export const NotShowing: Story = { args: { isCinemaShowing: false } };
 export const English: Story = {
   args: {
     isCinemaShowing: true,
-    titleJp: 'Demon Slayer',
+    title: 'Demon Slayer',
   },
   globals: { locale: 'en' },
 };

@@ -41,8 +41,7 @@ const mockProfile = {
 export const Default: Story = {
   args: {
     profile: mockProfile,
-    titleJp: 'インターステラー',
-    titleEn: 'Interstellar',
+    title: 'インターステラー',
     isCinemaShowing: false,
     relationPosts: mockRelationPosts,
     streamingVods: mockStreamingVods,
@@ -62,6 +61,7 @@ export const CinemaShowing: Story = {
 export const EnLocale: Story = {
   args: {
     ...Default.args,
+    title: 'Interstellar',
   },
   globals: { locale: 'en' },
 };
@@ -76,8 +76,7 @@ export const RelatedOnly: Story = {
 // ── VODのみ
 export const VodOnly: Story = {
   args: {
-    titleJp: 'インターステラー',
-    titleEn: 'Interstellar',
+    title: 'インターステラー',
     streamingVods: mockStreamingVods,
   },
 };

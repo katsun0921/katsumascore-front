@@ -31,7 +31,6 @@ export type TOfficialSnsEntry = {
 }
 
 export type TTitleMetaProps = {
-  titleEn?: string
   officialUrl?: string
   copyright?: string
   releaseDate?: string

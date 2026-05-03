@@ -11,7 +11,8 @@ export type WPGenreTerm = {
   slug: string;
   name: string;
   count: number;
-  acf?: { name_ja?: string; name_en?: string };
+  /** REST の `name_ja` / `name_en` を正規化（locale キーは `ja` / `en`） */
+  acf?: { ja?: string; en?: string };
 };
 
 const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | undefined => {
@@ -24,19 +25,19 @@ const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | u
 
 /**
  * genre タームの REST に載る ACF を正規化する。
- * - ACF の「REST API に表示」後は通常 `acf: { name_ja, name_en }`（フィールドの name に依存）
+ * - WP 側フィールド名は `name_ja` / `name_en` のまま読む
  * - 未設定や古いデータでは `acf: false` / 空オブジェクト のことがある
  */
 export const normalizeGenreTermAcf = (
   acfRaw: unknown,
-): { name_ja?: string; name_en?: string } | undefined => {
+): { ja?: string; en?: string } | undefined => {
   if (acfRaw === false || acfRaw === null || acfRaw === undefined) return undefined;
   if (typeof acfRaw !== "object" || Array.isArray(acfRaw)) return undefined;
   const r = acfRaw as Record<string, unknown>;
-  const name_ja = pickFirstString(r, ["name_ja", "genre_name_ja"]);
-  const name_en = pickFirstString(r, ["name_en", "genre_name_en"]);
-  if (name_ja === undefined && name_en === undefined) return undefined;
-  return { ...(name_ja !== undefined ? { name_ja } : {}), ...(name_en !== undefined ? { name_en } : {}) };
+  const primary = pickFirstString(r, ["name_ja", "genre_name_ja"]);
+  const alternate = pickFirstString(r, ["name_en", "genre_name_en"]);
+  if (primary === undefined && alternate === undefined) return undefined;
+  return { ...(primary !== undefined ? { ja: primary } : {}), ...(alternate !== undefined ? { en: alternate } : {}) };
 };
 
 const isGenreTermShape = (x: unknown): x is Omit<WPGenreTerm, "acf"> & { acf?: unknown } => {
@@ -71,11 +72,11 @@ const parseGenreList = (data: unknown): WPGenreTerm[] => {
 export const genreDisplayLabel = (term: WPGenreTerm, locale: string): string => {
   const acf = term.acf;
   if (locale === "en") {
-    if (acf?.name_en) return acf.name_en;
-    if (acf?.name_ja) return acf.name_ja;
+    if (acf?.en) return acf.en;
+    if (acf?.ja) return acf.ja;
     return term.name;
   }
-  if (acf?.name_ja) return acf.name_ja;
+  if (acf?.ja) return acf.ja;
   return term.name;
 };
 

@@ -12,8 +12,7 @@ const meta: Meta<typeof StreamingVod> = {
   component: StreamingVod,
   tags: ['autodocs'],
   args: {
-    titleJp: '鬼滅の刃',
-    titleEn: 'Demon Slayer',
+    title: '鬼滅の刃',
     services: mockServices,
   },
 };
@@ -22,7 +21,10 @@ export default meta;
 type Story = StoryObj<typeof StreamingVod>
 
 export const Japanese: Story = {};
-export const English: Story = { globals: { locale: 'en' } };
+export const English: Story = {
+  args: { title: 'Demon Slayer' },
+  globals: { locale: 'en' },
+};
 export const SingleService: Story = { args: { services: [mockServices[0]] } };
 export const AllServices: Story = {
   args: {

@@ -6,7 +6,6 @@ const meta: Meta<typeof TitleMeta> = {
   component: TitleMeta,
   tags: ['autodocs'],
   args: {
-    titleEn: 'Demon Slayer: Kimetsu no Yaiba',
     releaseDate: '20240407',
     officialUrl: 'https://kimetsu.com',
     officialSns: {
@@ -25,7 +24,6 @@ export const Japanese: Story = {};
 export const English: Story = { globals: { locale: 'en' } };
 export const Minimal: Story = {
   args: {
-    titleEn: 'Demon Slayer',
     officialUrl: 'https://kimetsu.com',
     officialSns: undefined,
   },

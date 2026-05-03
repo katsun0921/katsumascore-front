@@ -10,7 +10,7 @@ import type { PostDetailData } from './PostDetail.types';
 const basePost: PostDetailData = {
   ...mockPost,
   title: '花束みたいな恋をした',
-  titleEn: 'A Bouquet of Clumsy Words',
+  originalTitle: 'A Bouquet of Clumsy Words',
   authorComment: '東京の空気と若者のリアルな感情を丁寧に描いた、令和の恋愛映画の傑作。余韻が長く残る作品。',
   trailerYoutubeId: 'hLRMHi73BzQ',
   updatedAt: '2026-04-03',
@@ -29,7 +29,6 @@ const basePost: PostDetailData = {
     refLabel: '公式サイト',
   },
   TitleMeta: {
-    titleEn: 'A Bouquet of Clumsy Words',
     officialUrl: 'https://hanataba-movie.com',
     copyright: '©2021「花束みたいな恋をした」製作委員会',
     releaseDate: '20210129',
@@ -106,8 +105,7 @@ const basePost: PostDetailData = {
     updatedAt: '2026-04-01',
   },
   vodIntroduction: {
-    titleJp: '花束みたいな恋をした',
-    titleEn: 'A Bouquet of Clumsy Words',
+    title: '花束みたいな恋をした',
     writtenFrom: {
       type: 'vod',
       vodName: 'Amazon Prime Video',

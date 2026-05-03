@@ -16,13 +16,12 @@ type Story = StoryObj<typeof meta>
 // ---------------------------------------------------------------------------
 export const VodStreaming: Story = {
   args: {
-    titleJp: '花束みたいな恋をした',
-    titleEn: 'A Bouquet of Clumsy Words',
+    title: '花束みたいな恋をした',
     writtenFrom: {
       type: 'vod',
       vodName: 'Amazon Prime Video',
       vodUrl: 'https://www.amazon.co.jp/prime-video',
-      vodImageUrl: '/images/mock-image.webp',
+      vodImageUrl: '/images/vod/amazon-prime-video.webp',
     },
     publishedAt: '2026-04-01',
     relatedPosts: mockPosts.slice(0, 3),
@@ -34,7 +33,7 @@ export const VodStreaming: Story = {
 // ---------------------------------------------------------------------------
 export const VodStreamingNoRelated: Story = {
   args: {
-    titleJp: '花束みたいな恋をした',
+    title: '花束みたいな恋をした',
     writtenFrom: {
       type: 'vod',
       vodName: 'Netflix',
@@ -49,8 +48,7 @@ export const VodStreamingNoRelated: Story = {
 // ---------------------------------------------------------------------------
 export const EnLocale: Story = {
   args: {
-    titleJp: '花束みたいな恋をした',
-    titleEn: 'A Bouquet of Clumsy Words',
+    title: 'A Bouquet of Clumsy Words',
     writtenFrom: {
       type: 'vod',
       vodName: 'Amazon Prime Video',

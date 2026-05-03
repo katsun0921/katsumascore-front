@@ -12,17 +12,15 @@ export type TStreamingVodEntry = {
 }
 
 export type TStreamingVodProps = {
-  titleJp?: string
-  titleEn?: string
+  title?: string
   services: TStreamingVodEntry[]
 }
 
-export const StreamingVod = ({ titleJp, titleEn, services }: TStreamingVodProps) => {
+export const StreamingVod = ({ title, services }: TStreamingVodProps) => {
   const locale = useLocale();
 
   if (!services.length) return null;
 
-  const title = locale === 'en' ? titleEn : titleJp;
   const { defaultHeading, headingPrefix, headingSuffix } = streamingVodConfig[locale];
   const heading = title ? `${headingPrefix}${title}${headingSuffix}` : defaultHeading;
   const items = services.map((entry, index) => (

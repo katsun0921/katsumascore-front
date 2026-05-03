@@ -8,8 +8,7 @@ import { messages } from './i18n';
 type TWrittenFrom = { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
 
 export type TVodIntroductionProps = {
-  titleJp: string
-  titleEn?: string
+  title: string
   writtenFrom: TWrittenFrom
   publishedAt: string
   updatedAt?: string
@@ -19,15 +18,13 @@ export type TVodIntroductionProps = {
 }
 
 export const VodIntroduction = ({
-  titleJp,
-  titleEn,
+  title,
   writtenFrom,
   publishedAt,
   relatedPosts = [],
   affiliateHtml,
 }: TVodIntroductionProps) => {
   const locale = useLocale();
-  const title = locale === 'en' ? (titleEn || titleJp) : titleJp;
 
   const { vodName, vodUrl, vodImageUrl } = writtenFrom;
   const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP';

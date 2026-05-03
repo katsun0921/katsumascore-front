@@ -3,7 +3,7 @@ import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
 import type { SeasonItem } from "@/components/ui-home/HomeSeasonReview";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
-import type { WPCategory, WPPage } from "@/types/wordpress";
+import type { WPPage } from "@/types/wordpress";
 import type { Post } from "@/types/post";
 import { getScoreRank } from "@/types/wordpress";
 import {
@@ -18,6 +18,7 @@ import {
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
+import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
@@ -70,14 +71,6 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
   return { slides };
 };
 
-const resolveAnimeCategoryId = (categories: WPCategory[]): number | undefined => {
-  const fromEnv = process.env.WP_ANIME_CATEGORY_ID;
-  if (fromEnv && /^\d+$/.test(fromEnv)) return Number(fromEnv);
-  const bySlug = categories.find((c) => c.slug === "anime");
-  if (bySlug) return bySlug.id;
-  return categories.find((c) => c.name.includes("アニメ"))?.id;
-};
-
 const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
   posts.slice(0, 6).map((p, i) => ({
     label: (p.category ?? "PICK").slice(0, 12).toUpperCase(),
@@ -121,7 +114,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const latestPosts = [...pool].sort(sortByDateDesc).slice(0, 8);
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
 
-  const animeCategoryId = resolveAnimeCategoryId(categories);
+  const animeCategoryId = resolveAnimeCategoryMeta(categories)?.id;
 
   const [animeRaw, movieCategory, recommendBlockRows, seasonalChildren, featuredPages] = await Promise.all([
     animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId, lang }) : Promise.resolve([]),

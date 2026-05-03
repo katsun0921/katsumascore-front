@@ -36,8 +36,8 @@ export const buildPostDetailFromWp = ({
   if (!base) return null;
 
   const acf = parsed.acf as Record<string, unknown> | undefined;
-  const titleEnRaw = parsed.acf?.title_en?.trim();
-  const titleEn = titleEnRaw ? stripHtml(titleEnRaw) : undefined;
+  const originalTitleRaw = parsed.acf?.title_en?.trim();
+  const originalTitle = originalTitleRaw ? stripHtml(originalTitleRaw) : undefined;
 
   const sg = parsed.acf?.acf_summary_group as Record<string, unknown> | undefined;
 
@@ -49,7 +49,7 @@ export const buildPostDetailFromWp = ({
   };
 
   /** グループ内・ルート ACF の両方からあらすじ本文を拾う（テーマ acf-summary.php は acf_summary_text 中心） */
-  const summaryJpFromFields = (): string => {
+  const summaryPrimaryFromFields = (): string => {
     const fromGroup =
       snippetFrom(sg?.summary_jp) ||
       snippetFrom(sg?.acf_summary_text) ||
@@ -59,21 +59,17 @@ export const buildPostDetailFromWp = ({
     return snippetFrom(acf.acf_summary_text) || snippetFrom(acf.summary_jp);
   };
 
-  const summaryEnFromFields = (): string => {
+  const summaryAlternateFromFields = (): string => {
     const fromGroup = snippetFrom(sg?.summary_en) || snippetFrom(sg?.acf_summary_text_en);
     if (fromGroup) return fromGroup;
     if (!acf) return "";
     return snippetFrom(acf.summary_en);
   };
 
-  const jpText = summaryJpFromFields();
-  const enText = summaryEnFromFields();
-  let summaryText = "";
-  if (locale === "en") {
-    summaryText = enText || jpText;
-  } else {
-    summaryText = jpText || enText;
-  }
+  const primarySummary = summaryPrimaryFromFields();
+  const alternateSummary = summaryAlternateFromFields();
+  const summaryText =
+    locale === "en" ? alternateSummary || primarySummary : primarySummary || alternateSummary;
 
   const officialUrl = parsed.acf?.official_url?.trim();
   const groupRefUrl = typeof sg?.acf_ref_url === "string" ? sg.acf_ref_url.trim() : "";
@@ -183,11 +179,11 @@ export const buildPostDetailFromWp = ({
     ...(cinemaIntroductionOfficial ? { officialUrl: cinemaIntroductionOfficial } : {}),
   };
 
-  const vodIntroduction = buildVodIntroductionPayload(parsed, base, acf, titleEn, vodRelatedPosts);
+  const vodIntroduction = buildVodIntroductionPayload(parsed, base, acf, vodRelatedPosts);
 
   return {
     ...base,
-    ...(titleEn ? { titleEn } : {}),
+    ...(originalTitle ? { originalTitle } : {}),
     ...(updatedAt ? { updatedAt } : {}),
     ...trailerVideo,
     ...(authorComment ? { authorComment } : {}),

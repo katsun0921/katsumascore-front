@@ -187,6 +187,35 @@ export const getPostsWithMeta = async (
 ): Promise<WpPostsPagedResult<WPPost> | null> =>
   fetchPostsWithMeta(buildPostsQuery(params), options);
 
+/**
+ * 投稿一覧を複数 REST ページにわたって取得し、ID 重複を除いて結合する。
+ * 直近1ページ（既定100件）だけでは高スコア記事の候補が足りない場合に使う。
+ */
+export const getPostsPagedMerge = async (
+  base: PostsParams,
+  maxPages: number,
+  options?: WpFetchOptions,
+): Promise<WPPost[]> => {
+  if (maxPages < 1) return [];
+  const perPage = base.per_page ?? 100;
+  const merged: WPPost[] = [];
+  const seenIds = new Set<number>();
+  let totalPages = 1;
+
+  for (let page = 1; page <= maxPages; page += 1) {
+    const batch = await getPostsWithMeta({ ...base, page, per_page: perPage }, options);
+    if (!batch || batch.items.length === 0) break;
+    totalPages = batch.meta.totalPages;
+    for (const p of batch.items) {
+      if (seenIds.has(p.id)) continue;
+      seenIds.add(p.id);
+      merged.push(p);
+    }
+    if (page >= totalPages) break;
+  }
+  return merged;
+};
+
 export const getPostBySlug = async (
   slug: string,
   lang?: string,
