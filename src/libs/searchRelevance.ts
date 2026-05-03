@@ -1,5 +1,5 @@
 import type { ParsedWPPost } from "@/libs/api/wordpress/schema";
-import { parseWPPostUnknown, stripHtml } from "@/libs/api/wordpress";
+import { parseWPPostUnknown, stripHtml, titleSearchBlobFromParsedWp } from "@/libs/api/wordpress";
 
 export type SearchDimensionFilter = "all" | "actor" | "director" | "genre";
 
@@ -22,14 +22,7 @@ const pushKind = (kinds: SearchMatchKind[], kind: SearchMatchKind) => {
   if (!kinds.includes(kind)) kinds.push(kind);
 };
 
-const titleBlob = (wp: ParsedWPPost): string => {
-  const parts = [stripHtml(wp.title.rendered)];
-  const acfTitleLine = wp.acf?.title_jp?.trim();
-  const acfAlternateTitleLine = wp.acf?.title_en?.trim();
-  if (acfTitleLine) parts.push(stripHtml(acfTitleLine));
-  if (acfAlternateTitleLine) parts.push(stripHtml(acfAlternateTitleLine));
-  return parts.join(" ");
-};
+const titleBlob = (wp: ParsedWPPost): string => titleSearchBlobFromParsedWp(wp);
 
 const actorsBlob = (wp: ParsedWPPost): string => {
   const rows = wp.acf?.actors_filed;

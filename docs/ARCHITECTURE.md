@@ -321,7 +321,7 @@ GET /api/vod?slug={post-slug}
 | 2 | @opennextjs/cloudflare + wrangler.jsonc設定 | 高 |
 | 3 | WP REST API型定義・データ取得層（lib/wordpress.ts） | 高 |
 | 4 | WordPressテーマのページ構成をNext.jsルートに移植 | 高 |
-| 5 | ACFフィールド（review_score・title_jp/en・streaming_vod_*）のマッピング | 高 |
+| 5 | ACFフィールド（review_score・streaming_vod_* 等）のマッピング | 高 |
 | 6 | Storybookの既存コンポーネントをReactに移植（SCSSのみ） | 高 |
 | 7 | 多言語（Next.js `i18n` + ACF `lang` による記事の言語切り分け） | 中 |
 | 8 | VOD在庫APIのSSRルート実装（/api/vod） | 中 |
@@ -467,7 +467,7 @@ src/
 
 | フィールド | スコア |
 |---|---|
-| タイトル一致（title / title_jp / title_en） | +10 |
+| タイトル一致（WP `title`） | +10 |
 | 出演者一致（actors_filed） | +5 |
 | 監督一致（taxonomy: director） | +4 |
 | ジャンル一致（taxonomy: genre） | +3 |

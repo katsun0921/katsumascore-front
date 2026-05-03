@@ -6,7 +6,7 @@ import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getCategoryBySlug, getPostsWithMeta } from '@/libs/api/wordpress';
-import { normalizePostsFromLangScopedQuery } from '@/utils/normalizePost';
+import { normalizePosts } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
@@ -75,7 +75,7 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
   return {
     props: {
       categoryName: category.name,
-      posts: normalizePostsFromLangScopedQuery(fetched.items),
+      posts: normalizePosts(fetched.items, currentLocale),
       locale: currentLocale,
     },
     revalidate: 60,

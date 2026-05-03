@@ -39,11 +39,27 @@ export const getCategories = async (
   options?: WpFetchOptions,
 ): Promise<WPCategory[]> => (await fetchCategories(lang, options)) ?? [];
 
+/**
+ * アーカイブ・スラッグ解決用のカテゴリ一覧。
+ * Polylang 不使用の環境では `lang=en` の `/categories` が空配列になりうるが、ターム ID は投稿と共通のため
+ * その場合は `lang` 無しで再取得する。
+ */
+export const getCategoriesForArchiveResolve = async (
+  locale?: string,
+  options?: WpFetchOptions,
+): Promise<WPCategory[]> => {
+  if (locale === "ja" || locale === "en") {
+    const localized = await getCategories(locale, options);
+    if (localized.length > 0) return localized;
+  }
+  return getCategories(undefined, options);
+};
+
 export const getCategoryBySlug = async (
   slug: string,
   lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPCategory | null> => {
-  const categories = await getCategories(lang, options);
+  const categories = await getCategoriesForArchiveResolve(lang, options);
   return categories.find((c) => c.slug === slug) ?? null;
 };

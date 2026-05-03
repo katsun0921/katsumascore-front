@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — アニメカテゴリ記事一覧（/anime）
+// ISR: revalidate 60s — アニメカテゴリ記事一覧（/anime, /en/anime）
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
+import { getAnimeArchivePath } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
@@ -42,8 +43,8 @@ const AnimeIndexPage = ({
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = loc === 'en' ? '/en/anime' : '/anime';
-    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true });
+    const base = getAnimeArchivePath(loc);
+    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
   };
 
   return (

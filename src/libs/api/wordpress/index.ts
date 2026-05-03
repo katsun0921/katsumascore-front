@@ -11,7 +11,11 @@ export {
   getPostsByTagId,
 } from "./endpoints/posts";
 
-export { getCategories, getCategoryBySlug } from "./endpoints/categories";
+export {
+  getCategories,
+  getCategoriesForArchiveResolve,
+  getCategoryBySlug,
+} from "./endpoints/categories";
 
 export { getTags, pickRandomTags } from "./endpoints/tags";
 
@@ -30,6 +34,7 @@ export {
   normalizePageContent,
   mapWPPostToPost,
   parseWPPostUnknown,
+  titleSearchBlobFromParsedWp,
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
   extractFilmStudioLinksFromParsedWp,

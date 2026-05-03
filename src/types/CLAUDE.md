@@ -26,8 +26,6 @@ interface WPPost {
   _embedded?: { 'wp:featuredmedia': [{ source_url: string }] }
   acf?: {
     review_score?: 1 | 2 | 3 | 4 | 5
-    title_jp?: string
-    title_en?: string
     acf_summary_group?: { summary_jp?: string; summary_en?: string }
     actors_filed?: { name: string; role?: string }[]
     release_date?: string           // Ymd形式
@@ -44,7 +42,7 @@ interface WPPost {
 
 ### Post（正規化後）
 
-`mapWPPostToPost` が `acf.title_jp` / `title_en` を解決し、`title` と任意の `originalTitle` を組み立てる。アプリ層では ACF のタイトルキーを直接参照しない。
+`mapWPPostToPost` は WP の `title.rendered` を `title` に正規化する。`originalTitle` は Story 等の手組みデータ用で、WP 正規化では付与しない。
 
 ### ScoreRank
 

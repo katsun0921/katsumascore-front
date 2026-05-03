@@ -163,7 +163,6 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 |------|----------------|
 | 記事の言語（`ja` / `en`） | `lang` |
 | レビュースコア | `review_score` |
-| タイトル（日／英） | `title_jp`, `title_en` |
 | あらすじグループ | `acf_summary_group`（`summary_jp` / `summary_en`） |
 | 出演者 | `actors_filed`（WordPress 側スペルどおり） |
 | 良かった点 | `good_point_filed` |

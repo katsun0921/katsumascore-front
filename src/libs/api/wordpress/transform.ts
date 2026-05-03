@@ -29,11 +29,9 @@ export const normalizePageContent = (page: WPPageLike): NormalizedPageContent =>
   html: page.content?.rendered ?? null,
 });
 
-const titleFromWp = (wp: ParsedWPPost): string => {
-  const acfTitleLine = wp.acf?.title_jp?.trim();
-  if (acfTitleLine) return stripHtml(acfTitleLine);
-  return stripHtml(wp.title.rendered);
-};
+/** 検索のタイトル次元: WP `title.rendered` のみ */
+export const titleSearchBlobFromParsedWp = (wp: ParsedWPPost): string =>
+  stripHtml(wp.title.rendered);
 
 export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
   const parsed = WPPostSchema.safeParse(wp);
@@ -168,10 +166,12 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     : undefined;
   const year = releaseYear !== undefined && Number.isFinite(releaseYear) ? releaseYear : undefined;
 
+  const title = stripHtml(wp.title.rendered);
+
   return {
     id: String(wp.id),
     slug: getPostUrl(type, wp.slug, lang),
-    title: titleFromWp(wp),
+    title,
     excerpt: stripHtml(wp.excerpt.rendered),
     content: wp.content.rendered,
     image: image ?? null,

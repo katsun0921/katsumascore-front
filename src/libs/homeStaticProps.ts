@@ -100,7 +100,7 @@ const parseCommaList = (raw: string | undefined): string[] | undefined => {
 
 export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplateProps> => {
   const lang = locale === "en" ? "en" : "ja";
-  const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie-ja";
+  const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie";
   const seasonalParentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
 
   const [categories, poolRaw, randomTags] = await Promise.all([

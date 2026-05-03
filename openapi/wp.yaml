@@ -99,10 +99,6 @@ components:
           type: integer
           minimum: 1
           maximum: 5
-        title_jp:
-          type: string
-        title_en:
-          type: string
         acf_summary_group:
           type: object
           properties:

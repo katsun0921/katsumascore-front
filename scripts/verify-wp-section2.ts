@@ -89,7 +89,7 @@ const main = async () => {
   const enSlug = (enFirst as { slug?: string }).slug;
   if (jaSlug === enSlug) {
     console.warn(
-      `verify-wp-section2: warning: first post slug identical for lang=ja and lang=en (${jaSlug ?? "?"}); check Polylang REST lang filter`,
+      `verify-wp-section2: warning: first post slug identical for lang=ja and lang=en (${jaSlug ?? "?"}); REST の lang クエリが効いていない可能性あり。本番の言語分離は ACF lang を確認すること`,
     );
   }
 

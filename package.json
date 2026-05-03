@@ -18,7 +18,7 @@
     "lint": "eslint src .storybook eslint-rules eslint.config.mjs",
     "lint:scss": "stylelint \"src/**/*.scss\"",
     "lint:ui": "node scripts/lint-ui.mjs",
-    "wp:gen-types": "openapi-typescript openapi/wp.yaml -o src/lib/api/wordpress/generated/wp-schema.d.ts",
+    "wp:gen-types": "openapi-typescript openapi/wp.yaml -o src/libs/api/wordpress/generated/wp-schema.d.ts",
     "verify:wp-api": "bash scripts/verify-wp-api.sh",
     "verify:wp-section2": "tsx scripts/verify-wp-section2.ts",
     "verify:wp-section2:relax": "VERIFY_WP_SECTION2_RELAX_ACF=1 tsx scripts/verify-wp-section2.ts",

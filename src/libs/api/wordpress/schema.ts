@@ -78,8 +78,6 @@ const wpPostAcfObjectSchema = z
   .object({
     lang: z.enum(["ja", "en"]).optional(),
     review_score: optionalReviewScore,
-    title_jp: z.string().optional(),
-    title_en: z.string().optional(),
     acf_summary_group: acfSummaryGroupSchema,
     actors_filed: z.array(actorFieldSchema).optional(),
     good_point_filed: z.unknown().optional(),

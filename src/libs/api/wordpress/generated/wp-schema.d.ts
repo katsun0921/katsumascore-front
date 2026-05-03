@@ -96,8 +96,6 @@ export interface components {
         /** @description ACF フィールド。本番では acf: [] が返ることがある（Zod で吸収）。 */
         WPPostAcf: {
             review_score?: number;
-            title_jp?: string;
-            title_en?: string;
             acf_summary_group?: {
                 summary_jp?: string;
                 summary_en?: string;

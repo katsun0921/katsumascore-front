@@ -8,7 +8,7 @@ export type Post = {
   id: string;
   slug: string;
   title: string;
-  /** メイン `title` と異なる英語表記など（`mapWPPostToPost` が ACF から付与） */
+  /** 詳細 UI 用の副題（Story / 手組みデータ向け。WP 正規化では未設定） */
   originalTitle?: string;
   excerpt: string;
   image: string | null;
