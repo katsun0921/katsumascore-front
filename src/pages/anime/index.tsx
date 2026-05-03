@@ -4,17 +4,16 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
+import {
+  formatListPageCategoryDescription,
+  formatListPageIndexMetaDescription,
+  formatListPageIndexTitle,
+} from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
-import { getAnimeArchivePath } from '@/libs/route';
+import { getPostTypeArchivePath } from '@/libs/route';
 import type { Post } from '@/types/post';
-
-const FILTER_OPTIONS = [
-  { label: '評価順', value: 'score' },
-  { label: '新着', value: 'new' },
-  { label: '配信中', value: 'streaming' },
-];
 
 type AnimeIndexProps = {
   categoryName: string;
@@ -43,21 +42,20 @@ const AnimeIndexPage = ({
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = getAnimeArchivePath(loc);
+    const base = getPostTypeArchivePath({ type: 'anime', lang: loc });
     void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
   };
 
   return (
     <I18nProvider locale={loc}>
       <Head>
-        <title>{categoryName} | KatsumaScore</title>
-        <meta name='description' content={`${categoryName}の記事一覧 — スコアで選ぶ`} />
+        <title>{formatListPageIndexTitle(categoryName, loc)}</title>
+        <meta name='description' content={formatListPageIndexMetaDescription(categoryName, loc)} />
       </Head>
       <ListTemplate
         categoryName={categoryName}
-        categoryDescription={`今観るべき${categoryName}作品を、スコアで選ぶ`}
+        categoryDescription={formatListPageCategoryDescription(categoryName, loc)}
         posts={sortedPosts}
-        filterOptions={FILTER_OPTIONS}
         activeFilter={activeFilter}
         onFilterSelect={setActiveFilter}
         currentPage={currentPage}

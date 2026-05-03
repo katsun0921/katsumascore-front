@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — アニメ一覧ページネーション（/anime/page/[page], /en/anime/page/[page]）
+// ISR: revalidate 60s — ドラマ一覧ページネーション（/drama/page/[page], /en/drama/page/[page]）
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -11,11 +11,11 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
+import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import { getPostTypeArchivePath } from '@/libs/route';
 import type { Post } from '@/types/post';
 
-type AnimePagedProps = {
+type DramaPagedProps = {
   categoryName: string;
   posts: Post[];
   currentPage: number;
@@ -29,20 +29,20 @@ const sortPosts = (posts: Post[], filter: string): Post[] => {
   return posts;
 };
 
-const AnimePagedPage = ({
+const DramaPagedPage = ({
   categoryName,
   posts,
   currentPage,
   totalPages,
   locale,
-}: AnimePagedProps) => {
+}: DramaPagedProps) => {
   const router = useRouter();
   const [activeFilter, setActiveFilter] = useState('score');
   const sortedPosts = sortPosts(posts, activeFilter);
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = getPostTypeArchivePath({ type: 'anime', lang: loc });
+    const base = getPostTypeArchivePath({ type: 'drama', lang: loc });
     void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
   };
 
@@ -66,21 +66,22 @@ const AnimePagedPage = ({
   );
 };
 
-export default AnimePagedPage;
+export default DramaPagedPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
   fallback: 'blocking',
 });
 
-export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, locale }) => {
+export const getStaticProps: GetStaticProps<DramaPagedProps> = async ({ params, locale }) => {
   const raw = params?.page;
   if (typeof raw !== 'string') return { notFound: true };
   const pageNum = Number.parseInt(raw, 10);
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
   const currentLocale = locale ?? 'ja';
-  const data = await loadAnimeListPage(currentLocale, pageNum);
+  const dramaSlug = process.env.WP_DRAMA_CATEGORY_SLUG ?? 'drama';
+  const data = await loadCategoryListPage(dramaSlug, currentLocale, pageNum);
   if ('notFound' in data) return { notFound: true };
 
   return {

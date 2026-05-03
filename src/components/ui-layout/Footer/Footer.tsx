@@ -1,42 +1,54 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { XIcon, FacebookIcon, RssIcon } from '@/assets/icons';
-const CATEGORIES = [
-  { name: '映画', href: '/category/movie' },
-  { name: 'アニメ', href: '/category/anime' },
-  { name: 'ドラマ', href: '/category/drama' },
+import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/postTypeArchiveNav.config';
+import type { Locale } from '@/i18n/t';
+import { t } from '@/i18n/t';
+import { getPostTypeArchivePath } from '@/libs/route';
+import { messages } from './i18n';
+
+type VodKey = 'netflix' | 'amazonPrime' | 'unext';
+type MetaKey = 'about' | 'privacy' | 'contact';
+type SnsKey = 'x' | 'facebook' | 'rss';
+
+const VOD_ITEMS: { key: VodKey; href: string }[] = [
+  { key: 'netflix', href: '/vod/netflix' },
+  { key: 'amazonPrime', href: '/vod/amazon' },
+  { key: 'unext', href: '/vod/unext' },
 ];
 
-const VOD_LINKS = [
-  { name: 'Netflix', href: '/vod/netflix' },
-  { name: 'Amazon Prime', href: '/vod/amazon' },
-  { name: 'U-NEXT', href: '/vod/unext' },
+const META_ITEMS: { key: MetaKey; href: string }[] = [
+  { key: 'about', href: '/about' },
+  { key: 'privacy', href: '/privacy' },
+  { key: 'contact', href: '/contact' },
 ];
 
-const META_LINKS = [
-  { name: 'サイトについて', href: '/about' },
-  { name: 'Privacy Policy', href: '/privacy' },
-  { name: 'お問い合わせ', href: '/contact' },
-];
-
-const SNS_LINKS = [
+const SNS_ITEMS: {
+  key: SnsKey;
+  href: string;
+  icon: ReactNode;
+}[] = [
   {
-    label: 'X (Twitter)',
+    key: 'x',
     href: 'https://twitter.com/Katsun0921',
     icon: <XIcon className='w-[18px] h-[18px]' aria-hidden='true' />,
   },
   {
-    label: 'Facebook',
+    key: 'facebook',
     href: 'https://www.facebook.com/people/Katsumascore/100072246676709/',
     icon: <FacebookIcon className='w-[18px] h-[18px]' aria-hidden='true' />,
   },
   {
-    label: 'RSS',
+    key: 'rss',
     href: 'https://katsumascore.blog/feed/',
     icon: <RssIcon className='w-[18px] h-[18px]' aria-hidden='true' />,
   },
 ];
 
 export const Footer = () => {
+  const { locale: routerLocale } = useRouter();
+  const loc: Locale = routerLocale === 'en' ? 'en' : 'ja';
   const currentYear = new Date().getFullYear();
 
   return (
@@ -45,37 +57,45 @@ export const Footer = () => {
 
         {/* 1. Catchcopy */}
         <p className='footer-catchcopy text-sm'>
-          スコアは、物語のあとに生まれる。
+          {t(messages, ['catchcopy', 'line'], loc)}
         </p>
 
         {/* 2. Site name */}
         <p className='footer-sitename mt-5 text-2xl font-semibold uppercase'>
-          Katsumascore
+          {t(messages, ['sitename', 'text'], loc)}
         </p>
 
         {/* 3. Divider */}
         <div className='footer-divider mt-10 w-10 h-px' aria-hidden='true' />
 
         {/* 4. Categories */}
-        <nav className='mt-10' aria-label='カテゴリ'>
+        <nav className='mt-10' aria-label={t(messages, ['nav', 'categories', 'aria'], loc)}>
           <ul className='flex gap-9 sm:gap-6'>
-            {CATEGORIES.map(({ name, href }) => (
-              <li key={name}>
-                <Link href={href} className='footer-category-link text-sm font-medium block py-1'>
-                  {name}
-                </Link>
-              </li>
-            ))}
+            {POST_TYPE_ARCHIVE_NAV_ITEMS.map((item) => {
+              const name = item.label[loc];
+              const href = getPostTypeArchivePath({ type: item.postType, lang: loc });
+              return (
+                <li key={item.postType}>
+                  <Link
+                    href={href}
+                    locale={false}
+                    className='footer-category-link text-sm font-medium block py-1'
+                  >
+                    {name}
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         </nav>
 
         {/* 5. VOD */}
-        <nav className='mt-4' aria-label='配信サービス'>
+        <nav className='mt-4' aria-label={t(messages, ['nav', 'vod', 'aria'], loc)}>
           <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
-            {VOD_LINKS.map(({ name, href }) => (
-              <li key={name}>
+            {VOD_ITEMS.map(({ key, href }) => (
+              <li key={key}>
                 <Link href={href} className='footer-vod-link text-[var(--font-size-caption-sm)] block py-1'>
-                  {name}
+                  {t(messages, ['vod', key, 'name'], loc)}
                 </Link>
               </li>
             ))}
@@ -83,29 +103,32 @@ export const Footer = () => {
         </nav>
 
         {/* 6. SNS */}
-        <ul className='flex gap-6 mt-10' aria-label='SNSリンク'>
-          {SNS_LINKS.map(({ label, href, icon }) => (
-            <li key={label}>
-              <a
-                href={href}
-                target='_blank'
-                rel='noreferrer noopener'
-                className='footer-sns-link flex items-center justify-center w-9 h-9'
-                aria-label={label}
-              >
-                {icon}
-              </a>
-            </li>
-          ))}
+        <ul className='flex gap-6 mt-10' aria-label={t(messages, ['nav', 'sns', 'aria'], loc)}>
+          {SNS_ITEMS.map(({ key, href, icon }) => {
+            const label = t(messages, ['sns', key, 'label'], loc);
+            return (
+              <li key={key}>
+                <a
+                  href={href}
+                  target='_blank'
+                  rel='noreferrer noopener'
+                  className='footer-sns-link flex items-center justify-center w-9 h-9'
+                  aria-label={label}
+                >
+                  {icon}
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         {/* 7. Meta links */}
-        <nav className='mt-10' aria-label='サイト情報'>
+        <nav className='mt-10' aria-label={t(messages, ['nav', 'siteInfo', 'aria'], loc)}>
           <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
-            {META_LINKS.map(({ name, href }) => (
-              <li key={name}>
+            {META_ITEMS.map(({ key, href }) => (
+              <li key={key}>
                 <Link href={href} className='footer-meta-link text-[var(--font-size-caption-sm)] block py-1'>
-                  {name}
+                  {t(messages, ['metaLinks', key, 'label'], loc)}
                 </Link>
               </li>
             ))}
@@ -114,7 +137,7 @@ export const Footer = () => {
 
         {/* 8. Copyright */}
         <small className='footer-copyright mt-10 text-[var(--font-size-caption-sm)]'>
-          &copy; {currentYear} Katsumascore. All rights reserved.
+          {t(messages, ['copyright', 'line'], loc).replaceAll('{year}', String(currentYear))}
         </small>
 
       </div>
