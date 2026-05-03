@@ -11,7 +11,7 @@
 
 - WordPress テーマの「移植」ではなく、Next.js での「再設計」とする
 - WordPress 生データ（`post.title.rendered` 等）は `lib/api` で正規化し、UI 層には渡さない
-- ACF / Polylang などのプラグイン依存は `lib/api` 層で吸収する
+- ACF などのプラグイン依存は `lib/api` 層で吸収する（記事の言語は ACF `lang`。Polylang は使用しない）
 - レイヤー構成は `CLAUDE.md` の規約（ui-parts / ui-layout / ui-section / features / templates）に従う
 
 ---
@@ -53,7 +53,7 @@ pages（getStaticProps / getServerSideProps）
 - `post.acf.review_score` 等 → `normalizedPost.score` / 詳細用フィールド
 - `post._embedded['wp:featuredmedia'][0].source_url` → サムネイル
 - ACF の VOD フラグ等 → `streamingVods`（`buildPostDetailFromWp`）
-- Polylang → API の `lang` クエリ + `next.config` の `i18n`
+- 多言語: `next.config` の `i18n` + API の `lang` クエリ（任意）+ **ACF `lang`** による正規化・フィルタ
 
 ---
 
@@ -81,7 +81,7 @@ pages（getStaticProps / getServerSideProps）
 
 ## 4. プラグイン依存の処理
 
-（Polylang / ACF の対応方針は変更なし。正規化の集約先に `buildPostDetailFromWp` を追加。）
+（ACF 中心の対応方針は維持。正規化の集約先に `buildPostDetailFromWp` を追加。）
 
 ---
 
@@ -92,7 +92,7 @@ pages（getStaticProps / getServerSideProps）
 - [x] `lib/api/wordpress.ts` — 一覧・タグ・カテゴリ・検索・関連・固定ページ・子ページ・ページネーション（`getPostsWithMeta`）等
 - [x] `lib/api/wordpress.schema.ts` — Post / Category / Tag / 主要 ACF 形状のバリデーション
 - [x] 正規化 — `wordpress.transform` + `buildPostDetailFromWp`（記事詳細で使用する ACF。本文は `content.rendered`、追加ブロックは WP 側 HTML に依存）
-- [x] Polylang ↔ Next.js locale（`i18n` + API `lang`）
+- [x] Next.js locale（`i18n`）+ API `lang` クエリ + ACF `lang` 正規化
 
 ### フェーズ 2: ページ別実装
 

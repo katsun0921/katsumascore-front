@@ -28,13 +28,16 @@
 
 ## プラグイン依存の処理方針
 
-### Polylang（多言語）
+### 多言語（Next.js × ACF）
 
-| WordPress | Next.js |
+- **Polylang は使用しない。** 記事が日本語か英語かは **ACF `lang`（`ja` / `en`）** を正とする（[`detectLang`](../../src/libs/api/wordpress/lang.ts)）。
+- UI のロケールは `useRouter().locale` / `I18nProvider`。REST には互換のため `?lang=` を付与する場合があるが、一覧は **`normalizePosts`** で `m.lang` により必ずフィルタする。
+
+| 目的 | Next.js / lib |
 |---|---|
-| `pll_current_language()` | `useLocale()` from `@/i18n/provider` |
-| `pll_get_post($id, 'en')` | `fetchPostBySlug(slug, locale)` |
-| `pll_home_url()` | `next/router` の `locale` |
+| 現在の表示言語 | `useLocale()`（`@/i18n/provider`）、`useRouter().locale` |
+| 記事の言語判定 | ACF `lang` → `mapWPPostToPost` の `lang` |
+| 同一スラッグの日英 | WP 上は別投稿＋ ACF `lang` で区別。取得は `getPostBySlug` + 正規化後の `lang` で確認 |
 
 ### ACF（Advanced Custom Fields）
 
@@ -90,7 +93,7 @@
 - [x] `lib/api/wordpress/schema.ts` の作成（Zod によるレスポンスバリデーション）
 - [x] `lib/api/wordpress/transform.ts` の作成（`transformPost()` を独立ファイルへ分離）
 - [x] `mapWPPostToPost()` で ACF フィールドを正規化（score / vod / isCinemaShowing 等）
-- [x] Polylang 対応（`lang` パラメータ経由）
+- [x] REST `lang` クエリ付与 + ACF `lang` による記事の言語正規化（Polylang 不使用）
 - [x] fetch にリトライ（最大 2 回）・タイムアウト（3 秒）を実装
 
 ### ページ API 接続（フェーズ 2）

@@ -24,6 +24,7 @@
 - ベースURL: `process.env.WP_API_URL`
 - 全リクエストに `_embed&acf_format=standard` を付与
 - エラー時は `null` を返す（`try/catch`）
+- 記事の言語は **ACF `lang`** を正とする（Polylang 不使用）。一覧は `normalizePosts` で `m.lang` によりフィルタする
 
 ## ranking.ts の仕様
 

@@ -19,7 +19,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 | WordPress管理画面 | ConoHa Wing（共有レンタルサーバー） |
 | DNS・CDN | Cloudflare |
 | コンテンツ管理 | WordPress REST API（wp-json）+ ACF Pro |
-| 多言語 | Polylang Pro（日本語/英語） |
+| 多言語 | Next.js `i18n`（`ja` / `en`）+ WordPress 記事は **ACF `lang`** で日英を区別（Polylang は使用しない） |
 | フロントエンド | WordPressカスタムテーマ（PHP）→ 移行対象 |
 | コンポーネント管理 | Storybook（React） |
 | VOD在庫チェック | Google Sheets + Apps Script + Cloud Run（Python scraper） |
@@ -65,7 +65,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 ```
 [ ConoHa Wing ]
   admin.katsumascore.blog
-  WordPress + WP REST API + ACF Pro + Polylang Pro
+  WordPress + WP REST API + ACF Pro
   Cloudflare Cache Rules: Bypass（管理画面のみ）
          │ wp-json/wp/v2/
          ↓
@@ -84,7 +84,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 | フレームワーク | Next.js 15（Pages Router） | App Routerは使用しない |
 | Workersアダプター | @opennextjs/cloudflare | OpenNext公式Cloudflareアダプター |
 | コンテンツソース | WordPress REST API + ACF | ConoHa Wing上のWordPress |
-| 多言語 | Polylang Pro → REST APIで言語パラメーター | `?lang=ja` / `?lang=en` |
+| 多言語 | ACF `lang`（`ja` / `en`）を正とし、`normalizePosts` で一覧をフィルタ | REST には互換のため `?lang=` を付与する場合あり（WP 側で無視されうる） |
 | VOD在庫API | SSR（Cloudflare Workers） | Netflix / Amazon Prime / U-NEXT |
 | コンポーネント管理 | Storybook（既存流用） | SCSSのみ使用 |
 | スタイリング | Tailwind CSS v4（Next.jsページ） / SCSS（Storybook） | 役割で完全分離 |
@@ -323,7 +323,7 @@ GET /api/vod?slug={post-slug}
 | 4 | WordPressテーマのページ構成をNext.jsルートに移植 | 高 |
 | 5 | ACFフィールド（review_score・title_jp/en・streaming_vod_*）のマッピング | 高 |
 | 6 | Storybookの既存コンポーネントをReactに移植（SCSSのみ） | 高 |
-| 7 | Polylang多言語対応（/ja/・/en/ ルーティング） | 中 |
+| 7 | 多言語（Next.js `i18n` + ACF `lang` による記事の言語切り分け） | 中 |
 | 8 | VOD在庫APIのSSRルート実装（/api/vod） | 中 |
 | 9 | katsumascore.blogドメインをCloudflare Workersに切り替え | 高 |
 | 10 | GitHub Actions CI/CD設定（wrangler deploy） | 中 |

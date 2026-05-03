@@ -29,8 +29,8 @@
 
 - [x] `/posts?per_page=1&_embed=1&acf_format=standard` が **200** で JSON を返す（`curl` は User-Agent 付き。例は本体ドキュメント）
 - [x] 匿名 GET がブロックされていない（WAF / Basic 認証で 401/403 にならない）
-- [ ] `lang=ja` / `lang=en` で Polylang 想定どおり区別できる
-  - 現状整理: [polylang_rest_lang_issue.md](./polylang_rest_lang_issue.md)
+- [ ] 英語記事に **ACF `lang: en`**、日本語記事に **`ja`** が付き、一覧が `normalizePosts` で期待どおり絞れる（REST `?lang=` だけに依存しない）
+  - 参考（歴史的メモ）: [polylang_rest_lang_issue.md](../archive/polylang_rest_lang_issue.md)
 - [x] 投稿一覧で `X-WP-Total` / `X-WP-TotalPages` が返る
 - [x] 本番レイテンシが既定のタイムアウト・リトライで問題ない（不足時は `WpFetchOptions` を検討。本体参照）
 

@@ -433,6 +433,11 @@ components
 ↓
 pages
 
+### WordPress 記事の言語（ja / en）
+
+- **Polylang は使用しない。** 投稿が日本語か英語かは **ACF の `lang` フィールド**を正とする（`src/libs/api/wordpress/lang.ts` の `detectLang`）。
+- REST リクエストに `?lang=ja` / `?lang=en` を付与する場合があるが、WP 側で無視されうる。**一覧・詳細の最終的な言語切り分けは `normalizePosts` / `mapWPPostToPost` 後の `m.lang` で行う。**
+
 ---
 
 ## ■ 禁止事項

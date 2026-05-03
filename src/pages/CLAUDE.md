@@ -28,7 +28,8 @@ Next.js 15 Pages Router のページファイルを管理するディレクト�
 - `getServerSideProps` でWP REST APIから取得
 - ベースURL: `process.env.WP_API_URL`
 - 全リクエストに `_embed&acf_format=standard` を付与（ACF＋アイキャッチ取得）
-- Polylang言語指定: `?lang=ja` または `?lang=en`
+- 記事の言語は **ACF `lang`（`ja` / `en`）** を正とする（Polylang は使用しない）
+- WP REST には互換のため `?lang=ja` / `?lang=en` を付与する場合があるが、一覧は `normalizePosts` で ACF 由来の言語に必ずフィルタする
 
 ## 多言語
 

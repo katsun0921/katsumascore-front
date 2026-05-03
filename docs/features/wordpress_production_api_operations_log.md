@@ -2,7 +2,8 @@
 
 > 対象: フェーズ 7 の本番 API 接続確認  
 > 手順: [wordpress_production_api_verification.md](./wordpress_production_api_verification.md)  
-> 進捗: [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md)
+> 進捗: [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md)  
+> **方針:** 記事の言語は **ACF `lang`** を正とする。**Polylang は使用しない**（以下の古いログに Polylang 言及が残る場合がある）。
 
 ## 記録ルール
 
@@ -51,6 +52,6 @@
 ### 未解決 / 次アクション
 
 - Polylang `lang` 判定（`ja/en` 差分）を継続切り分け
-  - 参照: [polylang_rest_lang_issue.md](./polylang_rest_lang_issue.md)
+  - 参照（歴史的）: [polylang_rest_lang_issue.md](../archive/polylang_rest_lang_issue.md)
 - `/posts/[slug]` 404 の原因切り分け
   - `getStaticPaths` 生成 slug と WP 現在 slug の整合確認

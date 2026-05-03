@@ -98,7 +98,7 @@ src/lib/api/wordpress/
 
 | 案 | 不採用理由 |
 |---|---|
-| GraphQL (WPGraphQL) | サーバ側プラグイン依存。ACF/Polylang 連携プラグインが WP 本体更新で壊れやすい。本番検証作業と競合 |
+| GraphQL (WPGraphQL) | サーバ側プラグイン依存。ACF 連携プラグインが WP 本体更新で壊れやすい。本番検証作業と競合 |
 | axios | 重大なセキュリティリスク履歴のため利用禁止 |
 | ky | 魅力的だが現状のリトライ要件は十数行で書ける。`openapi-fetch` と役割が被る |
 | `@wp-api/openapi-spec` 等の既製スキーマ | 更新が止まっており「更新頻度が高いものに限る」要件に合致しない |

@@ -1,6 +1,8 @@
 import type { NextConfig } from "next";
 import path from "path";
-import { legacyGenrePathCategorySlugPattern } from "./src/libs/taxonomyRoutes";
+
+/** 旧 `/genre/[slug]` 用 WP category slug（`/categories/[slug]` へリダイレクト） */
+const legacyGenrePathCategorySlugPattern = ["movie-ja", "movie", "anime", "drama"].join("|");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
@@ -23,16 +25,6 @@ const nextConfig: NextConfig = {
   async redirects() {
     const legacyGenre = legacyGenrePathCategorySlugPattern;
     return [
-      {
-        source: `/genre/:slug(${legacyGenre})`,
-        destination: "/categories/:slug",
-        permanent: true,
-      },
-      {
-        source: `/en/genre/:slug(${legacyGenre})`,
-        destination: "/en/categories/:slug",
-        permanent: true,
-      },
       {
         source: "/author/:slug",
         destination: "/404",

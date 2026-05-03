@@ -1,6 +1,10 @@
-# Polylang REST `lang` 判定の現状整理
+# Polylang REST `lang` 判定の現状整理（アーカイブ）
 
-> 対象: フェーズ 7 §2.1「`lang=ja` / `lang=en` で Polylang 想定どおり区別できる」
+> **現行方針（2026-05）:** 本プロジェクトは **Polylang を使用しない**。記事の言語は **ACF の `lang` フィールド**を正とし、一覧は `normalizePosts` でフィルタする。以下は当時の切り分けメモとして残す。
+
+---
+
+> 対象（当時）: フェーズ 7 §2.1「`lang=ja` / `lang=en` で Polylang 想定どおり区別できる」
 
 ## 要約
 

@@ -81,7 +81,7 @@ npm run build
 |------|----------|
 | 到達性 | 本番 `WP_API_URL` に対し、`/posts?per_page=1&_embed=1&acf_format=standard` が **200** で JSON を返す（ブラウザまたは `curl`） |
 | 認証・制限 | 匿名 GET が許可されている。Basic 認証・WAF・IP 制限で Workers / CI の出口がブロックされていない |
-| 多言語 | `lang=ja` / `lang=en` で Polylang 想定の件数・スラッグになる |
+| 多言語 | 記事の言語は **ACF `lang`** が `ja` / `en` で期待どおり付いている（一覧は `normalizePosts` で最終フィルタ）。REST の `?lang=` だけに依存しない |
 | ACF | レビュー系 ACF が `acf_format=standard` で欠けない（[`mapWPPostToPost`](../../src/lib/api/wordpress.transform.ts) と整合） |
 | 一覧ヘッダ | `getPostsWithMeta` 利用箇所向けに、`X-WP-Total` / `X-WP-TotalPages` が返る |
 | タイムアウト | 本番レイテンシに対し、既定 **3 秒タイムアウト・最大 2 回リトライ**で足りるか。不足する場合は [`WpFetchOptions`](../../src/lib/api/wordpress.ts) で調整を検討 |
@@ -161,6 +161,7 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 
 | 用途 | ACF 名（例） |
 |------|----------------|
+| 記事の言語（`ja` / `en`） | `lang` |
 | レビュースコア | `review_score` |
 | タイトル（日／英） | `title_jp`, `title_en` |
 | あらすじグループ | `acf_summary_group`（`summary_jp` / `summary_en`） |
@@ -178,9 +179,12 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 
 補足: 旧来の **`wp-json/acf/v3/posts/...`** が **404** でも問題ない。本プロジェクトは **`wp/v2/posts` の `acf` プロパティ**だけを使う。
 
-### Polylang と `lang` パラメータ
+### REST の `lang` クエリと ACF `lang`
 
-`lang=ja` と `lang=en` で**先頭投稿のスラッグが同じ**場合、REST 側で言語フィルタが効いていない可能性がある。Polylang の **REST API / 言語**関連設定や、別プラグインによる `lang` クエリの解釈を確認する（詳細は Polylang ドキュメントに従う）。
+**Polylang は使用しない。** 日英の切り分けは **ACF の `lang` フィールド**を正とする（[`detectLang`](../../src/libs/api/wordpress/lang.ts)）。
+
+- REST に `?lang=ja` / `?lang=en` を付けても、WP 側で無視されたり同一結果になったりしうる。検証・本番表示の最終判定は **`acf.lang`（および `mapWPPostToPost` 後の `m.lang`）** で行う。
+- 歴史的な Polylang 前提の切り分けメモ: [polylang_rest_lang_issue.md](../archive/polylang_rest_lang_issue.md)（アーカイブ）
 
 ---
 
@@ -223,7 +227,7 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 - [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md) — TODO チェックリスト（進捗はここを更新）
 - [wordpress_production_api_operations_log.md](./wordpress_production_api_operations_log.md) — 実行ログ（証跡）
 - [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md) — §1 本番環境変数・シークレット運用
-- [polylang_rest_lang_issue.md](./polylang_rest_lang_issue.md) — §2.1 Polylang `lang` 判定の現状と切り分け
+- [polylang_rest_lang_issue.md](../archive/polylang_rest_lang_issue.md) — 歴史的メモ（現行は ACF `lang` 前提）
 - [README.md](../../README.md) — 「本番対応（フェーズ 7）」: ISR Webhook、Cloudflare 本番検証
 - [docs/migration-plan.md](../migration-plan.md) — フェーズ 7 の詳細項目（広告・パフォーマンス等は別途）
 - [docs/archive/api-integration-plan.md](../archive/api-integration-plan.md) — lib/api 基盤・ページ接続の完了記録（参考）
