@@ -132,7 +132,7 @@ query PostList($first: Int!, $after: String, $lang: String) {
       featuredImage { node { sourceUrl } }
       acfPost {
         reviewScore
-        titleJp
+        title
         lang
         displaySettings { isFeatured }
       }
@@ -159,8 +159,8 @@ query PostDetail($slug: String!) {
     featuredImage { node { sourceUrl } }
     acfPost {
       reviewScore
-      titleJp
-      titleEn
+      title
+      originalTitle
       acfSummaryGroup { summaryJp summaryEn }
       actorsFiled { name character role description }
       goodPointFiled
