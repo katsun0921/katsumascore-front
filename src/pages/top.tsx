@@ -1,11 +1,11 @@
+// ISR: revalidate 60s — WP固定ページ /top
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getPageBySlug } from '@/libs/api/wordpress';
-import { stripHtml } from '@/libs/api/wordpress';
+import { getPageBySlug, normalizePageContent } from '@/libs/api/wordpress';
 
 type TopPageProps = {
   title: string;
@@ -47,10 +47,11 @@ export const getStaticProps: GetStaticProps<TopPageProps> = async ({ locale }) =
       revalidate: 60,
     };
   }
+  const normalized = normalizePageContent(page);
   return {
     props: {
-      title: stripHtml(page.title.rendered),
-      html: page.content?.rendered ?? null,
+      title: normalized.title,
+      html: normalized.html,
       locale: currentLocale,
     },
     revalidate: 60,

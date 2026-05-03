@@ -1,11 +1,11 @@
+// ISR: revalidate 60s — 季節レビュー固定ページ
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getChildPages, getPageBySlug } from '@/libs/api/wordpress';
-import { stripHtml } from '@/libs/api/wordpress';
+import { getChildPages, getPageBySlug, normalizePageContent } from '@/libs/api/wordpress';
 
 type SeasonalDetailProps = {
   title: string;
@@ -56,11 +56,12 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
   const lang = currentLocale === 'en' ? 'en' : 'ja';
   const page = await getPageBySlug(slug, lang);
   if (!page) return { notFound: true };
+  const normalized = normalizePageContent(page);
 
   return {
     props: {
-      title: stripHtml(page.title.rendered),
-      html: page.content?.rendered ?? null,
+      title: normalized.title,
+      html: normalized.html,
       locale: currentLocale,
     },
     revalidate: 60,

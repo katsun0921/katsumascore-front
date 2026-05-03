@@ -1,11 +1,11 @@
+// ISR: revalidate 60s — 季節レビュー一覧
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getChildPages } from '@/libs/api/wordpress';
-import { stripHtml } from '@/libs/api/wordpress';
+import { getChildPages, normalizePageContent } from '@/libs/api/wordpress';
 import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
 
 type SeasonalIndexProps = {
@@ -56,7 +56,7 @@ export const getStaticProps: GetStaticProps<SeasonalIndexProps> = async ({ local
   const items: SeasonItem[] =
     parentRaw && /^\d+$/.test(parentRaw)
       ? (await getChildPages(Number(parentRaw), lang)).map((p) => ({
-          label: stripHtml(p.title.rendered),
+          label: normalizePageContent(p).title,
           period: (p.modified ?? p.date).slice(0, 10),
           href: `/seasonal-reviews/${p.slug}`,
         }))
