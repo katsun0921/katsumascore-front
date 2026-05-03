@@ -1,3 +1,4 @@
+// ISR: revalidate 60s — 特集カテゴリ一覧
 import Head from 'next/head';
 import { useState } from 'react';
 import type { GetStaticProps } from 'next';
@@ -5,7 +6,7 @@ import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getCategoryBySlug, getPostsWithMeta } from '@/libs/api/wordpress';
-import { normalizePosts } from '@/utils/normalizePost';
+import { normalizePostsFromLangScopedQuery } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
@@ -74,7 +75,7 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
   return {
     props: {
       categoryName: category.name,
-      posts: normalizePosts(fetched.items, currentLocale),
+      posts: normalizePostsFromLangScopedQuery(fetched.items),
       locale: currentLocale,
     },
     revalidate: 60,

@@ -1,3 +1,4 @@
+// SSG: 404ページ
 import Head from 'next/head';
 import { NotFoundTemplate } from '@/components/templates/NotFoundTemplate';
 

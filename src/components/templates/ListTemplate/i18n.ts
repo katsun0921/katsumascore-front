@@ -26,4 +26,7 @@ export const messages = {
     new: { ja: '新着', en: 'New' },
     streaming: { ja: '配信中', en: 'Streaming' },
   },
+  empty: {
+    posts: { ja: 'この条件に該当する記事はまだありません。', en: 'No posts match this view yet.' },
+  },
 } as const;

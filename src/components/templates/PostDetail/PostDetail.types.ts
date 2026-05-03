@@ -16,7 +16,8 @@ import type { PostTaxonomyLink } from '@/libs/api/wordpress';
 export type PostDetailData = Post & {
   // コンテンツ
   content: string
-  titleEn?: string
+  /** ACF `title_en`（英語の作品名・PostHeader の titleOriginal に渡す） */
+  originalTitle?: string
   updatedAt?: string
 
   // PostHero 用
@@ -55,7 +56,7 @@ export type PostDetailData = Post & {
   cinemaIntroduction?: Omit<TCinemaIntroductionProps, 'title' | 'isShowing'>
 
   // VOD紹介（post-introduce-vod.php 相当）
-  vodIntroduction?: Omit<TVodIntroductionProps, 'locale'>
+  vodIntroduction?: TVodIntroductionProps
 
   // サイドバー用
   profile?: ProfileProps

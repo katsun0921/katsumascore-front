@@ -1,5 +1,5 @@
 import { getCategories, getPostsWithMeta } from "@/libs/api/wordpress";
-import { normalizePosts } from "@/utils/normalizePost";
+import { normalizePostsFromLangScopedQuery } from "@/utils/normalizePost";
 import type { Post } from "@/types/post";
 
 export const CATEGORY_LIST_PER_PAGE = 12;
@@ -39,7 +39,7 @@ export const loadCategoryListPage = async (
   return {
     categoryName: category.name,
     slug: category.slug,
-    posts: normalizePosts(fetched.items, currentLocale),
+    posts: normalizePostsFromLangScopedQuery(fetched.items),
     currentPage: safePage,
     totalPages,
   };

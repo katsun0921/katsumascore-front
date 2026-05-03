@@ -13,26 +13,32 @@ import { VodIntroduction } from '@/components/ui-section/VodIntroduction';
 import { ShareButtons } from '@/components/ui-parts/ShareButtons';
 import { Sidebar } from '@/components/ui-layout/Sidebar';
 import { PostDate } from '@/components/ui-section/PostDate';
+import { useLocale } from '@/i18n/provider';
+import type { ReactNode } from 'react';
 import type { PostDetailProps } from './PostDetail.types';
 
 export const PostDetail = ({ post, genres }: PostDetailProps) => {
+  const locale = useLocale();
+  const workTitle =
+    locale === 'en' ? (post.originalTitle ?? post.title) : post.title;
+
+  let vodIntroductionSection: ReactNode = null;
+  if (post.vodIntroduction) {
+    const { title: vodWorkTitle, ...vodRest } = post.vodIntroduction;
+    const vodTitle =
+      locale === 'en' ? (post.originalTitle ?? vodWorkTitle) : vodWorkTitle;
+    vodIntroductionSection = <VodIntroduction {...vodRest} title={vodTitle} />;
+  }
+
   return (
     <PageLayout>
       <div className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-primary-dark))] px-4 pb-4'>
-        <div className='pt-3 pb-0'>
-          <Breadcrumbs
-            title={post.title}
-            category={post.category}
-            type={post.type}
-            lang={post.lang}
-          />
-        </div>
 
-        {/* ── title.php 相当 ── */}
+        {/* PostHeader：記事タイトル/公式タイトル/スタジオなど主要なヘッダー情報を表示 */}
         <PostHeader
           category={post.category ?? ''}
           titleOfficial={post.title}
-          titleOriginal={post.titleEn}
+          titleOriginal={post.originalTitle}
           filmStudios={post.TitleMeta?.filmStudios}
           productionStudios={post.TitleMeta?.productionStudios}
           releaseDate={post.TitleMeta?.releaseDate}
@@ -60,7 +66,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 px-4'>
-          <CinemaCheck isCinemaShowing={post.isCinemaShowing ?? false} titleJp={post.title} />
+          <CinemaCheck isCinemaShowing={post.isCinemaShowing ?? false} title={workTitle} />
 
           {/* ── post-single.php → post-review.php 相当 ── */}
           <section
@@ -91,7 +97,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
           <PostDate publishedAt={post.publishedAt} updatedAt={post.updatedAt} />
           <ShareButtons
             url={post.shareUrl ?? post.slug}
-            title={post.title}
+            title={workTitle}
           />
 
           {post.reviewSiteScores && (
@@ -110,9 +116,15 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
             />
           )}
 
-          {post.vodIntroduction && (
-            <VodIntroduction {...post.vodIntroduction} />
-          )}
+          {vodIntroductionSection}
+          <div className='mt-3'>
+            <Breadcrumbs
+              title={post.title}
+              category={post.category}
+              type={post.type}
+              lang={post.lang}
+            />
+          </div>
         </div>
 
         {/* ── サイドバー ── */}
@@ -123,8 +135,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
             highScorePosts={post.highScorePosts}
             relationPosts={post.relationPosts}
             isCinemaShowing={post.isCinemaShowing}
-            titleJp={post.title}
-            titleEn={post.titleEn}
+            title={workTitle}
             streamingVods={post.streamingVods}
             postsGroups={post.postsGroups}
             genres={genres}

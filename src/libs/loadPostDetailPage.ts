@@ -5,6 +5,7 @@ import {
   getGenres,
   getPostBySlug,
   getPosts,
+  getPostsPagedMerge,
   getRelatedPosts,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
@@ -121,7 +122,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const toc = extractToc(detail.content);
 
     const [allHighScore, allGenres] = await Promise.all([
-      getPosts({ per_page: 100, lang: loc }),
+      getPostsPagedMerge({ per_page: 100, lang: loc }, 5),
       getGenres(loc),
     ]);
 

@@ -1,3 +1,4 @@
+// ISR: revalidate 60s — TOPページ
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { HomeTemplate } from '@/components/templates/HomeTemplate';

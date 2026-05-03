@@ -1,3 +1,4 @@
+// SSG: 検索シェルを静的生成し、検索結果は client-side fetch
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { I18nProvider } from '@/i18n/provider';

@@ -20,7 +20,7 @@ type PostsQuery = {
   lang?: "ja" | "en";
   categories?: number;
   tags?: number;
-  /** カスタム taxonomy `genre` のスラッグ（OpenAPI 未定義のためクエリは生 URL で付与） */
+  /** カスタム taxonomy `genre` — WP 実装では多くの場合ターム ID（文字列の数値）。slug が効かないときは ID を渡す */
   genre?: string;
   /** カスタム taxonomy `vod` のターム ID（OpenAPI 未定義のためクエリは生 URL で付与） */
   vod?: number;

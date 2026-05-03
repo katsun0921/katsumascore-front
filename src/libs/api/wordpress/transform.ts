@@ -4,6 +4,16 @@ import type { ParsedWPPost } from "./schema";
 import { detectLang } from "./lang";
 import { getPostUrl, resolvePostType } from "@/libs/route";
 
+type WPPageLike = {
+  title: { rendered: string };
+  content?: { rendered?: string };
+};
+
+export type NormalizedPageContent = {
+  title: string;
+  html: string | null;
+};
+
 export const stripHtml = (html: string): string =>
   html
     .replace(/<[^>]+>/g, "")
@@ -14,9 +24,14 @@ export const stripHtml = (html: string): string =>
     .replace(/&#039;/g, "'")
     .trim();
 
+export const normalizePageContent = (page: WPPageLike): NormalizedPageContent => ({
+  title: stripHtml(page.title.rendered),
+  html: page.content?.rendered ?? null,
+});
+
 const titleFromWp = (wp: ParsedWPPost): string => {
-  const jp = wp.acf?.title_jp?.trim();
-  if (jp) return stripHtml(jp);
+  const acfTitleLine = wp.acf?.title_jp?.trim();
+  if (acfTitleLine) return stripHtml(acfTitleLine);
   return stripHtml(wp.title.rendered);
 };
 
