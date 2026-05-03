@@ -6,7 +6,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getCategories } from '@/libs/api/wordpress';
+import { getCategoriesForArchiveResolve } from '@/libs/api/wordpress';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import { getEntityUrl } from '@/libs/route';
 import type { Post } from '@/types/post';
@@ -68,7 +68,7 @@ export default ActorPage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
   for (const loc of locales) {
-    const categories = await getCategories(loc === 'en' ? 'en' : 'ja');
+    const categories = await getCategoriesForArchiveResolve(loc === 'en' ? 'en' : 'ja');
     for (const category of categories) {
       paths.push({ params: { slug: category.slug }, locale: loc });
     }

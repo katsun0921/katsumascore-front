@@ -1,5 +1,5 @@
-import { getCategories, getPostsWithMeta } from "@/libs/api/wordpress";
-import { normalizePostsFromLangScopedQuery } from "@/utils/normalizePost";
+import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
+import { normalizePosts } from "@/utils/normalizePost";
 import type { Post } from "@/types/post";
 
 export const CATEGORY_LIST_PER_PAGE = 12;
@@ -20,7 +20,7 @@ export const loadCategoryListPage = async (
   page: number,
 ): Promise<CategoryListPageResult> => {
   const currentLocale = locale === "en" ? "en" : "ja";
-  const categories = await getCategories(currentLocale);
+  const categories = await getCategoriesForArchiveResolve(currentLocale);
   const category = categories.find((c) => c.slug === slug);
   if (!category) return { notFound: true };
 
@@ -39,7 +39,7 @@ export const loadCategoryListPage = async (
   return {
     categoryName: category.name,
     slug: category.slug,
-    posts: normalizePostsFromLangScopedQuery(fetched.items),
+    posts: normalizePosts(fetched.items, currentLocale),
     currentPage: safePage,
     totalPages,
   };
