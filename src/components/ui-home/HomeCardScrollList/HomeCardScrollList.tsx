@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import { HomeCard } from '@/components/ui-home/HomeCard';
 import { StarIcon } from '@/assets/icons';
 import type { HomeCardScrollListProps } from './HomeCardScrollList.types';
@@ -27,7 +28,7 @@ export const HomeCardScrollList = ({
             </div>
           )}
           {seeAllHref && (
-            <Link href={seeAllHref} className='homeCardScrollList__seeAll'>
+            <Link href={seeAllHref} locale={linkLocaleForHref(seeAllHref)} className='homeCardScrollList__seeAll'>
               すべて見る →
             </Link>
           )}

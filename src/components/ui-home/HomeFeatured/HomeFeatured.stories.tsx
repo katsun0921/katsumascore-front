@@ -5,6 +5,9 @@ import { HomeFeatured } from './HomeFeatured';
 const meta: Meta<typeof HomeFeatured> = {
   title: 'UI-Home/HomeFeatured',
   component: HomeFeatured,
+  args: {
+    title: '特集',
+  },
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (

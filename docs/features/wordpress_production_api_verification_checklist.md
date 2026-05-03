@@ -18,7 +18,7 @@
 - [ ] `WP_TOP_PAGE_SLUG` が本番の固定ページスラッグと一致する（未設定時は `top`）
 - [ ] `WP_FEATURED_CATEGORY_SLUG` が本番と一致する（未設定時は `featured`）
 - [ ] `WP_ANIME_CATEGORY_ID` またはスラッグ解決でアニメカテゴリが取れることを確認
-- [ ] `WP_MOVIE_CATEGORY_SLUG` が本番と一致する（未設定時は `movie-ja`）
+- [ ] `WP_MOVIE_CATEGORY_SLUG` が本番と一致する（未設定時は `movie`）
 - [ ] 上記のシークレット・環境変数がリポジトリにコミットされていない
 
 ---

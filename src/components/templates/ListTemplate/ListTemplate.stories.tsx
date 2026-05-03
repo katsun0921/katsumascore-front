@@ -14,13 +14,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-const mockVodRanking = [
-  { id: 'vod-1', title: 'イコライザー' },
-  { id: 'vod-2', title: 'M3GAN' },
-  { id: 'vod-3', title: 'トロール' },
-  { id: 'vod-4', title: 'ナイブズ・アウト' },
-];
-
 export const Default: Story = {
   args: {
     categoryName: '映画',
@@ -29,7 +22,6 @@ export const Default: Story = {
     activeFilter: 'score',
     currentPage: 1,
     totalPages: 3,
-    vodRanking: mockVodRanking,
   },
 };
 
@@ -65,13 +57,6 @@ export const NoDescription: Story = {
   },
 };
 
-export const NoVodRanking: Story = {
-  args: {
-    ...Default.args,
-    vodRanking: undefined,
-  },
-};
-
 export const Pagination: Story = {
   args: {
     ...Default.args,
@@ -88,7 +73,6 @@ export const Chaos: Story = {
     activeFilter: 'score',
     currentPage: 1,
     totalPages: 3,
-    vodRanking: mockVodRanking,
   },
 };
 

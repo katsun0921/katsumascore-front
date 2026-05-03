@@ -8,7 +8,7 @@ import type { Post } from "@/types/post";
 import { getScoreRank } from "@/types/wordpress";
 import {
   getPosts,
-  getCategories,
+  getCategoriesForArchiveResolve,
   mapWPPostToPost,
   pickRandomTags,
   getPostsByTagId,
@@ -19,6 +19,7 @@ import {
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
+import { getAnimeArchivePath } from "@/libs/route";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
@@ -103,7 +104,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const seasonalParentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
 
   const [categories, poolRaw, randomTags] = await Promise.all([
-    getCategories(lang),
+    getCategoriesForArchiveResolve(lang),
     getPosts({ per_page: 100, lang }),
     pickRandomTags(3, lang),
   ]);
@@ -164,6 +165,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     hero: buildHeroFromPosts(pool),
     rankingPosts,
     latestPosts,
+    animeArchiveHref: getAnimeArchivePath(lang),
     animePosts,
     highScorePosts,
     recommendBlocks,

@@ -27,6 +27,7 @@ const defaultArgs = {
   hero: mockHeroData,
   rankingPosts: mockRankingPosts,
   latestPosts: mockLatestPosts,
+  animeArchiveHref: '/anime',
   animePosts: mockAnimePosts,
   highScorePosts: mockHighScorePosts,
   recommendBlocks: mockRecommendBlocks,

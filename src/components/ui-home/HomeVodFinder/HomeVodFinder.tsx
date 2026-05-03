@@ -7,13 +7,15 @@ export type VodFinderItem = {
 };
 
 export type HomeVodFinderProps = {
+  title: string;
+  workCountSuffix: string;
   items: VodFinderItem[];
 };
 
-export const HomeVodFinder = ({ items }: HomeVodFinderProps) => {
+export const HomeVodFinder = ({ title, workCountSuffix, items }: HomeVodFinderProps) => {
   return (
     <section className='homeVodFinder'>
-      <h2 className='homeVodFinder__title'>VODで探す</h2>
+      <h2 className='homeVodFinder__title'>{title}</h2>
       <ul className='homeVodFinder__grid'>
         {items.map(({ vod, count, href }) => (
           <li key={vod}>
@@ -28,7 +30,10 @@ export const HomeVodFinder = ({ items }: HomeVodFinderProps) => {
               <span className='homeVodItem__info'>
                 <span className='homeVodItem__name'>{VOD_LABEL[vod]}</span>
                 {count !== undefined && (
-                  <span className='homeVodItem__count'>{count}作品</span>
+                  <span className='homeVodItem__count'>
+                    {count}
+                    {workCountSuffix}
+                  </span>
                 )}
               </span>
             </Link>

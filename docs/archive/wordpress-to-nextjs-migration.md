@@ -49,7 +49,7 @@ pages（getStaticProps / getServerSideProps）
 
 ### 正規化の原則
 
-- `post.title.rendered` → `normalizedPost.title`（`acf.title_jp` 優先は `mapWPPostToPost` / `buildPostDetailFromWp`）
+- `post.title.rendered` + ACF タイトル → `normalizedPost.title` / `originalTitle`（`mapWPPostToPost` のみ）
 - `post.acf.review_score` 等 → `normalizedPost.score` / 詳細用フィールド
 - `post._embedded['wp:featuredmedia'][0].source_url` → サムネイル
 - ACF の VOD フラグ等 → `streamingVods`（`buildPostDetailFromWp`）
@@ -63,7 +63,7 @@ pages（getStaticProps / getServerSideProps）
 
 ### 3-1. ホームページ
 
-- 実装: `loadHomeTemplateProps`（`src/lib/homeStaticProps.ts`）— ランダムタグ、`movie-ja` 特集、季節子ページ、任意で Facebook iframe / `next/script`（`HomePageEmbeds`）。
+- 実装: `loadHomeTemplateProps`（`src/lib/homeStaticProps.ts`）— ランダムタグ、`movie` 特集、季節子ページ、任意で Facebook iframe / `next/script`（`HomePageEmbeds`）。
 
 ### 3-2. アーカイブ
 
@@ -137,7 +137,7 @@ iframe は CSS クラスで寸法管理（`style` prop 禁止ルールに準拠�
 ### 環境変数（例）
 
 - `WP_SEASONAL_REVIEW_PARENT_ID` — 季節レビュー親ページ ID  
-- `WP_MOVIE_CATEGORY_SLUG` — 既定 `movie-ja`  
+- `WP_MOVIE_CATEGORY_SLUG` — 既定 `movie`  
 - `WP_TOP_PAGE_SLUG` / `WP_FEATURED_CATEGORY_SLUG`  
 - `NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL` / `NEXT_PUBLIC_HOME_EXTRA_SCRIPT_SRCS`（任意）
 

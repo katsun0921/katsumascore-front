@@ -7,6 +7,9 @@ import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
 import { HomePageEmbeds } from '@/components/features/HomePageEmbeds';
 import { PageLayout } from '@/components/templates/PageLayout';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 /**
  * DOM順はSPファースト。
@@ -23,6 +26,7 @@ export const HomeTemplate = ({
   hero,
   rankingPosts,
   latestPosts,
+  animeArchiveHref,
   animePosts,
   highScorePosts,
   recommendBlocks,
@@ -32,6 +36,8 @@ export const HomeTemplate = ({
   facebookTimelineEmbedUrl,
   homeAdScriptSrcs,
 }: HomeTemplateProps) => {
+  const locale = useLocale();
+
   return (
     <PageLayout>
     <div className='homeTemplate'>
@@ -40,36 +46,63 @@ export const HomeTemplate = ({
       <div className='homeTemplate__body'>
         {/* ── SP: 1列目 / PC: 左列 ── */}
         <section className='homeTemplate__section'>
-          <HomeRanking posts={rankingPosts} seeAllHref='/ranking' />
+          <HomeRanking
+            title={t(messages, ['ranking', 'title'], locale)}
+            posts={rankingPosts}
+            seeAllHref='/ranking'
+          />
         </section>
 
         <section className='homeTemplate__section'>
-          <HomeCardScrollList title='最新レビュー' posts={latestPosts} seeAllHref='/posts' />
+          <HomeCardScrollList
+            title={t(messages, ['cardScrollList', 'latest'], locale)}
+            posts={latestPosts}
+            seeAllHref='/posts'
+          />
         </section>
 
         <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeCardScrollList title='注目のアニメ' posts={animePosts} seeAllHref='/categories/anime' />
+          <HomeCardScrollList
+            title={t(messages, ['cardScrollList', 'anime'], locale)}
+            posts={animePosts}
+            seeAllHref={animeArchiveHref}
+          />
         </section>
 
         {/* ── SP: 4列目 / PC: 左列続き ── */}
         <section className='homeTemplate__section'>
-          <HomeCardScrollList title='高評価作品' posts={highScorePosts} icon='star' />
+          <HomeCardScrollList
+            title={t(messages, ['cardScrollList', 'highScore'], locale)}
+            posts={highScorePosts}
+            icon='star'
+          />
         </section>
 
         <section className='homeTemplate__section'>
-          <HomeRecommend blocks={recommendBlocks} />
+          <HomeRecommend
+            title={t(messages, ['recommend', 'title'], locale)}
+            seeAllLabel={t(messages, ['recommend', 'seeAll'], locale)}
+            blocks={recommendBlocks}
+          />
         </section>
 
         <section className='homeTemplate__section'>
-          <HomeFeatured items={featuredItems} />
+          <HomeFeatured title={t(messages, ['featured', 'title'], locale)} items={featuredItems} />
         </section>
 
         <section className='homeTemplate__section'>
-          <HomeVodFinder items={vodFinderItems} />
+          <HomeVodFinder
+            title={t(messages, ['vodFinder', 'title'], locale)}
+            workCountSuffix={t(messages, ['vodFinder', 'workCountSuffix'], locale)}
+            items={vodFinderItems}
+          />
         </section>
 
         <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeSeasonReview items={seasonItems} />
+          <HomeSeasonReview
+            title={t(messages, ['seasonReview', 'title'], locale)}
+            items={seasonItems}
+          />
         </section>
       </div>
       <HomePageEmbeds

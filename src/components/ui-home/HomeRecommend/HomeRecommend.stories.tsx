@@ -5,6 +5,10 @@ import { HomeRecommend } from './HomeRecommend';
 const meta: Meta<typeof HomeRecommend> = {
   title: 'UI-Home/HomeRecommend',
   component: HomeRecommend,
+  args: {
+    title: 'こちらもおすすめ',
+    seeAllLabel: 'すべて見る →',
+  },
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (

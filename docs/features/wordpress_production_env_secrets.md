@@ -19,7 +19,7 @@
 | `WP_TOP_PAGE_SLUG` | `/top` 用ページスラッグ | 未設定時 `top` |
 | `WP_FEATURED_CATEGORY_SLUG` | `/featured` 用カテゴリスラッグ | 未設定時 `featured` |
 | `WP_ANIME_CATEGORY_ID` | ホームのアニメカテゴリ ID | 未設定時はスラッグ解決 |
-| `WP_MOVIE_CATEGORY_SLUG` | ホームの映画カテゴリスラッグ | 未設定時 `movie-ja` |
+| `WP_MOVIE_CATEGORY_SLUG` | ホームの映画カテゴリスラッグ | 未設定時 `movie` |
 
 ---
 

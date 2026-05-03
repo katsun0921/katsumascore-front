@@ -42,6 +42,10 @@ interface WPPost {
 }
 ```
 
+### Post（正規化後）
+
+`mapWPPostToPost` が `acf.title_jp` / `title_en` を解決し、`title` と任意の `originalTitle` を組み立てる。アプリ層では ACF のタイトルキーを直接参照しない。
+
 ### ScoreRank
 
 ```ts

@@ -8,13 +8,14 @@ export type FeaturedItem = {
 };
 
 export type HomeFeaturedProps = {
+  title: string;
   items: FeaturedItem[];
 };
 
-export const HomeFeatured = ({ items }: HomeFeaturedProps) => {
+export const HomeFeatured = ({ title, items }: HomeFeaturedProps) => {
   return (
     <section className='homeFeatured'>
-      <h2 className='homeFeatured__title'>特集</h2>
+      <h2 className='homeFeatured__title'>{title}</h2>
       <ul className='homeFeatured__grid'>
         {items.map(({ label, title, description, href, isPrimary }) => (
           <li key={href}>

@@ -52,13 +52,13 @@ WordPressリニューアルに伴い、以下の4つのtaxonomyを整理・新�
 
 | name_ja | name_en | slug | 件数 |
 |---|---|---|---|
-| 映画 | Movie | `movie-ja` | 995件 |
+| 映画 | Movie | `movie` | 995件 |
 | アニメ | Anime | `anime` | 83件 |
 | ドラマ | Drama | `drama` | 1件 |
 
 ### 実施内容
 
-- `Movie`（movie-en）210件 → `映画`（movie-ja）にmerge後削除
+- `Movie`（movie-en）・`映画`（movie-ja）→ `movie` に統合
 - `Anime`（anime-en）33件 → `アニメ`（anime）にmerge後削除
 - 劇場版・OVA・Cinema → 削除
 - 国サブカテゴリ（16件）→ country taxonomyに移行済みのため削除

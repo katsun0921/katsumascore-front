@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import type { Post } from '@/types/post';
 export type TPostsGroupItem = {
   heading: string
@@ -13,7 +14,7 @@ export type TPostsGroupProps = {
 
 const PostThumb = ({ post }: { post: Post }) => (
   <li className='p-posts-group__item'>
-    <Link href={post.slug} className='p-posts-group__link'>
+    <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='p-posts-group__link'>
       <div className='p-posts-group__thumb'>
         {post.image ? (
           <Image

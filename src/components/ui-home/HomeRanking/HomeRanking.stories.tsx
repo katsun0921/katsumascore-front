@@ -5,6 +5,9 @@ import { HomeRanking } from './HomeRanking';
 const meta: Meta<typeof HomeRanking> = {
   title: 'UI-Home/HomeRanking',
   component: HomeRanking,
+  args: {
+    title: 'TOP 10 ランキング',
+  },
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (

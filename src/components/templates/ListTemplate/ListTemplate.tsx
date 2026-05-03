@@ -1,5 +1,6 @@
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
+import { Sidebar as SidebarComponent } from '@/components/ui-layout/Sidebar';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
@@ -20,6 +21,7 @@ export const ListTemplate = ({
   totalPages = 1,
   onPageChange,
   isLoading = false,
+  sidebar,
 }: ListTemplateProps) => {
   const locale = useLocale();
 
@@ -30,12 +32,6 @@ export const ListTemplate = ({
   ];
 
   const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
-
-  const scoreFilterItems = [
-    { label: t(messages, ['scoreFilter', 'high'], locale), value: '4.0+', color: 'var(--color-score-rank-high)' },
-    { label: t(messages, ['scoreFilter', 'mid'], locale), value: '3.0-3.9', color: 'var(--color-score-rank-mid)' },
-    { label: t(messages, ['scoreFilter', 'low'], locale), value: '2.9-', color: 'var(--color-score-rank-low)' },
-  ];
 
   const breadcrumbItems = [
     { label: t(messages, ['breadcrumb', 'home'], locale), href: '/' },
@@ -113,43 +109,7 @@ export const ListTemplate = ({
           />
         </div>
 
-        {/* Sidebar */}
-        <aside className='space-y-6'>
-          {/* 広告 */}
-          <div className='rounded-2xl border border-color-border-soft bg-surface p-5'>
-            <p className='font-ui text-xs tracking-[0.16em] text-category uppercase mb-3'>
-              {t(messages, ['ad', 'label'], locale)}
-            </p>
-            <div className='flex items-center justify-center h-[250px] rounded-lg bg-color-bg-muted text-color-secondary text-sm'>
-              {t(messages, ['ad', 'placeholder'], locale)}
-            </div>
-          </div>
-
-          {/* スコア別フィルター */}
-          <div className='rounded-2xl border border-color-border-soft bg-surface p-5 space-y-3'>
-            <p className='font-ui text-xs tracking-[0.16em] text-category uppercase'>
-              {t(messages, ['scoreFilter', 'heading'], locale)}
-            </p>
-            <ul className='space-y-2'>
-              {scoreFilterItems.map((item) => (
-                <li key={item.value}>
-                  <button
-                    type='button'
-                    className='flex items-center gap-2 w-full text-sm text-color-secondary hover:text-color-primary transition-colors'
-                  >
-                    <span
-                      className='font-bold font-ui'
-                      style={{ color: `var(${item.color.slice(4, -1)})` }}
-                    >
-                      ●
-                    </span>
-                    {item.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </aside>
+        <SidebarComponent {...(sidebar ?? {})} />
       </div>
     </PageLayout>
   );

@@ -8,13 +8,15 @@ export type RecommendBlock = {
 };
 
 export type HomeRecommendProps = {
+  title: string;
+  seeAllLabel: string;
   blocks: RecommendBlock[];
 };
 
-export const HomeRecommend = ({ blocks }: HomeRecommendProps) => {
+export const HomeRecommend = ({ title, seeAllLabel, blocks }: HomeRecommendProps) => {
   return (
     <section className='homeRecommend'>
-      <h2 className='homeRecommend__title'>こちらもおすすめ</h2>
+      <h2 className='homeRecommend__title'>{title}</h2>
       <div className='homeRecommend__blocks'>
         {blocks.map(({ tag, posts, seeAllHref }) => (
           <div key={tag} className='homeRecommend__block'>
@@ -22,7 +24,7 @@ export const HomeRecommend = ({ blocks }: HomeRecommendProps) => {
               <span className='homeRecommend__tag'>{tag}</span>
               {seeAllHref && (
                 <Link href={seeAllHref} className='homeRecommend__seeAll'>
-                  すべて見る →
+                  {seeAllLabel}
                 </Link>
               )}
             </div>

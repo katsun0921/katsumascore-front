@@ -16,8 +16,6 @@ import type { PostTaxonomyLink } from '@/libs/api/wordpress';
 export type PostDetailData = Post & {
   // コンテンツ
   content: string
-  /** ACF `title_en`（英語の作品名・PostHeader の titleOriginal に渡す） */
-  originalTitle?: string
   updatedAt?: string
 
   // PostHero 用

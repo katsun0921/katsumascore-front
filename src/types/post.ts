@@ -8,6 +8,8 @@ export type Post = {
   id: string;
   slug: string;
   title: string;
+  /** メイン `title` と異なる英語表記など（`mapWPPostToPost` が ACF から付与） */
+  originalTitle?: string;
   excerpt: string;
   image: string | null;
   publishedAt: string;

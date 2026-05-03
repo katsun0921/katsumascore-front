@@ -7,13 +7,14 @@ export type SeasonItem = {
 };
 
 export type HomeSeasonReviewProps = {
+  title: string;
   items: SeasonItem[];
 };
 
-export const HomeSeasonReview = ({ items }: HomeSeasonReviewProps) => {
+export const HomeSeasonReview = ({ title, items }: HomeSeasonReviewProps) => {
   return (
     <section className='homeSeasonReview'>
-      <h2 className='homeSeasonReview__title'>季節のレビュー</h2>
+      <h2 className='homeSeasonReview__title'>{title}</h2>
       <ul className='homeSeasonReview__list'>
         {items.map(({ label, period, href, isCurrent }) => (
           <li key={href}>

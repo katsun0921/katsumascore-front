@@ -1,7 +1,7 @@
 import type { Post } from "@/types/post";
 import type { PostDetailData } from "@/components/templates/PostDetail/PostDetail.types";
 import type { ParsedWPPost } from "@/libs/api/wordpress";
-import { parseWPPostUnknown, stripHtml } from "@/libs/api/wordpress";
+import { parseWPPostUnknown } from "@/libs/api/wordpress";
 import { vodLogoSrcBySlug } from "@assets/images/vod";
 
 import { acfTruthy } from "./acfScalars";
@@ -127,10 +127,7 @@ export const buildVodIntroductionPayload = (
 
   if (!vodUrl && !(isAffiliate && affiliateCode.length > 0)) return undefined;
 
-  const title =
-    typeof acf.title_jp === "string" && acf.title_jp.trim()
-      ? stripHtml(acf.title_jp.trim())
-      : base.title;
+  const title = base.title;
 
   const publishedAt = parsed.date.slice(0, 10);
   const updatedAt = parsed.modified?.slice(0, 10);

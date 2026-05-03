@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import { getRankingIcon } from '@/components/features/ScoreWithRank/getRankingIcon';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
@@ -29,7 +30,7 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
 
   return (
     <li className='sidebar-picks__item'>
-      <Link href={post.slug} className='sidebar-picks__link'>
+      <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='sidebar-picks__link'>
         {/* サムネイル */}
         <div className='sidebar-picks__thumb'>
           {post.thumbnailUrl ? (

@@ -160,11 +160,11 @@ WordPress リニューアルに伴い、投稿の分類は以下の4 taxonomy �
 
 | name_ja | name_en | slug | 件数（参考） |
 |---|---|---|---|
-| 映画 | Movie | `movie-ja` | 995件 |
+| 映画 | Movie | `movie` | 995件 |
 | アニメ | Anime | `anime` | 83件 |
 | ドラマ | Drama | `drama` | 1件 |
 
-**主な移行・削除**: `Movie`（movie-en）を `映画`（movie-ja）へマージ後削除、`Anime`（anime-en）を `アニメ`（anime）へマージ後削除。劇場版・OVA・Cinema カテゴリ削除。国サブカテゴリ（16件）は country taxonomy へ移行済みのため削除。count=0 のカテゴリ（動画・ゲーム・舞台・Uncategorized・Drama-en 等）削除。
+**主な移行・削除**: `Movie`（movie-en）・`映画`（movie-ja）を `movie` に統合、`Anime`（anime-en）を `アニメ`（anime）へマージ後削除。劇場版・OVA・Cinema カテゴリ削除。国サブカテゴリ（16件）は country taxonomy へ移行済みのため削除。count=0 のカテゴリ（動画・ゲーム・舞台・Uncategorized・Drama-en 等）削除。
 
 **ACF（term）**
 

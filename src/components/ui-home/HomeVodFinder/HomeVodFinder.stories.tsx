@@ -5,6 +5,10 @@ import { HomeVodFinder } from './HomeVodFinder';
 const meta: Meta<typeof HomeVodFinder> = {
   title: 'UI-Home/HomeVodFinder',
   component: HomeVodFinder,
+  args: {
+    title: 'VODで探す',
+    workCountSuffix: '作品',
+  },
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (

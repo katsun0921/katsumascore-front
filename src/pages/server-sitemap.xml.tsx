@@ -1,6 +1,6 @@
 // SSR: WPデータを含む XML sitemap をリクエスト時に生成
 import type { GetServerSideProps } from 'next';
-import { getPosts, getCategories, getChildPages } from '@/libs/api/wordpress';
+import { getPosts, getCategoriesForArchiveResolve, getChildPages } from '@/libs/api/wordpress';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 
@@ -19,8 +19,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const [jaPosts, enPosts, jaCategories, enCategories, jaSeasonal, enSeasonal] = await Promise.all([
     getPosts({ per_page: 1000, lang: 'ja' }),
     getPosts({ per_page: 1000, lang: 'en' }),
-    getCategories('ja'),
-    getCategories('en'),
+    getCategoriesForArchiveResolve('ja'),
+    getCategoriesForArchiveResolve('en'),
     seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
       ? getChildPages(Number(seasonalParentRaw), 'ja')
       : Promise.resolve([]),

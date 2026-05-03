@@ -1,10 +1,6 @@
 import type { Post } from '@/types/post';
 import type { FilterOption } from '@/components/features/Post/ListFilterBar/ListFilterBar.types';
-
-export type VodRankingItem = {
-  id: string;
-  title: string;
-};
+import type { SidebarProps } from '@/components/ui-layout/Sidebar';
 
 export type ListTemplateProps = {
   categoryName: string;
@@ -17,5 +13,5 @@ export type ListTemplateProps = {
   totalPages?: number;
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
-  vodRanking?: VodRankingItem[];
+  sidebar?: SidebarProps;
 };

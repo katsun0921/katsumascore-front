@@ -36,8 +36,6 @@ export const buildPostDetailFromWp = ({
   if (!base) return null;
 
   const acf = parsed.acf as Record<string, unknown> | undefined;
-  const originalTitleRaw = parsed.acf?.title_en?.trim();
-  const originalTitle = originalTitleRaw ? stripHtml(originalTitleRaw) : undefined;
 
   const sg = parsed.acf?.acf_summary_group as Record<string, unknown> | undefined;
 
@@ -183,7 +181,6 @@ export const buildPostDetailFromWp = ({
 
   return {
     ...base,
-    ...(originalTitle ? { originalTitle } : {}),
     ...(updatedAt ? { updatedAt } : {}),
     ...trailerVideo,
     ...(authorComment ? { authorComment } : {}),

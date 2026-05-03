@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import { PostCardMedia } from '@/components/ui-parts/PostCard/PostCardMedia';
 import { PostCardBody } from '@/components/ui-parts/PostCard/PostCardBody';
 import { ScoreHexBadge } from '@/components/ui-parts/ScoreHexBadge';
@@ -6,7 +7,7 @@ import { VodDots } from '@/components/ui-parts/VodDots';
 import type { HomeCardProps } from './HomeCard.types';
 export const HomeCard = ({ post, className }: HomeCardProps) => {
   return (
-    <Link href={post.slug} className={['homeCard', className].filter(Boolean).join(' ')}>
+    <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className={['homeCard', className].filter(Boolean).join(' ')}>
       <PostCardMedia
         image={post.image}
         title={post.title}

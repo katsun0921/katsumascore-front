@@ -16,6 +16,7 @@
 - `getPosts(params?)` — 記事一覧取得
 - `getPostBySlug(slug, lang?)` — スラッグで記事取得
 - `getCategories(lang?)` — カテゴリー一覧取得
+- `getCategoriesForArchiveResolve(locale?)` — `lang` 付きが空のとき `lang` 無しで再取得（アーカイブ用）
 - `getPostsByCategory(categoryId, lang?)` — カテゴリー別記事取得
 - `getRelatedPosts(ids)` — 関連記事取得
 - `searchPosts(query, lang?)` — 記事検索
