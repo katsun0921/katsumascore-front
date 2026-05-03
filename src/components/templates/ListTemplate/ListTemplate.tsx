@@ -46,6 +46,10 @@ export const ListTemplate = ({
     onPageChange?.(page);
   };
 
+  /** 各ページとも先頭1件をリード、残りをグリッドに揃える（1ページ目と2ページ目で同じ内訳になる） */
+  const leadPost = posts[0];
+  const gridPosts = posts.slice(1);
+
   return (
     <PageLayout>
       {/* Hero — ダーク背景でカテゴリ名を表示 */}
@@ -83,10 +87,10 @@ export const ListTemplate = ({
         <div className='space-y-8'>
           {posts.length > 0 && !isLoading && (
             <div className='flex flex-col gap-3 lg:gap-4'>
-              <PostCardImgLeft post={posts[0]} />
-              {posts.length > 1 && (
+              {leadPost && <PostCardImgLeft post={leadPost} />}
+              {gridPosts.length > 0 && (
                 <ol className='m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4 lg:gap-4'>
-                  {posts.slice(1).map((item) => (
+                  {gridPosts.map((item) => (
                     <li key={item.id}>
                       <PostCardImgTop post={item} />
                     </li>

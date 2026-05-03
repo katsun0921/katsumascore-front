@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — ドラマ一覧ページネーション（/drama/page/[page], /en/drama/page/[page]）
+// ISR: revalidate 60s — ドラマ一覧 2 ページ目以降。公開 URL は /drama?page=N（rewrite で本ファイルに到達）
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import {
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
-import { getPostTypeArchivePath } from '@/libs/route';
+import { getPostTypeArchiveUrl } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 type DramaPagedProps = {
@@ -42,8 +42,10 @@ const DramaPagedPage = ({
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = getPostTypeArchivePath({ type: 'drama', lang: loc });
-    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
+    void router.push(getPostTypeArchiveUrl({ type: 'drama', lang: loc, page }), undefined, {
+      scroll: true,
+      locale: false,
+    });
   };
 
   return (

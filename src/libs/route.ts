@@ -39,6 +39,20 @@ export const getPostTypeArchivePath = ({
 }: PostTypeArchivePathParams): string =>
   `${getLocalePathPrefix(lang)}/${getPostTypeCategorySlug(type)}`;
 
+/**
+ * 記事一覧の URL（ページネーションは `?page=N`。1 ページ目はクエリなし）
+ * 実体は next.config の rewrite で `/[type]/page/N` に委譲し ISR を維持する。
+ */
+export const getPostTypeArchiveUrl = ({
+  type,
+  lang = DEFAULT_LOCALE,
+  page = 1,
+}: PostTypeArchivePathParams & { page?: number }): string => {
+  const base = getPostTypeArchivePath({ type, lang });
+  if (page <= 1) return base;
+  return `${base}?${new URLSearchParams({ page: String(page) }).toString()}`;
+};
+
 export const getPostUrl = (type: PostType, slug: string, lang = DEFAULT_LOCALE): string =>
   `${getPostTypeArchivePath({ type, lang })}/${slug}`;
 

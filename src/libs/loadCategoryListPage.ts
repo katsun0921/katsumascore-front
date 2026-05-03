@@ -1,8 +1,9 @@
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
 import type { Post } from "@/types/post";
+import type { WPPost } from "@/types/wordpress";
 
-export const CATEGORY_LIST_PER_PAGE = 12;
+export const CATEGORY_LIST_PER_PAGE = 13;
 
 export type CategoryListPageResult =
   | { notFound: true }
@@ -25,21 +26,34 @@ export const loadCategoryListPage = async (
   if (!category) return { notFound: true };
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-  const fetched = await getPostsWithMeta({
-    category: category.id,
-    page: safePage,
-    per_page: CATEGORY_LIST_PER_PAGE,
-    lang: currentLocale,
-  });
-  if (!fetched) return { notFound: true };
+  const requiredPostCount = safePage * CATEGORY_LIST_PER_PAGE;
+  const rawPosts: WPPost[] = [];
+  let rawTotalPages = 1;
+  let reachedRawEnd = false;
+  for (let rawPage = 1; rawPage <= rawTotalPages; rawPage += 1) {
+    const fetched = await getPostsWithMeta({
+      category: category.id,
+      page: rawPage,
+      per_page: CATEGORY_LIST_PER_PAGE,
+      lang: currentLocale,
+    });
+    if (!fetched) return { notFound: true };
+    rawPosts.push(...fetched.items);
+    rawTotalPages = Math.max(1, fetched.meta.totalPages);
+    reachedRawEnd = rawPage >= rawTotalPages;
+    if (normalizePosts(rawPosts, currentLocale).length >= requiredPostCount) break;
+  }
 
-  const totalPages = Math.max(1, fetched.meta.totalPages);
+  const normalizedPosts = normalizePosts(rawPosts, currentLocale);
+  const normalizedTotalPages = Math.max(1, Math.ceil(normalizedPosts.length / CATEGORY_LIST_PER_PAGE));
+  const totalPages = reachedRawEnd ? normalizedTotalPages : rawTotalPages;
   if (safePage > totalPages) return { notFound: true };
+  const start = (safePage - 1) * CATEGORY_LIST_PER_PAGE;
 
   return {
     categoryName: category.name,
     slug: category.slug,
-    posts: normalizePosts(fetched.items, currentLocale),
+    posts: normalizedPosts.slice(start, start + CATEGORY_LIST_PER_PAGE),
     currentPage: safePage,
     totalPages,
   };

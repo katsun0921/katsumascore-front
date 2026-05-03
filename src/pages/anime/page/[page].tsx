@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — アニメ一覧ページネーション（/anime/page/[page], /en/anime/page/[page]）
+// ISR: revalidate 60s — アニメ一覧 2 ページ目以降。公開 URL は /anime?page=N（rewrite で本ファイルに到達）
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import {
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
-import { getPostTypeArchivePath } from '@/libs/route';
+import { getPostTypeArchiveUrl } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 type AnimePagedProps = {
@@ -42,8 +42,10 @@ const AnimePagedPage = ({
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = getPostTypeArchivePath({ type: 'anime', lang: loc });
-    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
+    void router.push(getPostTypeArchiveUrl({ type: 'anime', lang: loc, page }), undefined, {
+      scroll: true,
+      locale: false,
+    });
   };
 
   return (

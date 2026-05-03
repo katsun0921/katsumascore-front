@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — 映画一覧ページネーション（/movie/page/[page], /en/movie/page/[page]）
+// ISR: revalidate 60s — 映画一覧 2 ページ目以降。公開 URL は /movie?page=N（rewrite で本ファイルに到達）
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
@@ -12,7 +12,7 @@ import {
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
-import { getPostTypeArchivePath } from '@/libs/route';
+import { getPostTypeArchiveUrl } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 type MoviePagedProps = {
@@ -42,8 +42,10 @@ const MoviePagedPage = ({
   const loc = (locale ?? 'ja') as Locale;
 
   const handlePageChange = (page: number) => {
-    const base = getPostTypeArchivePath({ type: 'movie', lang: loc });
-    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true, locale: false });
+    void router.push(getPostTypeArchiveUrl({ type: 'movie', lang: loc, page }), undefined, {
+      scroll: true,
+      locale: false,
+    });
   };
 
   return (

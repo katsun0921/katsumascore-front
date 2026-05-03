@@ -3,6 +3,16 @@ import { ListTemplate } from './ListTemplate';
 import { mockPost, mockPosts } from '@/mocks/post';
 import { chaosPosts } from '@/mocks/chaosPosts';
 
+/** /movie（1ページ目）と /movie?page=2（2ページ目）で同じ 13 件のとき、リード1＋グリッド11で揃うことを確認する */
+const thirteenPostsMovieArchive = Array.from({ length: 13 }, (_, i) => ({
+  ...mockPost,
+  id: `movie-parity-${i}`,
+  slug: `/posts/movie-parity-${i}`,
+  title: `映画レビュー ${i + 1}（13件ページング同型）`,
+  publishedAt: `2026-05-${String((i % 28) + 1).padStart(2, '0')}`,
+  score: ((i % 5) + 1) as 1 | 2 | 3 | 4 | 5,
+}));
+
 const meta = {
   title: 'templates/ListTemplate',
   component: ListTemplate,
@@ -63,6 +73,47 @@ export const Pagination: Story = {
     currentPage: 2,
     totalPages: 5,
   },
+};
+
+export const MoviePageQueryParity: Story = {
+  parameters: {
+    docs: {
+      description: {
+        story:
+          '`currentPage` が 1 と 2 で **同一13件**のとき、どちらもリード（ImgLeft）1件＋グリッド（ImgTop）11件。`/movie` と `/movie?page=2` の表示数ずれをここで確認する。',
+      },
+    },
+  },
+  render: () => (
+    <div className='flex flex-col gap-10 bg-color-bg'>
+      <section>
+        <p className='border-b border-color-border bg-secondary px-4 py-2 font-ui text-sm text-color-inverse'>
+          1ページ目（/movie 相当）— リード1＋グリッド11＝計13カード
+        </p>
+        <ListTemplate
+          categoryName='映画'
+          categoryDescription='今観るべき作品を、スコアで選ぶ'
+          posts={thirteenPostsMovieArchive}
+          activeFilter='score'
+          currentPage={1}
+          totalPages={3}
+        />
+      </section>
+      <section>
+        <p className='border-b border-color-border bg-secondary px-4 py-2 font-ui text-sm text-color-inverse'>
+          2ページ目（/movie?page=2 相当）— 同じ内訳で計13カード
+        </p>
+        <ListTemplate
+          categoryName='映画'
+          categoryDescription='今観るべき作品を、スコアで選ぶ'
+          posts={thirteenPostsMovieArchive}
+          activeFilter='score'
+          currentPage={2}
+          totalPages={3}
+        />
+      </section>
+    </div>
+  ),
 };
 
 export const Chaos: Story = {
