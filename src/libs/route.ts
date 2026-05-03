@@ -6,7 +6,8 @@ export type EntityType = 'actor' | 'director' | 'company'
 
 const DEFAULT_LOCALE = 'ja';
 
-const localePrefix = (lang: string): string =>
+/** ja は `''`、en は `/en` */
+export const getLocalePathPrefix = (lang: string): string =>
   lang === DEFAULT_LOCALE ? '' : `/${lang}`;
 
 // WP category slug → PostType mapping. Extend when actual WP slugs are known.
@@ -16,7 +17,7 @@ const WP_CATEGORY_TO_POST_TYPE: Partial<Record<string, PostType>> = {
   drama: 'drama',
 };
 
-const categorySlugForPostType = (postType: PostType): string => {
+export const getPostTypeCategorySlug = (postType: PostType): string => {
   const pairs = Object.entries(WP_CATEGORY_TO_POST_TYPE) as [string, PostType][];
   for (const [slug, t] of pairs) {
     if (t === postType) {
@@ -26,18 +27,26 @@ const categorySlugForPostType = (postType: PostType): string => {
   return postType;
 };
 
-/** アニメ一覧のパス（ja は `/anime`、en は `/en/anime` — Next.js i18n の defaultLocale 規約） */
-export const getAnimeArchivePath = (lang = DEFAULT_LOCALE): string =>
-  `${localePrefix(lang)}/${categorySlugForPostType('anime')}`;
+export type PostTypeArchivePathParams = {
+  type: PostType
+  lang?: string
+};
+
+/** 映画・アニメ・ドラマの記事一覧トップ（ja は `/movie` 等、en は `/en/movie`） */
+export const getPostTypeArchivePath = ({
+  type,
+  lang = DEFAULT_LOCALE,
+}: PostTypeArchivePathParams): string =>
+  `${getLocalePathPrefix(lang)}/${getPostTypeCategorySlug(type)}`;
 
 export const getPostUrl = (type: PostType, slug: string, lang = DEFAULT_LOCALE): string =>
-  `${localePrefix(lang)}/${categorySlugForPostType(type)}/${slug}`;
+  `${getPostTypeArchivePath({ type, lang })}/${slug}`;
 
 export const getTaxonomyUrl = (taxonomy: TaxonomyType, slug: string, lang = DEFAULT_LOCALE): string =>
-  `${localePrefix(lang)}/${taxonomy}/${slug}`;
+  `${getLocalePathPrefix(lang)}/${taxonomy}/${slug}`;
 
 export const getEntityUrl = (type: EntityType, slug: string, lang = DEFAULT_LOCALE): string =>
-  `${localePrefix(lang)}/${type}/${slug}`;
+  `${getLocalePathPrefix(lang)}/${type}/${slug}`;
 
 export const resolvePostType = (categorySlug: string | undefined): PostType =>
   (categorySlug !== undefined ? WP_CATEGORY_TO_POST_TYPE[categorySlug] : undefined) ?? 'movie';

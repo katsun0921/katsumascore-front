@@ -2,7 +2,7 @@ import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Locale } from '@/i18n/t';
-import type { PostType } from '@/libs/route';
+import { getPostTypeArchivePath, type PostType } from '@/libs/route';
 import { messages } from './i18n';
 
 export type BreadcrumbsProps = {
@@ -12,10 +12,8 @@ export type BreadcrumbsProps = {
   lang?: Locale
 }
 
-const getCategoryHref = (type: PostType, lang: Locale): string => {
-  const prefix = lang === 'ja' ? '' : `/${lang}`;
-  return `${prefix}/categories/${type}`;
-};
+const getCategoryHref = (type: PostType, lang: Locale): string =>
+  getPostTypeArchivePath({ type, lang });
 
 export const Breadcrumbs = ({ title, category, type, lang }: BreadcrumbsProps) => {
   const locale = useLocale();

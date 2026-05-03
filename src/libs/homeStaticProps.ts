@@ -19,7 +19,7 @@ import {
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
-import { getAnimeArchivePath } from "@/libs/route";
+import { getPostTypeArchivePath } from "@/libs/route";
 
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
@@ -165,7 +165,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     hero: buildHeroFromPosts(pool),
     rankingPosts,
     latestPosts,
-    animeArchiveHref: getAnimeArchivePath(lang),
+    animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,
     recommendBlocks,

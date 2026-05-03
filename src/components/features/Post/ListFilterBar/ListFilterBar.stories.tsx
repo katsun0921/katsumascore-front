@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/postTypeArchiveNav.config';
 import { ListFilterBar } from './ListFilterBar';
+
+const postTypeFilterOptionsJa = POST_TYPE_ARCHIVE_NAV_ITEMS.map((item) => ({
+  label: item.label.ja,
+  value: item.postType,
+}));
 
 const meta: Meta<typeof ListFilterBar> = {
   title: 'features/Post/ListFilterBar',
   component: ListFilterBar,
   parameters: { layout: 'padded' },
   args: {
-    options: [
-      { label: 'すべて', value: 'all' },
-      { label: '映画', value: 'movie' },
-      { label: 'アニメ', value: 'anime' },
-      { label: 'ドラマ', value: 'drama' },
-    ],
+    options: [{ label: 'すべて', value: 'all' }, ...postTypeFilterOptionsJa],
     activeValue: 'all',
     onSelect: () => {},
   },
@@ -37,9 +38,7 @@ export const ManyOptions: Story = {
   args: {
     options: [
       { label: 'すべて', value: 'all' },
-      { label: '映画', value: 'movie' },
-      { label: 'アニメ', value: 'anime' },
-      { label: 'ドラマ', value: 'drama' },
+      ...postTypeFilterOptionsJa,
       { label: 'バラエティ', value: 'variety' },
       { label: 'ドキュメンタリー', value: 'documentary' },
       { label: 'スポーツ', value: 'sports' },

@@ -1,9 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
 
-/** 旧 `/genre/[slug]` 用 WP category slug（`/categories/[slug]` へリダイレクト） */
-const legacyGenrePathCategorySlugPattern = ["movie", "anime", "drama"].join("|");
-
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   images: {
