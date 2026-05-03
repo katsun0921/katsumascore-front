@@ -29,10 +29,10 @@ export const Sidebar = ({
   return (
     <aside className='flex flex-col gap-8 w-full px-4'>
 
-      {/* ❶ プロフィールカード */}
+      {/* プロフィールカード */}
       {profile && <Profile {...profile} />}
 
-      {/* ❷ VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
+      {/* VODバッジ（acf-streaming-vod.php 相当・劇場公開中は非表示） */}
       {!isCinemaShowing && streamingVods && streamingVods.length > 0 && (
         <StreamingVod
           title={title ?? ''}
@@ -40,38 +40,37 @@ export const Sidebar = ({
         />
       )}
 
-      {/* ❹ レンタル広告（固定アフィリエイト。劇場公開中・英語ロケールは非表示） */}
-      {!isCinemaShowing && locale !== 'en' && (
+      {/* レンタル広告（固定アフィリエイト。劇場公開中・ja以外は非表示） */}
+      {!isCinemaShowing && locale === 'ja' && (
         <AdRental
           title={title ?? ''}
         />
       )}
 
-      {/* ❹ 固定広告バナー */}
-      <AdBanner />
+      {/* 固定広告バナー（jaのみ） */}
+      {locale === 'ja' && <AdBanner />}
 
-      {/* ❺ 関連記事（サイドバー専用リスト） */}
+      {/* 関連記事（サイドバー専用リスト） */}
       {relatedPosts && relatedPosts.length > 0 && (
         <RelatedPosts posts={relatedPosts} />
       )}
 
-      {/* ❼ PICK UP / HIGH SCORE */}
+      {/* PICK UP / HIGH SCORE */}
       <PickUpAndScore pickupPosts={pickupPosts} highScorePosts={highScorePosts} />
 
-      {/* ❽ ジャンルナビ */}
+      {/* ジャンルナビ */}
       {genres && genres.length > 0 && (
         <GenreNav tags={genres} activeSlug={activeGenreSlug} />
       )}
 
-      {/* ❾ サイト内検索 */}
+      {/* サイト内検索 */}
       <SearchBox />
 
-      {/* 既存：acf-relation-by-post-id.php 相当（記事本文内グリッド形式） */}
       {relationPosts && relationPosts.length > 0 && (
         <RelationPost posts={relationPosts} />
       )}
 
-      {/* ❼ 関連投稿グループ（PostsGroup 相当） */}
+      {/* 関連投稿グループ（PostsGroup 相当） */}
       {postsGroups && postsGroups.length > 0 && (
         <PostsGroup groups={postsGroups} />
       )}

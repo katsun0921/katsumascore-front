@@ -19,6 +19,6 @@ export const AdRental = ({ title }: TAdRentalProps) => {
   }
 
   const { headingSuffix } = adRentalConfig;
-  const heading = `${title}${headingSuffix}`;
+  const heading = title ? `${title}${headingSuffix}` : undefined;
   return <AdRentalSection heading={heading}  />;
 };
