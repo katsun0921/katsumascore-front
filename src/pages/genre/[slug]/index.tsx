@@ -40,7 +40,7 @@ const GenrePage = ({ genreName, slug, posts, currentPage, totalPages, locale }: 
 
   const handlePageChange = (page: number) => {
     const base = getTaxonomyUrl('genre', slug, loc);
-    void router.push(page === 1 ? base : `${base}/page/${page}`, undefined, { scroll: true });
+    void router.push(page === 1 ? base : `${base}/p/${page}`, undefined, { scroll: true });
   };
 
   return (
@@ -78,9 +78,15 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   return { paths, fallback: 'blocking' };
 };
 
+const paramAsString = (v: string | string[] | undefined): string | undefined => {
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v) && typeof v[0] === 'string') return v[0];
+  return undefined;
+};
+
 export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, locale }) => {
-  const slug = params?.slug;
-  if (typeof slug !== 'string') return { notFound: true };
+  const slug = paramAsString(params?.slug);
+  if (slug === undefined) return { notFound: true };
 
   const currentLocale = locale ?? 'ja';
   const data = await loadGenreListPage(slug, currentLocale, 1);

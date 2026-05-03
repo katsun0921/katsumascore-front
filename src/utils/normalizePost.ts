@@ -16,3 +16,19 @@ export const normalizePosts = (wpPosts: WPPost[], locale: Locale): Post[] => {
   }
   return out;
 };
+
+/**
+ * 取得時に REST の `lang` クエリで既に言語絞り込み済みの一覧向け。
+ * ACF `lang` / link 由来の `m.lang` が実体とずれていると `normalizePosts` で記事がすべて落ちるため、こちらではクライアント側の言語フィルタを行わない。
+ */
+export const normalizePostsFromLangScopedQuery = (wpPosts: WPPost[]): Post[] => {
+  const out: Post[] = [];
+  for (const p of wpPosts) {
+    const m = mapWPPostToPost(p);
+    if (!m) continue;
+    const { content, ...rest } = m;
+    void content;
+    out.push(rest);
+  }
+  return out;
+};

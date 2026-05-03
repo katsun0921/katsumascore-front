@@ -1,3 +1,4 @@
+// SSR: XML sitemap をリクエスト時に生成
 import type { GetServerSideProps } from 'next';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');

@@ -1,3 +1,4 @@
+// SSR: WPデータを含む XML sitemap をリクエスト時に生成
 import type { GetServerSideProps } from 'next';
 import { getPosts, getCategories, getChildPages } from '@/libs/api/wordpress';
 

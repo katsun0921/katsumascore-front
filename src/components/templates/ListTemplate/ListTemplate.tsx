@@ -1,15 +1,13 @@
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
-import { PostRankingItem } from '@/components/features/Post/PostRankingItem';
+import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
 import { Pagination } from '@/components/features/Pagination';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
-
-const RANKING_COUNT = 10;
 
 export const ListTemplate = ({
   categoryName,
@@ -22,7 +20,6 @@ export const ListTemplate = ({
   totalPages = 1,
   onPageChange,
   isLoading = false,
-  vodRanking,
 }: ListTemplateProps) => {
   const locale = useLocale();
 
@@ -39,9 +36,6 @@ export const ListTemplate = ({
     { label: t(messages, ['scoreFilter', 'mid'], locale), value: '3.0-3.9', color: 'var(--color-score-rank-mid)' },
     { label: t(messages, ['scoreFilter', 'low'], locale), value: '2.9-', color: 'var(--color-score-rank-low)' },
   ];
-
-  const featuredPost = posts[0];
-  const rankingPosts = posts.slice(0, RANKING_COUNT);
 
   const breadcrumbItems = [
     { label: t(messages, ['breadcrumb', 'home'], locale), href: '/' },
@@ -91,18 +85,25 @@ export const ListTemplate = ({
       <div className='grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start px-4 py-8 pb-12'>
         {/* Main column */}
         <div className='space-y-8'>
-          {featuredPost && !isLoading && (
-            <PostCardImgLeft post={featuredPost} rank={1} />
+          {posts.length > 0 && !isLoading && (
+            <div className='flex flex-col gap-3 lg:gap-4'>
+              <PostCardImgLeft post={posts[0]} />
+              {posts.length > 1 && (
+                <ol className='m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4 lg:gap-4'>
+                  {posts.slice(1).map((item) => (
+                    <li key={item.id}>
+                      <PostCardImgTop post={item} />
+                    </li>
+                  ))}
+                </ol>
+              )}
+            </div>
           )}
 
-          {rankingPosts.length > 1 && !isLoading && (
-            <section className='space-y-2'>
-              <ol className='grid grid-cols-3 gap-4'>
-                {rankingPosts.map((post, index) => (
-                  <PostRankingItem key={post.id} post={post} rank={index + 1} columns={3} />
-                ))}
-              </ol>
-            </section>
+          {posts.length === 0 && !isLoading && (
+            <p className='text-body text-color-secondary'>
+              {t(messages, ['empty', 'posts'], locale)}
+            </p>
           )}
 
           <Pagination

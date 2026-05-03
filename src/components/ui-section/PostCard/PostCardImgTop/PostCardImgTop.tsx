@@ -15,7 +15,7 @@ export const PostCardImgTop = ({ post, rank, className }: Props) => (
   <PostCardContainer className={className}>
     <Link href={post.slug} className='relative grid text-inherit'>
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
-      <PostCardMedia image={post.image} title={post.title} />
+      <PostCardMedia image={post.image} title={post.title} className='aspect-video w-full' />
       <PostCardBody
         publishedAt={post.publishedAt}
         title={post.title}
