@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { vodLogoSrcBySlug } from '@assets/images/vod';
 import { VodIntroduction } from './VodIntroduction';
 import { mockPosts } from '@/mocks/post';
 
@@ -21,7 +22,7 @@ export const VodStreaming: Story = {
       type: 'vod',
       vodName: 'Amazon Prime Video',
       vodUrl: 'https://www.amazon.co.jp/prime-video',
-      vodImageUrl: '/images/vod/amazon-prime-video.webp',
+      vodImageUrl: vodLogoSrcBySlug['amazon-prime-video'],
     },
     publishedAt: '2026-04-01',
     relatedPosts: mockPosts.slice(0, 3),
