@@ -2,6 +2,7 @@ import type { Post } from "@/types/post";
 import type { PostDetailData } from "@/components/templates/PostDetail/PostDetail.types";
 import type { ParsedWPPost } from "@/libs/api/wordpress";
 import { parseWPPostUnknown, stripHtml } from "@/libs/api/wordpress";
+import { vodLogoSrcBySlug } from "@assets/images/vod";
 
 import { acfTruthy } from "./acfScalars";
 import { HTTP_URL_RE } from "./constants";
@@ -49,6 +50,28 @@ const resolveVodTermFromEmbedded = (
   return undefined;
 };
 
+const stripVodTaxonomyRegionSuffix = (raw: string): string => {
+  let s = raw.trim().toLowerCase();
+  const suffixes = ["-cojp", "-com", "-jp", "-ja"] as const;
+  for (const suf of suffixes) {
+    if (s.endsWith(suf)) {
+      s = s.slice(0, -suf.length);
+      break;
+    }
+  }
+  return s;
+};
+
+const vodImageUrlForTaxonomySlug = (rawSlug: string): string | undefined => {
+  const base = stripVodTaxonomyRegionSuffix(rawSlug);
+  const keys = [base, base.replace(/-/g, "_"), base.replace(/_/g, "-")];
+  for (const k of keys) {
+    const url = vodLogoSrcBySlug[k];
+    if (url) return url;
+  }
+  return undefined;
+};
+
 const getWatchedVodRecord = (acf: Record<string, unknown>): Record<string, unknown> | undefined => {
   const sv = acf.streaming_vod;
   if (!sv || typeof sv !== "object" || Array.isArray(sv)) return undefined;
@@ -79,7 +102,6 @@ export const buildVodIntroductionPayload = (
   parsed: ParsedWPPost,
   base: Post & { content: string },
   acf: Record<string, unknown> | undefined,
-  titleEn: string | undefined,
   vodRelatedPosts: Post[] | undefined,
 ): PostDetailData["vodIntroduction"] | undefined => {
   if (!acf) return undefined;
@@ -105,21 +127,22 @@ export const buildVodIntroductionPayload = (
 
   if (!vodUrl && !(isAffiliate && affiliateCode.length > 0)) return undefined;
 
-  const titleJp =
+  const title =
     typeof acf.title_jp === "string" && acf.title_jp.trim()
       ? stripHtml(acf.title_jp.trim())
       : base.title;
 
   const publishedAt = parsed.date.slice(0, 10);
   const updatedAt = parsed.modified?.slice(0, 10);
+  const vodImageUrl = vodImageUrlForTaxonomySlug(vodMeta.slug);
 
   const out: NonNullable<PostDetailData["vodIntroduction"]> = {
-    titleJp,
-    ...(titleEn ? { titleEn } : {}),
+    title,
     writtenFrom: {
       type: "vod",
       vodName: vodMeta.name,
       vodUrl: vodUrl ?? "",
+      ...(vodImageUrl ? { vodImageUrl } : {}),
     },
     publishedAt,
     ...(updatedAt ? { updatedAt } : {}),

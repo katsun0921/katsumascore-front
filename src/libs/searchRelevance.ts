@@ -24,10 +24,10 @@ const pushKind = (kinds: SearchMatchKind[], kind: SearchMatchKind) => {
 
 const titleBlob = (wp: ParsedWPPost): string => {
   const parts = [stripHtml(wp.title.rendered)];
-  const jp = wp.acf?.title_jp?.trim();
-  const en = wp.acf?.title_en?.trim();
-  if (jp) parts.push(stripHtml(jp));
-  if (en) parts.push(stripHtml(en));
+  const acfTitleLine = wp.acf?.title_jp?.trim();
+  const acfAlternateTitleLine = wp.acf?.title_en?.trim();
+  if (acfTitleLine) parts.push(stripHtml(acfTitleLine));
+  if (acfAlternateTitleLine) parts.push(stripHtml(acfAlternateTitleLine));
   return parts.join(" ");
 };
 

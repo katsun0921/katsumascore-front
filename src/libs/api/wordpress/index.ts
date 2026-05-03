@@ -3,6 +3,7 @@ export type { WpFetchOptions, WpPostsListMeta, WpPostsPagedResult } from "./clie
 export {
   getPosts,
   getPostsWithMeta,
+  getPostsPagedMerge,
   getPostBySlug,
   getRelatedPosts,
   searchPosts,
@@ -26,6 +27,7 @@ export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/page
 
 export {
   stripHtml,
+  normalizePageContent,
   mapWPPostToPost,
   parseWPPostUnknown,
   extractGenreLinksFromParsedWp,
@@ -35,7 +37,7 @@ export {
   extractDirectorTermNamesFromParsedWp,
   extractActorTermNamesFromParsedWp,
 } from "./transform";
-export type { PostTaxonomyLink } from "./transform";
+export type { NormalizedPageContent, PostTaxonomyLink } from "./transform";
 
 export { WPPostSchema, WPCategorySchema, WPTagSchema, WPEmbeddedSchema, parseWPPost } from "./schema";
 export type { ParsedWPPost } from "./schema";
