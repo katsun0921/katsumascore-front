@@ -1,12 +1,10 @@
 /**
- * TOP（HomeTemplate）向けのサーバー側データ組み立て。WP から取得した記事・タグ・季節レビュー等を正規化する。
+ * TOP（HomeTemplate）向けのサーバー側データ組み立て。WP から取得した記事・タグ等を正規化する。
  */
 import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/HomeTemplate.types";
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
-import type { SeasonItem } from "@/components/ui-home/HomeSeasonReview";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
-import type { WPPage } from "@/types/wordpress";
 import type { Post } from "@/types/post";
 import { getScoreRank } from "@/types/wordpress";
 import {
@@ -16,13 +14,16 @@ import {
   pickRandomTags,
   getPostsByTagId,
   getCategoryBySlug,
-  getChildPages,
+  getPageBySlug,
   getFeaturedPages,
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
 import { getPostTypeArchivePath } from "@/libs/route";
+
+const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
+const WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG = "seasonal-anime-and-dramas-reviews";
 
 /**
  * レビュースコアをヒーロー表示用の 1〜5 の整数ランクに正規化する。
@@ -143,19 +144,42 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
     isPrimary: i === 0,
   }));
 
+/** Katsumascore 公式 Facebook（本サイト・katsumascore.blog の SNS 導線と揃える）。 */
+const KATSUMASCORE_FACEBOOK_PAGE_URL =
+  "https://www.facebook.com/people/Katsumascore/100072246676709/";
+
 /**
- * 季節レビュー親ページの子（固定ページ）を、`HomeSeasonReview` 用の一覧行に変換する。
- * タイトルは HTML 除去、`period` は `modified` または `date` の先頭 10 文字（YYYY-MM-DD 想定）。
+ * Facebook Page Plugin 用 iframe の `src` を組み立てる。
+ * `NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL` 未設定時の既定値。幅 300 は TOP グリッド右列（300px）に合わせる。
  *
- * @param pages — `getChildPages` から返った `WPPage` の配列。
- * @returns `label` / `period` / `href` を持つ `SeasonItem` の配列。
+ * @returns `plugins/page.php?...` 形式の絶対 URL。
  */
-const mapWpPagesToSeasonItems = (pages: WPPage[]): SeasonItem[] =>
-  pages.map((p) => ({
-    label: stripHtml(p.title.rendered),
-    period: (p.modified || p.date || "").slice(0, 10),
-    href: `/seasonal-reviews/${p.slug}`,
-  }));
+const buildDefaultFacebookPagePluginSrc = (): string =>
+  `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
+    KATSUMASCORE_FACEBOOK_PAGE_URL,
+  )}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
+
+/**
+ * 季節レビュー親固定ページの ID を、環境変数または既知の WordPress 親スラッグから解決する。
+ * `WP_SEASONAL_REVIEW_PARENT_ID` が未設定の環境でも TOP の季節レビューリンクを組み立てられるようにする。
+ */
+const resolveSeasonalReviewParentId = async (lang: "ja" | "en"): Promise<number | null> => {
+  const parentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
+  if (parentRaw && /^\d+$/.test(parentRaw)) return Number(parentRaw);
+  const parent = await getPageBySlug(WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG, lang);
+  return parent?.id ?? null;
+};
+
+/**
+ * TOP の特集枠に固定ページを出す際のリンク先を決める。
+ * 季節レビュー親ページの子は通常固定ページ直下ではなく `/seasonal-reviews/{slug}` に正規化する。
+ */
+const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalParentId: number | null): string => {
+  if (seasonalParentId && page.parent === seasonalParentId) {
+    return `${SEASONAL_REVIEWS_BASE_PATH}/${page.slug}`;
+  }
+  return `/${page.slug}`;
+};
 
 /**
  * 環境変数などの「カンマ区切り URL リスト」をトリム分割し、空要素を除いた配列にする。
@@ -177,7 +201,7 @@ const parseCommaList = (raw: string | undefined): string[] | undefined => {
  * TOP ページ（`HomeTemplate`）向けに、WordPress から必要データを並列取得して `HomeTemplateProps` を組み立てる。
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
- * アニメ枠・おすすめ（タグ）・季節レビュー・特集・VOD ブロック・任意の埋め込み用 URL を含む。
+ * アニメ枠・おすすめ（タグ）・特集・VOD ブロック・Facebook タイムライン埋め込み・任意の追加スクリプトを含む。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
@@ -185,7 +209,6 @@ const parseCommaList = (raw: string | undefined): string[] | undefined => {
 export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplateProps> => {
   const lang = locale === "en" ? "en" : "ja";
   const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie";
-  const seasonalParentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
@@ -211,8 +234,9 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
 
   const animeCategoryId = resolveAnimeCategoryMeta(categories)?.id;
+  const seasonalParentId = await resolveSeasonalReviewParentId(lang);
 
-  const [animeRaw, movieCategory, recommendBlockRows, seasonalChildren, featuredPages] = await Promise.all([
+  const [animeRaw, movieCategory, recommendBlockRows, featuredPages] = await Promise.all([
     animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId, lang }) : Promise.resolve([]),
     getCategoryBySlug(movieSlug, lang),
     Promise.all(
@@ -225,9 +249,6 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
         } satisfies RecommendBlock;
       }),
     ),
-    seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
-      ? getChildPages(Number(seasonalParentRaw), lang)
-      : Promise.resolve([]),
     getFeaturedPages(lang),
   ]);
 
@@ -238,7 +259,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     label: "FEATURED",
     title: stripHtml(p.title.rendered),
     description: stripHtml(p.title.rendered),
-    href: `/${p.slug}`,
+    href: getFeaturedPageHref(p, seasonalParentId),
     isPrimary: i === 0,
   }));
 
@@ -251,9 +272,11 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const featuredItems =
     featuredItemsFromPages.length > 0 ? featuredItemsFromPages : toFeaturedItems(featuredSource);
 
-  const seasonItems = mapWpPagesToSeasonItems(seasonalChildren);
-
-  const facebookTimelineEmbedUrl = process.env.NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL?.trim() || undefined;
+  const envFacebookEmbed = process.env.NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL?.trim();
+  const facebookTimelineEmbedUrl =
+    envFacebookEmbed && envFacebookEmbed.length > 0
+      ? envFacebookEmbed
+      : buildDefaultFacebookPagePluginSrc();
   const homeAdScriptSrcs = parseCommaList(process.env.NEXT_PUBLIC_HOME_EXTRA_SCRIPT_SRCS);
 
   return {
@@ -265,9 +288,8 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     highScorePosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromConfig(),
-    seasonItems,
     featuredItems,
-    ...(facebookTimelineEmbedUrl ? { facebookTimelineEmbedUrl } : {}),
+    facebookTimelineEmbedUrl,
     ...(homeAdScriptSrcs ? { homeAdScriptSrcs } : {}),
   };
 };

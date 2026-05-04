@@ -30,6 +30,9 @@ export {
 } from "./endpoints/genre";
 export type { WPGenreTerm } from "./endpoints/genre";
 
+export { getVodTermBySlug, getVodTerms } from "./endpoints/vodTaxonomy";
+export type { WPVodTerm } from "./endpoints/vodTaxonomy";
+
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
 export {
@@ -47,5 +50,4 @@ export {
 } from "./transform";
 export type { NormalizedPageContent, PostTaxonomyLink } from "./transform";
 
-export { WPPostSchema, WPCategorySchema, WPTagSchema, WPEmbeddedSchema, parseWPPost } from "./schema";
 export type { ParsedWPPost } from "./schema";

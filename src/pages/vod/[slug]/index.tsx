@@ -1,7 +1,7 @@
-// ISR: revalidate 60s — 映画カテゴリ記事一覧（/movie, /en/movie）。2 ページ目以降は ?page=N（内部 rewrite で page/[page].tsx）
+// ISR: revalidate 60s — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import type { GetStaticProps } from 'next';
+import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import {
   formatListPageCategoryDescription,
@@ -10,8 +10,10 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { CATEGORY_LIST_PER_PAGE } from '@/libs/listFilters';
-import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
+import {
+  VOD_ARCHIVE_LIST_PER_PAGE,
+  loadVodArchivePage,
+} from '@/libs/loadVodArchivePage';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,
@@ -20,11 +22,13 @@ import {
   getUrlParamsFromListFilter,
   paginatePosts,
 } from '@/libs/listFilters';
-import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
+import { VOD_ARCHIVE_PATH_SLUGS } from '@/libs/vodPathToWpSlug';
+import { getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
 
-type MovieIndexProps = {
+type VodSlugIndexProps = {
   categoryName: string;
+  pathSlug: string;
   posts: Post[];
   allPosts: FilterPost[];
   currentPage: number;
@@ -32,13 +36,14 @@ type MovieIndexProps = {
   locale: string;
 };
 
-const MovieIndexPage = ({
+const VodSlugIndexPage = ({
   categoryName,
+  pathSlug,
   posts,
   allPosts,
   currentPage,
   locale,
-}: MovieIndexProps) => {
+}: VodSlugIndexProps) => {
   const router = useRouter();
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
@@ -46,16 +51,19 @@ const MovieIndexPage = ({
   const filteredIds = paginatePosts(
     filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }),
     currentPage,
-    CATEGORY_LIST_PER_PAGE,
+    VOD_ARCHIVE_LIST_PER_PAGE,
   ).map((p) => p.id);
   const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = Math.max(1, Math.ceil(
-    filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }).length / CATEGORY_LIST_PER_PAGE,
-  ));
+  const filteredTotalPages = Math.max(
+    1,
+    Math.ceil(
+      filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }).length / VOD_ARCHIVE_LIST_PER_PAGE,
+    ),
+  );
   const loc = normalizeRouteLocale(locale) as Locale;
 
   const getArchiveUrl = (page: number, filter?: string) => {
-    const base = getPostTypeArchiveUrl({ type: 'movie', lang: loc, page });
+    const base = getVodArchiveUrl(pathSlug, loc, page);
     const params = new URLSearchParams();
     const nextParams = filter ? getUrlParamsFromListFilter(filter) : undefined;
     const nextSortFilter = nextParams?.filter ?? sortFilter;
@@ -93,22 +101,38 @@ const MovieIndexPage = ({
         currentPage={currentPage}
         totalPages={filteredTotalPages}
         onPageChange={handlePageChange}
+        vodHubBreadcrumb
       />
     </I18nProvider>
   );
 };
 
-export default MovieIndexPage;
+export default VodSlugIndexPage;
 
-export const getStaticProps: GetStaticProps<MovieIndexProps> = async ({ locale }) => {
+export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
+  const locs = (locales ?? ['ja', 'en']).filter((l) => l !== 'default');
+  const pathLocales = locs.length > 0 ? locs : ['ja', 'en'];
+  const paths: { params: { slug: string }; locale: string }[] = [];
+  for (const loc of pathLocales) {
+    for (const slug of VOD_ARCHIVE_PATH_SLUGS) {
+      paths.push({ params: { slug }, locale: loc });
+    }
+  }
+  return { paths, fallback: 'blocking' };
+};
+
+export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params, locale }) => {
+  const slug = typeof params?.slug === 'string' ? params.slug : undefined;
+  if (slug === undefined) return { notFound: true };
+
   const currentLocale = normalizeRouteLocale(locale);
-  const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? 'movie';
-  const data = await loadCategoryListPage(movieSlug, currentLocale, 1);
+  const data = await loadVodArchivePage(slug, currentLocale, 1);
   if ('notFound' in data) return { notFound: true };
 
   return {
     props: {
       categoryName: data.categoryName,
+      pathSlug: data.pathSlug,
       posts: data.posts,
       allPosts: data.allPosts,
       currentPage: data.currentPage,

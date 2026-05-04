@@ -10,6 +10,7 @@ type WPPageWithAcf = {
   slug: string;
   title: { rendered: string };
   link?: string;
+  parent?: number;
   acf?: {
     display_settings?: {
       is_featured?: boolean;
@@ -24,7 +25,7 @@ const BASE_URL = process.env.WP_API_URL?.replace(/\/+$/, "") ?? "";
 /** ACF の `display_settings.is_featured` が真のページのみ返す（生 `fetch`）。 */
 export const getFeaturedPages = async (lang?: string): Promise<WPPageWithAcf[]> => {
   if (!BASE_URL) return [];
-  const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,acf" });
+  const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,parent,acf" });
   if (lang) params.set("lang", lang);
   try {
     const res = await fetch(`${BASE_URL}/pages?${params.toString()}`);
@@ -78,7 +79,7 @@ const fetchPages = async (
   return null;
 };
 
-/** 指定親ページ ID の子ページをメニュー順で取得する。 */
+/** 指定親ページ ID の子ページをメニュー順で取得する。`ja` 取得が空なら言語指定なしで再取得する。 */
 export const getChildPages = async (
   parentId: number,
   lang?: string,
@@ -91,10 +92,18 @@ export const getChildPages = async (
     order: "asc",
     ...(lang ? { lang: lang as "ja" | "en" } : {}),
   };
-  return (await fetchPages(q, options)) ?? [];
+  const pages = (await fetchPages(q, options)) ?? [];
+  if (pages.length > 0 || lang !== "ja") return pages;
+  const fallbackQuery: PagesQuery = {
+    parent: parentId,
+    per_page: 100,
+    orderby: "menu_order",
+    order: "asc",
+  };
+  return (await fetchPages(fallbackQuery, options)) ?? [];
 };
 
-/** スラッグで固定ページ 1 件。見つからなければ `null`。 */
+/** スラッグで固定ページ 1 件を取得する。`ja` 取得が空なら言語指定なしで再取得し、それでも無ければ `null`。 */
 export const getPageBySlug = async (
   slug: string,
   lang?: string,
@@ -102,5 +111,8 @@ export const getPageBySlug = async (
 ): Promise<WPPage | null> => {
   const q: PagesQuery = { slug, ...(lang ? { lang: lang as "ja" | "en" } : {}) };
   const pages = await fetchPages(q, options);
-  return pages?.[0] ?? null;
+  const page = pages?.[0] ?? null;
+  if (page || lang !== "ja") return page;
+  const fallbackPages = await fetchPages({ slug }, options);
+  return fallbackPages?.[0] ?? null;
 };

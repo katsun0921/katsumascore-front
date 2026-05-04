@@ -6,6 +6,7 @@ import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getChildPages, getPageBySlug, normalizePageContent } from '@/libs/api/wordpress';
+import { resolveSeasonalReviewParentId } from './index';
 
 type SeasonalDetailProps = {
   title: string;
@@ -34,13 +35,10 @@ export default SeasonalDetailPage;
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths: { params: { slug: string }; locale: string }[] = [];
-  const parentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
-  if (!parentRaw || !/^\d+$/.test(parentRaw)) {
-    return { paths: [], fallback: 'blocking' };
-  }
-  const parentId = Number(parentRaw);
   for (const loc of locales) {
     const lang = loc === 'en' ? 'en' : 'ja';
+    const parentId = await resolveSeasonalReviewParentId(lang);
+    if (!parentId) continue;
     const children = await getChildPages(parentId, lang);
     for (const p of children) {
       paths.push({ params: { slug: p.slug }, locale: loc });

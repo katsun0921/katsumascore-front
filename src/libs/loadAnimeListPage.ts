@@ -4,10 +4,11 @@
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
 import { toSerializableValue } from "@/utils/toSerializableValue";
+import { ANIME_LIST_PER_PAGE } from "@/libs/listFilters";
 import type { FilterPost, Post } from "@/types/post";
 import type { WPCategory, WPPost } from "@/types/wordpress";
 
-export const ANIME_LIST_PER_PAGE = 12;
+export { ANIME_LIST_PER_PAGE } from "@/libs/listFilters";
 
 export type AnimeListPageResult =
   | { notFound: true }

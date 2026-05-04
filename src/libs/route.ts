@@ -73,6 +73,24 @@ export const getTaxonomyUrl = (taxonomy: TaxonomyType, slug: string, lang = DEFA
 export const getEntityUrl = (type: EntityType, slug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/${type}/${slug}`;
 
+/** VOD ハブ（サービス一覧）のパス（例: `/ja/vod`）。 */
+export const getVodHubPath = (lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/vod`;
+
+/** VOD 一覧の基底パス（例: `/ja/vod/netflix`）。 */
+export const getVodArchivePath = (pathSlug: string, lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/vod/${pathSlug}`;
+
+/**
+ * VOD 別記事一覧の URL。1 ページ目はクエリなし、2 ページ目以降は公開 URL を `?page=N` とし、
+ * middleware で `/[lang]/vod/[slug]/page/N` に rewrite する。
+ */
+export const getVodArchiveUrl = (pathSlug: string, lang = DEFAULT_LOCALE, page = 1): string => {
+  const base = getVodArchivePath(pathSlug, lang);
+  if (page <= 1) return base;
+  return `${base}?${new URLSearchParams({ page: String(page) }).toString()}`;
+};
+
 /** WP カテゴリスラッグから PostType を解決する。未マッピングは `movie`。 */
 export const resolvePostType = (categorySlug: string | undefined): PostType =>
   (categorySlug !== undefined ? WP_CATEGORY_TO_POST_TYPE[categorySlug] : undefined) ?? 'movie';

@@ -16,4 +16,6 @@ export type ListTemplateProps = {
   onPageChange?: (page: number) => void;
   isLoading?: boolean;
   sidebar?: SidebarProps;
+  /** `true` のときパンくずを `ホーム / VOD / （サービス名）` とする（VOD 別一覧向け）。 */
+  vodHubBreadcrumb?: boolean;
 };

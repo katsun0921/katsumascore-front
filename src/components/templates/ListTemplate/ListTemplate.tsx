@@ -8,6 +8,7 @@ import { Pagination } from '@/components/features/Pagination';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { getPostTaxonomyFilterOptionRows } from '@/libs/listFilters';
+import { getVodHubPath } from '@/libs/route';
 import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
 
@@ -25,6 +26,7 @@ export const ListTemplate = ({
   onPageChange,
   isLoading = false,
   sidebar,
+  vodHubBreadcrumb = false,
 }: ListTemplateProps) => {
   const locale = useLocale();
 
@@ -51,8 +53,13 @@ export const ListTemplate = ({
   const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
   const resolvedFilterOptionRows = filterOptions ? [filterOptions] : defaultFilterOptionRows;
 
+  const vodMid =
+    vodHubBreadcrumb ?
+      [{ label: t(messages, ['breadcrumb', 'vod'], locale), href: getVodHubPath(locale) }]
+    : [];
   const breadcrumbItems = [
     { label: t(messages, ['breadcrumb', 'home'], locale), href: '/' },
+    ...vodMid,
     { label: categoryName },
   ];
 

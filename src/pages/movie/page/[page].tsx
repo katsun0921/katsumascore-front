@@ -10,7 +10,8 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { CATEGORY_LIST_PER_PAGE, loadCategoryListPage } from '@/libs/loadCategoryListPage';
+import { CATEGORY_LIST_PER_PAGE } from '@/libs/listFilters';
+import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,

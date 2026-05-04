@@ -10,7 +10,8 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { ANIME_LIST_PER_PAGE, loadAnimeListPage } from '@/libs/loadAnimeListPage';
+import { ANIME_LIST_PER_PAGE } from '@/libs/listFilters';
+import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,

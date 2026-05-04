@@ -4,6 +4,10 @@
  */
 import type { FilterPost, PostTaxonomy } from '@/types/post';
 
+/** アニメ・映画・ドラマ一覧のクライアント側ページネーション単位（サーバー側の per_page と一致させる） */
+export const ANIME_LIST_PER_PAGE = 12;
+export const CATEGORY_LIST_PER_PAGE = 13;
+
 export type ListFilterOption = {
   label: string;
   value: string;

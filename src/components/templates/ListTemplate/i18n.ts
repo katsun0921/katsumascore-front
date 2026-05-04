@@ -3,6 +3,7 @@ import { t, type Locale } from '@/i18n/t';
 export const messages = {
   breadcrumb: {
     home: { ja: 'ホーム', en: 'Home' },
+    vod: { ja: 'VOD', en: 'VOD' },
   },
   category: {
     label: { ja: 'カテゴリ', en: 'Category' },
