@@ -101,6 +101,7 @@ export const PostHero = (props: PostHeroProps) => {
             alt=''
             fill
             sizes='(min-width: 768px) 30vw, 100vw'
+            priority
             className={`${prefixClassName}__poster-img`}
           />
         ) : (

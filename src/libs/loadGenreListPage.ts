@@ -1,3 +1,4 @@
+/** `/genre/...` アーカイブ一覧は現状常に 404 を返すスタブ。 */
 // `/genre/...` アーカイブは 404
 import type { Post } from "@/types/post";
 
@@ -13,8 +14,14 @@ export type GenreListPageResult =
       totalPages: number;
     };
 
+/** 常に `{ notFound: true }` を返す。 */
 export const loadGenreListPage = async (
   _slug: string,
   _locale: string,
   _page: number,
-): Promise<GenreListPageResult> => ({ notFound: true });
+): Promise<GenreListPageResult> => {
+  void _slug;
+  void _locale;
+  void _page;
+  return { notFound: true };
+};

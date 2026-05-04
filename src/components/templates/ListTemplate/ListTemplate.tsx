@@ -106,7 +106,7 @@ export const ListTemplate = ({
         <div className='space-y-8'>
           {posts.length > 0 && !isLoading && (
             <div className='flex flex-col gap-3 lg:gap-4'>
-              {leadPost && <PostCardImgLeft post={leadPost} />}
+              {leadPost && <PostCardImgLeft post={leadPost} priority />}
               {gridPosts.length > 0 && (
                 <ol className='m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4 lg:gap-4'>
                   {gridPosts.map((item) => (

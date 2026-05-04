@@ -11,9 +11,10 @@ type Props = {
   rank?: number;
   className?: string;
   highlightKeyword?: string;
+  priority?: boolean;
 };
 
-export const PostCardImgLeft = ({ post, rank, className, highlightKeyword }: Props) => (
+export const PostCardImgLeft = ({ post, rank, className, highlightKeyword, priority }: Props) => (
   <PostCardContainer className={className}>
     <Link
       href={post.slug}
@@ -21,7 +22,7 @@ export const PostCardImgLeft = ({ post, rank, className, highlightKeyword }: Pro
       className='relative grid grid-cols-[minmax(120px,30%)_minmax(0,1fr)] items-stretch text-inherit'
     >
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
-      <PostCardMedia image={post.image} title={post.title} className='min-h-full' />
+      <PostCardMedia image={post.image} title={post.title} className='min-h-full' priority={priority} />
       <PostCardBody
         publishedAt={post.publishedAt}
         title={post.title}

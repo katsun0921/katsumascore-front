@@ -5,5 +5,6 @@ export type PostCardMediaProps = {
   title: string;
   className?: string;
   sizes?: string;
+  priority?: boolean;
   children?: ReactNode;
 };

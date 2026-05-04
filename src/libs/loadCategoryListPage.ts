@@ -1,6 +1,10 @@
+/**
+ * 任意カテゴリ（スラッグ指定）の記事一覧ページ用データ取得。
+ */
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
-import type { Post } from "@/types/post";
+import { toSerializableValue } from "@/utils/toSerializableValue";
+import type { FilterPost, Post } from "@/types/post";
 import type { WPPost } from "@/types/wordpress";
 
 export const CATEGORY_LIST_PER_PAGE = 13;
@@ -11,11 +15,12 @@ export type CategoryListPageResult =
       categoryName: string;
       slug: string;
       posts: Post[];
-      allPosts: Post[];
+      allPosts: FilterPost[];
       currentPage: number;
       totalPages: number;
     };
 
+/** カテゴリ `slug` の一覧をページ分割して返す。存在しないカテゴリやページ範囲外は `notFound`。 */
 export const loadCategoryListPage = async (
   slug: string,
   locale: string,
@@ -47,11 +52,21 @@ export const loadCategoryListPage = async (
   if (safePage > totalPages) return { notFound: true };
   const start = (safePage - 1) * CATEGORY_LIST_PER_PAGE;
 
+  const allPosts: FilterPost[] = normalizedPosts.map(({ id, slug, score, publishedAt, vods, genres, tags }) => ({
+    id,
+    slug,
+    score: score ?? null,
+    publishedAt,
+    vods: vods ?? null,
+    genres: genres ?? null,
+    tags: tags ?? null,
+  }));
+
   return {
     categoryName: category.name,
     slug: category.slug,
-    posts: normalizedPosts.slice(start, start + CATEGORY_LIST_PER_PAGE),
-    allPosts: normalizedPosts,
+    posts: toSerializableValue(normalizedPosts.slice(start, start + CATEGORY_LIST_PER_PAGE)),
+    allPosts: toSerializableValue(allPosts),
     currentPage: safePage,
     totalPages,
   };

@@ -2,7 +2,7 @@
  * 一覧ページのクエリ（`filter` / `genre` / `tag`）と、UI・クライアント側で使う
  * フィルター値文字列の相互変換、および投稿配列の絞り込み・ページングをまとめる。
  */
-import type { Post, PostTaxonomy } from '@/types/post';
+import type { FilterPost, PostTaxonomy } from '@/types/post';
 
 export type ListFilterOption = {
   label: string;
@@ -83,11 +83,11 @@ export const getUrlParamsFromListFilter = (filter: string): { filter?: StableFil
 };
 
 /** 投稿が、指定スラッグのタクソノミー（ジャンルまたはタグ）を少なくとも1つ持つか。 */
-const hasTaxonomySlug = (items: PostTaxonomy[] | undefined, slug: string): boolean =>
+const hasTaxonomySlug = (items: PostTaxonomy[] | null | undefined, slug: string): boolean =>
   items?.some((item) => item.slug === slug) ?? false;
 
 /** 1つのフィルター値に応じて投稿を並べ替え、またはタクソノミー・配信有無で絞り込む。元配列は変更しない（ソート時はコピー）。 */
-export const filterPostsByListFilter = (posts: Post[], filter: string): Post[] => {
+export const filterPostsByListFilter = <T extends FilterPost>(posts: T[], filter: string): T[] => {
   if (filter === 'score') return [...posts].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
   if (filter === 'new') return [...posts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
   if (filter === 'streaming') return posts.filter((post) => (post.vods?.length ?? 0) > 0);
@@ -102,10 +102,10 @@ export const filterPostsByListFilter = (posts: Post[], filter: string): Post[] =
 };
 
 /** ソート用フィルターとタクソノミー用フィルターを順に適用する。タクソノミーが無い場合はソートのみ。 */
-export const filterPostsByListFilters = (
-  posts: Post[],
+export const filterPostsByListFilters = <T extends FilterPost>(
+  posts: T[],
   filters: { sortFilter: StableFilterValue; taxonomyFilter?: string },
-): Post[] => {
+): T[] => {
   const taxonomyFilteredPosts = filters.taxonomyFilter
     ? filterPostsByListFilter(posts, filters.taxonomyFilter)
     : posts;
@@ -113,7 +113,7 @@ export const filterPostsByListFilters = (
 };
 
 /** 1 始まりのページ番号とページあたり件数で、`posts` の該当スライスを返す。不正なページ番号は 1 ページ目として扱う。 */
-export const paginatePosts = (posts: Post[], page: number, perPage: number): Post[] => {
+export const paginatePosts = <T extends FilterPost>(posts: T[], page: number, perPage: number): T[] => {
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
   const start = (safePage - 1) * perPage;
   return posts.slice(start, start + perPage);
@@ -121,7 +121,7 @@ export const paginatePosts = (posts: Post[], page: number, perPage: number): Pos
 
 /** 投稿集合から、指定種別のタクソノミーを重複なく走査し、`ListFilterOption` の配列にする。 */
 const collectTaxonomyFilterOptions = (
-  posts: Post[],
+  posts: FilterPost[],
   type: TaxonomyFilterType,
   labelPrefix: string,
 ): ListFilterOption[] => {
@@ -147,7 +147,7 @@ const collectTaxonomyFilterOptions = (
 
 /** ジャンル・タグのフィルター候補を、ラベル接頭辞付きで1本の配列にまとめて返す（UI のセレクト等向け）。 */
 export const getPostTaxonomyFilterOptions = (
-  posts: Post[],
+  posts: FilterPost[],
   labels: { genre: string; tag: string },
 ): ListFilterOption[] => [
   ...collectTaxonomyFilterOptions(posts, 'genre', labels.genre),
@@ -156,7 +156,7 @@ export const getPostTaxonomyFilterOptions = (
 
 /** ジャンル行・タグ行を別配列にした 2 次元配列。空の行は除く（行ごとの UI 向け）。 */
 export const getPostTaxonomyFilterOptionRows = (
-  posts: Post[],
+  posts: FilterPost[],
   labels: { genre: string; tag: string },
 ): ListFilterOption[][] => [
   collectTaxonomyFilterOptions(posts, 'genre', labels.genre),

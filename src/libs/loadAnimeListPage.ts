@@ -1,6 +1,10 @@
+/**
+ * アニメカテゴリ記事一覧ページ用。WP から全ページ取得後に正規化し、クライアント用フィルター向けに軽量行も返す。
+ */
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
-import type { Post } from "@/types/post";
+import { toSerializableValue } from "@/utils/toSerializableValue";
+import type { FilterPost, Post } from "@/types/post";
 import type { WPCategory, WPPost } from "@/types/wordpress";
 
 export const ANIME_LIST_PER_PAGE = 12;
@@ -10,7 +14,7 @@ export type AnimeListPageResult =
   | {
       categoryName: string;
       posts: Post[];
-      allPosts: Post[];
+      allPosts: FilterPost[];
       currentPage: number;
       totalPages: number;
     };
@@ -34,6 +38,7 @@ export const resolveAnimeCategoryMeta = (
   return undefined;
 };
 
+/** アニメ一覧の 1 ページ分と全件サマリ・ページ情報を取得する。カテゴリ解決失敗やページ範囲外は `notFound`。 */
 export const loadAnimeListPage = async (
   locale: string,
   page: number,
@@ -63,10 +68,20 @@ export const loadAnimeListPage = async (
   if (safePage > totalPages) return { notFound: true };
   const start = (safePage - 1) * ANIME_LIST_PER_PAGE;
 
+  const allPosts: FilterPost[] = normalizedPosts.map(({ id, slug, score, publishedAt, vods, genres, tags }) => ({
+    id,
+    slug,
+    score: score ?? null,
+    publishedAt,
+    vods: vods ?? null,
+    genres: genres ?? null,
+    tags: tags ?? null,
+  }));
+
   return {
     categoryName: meta.name,
-    posts: normalizedPosts.slice(start, start + ANIME_LIST_PER_PAGE),
-    allPosts: normalizedPosts,
+    posts: toSerializableValue(normalizedPosts.slice(start, start + ANIME_LIST_PER_PAGE)),
+    allPosts: toSerializableValue(allPosts),
     currentPage: safePage,
     totalPages,
   };

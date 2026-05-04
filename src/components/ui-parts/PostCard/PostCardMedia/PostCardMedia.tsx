@@ -7,6 +7,7 @@ export const PostCardMedia = ({
   title,
   className,
   sizes = DEFAULT_SIZES,
+  priority = false,
   children,
 }: PostCardMediaProps) => {
   return (
@@ -17,6 +18,7 @@ export const PostCardMedia = ({
           alt={`${title}のサムネイル画像`}
           fill
           sizes={sizes}
+          priority={priority}
           className='postCard__image'
         />
       ) : (
