@@ -1,0 +1,57 @@
+# main への push（マージ完了後）で Cloudflare Workers へデプロイする。
+#
+# 必要な GitHub Secrets（Repository settings → Secrets and variables → Actions）:
+#   CLOUDFLARE_API_TOKEN  — Workers デプロイ権限付き API トークン
+#   WP_API_URL            — 本番 WordPress REST ベース（末尾スラッシュなし）
+#   NEXT_PUBLIC_WP_BASE_URL
+#   NEXT_PUBLIC_SITE_URL  — 本番のこのフロントの URL（workers.dev またはカスタムドメイン）
+#   NEXT_PUBLIC_SITE_NAME
+#
+# 任意:
+#   CLOUDFLARE_ACCOUNT_ID
+#
+# 季節レビュー親スラッグ・カテゴリスラッグ・genre/vod の REST パスはコード固定（`src/config/wpContent.config.ts`）。
+#
+# Worker 上のシークレット（REVALIDATE_SECRET 等）は wrangler secret で登録済みのものが
+# デプロイ後も引き続き使われます（このワークフローで毎回上書きはしません）。
+
+name: Deploy Cloudflare Workers
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-workers-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WP_API_URL: ${{ secrets.WP_API_URL }}
+          NEXT_PUBLIC_WP_BASE_URL: ${{ secrets.NEXT_PUBLIC_WP_BASE_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME }}
+        run: npm run deploy

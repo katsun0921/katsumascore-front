@@ -1,26 +1,344 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Kaisei+Tokumin:wght@400;500;700&family=Rampart+One&family=Yusei+Magic&display=swap");
 @import "tailwindcss";
+@import "./reset.css" layer(base);
+@import "./generated/breakpoints.css";
+
+@theme inline {
+  --layout-width-lg: 768px;
+}
+
+/* ─── globals.css 運用ルール ─────────────────────────────────────
+   このファイルに書いてよいもの:
+     - @import / @theme
+     - :root（CSS変数）
+     - 要素セレクタのリセット・ベーススタイル（html, body, h1, a …）
+     - 属性セレクタ（input[type="search"] など）
+     - 言語セレクタ（:lang(ja) など）
+
+   禁止:
+     - クラスセレクタ（.foo { }）→ コンポーネントの SCSS に書く
+   ─────────────────────────────────────────────────────────────── */
+
+/* ─── Breakpoints ───────────────────────────────────────────────
+   src/styles/tokens/breakpoints.json を正本として自動生成する。
+   現在の切り替えは SP ファーストの 1 点のみで、`lg = 768px`。
+   CSS 側は ./generated/breakpoints.css を import し、
+   SCSS 側は global/variable/_breakpoints.scss を参照する。
+   ─────────────────────────────────────────────────────────────── */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --layout-width-lg: 768px;
+  --measure-readable: 40rem;
+
+  /* Brand */
+  --color-primary: #2563eb;
+  --color-secondary: #1e1b4b;
+  --color-accent: #6d28d9;
+  --color-accent-strong: #ff2dfc;
+
+  /* Derived UI */
+  --color-header: var(--color-secondary);
+  --color-navigation: var(--color-secondary);
+  --color-footer: #0e011c;
+
+  /* Background */
+  --color-bg: #ffffff;
+  --color-bg-muted: #f3f4f6;
+  --color-surface: #f7f7f7;
+  --color-bg-dark: #0a0618;
+  --color-surface-dark: #1a1030;
+
+  /* Text */
+  --color-text-primary: #111827;
+  --color-text-secondary: #6b7280;
+  --color-text-inverse: #ffffff;
+  --color-text-muted: #616161;
+
+  /* Border */
+  --color-border: #d1d5db;
+  --color-border-muted: #e0e0e0;
+  --color-border-soft: rgba(var(--color-black-rgb), 0.1);
+
+  /* Score */
+  --color-score-bg: #14082e;
+  --color-score-accent: #ff2dfc;
+  --color-score-rank-low: #64748b;
+  --color-score-rank-mid: #2563eb;
+  --color-score-rank-high: #c026d3;
+
+  /* Highlight */
+  --color-highlight-bg: #fefce8;
+  --color-highlight-mark: #fef08a;
+
+  /* Product */
+  --color-product-vod: #4caf50;
+  --color-product-commerce: #ff9800;
+
+  /* Misc */
+  --color-primary-dark: #1e40af;
+  --color-accent-yellow: #eab308;
+  --color-heading-gradient-start: #667eea;
+  --color-heading-gradient-end: #764ba2;
+  --color-heading-gold-start: #ffd700;
+  --color-heading-gold-end: #ffed4e;
+  --color-black: #000000;
+  --color-bg-code: #111827;
+
+  /* Service */
+  --color-netflix: #e50914;
+  --color-amazon: #00a8e1;
+  --color-amazon-shopping: #ff9900;
+  --color-hulu: #1ce783;
+  --color-rakuten: #bf0000;
+  --color-unext: #1a1a1a;
+  --color-disney: #113ccf;
+  --color-dmmtv: #ff4b00;
+  --color-abema: #00bcd4;
+  --color-appletv: #555555;
+  --color-youtube: #ff0000;
+  --color-tsutaya: #003087;
+  --color-geo: #0066cc;
+  --color-imdb: #f5c518;
+  --color-rt: #fa320a;
+  --color-filmarks: #3a7bd5;
+  --color-eiga-com: #e8562a;
+
+  /* Social */
+  --color-twitter: #1da1f2;
+  --color-x: #000000;
+  --color-facebook: #1877f2;
+  --color-instagram: #e1306c;
+  --color-line: #06c755;
+  --color-rss: #ec7c1c;
+
+  /* RGB channel variables for alpha color compositions */
+  --color-primary-rgb: 37, 99, 235;
+  --color-secondary-rgb: 30, 27, 75;
+  --color-white-rgb: 255, 255, 255;
+  --color-black-rgb: 0, 0, 0;
+  --color-text-primary-rgb: 17, 24, 39;
+  --color-text-secondary-rgb: 107, 114, 128;
+  --color-bg-muted-rgb: 243, 244, 246;
+  --color-surface-rgb: 247, 247, 247;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ─── Spacing Tokens ───────────────────────────────────────────────
+     名前は実寸（px）に対応。コンポーネントは必ずこの token を使う。
+     直接値（padding: 16px, p-[16px]など）の使用は禁止。
+     ─────────────────────────────────────────────────────────────── */
+  --space-0: 0px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+
+  /* ─── Size Tokens ──────────────────────────────────────────────── */
+  --size-post-card-overlay-height: 320px;
+  --size-header-inner-max: 800px;
+
+  /* ─── Font Size Tokens ─────────────────────────────────────────
+     PC / SP分離。コンポーネントは必ずこのtokenを使う。
+     直接値（font-size: 16px, text-[16px]など）の使用は禁止。
+     ─────────────────────────────────────────────────────────────── */
+  --font-size-title: clamp(32px, 4vw, 48px);
+  --font-size-h1: clamp(24px, 3vw, 32px);
+  --font-size-h2: clamp(20px, 2.5vw, 24px);
+  --font-size-h3: clamp(18px, 2vw, 20px);
+  --font-size-body: clamp(14px, 1.2vw, 16px);
+  --font-size-ui: clamp(12px, 1vw, 14px);
+  --font-size-caption: clamp(10px, 0.8vw, 12px);
+
+  /* ScoreWithRank ヒーロー（ランク数字・画像重なり） */
+  --score-scale: clamp(72px, 8vw, 96px);
+  --font-size-score-hero-int: var(--score-scale);
+  --font-size-score-hero-decimal: calc(var(--score-scale) * 0.625);
+  --size-score-rank-badge: var(--score-scale);
+
+  /* ランク画像と重なる数字の縁取り（ページ地色と揃え、必要なら上書き） */
+  --color-score-hero-text-halo: var(--color-bg);
+
+  /* 白系の二重 shadow（トークン化: white / rgb(255,255,255) に相当） */
+  --shadow-score-hero-text: 1px 1px 2px var(--color-score-hero-text-halo),
+    1px 1px 4px var(--color-score-hero-text-halo);
+
+  /* ScoreWithRank: スコア数字を若干下へ */
+  --offset-score-hero-text-y: var(--space-16);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-background: var(--color-bg);
+  --color-foreground: var(--color-text-primary);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Brand */
+  --color-primary: var(--color-primary);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-accent-strong: var(--color-accent-strong);
+
+  /* Derived UI */
+  --color-header: var(--color-header);
+  --color-navigation: var(--color-navigation);
+  --color-footer: var(--color-footer);
+
+  /* Background */
+  --color-bg: var(--color-bg);
+  --color-bg-muted: var(--color-bg-muted);
+  --color-surface: var(--color-surface);
+  --color-bg-dark: var(--color-bg-dark);
+  --color-surface-dark: var(--color-surface-dark);
+  --color-color-bg: var(--color-bg);
+  --color-color-bg-muted: var(--color-bg-muted);
+
+  /* Text */
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-inverse: var(--color-text-inverse);
+  --color-text-muted: var(--color-text-muted);
+  --color-color-primary: var(--color-text-primary);
+  --color-color-secondary: var(--color-text-secondary);
+  --color-color-muted: var(--color-text-muted);
+  --color-color-inverse: var(--color-text-inverse);
+
+  /* Border */
+  --color-border: var(--color-border);
+  --color-border-muted: var(--color-border-muted);
+  --color-border-soft: var(--color-border-soft);
+  --color-color-border: var(--color-border);
+  --color-color-border-muted: var(--color-border-muted);
+  --color-color-border-soft: var(--color-border-soft);
+
+  /* Score */
+  --color-score-bg: var(--color-score-bg);
+  --color-score-accent: var(--color-score-accent);
+  --color-score-rank-low: var(--color-score-rank-low);
+  --color-score-rank-mid: var(--color-score-rank-mid);
+  --color-score-rank-high: var(--color-score-rank-high);
+  --color-score-hero-text-halo: var(--color-score-hero-text-halo);
+
+  /* Highlight */
+  --color-highlight-bg: var(--color-highlight-bg);
+  --color-highlight-mark: var(--color-highlight-mark);
+
+  /* Product */
+  --color-product-vod: var(--color-product-vod);
+  --color-product-commerce: var(--color-product-commerce);
+
+  /* Misc */
+  --color-primary-dark: var(--color-primary-dark);
+  --color-accent-yellow: var(--color-accent-yellow);
+  --color-heading-gradient-start: var(--color-heading-gradient-start);
+  --color-heading-gradient-end: var(--color-heading-gradient-end);
+  --color-heading-gold-start: var(--color-heading-gold-start);
+  --color-heading-gold-end: var(--color-heading-gold-end);
+  --color-black: var(--color-black);
+  --color-bg-code: var(--color-bg-code);
+
+  /* Service */
+  --color-netflix: var(--color-netflix);
+  --color-amazon: var(--color-amazon);
+  --color-amazon-shopping: var(--color-amazon-shopping);
+  --color-rakuten: var(--color-rakuten);
+  --color-hulu: var(--color-hulu);
+  --color-unext: var(--color-unext);
+  --color-disney: var(--color-disney);
+  --color-dmmtv: var(--color-dmmtv);
+  --color-abema: var(--color-abema);
+  --color-appletv: var(--color-appletv);
+  --color-youtube: var(--color-youtube);
+  --color-tsutaya: var(--color-tsutaya);
+  --color-geo: var(--color-geo);
+  --color-imdb: var(--color-imdb);
+  --color-rt: var(--color-rt);
+  --color-filmarks: var(--color-filmarks);
+  --color-eiga-com: var(--color-eiga-com);
+
+  /* Social */
+  --color-twitter: var(--color-twitter);
+  --color-x: var(--color-x);
+  --color-facebook: var(--color-facebook);
+  --color-instagram: var(--color-instagram);
+  --color-line: var(--color-line);
+  --color-rss: var(--color-rss);
+
+  --font-body: var(--font-body), sans-serif;
+  --font-heading: var(--font-heading), serif;
+  --font-ui: var(--font-ui), sans-serif;
+
+  /* Spacing — Tailwind p-*, m-*, gap-* で参照（数値はスケール、p-* の実寸は左の --space-{px}） */
+  --spacing-0: var(--space-0);
+  --spacing-1: var(--space-4);
+  --spacing-2: var(--space-8);
+  --spacing-3: var(--space-12);
+  --spacing-4: var(--space-16);
+  --spacing-5: var(--space-20);
+  --spacing-6: var(--space-24);
+  --spacing-8: var(--space-32);
+  --spacing-10: var(--space-40);
+  --spacing-12: var(--space-48);
+
+  /* Font Size utilities */
+  --text-h1: var(--font-size-h1);
+  --text-h2: var(--font-size-h2);
+  --text-h3: var(--font-size-h3);
+  --text-body: var(--font-size-body);
+  --text-ui: var(--font-size-ui);
+  --text-caption: var(--font-size-caption);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+:root {
+  --font-ja-body: "Noto Sans JP", system-ui, sans-serif;
+  --font-ja-heading: "Kaisei Tokumin", serif;
+  --font-accent-strong: "Rampart One", sans-serif;
+  --font-accent-soft: "Yusei Magic", sans-serif;
+  --font-en-base: "Inter", system-ui, sans-serif;
+  --font-body: var(--font-ja-body);
+  --font-heading: var(--font-ja-heading);
+  --font-ui: var(--font-en-base);
+}
+
+:lang(ja) {
+  --font-body: var(--font-ja-body);
+  --font-heading: var(--font-ja-heading);
+}
+
+:lang(en) {
+  --font-body: var(--font-en-base);
+  --font-heading: var(--font-en-base);
+}
+
+h3,
+h4 {
+  font-family: var(--font-ja-body);
+}
+
+button,
+nav {
+  font-family: var(--font-ui);
+}
+
+@keyframes heading-gold-shine {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

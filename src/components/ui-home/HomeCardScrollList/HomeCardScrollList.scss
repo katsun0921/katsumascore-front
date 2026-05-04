@@ -1,0 +1,45 @@
+.homeCardScrollList {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  &__titleRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__title {
+    color: var(--color-text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+  }
+
+  &__seeAll {
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-score-accent);
+    }
+  }
+
+  &__track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm view:*)",
+      "Bash(.env.local:*)",
+      "Bash(npx tsc:*)",
+      "Bash(for f:*)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "Bash(grep \"\\\\.scss$\")",
+      "Bash(npm run:*)",
+      "Bash(node -e ' *)",
+      "Bash(grep -v \"^$\")"
+    ]
+  }
+}

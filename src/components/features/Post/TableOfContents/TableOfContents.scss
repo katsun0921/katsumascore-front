@@ -1,0 +1,143 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.toc {
+  /* 画面上部に貼り付くバー（.toc__inner）の高さ — nav の予約高さは fixed 前に JS で計測 */
+  --toc-fixed-bar-height: 60px;
+
+  position: static;
+  z-index: 10;
+  scroll-behavior: smooth;
+
+  padding: 12px 16px;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border-subtle);
+
+  &__inner {
+    display: block;
+  }
+
+  &--fixed {
+    /* 高さは fixed 直前の展開状態を TableOfContents.tsx で inline 指定 */
+    padding: 0;
+    border-bottom: none;
+    background: transparent;
+
+    .toc__inner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      width: 100%;
+      height: var(--toc-fixed-bar-height);
+      box-sizing: border-box;
+      padding: 12px 16px;
+      padding-left: 0;
+      background: var(--color-bg);
+      border-bottom: 1px solid var(--color-border-subtle);
+    }
+
+    .toc__heading {
+      display: none;
+    }
+    .toc__list {
+      max-height: calc(1em + (var(--space-8) * 2));
+      flex-flow: row nowrap;
+      white-space: nowrap;
+      transform: translateX(calc(var(--toc-active-offset, 0px) * -1));
+      transition: transform 0.3s ease;
+    }
+    .toc__item {
+      flex: 0 0 auto;
+      min-width: auto;
+      max-width: none;
+
+      a {
+        white-space: nowrap;
+        max-width: none;
+        overflow-wrap: normal;
+      }
+    }
+  }
+  &__heading {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  &__list {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 4px 8px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    -webkit-overflow-scrolling: touch;
+
+    @include layout-md {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px 0;
+      overflow-x: visible;
+    }
+  }
+
+  &__item {
+    flex: 0 1 auto;
+    min-width: 0;
+    max-width: 100%;
+    position: relative;
+    padding: 4px 8px;
+    color: var(--color-text-secondary);
+    transition: color 0.2s ease;
+
+    a {
+      display: inline-block;
+      max-width: 100%;
+      text-decoration: none;
+      color: inherit;
+      overflow-wrap: break-word;
+    }
+
+    &:hover {
+      color: var(--color-text-primary);
+    }
+
+    &--level-2 {
+      font-weight: 500;
+
+      @include layout-md {
+        padding-left: 0;
+      }
+    }
+
+    &--level-3 {
+      font-size: 0.95em;
+      opacity: 0.85;
+
+      @include layout-md {
+        padding-left: 1em;
+      }
+    }
+
+    &--level-4 {
+      font-size: 0.9em;
+      opacity: 0.7;
+
+      @include layout-md {
+        padding-left: 2em;
+      }
+    }
+
+    &--active {
+      font-weight: 500;
+      color: var(--color-text-primary);
+      border-bottom: 2px solid var(--color-primary);
+      transition: color 0.3s ease, border-color 0.3s ease;
+
+      a {
+        color: inherit;
+      }
+    }
+  }
+}

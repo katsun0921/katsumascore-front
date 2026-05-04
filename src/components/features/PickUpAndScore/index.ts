@@ -1,0 +1,1 @@
+export { PickUpAndScore } from './PickUpAndScore';

@@ -1,0 +1,30 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.homeTemplate {
+  background: var(--color-footer);
+  min-height: 100vh;
+  color: var(--color-text-inverse);
+  // 子の最小幅（iframe 等）でグリッド列が膨らみビューポートからはみ出すのを防ぐ
+  min-width: 0;
+
+  // ── SP: 縦積み ──
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin: 0 auto;
+    min-width: 0;
+    padding-bottom: 32px;
+    padding-inline: 16px;
+
+    @include layout-md {
+      padding-bottom: 40px;
+      padding-inline: 32px;
+    }
+    // PC も body は 1 列（縦積み）のみ。2 列は .homeTemplate__section--featuredFacebookRow 内だけ。
+  }
+
+  &__section {
+    // セクション自体は余白を持たない（gap で管理）
+  }
+}

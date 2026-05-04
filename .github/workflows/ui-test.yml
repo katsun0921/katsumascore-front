@@ -1,0 +1,45 @@
+name: UI Test
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      CHROMATIC_PROJECT_TOKEN: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node_version
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        run: npm run lint
+
+      - name: Stylelint
+        run: npm run lint:scss
+
+      - name: Build Storybook
+        run: npm run build-storybook
+
+      - name: Chromatic Visual Test
+        run: |
+          if [ -z "$CHROMATIC_PROJECT_TOKEN" ]; then
+            echo "CHROMATIC_PROJECT_TOKEN is not set, so Chromatic was skipped."
+            exit 0
+          fi
+
+          npm run chromatic -- --project-token="$CHROMATIC_PROJECT_TOKEN" --exit-zero-on-changes

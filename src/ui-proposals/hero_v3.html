@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KatsumaScore Hero v3 - Split + Cards</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=Kaisei+Tokumin:wght@700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-home-bg: #0a0618;
+      --color-home-card: #1a1030;
+      --color-home-text: #e8e6f0;
+      --color-home-text-secondary: #9890b0;
+      --color-home-text-soft: #f0eef6;
+      --color-score-bg: #14082e;
+      --color-score-border: #ff2dfc;
+      --color-score-rank-ss-text: #ff2dfc;
+      --color-score-rank-s-text: #c026d3;
+      --color-score-rank-a-text: #2563eb;
+      --color-score-rank-b-text: #0f766e;
+      --color-score-rank-c-text: #64748b;
+      --color-secondary: #1e1b4b;
+      --color-accent: #6d28d9;
+      --card-width: 260px;
+      --card-height: 364px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--color-home-bg);
+      color: var(--color-home-text);
+      font-family: 'Noto Sans JP', sans-serif;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ─── 背景: フルスクリーン ─── */
+    .hero-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .hero-bg__img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .hero-bg__img.is-active { opacity: 1; }
+
+    /* 左→右: テキスト側を暗く、右は薄く */
+    .hero-bg__overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(10,6,24,0.92) 0%, rgba(10,6,24,0.6) 50%, rgba(10,6,24,0.2) 100%),
+        linear-gradient(to top,   rgba(10,6,24,0.7)  0%, transparent 50%);
+    }
+
+    /* ─── Hero wrapper ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 56px;
+      gap: 64px;
+    }
+
+    /* ─── Left: テキスト情報 ─── */
+    .hero__left {
+      flex: 1;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .site-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--color-home-text-secondary);
+      opacity: 0;
+    }
+
+    /* スコアブロック */
+    .score-block {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      opacity: 0;
+    }
+
+    .score-hex-wrap {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      flex-shrink: 0;
+    }
+
+    .score-hex-wrap svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .hexagon-path {
+      fill: none;
+      stroke: var(--color-score-border);
+      stroke-width: 2;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+    }
+
+    .score-val {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      font-weight: 900;
+      color: var(--color-score-rank-ss-text);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .score-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .score-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--color-home-text-secondary);
+      text-transform: uppercase;
+    }
+
+    .score-rank {
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-score-border);
+      letter-spacing: 0.1em;
+    }
+
+    /* テキストブロック */
+    .text-block {
+      opacity: 0;
+    }
+
+    .copy-text {
+      font-size: 13px;
+      letter-spacing: 0.14em;
+      color: var(--color-home-text-secondary);
+      margin-bottom: 8px;
+    }
+
+    .title-text {
+      font-family: 'Kaisei Tokumin', serif;
+      font-size: clamp(28px, 3.5vw, 48px);
+      font-weight: 700;
+      color: var(--color-home-text-soft);
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    .read-review {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-score-border);
+      text-decoration: none;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(255,45,252,0.3);
+      transition: border-color 0.2s;
+    }
+
+    .read-review:hover { border-color: var(--color-score-border); }
+
+    .read-review__arrow {
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .read-review:hover .read-review__arrow { transform: translateX(4px); }
+
+    /* ─── Right: Swiper Cards ─── */
+    .hero__right {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .swiper {
+      width: var(--card-width);
+      height: var(--card-height);
+    }
+
+    .swiper-slide {
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+      background: var(--color-home-card);
+    }
+
+    .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* ─── SP: stack ─── */
+    @media (max-width: 767px) {
+      body { overflow: auto; }
+
+      .hero {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        padding: 48px 20px 40px;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .hero__left {
+        width: 100%;
+        max-width: 100%;
+        order: 2;
+        align-items: center;
+        text-align: center;
+      }
+
+      .hero__right { order: 1; }
+
+      :root {
+        --card-width: 220px;
+        --card-height: 308px;
+      }
+
+      .score-block { justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 背景レイヤー -->
+<div class="hero-bg" id="hero-bg">
+  <img class="hero-bg__img is-active" src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=1600" alt="">
+  <img class="hero-bg__img" src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=1600" alt="">
+  <img class="hero-bg__img" src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=1600" alt="">
+  <div class="hero-bg__overlay"></div>
+</div>
+
+<div class="hero">
+
+  <!-- Left: テキスト情報 -->
+  <div class="hero__left">
+    <span class="site-label" id="site-label">KatsumaScore — Featured</span>
+
+    <div class="score-block" id="score-block">
+      <div class="score-hex-wrap">
+        <svg viewBox="0 0 100 100">
+          <path class="hexagon-path" d="M50 5 L90 27.5 L90 72.5 L50 95 L10 72.5 L10 27.5 Z"/>
+        </svg>
+        <div id="score-num" class="score-val">0.0</div>
+      </div>
+      <div class="score-meta">
+        <span class="score-label">KatsumaScore</span>
+        <span id="score-rank" class="score-rank">SS RANK</span>
+      </div>
+    </div>
+
+    <div class="text-block" id="text-block">
+      <p id="copy-text" class="copy-text">---</p>
+      <h2 id="title-text" class="title-text">---</h2>
+      <a href="#" class="read-review">
+        レビューを読む
+        <span class="read-review__arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Right: Swiper Cards -->
+  <div class="hero__right">
+    <div class="swiper main-slider">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"
+          data-score="9.2" data-rank="SS"
+          data-copy="震えるほどの、熱狂を。"
+          data-title="DUNE PART TWO">
+          <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=800" alt="DUNE PART TWO">
+        </div>
+        <div class="swiper-slide"
+          data-score="8.5" data-rank="S"
+          data-copy="愛が、すべてを壊す。"
+          data-title="OPPENHEIMER">
+          <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=800" alt="OPPENHEIMER">
+        </div>
+        <div class="swiper-slide"
+          data-score="7.8" data-rank="A"
+          data-copy="その結末に、涙する。"
+          data-title="PERFECT DAYS">
+          <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=800" alt="PERFECT DAYS">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+  const RANK_COLORS = {
+    SS: '#ff2dfc',
+    S:  '#c026d3',
+    A:  '#2563eb',
+    B:  '#0f766e',
+    C:  '#64748b',
+  };
+
+  const bgImgs = document.querySelectorAll('.hero-bg__img');
+
+  function switchBg(index) {
+    bgImgs.forEach((img, i) => img.classList.toggle('is-active', i === index));
+  }
+
+  function updateText(slide) {
+    const rank = slide.dataset.rank || 'SS';
+    document.getElementById('copy-text').innerText = slide.dataset.copy;
+    document.getElementById('title-text').innerText = slide.dataset.title;
+    document.getElementById('score-rank').innerText = rank + ' RANK';
+    document.getElementById('score-rank').style.color = RANK_COLORS[rank];
+    document.querySelector('.score-val').style.color = RANK_COLORS[rank];
+  }
+
+  const swiper = new Swiper('.main-slider', {
+    effect: 'cards',
+    grabCursor: true,
+    loop: true,
+    autoplay: { delay: 5000, disableOnInteraction: false },
+    on: {
+      init() {
+        updateText(this.slides[this.activeIndex]);
+        // 初回登場
+        const initTl = gsap.timeline({ delay: 0.3 });
+        initTl
+          .to('#site-label', { opacity: 1, duration: 0.5 })
+          .call(() => animateIn(this.slides[this.activeIndex]));
+      },
+      slideChangeTransitionStart() { animateOut(); },
+      slideChangeTransitionEnd() {
+        const slide = this.slides[this.activeIndex];
+        switchBg(this.realIndex);
+        updateText(slide);
+        animateIn(slide);
+      },
+    },
+  });
+
+  function animateIn(slide) {
+    const targetScore = parseFloat(slide.dataset.score);
+    const tl = gsap.timeline();
+    tl.to('.hexagon-path', { strokeDashoffset: 0, duration: 0.8, ease: 'power2.out' })
+      .to('#score-block', { opacity: 1, y: 0, duration: 0.4 }, '-=0.4')
+      .to('#score-num', {
+        innerText: targetScore,
+        duration: 1.0,
+        snap: { innerText: 0.1 },
+        ease: 'power3.out',
+      }, '-=0.5')
+      .to('#text-block', { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.7');
+  }
+
+  function animateOut() {
+    gsap.to(['#score-block', '#text-block'], { opacity: 0, y: 12, duration: 0.25 });
+    gsap.set('.hexagon-path', { strokeDashoffset: 400 });
+    gsap.set('#score-num', { innerText: '0.0' });
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+.sidebar-search-box {
+  width: 100%;
+
+  &__heading {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-8);
+  }
+
+  &__form {
+    display: flex;
+    align-items: center;
+    gap: var(--space-0);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--color-surface);
+    transition: box-shadow 0.15s ease;
+
+    &:focus-within {
+      box-shadow: 0 0 0 2px var(--color-primary);
+    }
+  }
+
+  &__input {
+    flex: 1;
+    min-width: 0;
+    padding: var(--space-8) var(--space-12);
+    font-size: 0.875rem;
+    color: var(--color-text);
+    background: transparent;
+    border: none;
+    outline: none;
+    appearance: none;
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+
+    /* ブラウザデフォルトのクリアボタン非表示 */
+    &::-webkit-search-cancel-button {
+      display: none;
+    }
+  }
+
+  &__button {
+    flex-shrink: 0;
+    padding: var(--space-8) var(--space-16);
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--color-text-inverse);
+    background: var(--color-primary);
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &:active {
+      opacity: 0.7;
+    }
+  }
+}

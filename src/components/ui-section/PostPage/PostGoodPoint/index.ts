@@ -1,0 +1,1 @@
+export { GoodPoint } from './PostGoodPoint';

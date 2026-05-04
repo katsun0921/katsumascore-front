@@ -1,0 +1,1 @@
+export { PrivacyPolicyTemplate } from './PrivacyPolicyTemplate';

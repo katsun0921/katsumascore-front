@@ -1,0 +1,139 @@
+import React from 'react';
+import { useLocale } from '@/i18n/provider';
+import { formatDate } from '@/utils/formatDate';
+export type ReviewSiteId = 'imdb' | 'rt-critics' | 'rt-audience' | 'filmarks' | 'eiga-com'
+
+export type TReviewSite = {
+  siteId: ReviewSiteId
+  label?: string
+  score: number
+  maxScore?: number
+  unit?: string
+  /** CMS に要約がない場合は省略可（スコアのみ表示） */
+  summary?: string
+  url?: string
+}
+
+export type TReviewSiteScoresProps = {
+  sites: TReviewSite[]
+  updatedAt?: string
+  publishedDate?: string
+}
+
+const SITE_ORDER: ReviewSiteId[] = ['imdb', 'rt-critics', 'rt-audience', 'filmarks', 'eiga-com'];
+
+const SITE_CONFIG: Record<
+  ReviewSiteId,
+  { labels: { ja: string; en: string }; maxScore: number; unit: string; modifier: string }
+> = {
+  imdb: {
+    labels: { ja: 'IMDb', en: 'IMDb' },
+    maxScore: 10,
+    unit: ' /10',
+    modifier: 'p-review-scores__fill--imdb',
+  },
+  'rt-critics': {
+    labels: { ja: 'RT 批評家', en: 'RT Critics' },
+    maxScore: 100,
+    unit: '%',
+    modifier: 'p-review-scores__fill--rt',
+  },
+  'rt-audience': {
+    labels: { ja: 'RT 観客', en: 'RT Audience' },
+    maxScore: 100,
+    unit: '%',
+    modifier: 'p-review-scores__fill--rt-audience',
+  },
+  filmarks: {
+    labels: { ja: 'Filmarks', en: 'Filmarks' },
+    maxScore: 5,
+    unit: ' /5',
+    modifier: 'p-review-scores__fill--filmarks',
+  },
+  'eiga-com': {
+    labels: { ja: '映画.com', en: 'Eiga.com' },
+    maxScore: 5,
+    unit: ' /5',
+    modifier: 'p-review-scores__fill--eiga-com',
+  },
+};
+
+
+const formatScore = (score: number, maxScore: number) => {
+  if (maxScore === 100) return String(Math.round(score));
+  return Number.isInteger(score) ? String(score) : score.toFixed(1);
+};
+
+export const ReviewSiteScores = ({
+  sites,
+  updatedAt,
+  publishedDate,
+}: TReviewSiteScoresProps) => {
+  const locale = useLocale();
+  const validSites = sites
+    .filter((site) => site.score > 0)
+    .sort((a, b) => SITE_ORDER.indexOf(a.siteId) - SITE_ORDER.indexOf(b.siteId));
+
+  if (!validSites.length) return null;
+
+  const datedAt = updatedAt ?? publishedDate;
+  const formattedDate = datedAt ? formatDate(datedAt, locale).display : null;
+
+  return (
+    <section className='p-review-scores'>
+      <h2 className='p-review-scores__heading'>
+        {locale === 'en' ? 'Review Site Scores' : '各サイトのレビュースコア'}
+      </h2>
+      <ul className='p-review-scores__list'>
+        {validSites.map((site) => {
+          const config = SITE_CONFIG[site.siteId];
+          const maxScore = site.maxScore ?? config.maxScore;
+          const unit = site.unit ?? config.unit;
+          const label = site.label ?? (locale === 'en' ? config.labels.en : config.labels.ja);
+          const fillPercent = Math.max(0, Math.min((site.score / maxScore) * 100, 100));
+          const scoreText = `${formatScore(site.score, maxScore)}${unit}`;
+          const summaryText = site.summary?.trim();
+
+          return (
+            <li key={site.siteId} className='p-review-scores__item'>
+              <div className='p-review-scores__row'>
+                <span className='p-review-scores__label'>{label}</span>
+                <div className='p-review-scores__track' aria-hidden='true'>
+                  <div
+                    className={`p-review-scores__fill ${config.modifier}`}
+                    style={{ width: `${fillPercent}%` }}
+                  />
+                </div>
+                {site.url ? (
+                  <a
+                    className='p-review-scores__value'
+                    href={site.url}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    aria-label={`${label} ${scoreText}`}
+                  >
+                    {formatScore(site.score, maxScore)}
+                    <span className='p-review-scores__unit'>{unit}</span>
+                  </a>
+                ) : (
+                  <span className='p-review-scores__value'>
+                    {formatScore(site.score, maxScore)}
+                    <span className='p-review-scores__unit'>{unit}</span>
+                  </span>
+                )}
+              </div>
+              {summaryText ? <p className='p-review-scores__summary'>{summaryText}</p> : null}
+            </li>
+          );
+        })}
+      </ul>
+      {formattedDate && (
+        <p className='p-review-scores__footer'>
+          {locale === 'en'
+            ? `${formattedDate} · Check each review site for the latest score.`
+            : `${formattedDate} 時点 · 最新スコアは各サイトにてご確認ください`}
+        </p>
+      )}
+    </section>
+  );
+};

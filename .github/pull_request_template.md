@@ -1,0 +1,93 @@
+<!--
+  ⚠️ このテンプレートはすべて日本語で記入してください。
+  タイトル形式: "feature: 〇〇を追加" または "bug: 〇〇を修正"
+-->
+
+## 変更種別
+
+- [ ] feature: 新機能
+- [ ] bug: バグ修正
+- [ ] refactor: リファクタリング（機能変更なし）
+- [ ] style: スタイル変更（ロジック変更なし）
+- [ ] docs: ドキュメント
+- [ ] chore: ビルド / 依存関係 / 設定
+- [ ] test: テスト追加 / 修正
+
+---
+
+## 概要
+
+<!-- 何を・なぜ変更したかを日本語で記述する -->
+<!-- 例: PostCard コンポーネントを新規追加した。記事一覧ページでサムネイル付きカードを表示するため。 -->
+
+---
+
+## コード変更サマリー
+
+<!-- 変更したコードの内容を日本語で具体的に記述する -->
+<!--
+例:
+- `src/components/features/Post/PostCard/PostCard.tsx` を新規作成
+- `PostCardData` 型を定義し、title / thumbnail / score / href を props として受け取る
+- `ui-parts/PostCard/` の基礎部品を組み合わせて構成
+-->
+
+---
+
+## レイヤー設計チェック
+
+- [ ] コンポーネントを正しいレイヤーに配置した（ui-parts / ui-layout / ui-section / ui-home / features / templates）
+- [ ] 1ディレクトリ1コンポーネントルールを守った
+- [ ] ui-parts / ui-layout / ui-section / ui-home に hooks / state を含めていない
+- [ ] コンポーネント内で fetch を使用していない
+- [ ] Arrow 関数のみを使用した（`function` キーワード禁止）
+- [ ] 三項演算子・条件分岐がシンプルな範囲に収まっている
+
+---
+
+## スタイリングチェック
+
+- [ ] ハードコードカラー（`#xxxxxx`）を使用していない
+- [ ] Tailwind のデフォルトカラー（`bg-blue-500` 等）を使用していない
+- [ ] カラーは CSS 変数経由（`bg-[var(--color-xxx)]`）で指定した
+- [ ] arbitrary value（`p-[14px]` 等）を使用していない
+- [ ] `@media` のブレークポイント値を直書きしていない（Tailwind プレフィックス または `globals.css` で管理）
+- [ ] `<a href>` ではなく `<Link>` を使用した
+- [ ] `<img>` ではなく `<Image>` を使用した
+
+---
+
+## Storybook チェック
+
+- [ ] 新規コンポーネントに Story を追加した
+- [ ] 異常系（LongTitle / NoImage / MixedData / Dense / Extreme）を含めた
+- [ ] 既存 Story に影響がないことを確認した（Chromatic で確認）
+
+---
+
+## i18n チェック
+
+- [ ] 日本語 / 英語のハードコードがない（`i18n.ts` で管理）
+- [ ] 翻訳は `ja` / `en` 両キーを定義した
+
+---
+
+## レンダリング方式チェック（ページ変更がある場合）
+
+- [ ] ページファイルにレンダリング方式をコメントで明記した
+- [ ] ISR を使用する場合は `revalidate` 値を設定した
+- [ ] SSR は VOD ページのみに限定した
+
+---
+
+## スクリーンショット（UI 変更がある場合）
+
+| Before | After |
+|--------|-------|
+|        |       |
+
+---
+
+## 関連 Issue
+
+<!-- Closes #xxx -->

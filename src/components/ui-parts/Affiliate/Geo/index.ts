@@ -1,0 +1,1 @@
+export { GeoAd } from './GeoAd';

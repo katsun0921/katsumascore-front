@@ -1,0 +1,90 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.post-header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  position: relative;
+
+  // comment: 全幅・最上部
+  &__tagline {
+    width: 100%;
+    font-family: var(--font-accent-strong);
+    font-size: var(--font-size-h2);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-inverse);
+    letter-spacing: 0.03em;
+    text-shadow: -1px 1px 2px rgba(var(--color-black-rgb), 0.2);
+    margin: var(--space-0);
+  }
+
+  // title: 全幅
+  &__title-main {
+    width: 100%;
+    font-size: var(--font-size-title);
+    font-family: var(--font-ja-heading);
+    color: var(--color-text-inverse);
+    line-height: 1.2;
+    letter-spacing: 0.01em;
+    margin: var(--space-0);
+  }
+
+  &__hgroup {
+    position: relative;
+    z-index: 2;
+  }
+  // lower: メタ情報（左）とrank（右）の2カラム
+  &__lower {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  &__meta-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    flex: 1;
+    min-width: 0;
+    z-index: 2;
+    color: var(--color-text-inverse);
+  }
+
+  &__rank {
+    @include layout-md {
+        right: var(--space-12);
+        top: var(--font-size-h2);
+        z-index: 1;
+        position: absolute;
+    }
+  }
+
+  &__title-sub {
+    font-family: var(--font-en-heading);
+    font-size: var(--font-size-body);
+    color: rgba(var(--color-white-rgb), 0.55);
+    letter-spacing: 0.04em;
+    margin: var(--space-0);
+  }
+
+  &__meta {
+    font-family: var(--font-ja-body);
+    font-size: var(--font-size-body);
+    color: rgba(var(--color-white-rgb), 0.55);
+    letter-spacing: 0.04em;
+    margin: var(--space-0);
+  }
+
+  &__meta-sep {
+    margin: var(--space-0) var(--space-8);
+  }
+
+  &__copyright {
+    font-family: var(--font-ja-body);
+    font-size: var(--font-size-caption);
+    color: rgba(var(--color-white-rgb), 0.55);
+    letter-spacing: 0.03em;
+    margin: var(--space-0);
+  }
+}

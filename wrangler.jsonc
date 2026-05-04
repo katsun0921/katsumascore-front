@@ -1,0 +1,15 @@
+{
+  "name": "katsumascore",
+  "compatibility_date": "2026-03-30",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": ".open-next/worker.js",
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "vars": {
+    "NEXT_PUBLIC_WP_BASE_URL": "https://katsumascore.blog",
+    "NEXT_PUBLIC_SITE_URL": "https://katsumascore.sato-katsumasa.workers.dev",
+    "NEXT_PUBLIC_SITE_NAME": "KatsumaScore"
+  }
+}

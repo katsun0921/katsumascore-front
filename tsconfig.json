@@ -14,7 +14,9 @@
     "jsx": "react-jsx",
     "incremental": true,
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@scss/*": ["./src/styles/scss/*"],
+      "@assets/*": ["./src/assets/*"],
     }
   },
   "include": [
@@ -25,5 +27,5 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "katsumascore_design_system"]
 }

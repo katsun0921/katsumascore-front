@@ -1,0 +1,81 @@
+.postCardSkeleton {
+  width: 100%;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-soft);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 var(--space-16) var(--space-32) var(--color-border-soft);
+
+  &__link {
+    display: grid;
+  }
+
+  &__media {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--color-secondary), var(--color-accent));
+    height: 200px;
+  }
+
+  &__body {
+    display: grid;
+    gap: var(--space-12);
+    padding: var(--space-16) var(--space-16) var(--space-20);
+  }
+
+  &__skeleton {
+    display: block;
+    overflow: hidden;
+    background:
+      linear-gradient(
+        90deg,
+        var(--color-bg-muted) 0%,
+        var(--color-surface) 50%,
+        var(--color-bg-muted) 100%
+      );
+    background-size: 200% 100%;
+    animation: post-card-shimmer 1.5s ease-in-out infinite;
+  }
+
+  &__skeletonDate {
+    width: 6.5rem;
+    height: 1rem;
+    border-radius: 999px;
+  }
+
+  &__skeletonTitle {
+    width: 92%;
+    height: 1.5rem;
+    border-radius: 999px;
+  }
+
+  &__skeletonTitleShort {
+    width: 68%;
+    height: 1.5rem;
+    border-radius: 999px;
+    margin-top: calc(-1 * var(--space-4));
+  }
+
+  &__skeletonExcerpt {
+    width: 100%;
+    height: 1rem;
+    border-radius: 999px;
+  }
+
+  &__skeletonExcerptShort {
+    width: 84%;
+    height: 1rem;
+    border-radius: 999px;
+    margin-top: calc(-1 * var(--space-4));
+  }
+}
+
+@keyframes post-card-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}

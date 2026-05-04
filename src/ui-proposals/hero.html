@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KatsumaScore Category Hero Mocks</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&family=Noto+Sans+JP:wght@700&display=swap');
+        
+        :root {
+            --brand-color: #00ffcc; /* ネオンカラー */
+            --bg-dark: #0f172a;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: white;
+            font-family: 'Noto Sans JP', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .hero-container {
+            display: none;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-container.active {
+            display: flex;
+        }
+
+        /* 案3用のでかい文字 */
+        .big-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 12rem;
+            line-height: 1;
+            opacity: 0.05;
+            position: absolute;
+            bottom: -20px;
+            right: -20px;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="p-4 flex gap-4 bg-black/50 sticky top-0 z-50 justify-center">
+    <button onclick="showHero(1)" class="px-4 py-2 rounded border border-white/20 hover:bg-white/10 transition">案1: スコア重視</button>
+    <button onclick="showHero(2)" class="px-4 py-2 rounded border border-white/20 hover:bg-white/10 transition">案2: ショーケース</button>
+    <button onclick="showHero(3)" class="px-4 py-2 rounded border border-white/20 hover:bg-white/10 transition">案3: タイポグラフィ</button>
+</nav>
+
+<section id="hero1" class="hero-container active items-center overflow-hidden bg-[#070d1a]">
+
+    <!-- 背景：ポスター流れ（案2） -->
+    <div class="absolute inset-0 flex gap-4 pointer-events-none" id="poster-flow-1" style="opacity:0.18; filter:grayscale(0.6);">
+        <div class="w-52 shrink-0 rounded-xl mt-8"  style="background:url('https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+        <div class="w-52 shrink-0 rounded-xl -mt-8" style="background:url('https://images.unsplash.com/photo-1536440136628-849c177e76a1?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+        <div class="w-52 shrink-0 rounded-xl mt-4"  style="background:url('https://images.unsplash.com/photo-1440404653325-ab127d49abc1?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+        <div class="w-52 shrink-0 rounded-xl -mt-4" style="background:url('https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+        <div class="w-52 shrink-0 rounded-xl mt-10" style="background:url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+        <div class="w-52 shrink-0 rounded-xl -mt-6" style="background:url('https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?q=80&w=400&auto=format&fit=crop') center/cover;"></div>
+    </div>
+    <!-- グラデーションで読みやすく -->
+    <div class="absolute inset-0 bg-gradient-to-r from-[#070d1a] via-[#070d1acc] to-transparent pointer-events-none"></div>
+
+    <!-- コンテンツ（案2レイアウト：左テキスト＋右glassカード） -->
+    <div class="relative z-10 w-full max-w-5xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8 px-8">
+
+        <!-- 左：テキスト -->
+        <div id="hero1-text">
+            <p class="text-xs tracking-widest text-[#00ffcc] mb-3 uppercase">今週、観るべき1本。</p>
+            <h1 class="text-4xl md:text-5xl font-bold leading-snug mb-4">
+                「信じた瞬間、負ける。」<br>裏切りの果てに残ったもの。
+            </h1>
+            <p class="text-white/60 text-sm max-w-sm mb-6">The Departed — 組織の内側から崩れていく、息を呑むクライムサスペンス。</p>
+            <button class="border border-white/50 px-8 py-3 text-sm tracking-widest hover:bg-white hover:text-black transition">REVIEW を読む</button>
+        </div>
+
+        <!-- 右：glassカード＋スコアカウントアップ（案1） -->
+        <div id="hero1-card" class="glass p-8 rounded-2xl text-center min-w-[200px] border-l-4 border-[#00ffcc]">
+            <span class="block text-xs uppercase tracking-widest text-gray-400 mb-1">KatsumaScore</span>
+            <div id="score-num" class="text-7xl font-black text-[#00ffcc] tabular-nums">0.0</div>
+            <div class="mt-2 text-xs text-white/50 tracking-widest">The Departed · 2006</div>
+        </div>
+
+    </div>
+</section>
+
+<section id="hero2" class="hero-container items-center px-8">
+    <div class="absolute inset-0 flex gap-4 opacity-30 grayscale pointer-events-none" id="poster-flow">
+        <div class="w-64 h-96 bg-gray-700 rounded-lg shrink-0 mt-10"></div>
+        <div class="w-64 h-96 bg-gray-600 rounded-lg shrink-0 -mt-10"></div>
+        <div class="w-64 h-96 bg-gray-700 rounded-lg shrink-0 mt-5"></div>
+        <div class="w-64 h-96 bg-gray-600 rounded-lg shrink-0 -mt-5"></div>
+    </div>
+    
+    <div class="relative z-10 w-full max-w-5xl mx-auto flex flex-col md:flex-row gap-8 items-center">
+        <div class="flex-1">
+            <h1 class="text-5xl font-bold mb-4 italic">FANTASY</h1>
+            <p class="text-lg text-white/80">現実を忘れさせる、魔法と冒険の物語。</p>
+        </div>
+        <div class="glass p-4 rounded-xl flex items-center gap-4 border-l-4 border-[#00ffcc]">
+            <div class="w-16 h-20 bg-gray-800 rounded"></div>
+            <div>
+                <span class="text-[10px] bg-[#00ffcc] text-black px-1 font-bold">HOT NOW</span>
+                <h3 class="font-bold">最新の注目作タイトル</h3>
+                <p class="text-sm text-white/50">Score: 9.2</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="hero3" class="hero-container items-center px-12 bg-[#050505]">
+    <div class="big-text" id="bg-typo">DRAMA</div>
+    
+    <div class="relative z-10">
+        <h1 class="text-6xl font-bold mb-4 tracking-tighter">ドラマ</h1>
+        <p class="text-xl text-gray-400 max-w-xl leading-relaxed border-l-2 border-white/20 pl-6">
+            魂が震える、至極の人間ドラマ。<br>
+            日常に潜む葛藤と、忘れられない感動を。
+        </p>
+    </div>
+</section>
+
+<script>
+    function showHero(index) {
+        // 全て隠す
+        document.querySelectorAll('.hero-container').forEach(el => el.classList.remove('active'));
+        // 対象を表示
+        const target = document.getElementById('hero' + index);
+        target.classList.add('active');
+
+        // GSAPアニメーションの実行
+        if(index === 1) {
+            // ポスター背景を流す
+            gsap.to("#poster-flow-1", { x: -80, duration: 12, repeat: -1, yoyo: true, ease: "none" });
+
+            // テキスト入場
+            gsap.from("#hero1-text", { x: -40, opacity: 0, duration: 1, ease: "power3.out" });
+
+            // glassカード入場
+            gsap.from("#hero1-card", { scale: 0.85, opacity: 0, duration: 0.9, delay: 0.3, ease: "power3.out" });
+
+            // スコアカウントアップ（案1）
+            const obj = { val: 0 };
+            gsap.to(obj, {
+                val: 9.2,
+                duration: 1.8,
+                delay: 0.5,
+                ease: "power3.out",
+                onUpdate: () => {
+                    document.getElementById('score-num').innerText = obj.val.toFixed(1);
+                }
+            });
+        }
+
+        if(index === 2) {
+            gsap.to("#poster-flow div", {
+                x: -100,
+                duration: 10,
+                repeat: -1,
+                yoyo: true,
+                ease: "none"
+            });
+            gsap.from("#hero2 .glass", { scale: 0.8, opacity: 0, duration: 0.8, delay: 0.2 });
+        }
+
+        if(index === 3) {
+            gsap.from("#bg-typo", { x: 200, opacity: 0, duration: 2, ease: "power2.out" });
+            gsap.from("#hero3 h1, #hero3 p", { y: 30, opacity: 0, duration: 1, stagger: 0.2 });
+        }
+    }
+
+    // 初回実行
+    window.onload = () => showHero(1);
+</script>
+
+</body>
+</html>

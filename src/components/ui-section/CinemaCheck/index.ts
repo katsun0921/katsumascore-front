@@ -1,0 +1,1 @@
+export { CinemaCheck } from './CinemaCheck';

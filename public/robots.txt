@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://katsumascore.blog/sitemap.xml
+Sitemap: https://katsumascore.blog/server-sitemap.xml

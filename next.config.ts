@@ -1,8 +1,52 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'katsumascore.blog',
+        pathname: '/wp-content/uploads/**',
+      },
+    ],
+    formats: ['image/avif', 'image/webp'],
+    // ローカル開発環境では katsumascore.blog が NAT64 プライベートIPに解決されるため
+    // Next.js の画像最適化をバイパスして直接 URL を使用する
+    unoptimized: process.env.NODE_ENV === 'development',
+    // CDN / ISR と整合しやすい TTL（秒）。要件に合わせて調整可
+    minimumCacheTTL: 60,
+  },
+  i18n: {
+    locales: ['default', 'ja', 'en'],
+    defaultLocale: 'default',
+    localeDetection: false,
+  },
+  async redirects() {
+    return [
+      {
+        source: "/author/:slug",
+        destination: "/404",
+        permanent: false,
+      },
+      // 月別アーカイブ
+      {
+        source: "/:year(\\d{4})/:month(\\d{2})",
+        destination: "/404",
+        permanent: false,
+      },
+      // タグアーカイブ
+      {
+        source: "/tag/:slug",
+        destination: "/404",
+        permanent: false,
+      },
+    ];
+  },
+  sassOptions: {
+    additionalData: `@use "${path.resolve('./src/styles/scss/global/variable/colors.scss')}" as *; @use "${path.resolve('./src/styles/scss/global/variable/fontWeight.scss')}" as *;`,
+  },
 };
 
 export default nextConfig;

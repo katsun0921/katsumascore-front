@@ -1,0 +1,1 @@
+export { PostCardRankBadge } from './PostCardRankBadge';
