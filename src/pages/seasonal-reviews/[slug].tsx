@@ -6,7 +6,7 @@ import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getChildPages, getPageBySlug, normalizePageContent } from '@/libs/api/wordpress';
-import { resolveSeasonalReviewParentId } from './index';
+import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 
 type SeasonalDetailProps = {
   title: string;
@@ -62,6 +62,6 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 300,
   };
 };

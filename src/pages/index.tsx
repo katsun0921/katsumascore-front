@@ -32,6 +32,6 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const templateProps = await loadHomeTemplateProps(locale);
   return {
     props: toSerializableValue({ ...templateProps, locale }),
-    revalidate: 60,
+    revalidate: 300,
   };
 };

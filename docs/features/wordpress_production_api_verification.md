@@ -200,8 +200,8 @@ add_filter( 'acf/settings/rest_api_enabled', '__return_false' );
 | [`/categories/[slug]`](../../src/pages/categories/[slug]/index.tsx), [`/categories/[slug]/page/[page]`](../../src/pages/categories/[slug]/page/[page].tsx) | `getCategories` |
 | [`/search`](../../src/pages/search.tsx) | `searchPosts`（CSR） |
 | [`/featured`](../../src/pages/featured.tsx) | `getCategoryBySlug`, `getPostsWithMeta` |
-| [`/top`](../../src/pages/top.tsx) | `getPageBySlug`（`WP_TOP_PAGE_SLUG`） |
-| [`/seasonal-reviews`](../../src/pages/seasonal-reviews/index.tsx), [`/seasonal-reviews/[slug]`](../../src/pages/seasonal-reviews/[slug].tsx) | `getChildPages`, `getPageBySlug`（`WP_SEASONAL_REVIEW_PARENT_ID`） |
+| [`/top`](../../src/pages/top.tsx) | WordPress 非参照（静的シェル・`topPageMessages`） |
+| [`/seasonal-reviews`](../../src/pages/seasonal-reviews/index.tsx), [`/seasonal-reviews/[slug]`](../../src/pages/seasonal-reviews/[slug].tsx) | `getChildPages`, `getPageBySlug`（`wpContent.config` の親スラッグ） |
 | [`/server-sitemap.xml`](../../src/pages/server-sitemap.xml.tsx) | `getPosts`, `getCategories`, `getChildPages` |
 
 各ルートで **空の主要ブロックが続く／500 が出る**場合は、まず REST 直叩きとトラブルシュートで切り分ける。

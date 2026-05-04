@@ -14,11 +14,7 @@
 - [ ] `WP_API_URL` を本番デプロイ環境に設定（例: `https://katsumascore.blog/wp-json/wp/v2`）
 - [ ] `NEXT_PUBLIC_WP_BASE_URL` を設定（例: `https://katsumascore.blog`）
 - [ ] `NEXT_PUBLIC_SITE_URL` をフロントの正規 URL に設定
-- [ ] `WP_SEASONAL_REVIEW_PARENT_ID` を本番 WordPress の親固定ページ ID に合わせる
-- [ ] `WP_TOP_PAGE_SLUG` が本番の固定ページスラッグと一致する（未設定時は `top`）
-- [ ] `WP_FEATURED_CATEGORY_SLUG` が本番と一致する（未設定時は `featured`）
-- [ ] `WP_ANIME_CATEGORY_ID` またはスラッグ解決でアニメカテゴリが取れることを確認
-- [ ] `WP_MOVIE_CATEGORY_SLUG` が本番と一致する（未設定時は `movie`）
+- [ ] [`src/config/wpContent.config.ts`](../../src/config/wpContent.config.ts) のスラッグ・REST パスが本番 WordPress と一致している
 - [ ] 上記のシークレット・環境変数がリポジトリにコミットされていない
 
 ---

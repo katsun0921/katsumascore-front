@@ -109,6 +109,6 @@ export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 600,
   };
 };

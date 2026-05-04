@@ -1,6 +1,7 @@
 // SSR: WPデータを含む XML sitemap をリクエスト時に生成
 import type { GetServerSideProps } from 'next';
 import { getPosts, getCategoriesForArchiveResolve, getChildPages } from '@/libs/api/wordpress';
+import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 
@@ -15,18 +16,16 @@ const escapeXml = (str: string): string =>
   str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const seasonalParentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
+  let seasonalParentId = await resolveSeasonalReviewParentId('ja');
+  if (!seasonalParentId) seasonalParentId = await resolveSeasonalReviewParentId('en');
+
   const [jaPosts, enPosts, jaCategories, enCategories, jaSeasonal, enSeasonal] = await Promise.all([
     getPosts({ per_page: 1000, lang: 'ja' }),
     getPosts({ per_page: 1000, lang: 'en' }),
     getCategoriesForArchiveResolve('ja'),
     getCategoriesForArchiveResolve('en'),
-    seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
-      ? getChildPages(Number(seasonalParentRaw), 'ja')
-      : Promise.resolve([]),
-    seasonalParentRaw && /^\d+$/.test(seasonalParentRaw)
-      ? getChildPages(Number(seasonalParentRaw), 'en')
-      : Promise.resolve([]),
+    seasonalParentId ? getChildPages(seasonalParentId, 'ja') : Promise.resolve([]),
+    seasonalParentId ? getChildPages(seasonalParentId, 'en') : Promise.resolve([]),
   ]);
 
   const staticPaths: SitemapItem[] = [
