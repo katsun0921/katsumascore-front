@@ -1,5 +1,6 @@
 'use client';
 
+import clsx from 'clsx';
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -49,6 +50,8 @@ const RANK_CLASS_MAP: Record<HomeHeroSlide['rank'], string> = {
 export const HomeHero = ({ slides }: HomeHeroProps) => {
   const locale = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
+  /** GSAP の動的 import が失敗したとき SCSS の opacity:0 のまま固定されないよう表示を確実にする */
+  const [motionFallback, setMotionFallback] = useState(false);
 
   const scoreBlockRef    = useRef<HTMLDivElement>(null);
   const textBlockRef     = useRef<HTMLDivElement>(null);
@@ -106,16 +109,23 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   // 初回登場（GSAP は動的 import でメインバンドルから分離）
   useEffect(() => {
     let cancelled = false;
-    void import('gsap').then(({ gsap }) => {
-      if (cancelled) return;
-      gsapRef.current = gsap;
-      gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
-      const initTl = gsap.timeline({ delay: 0.3 });
-      initTl.call(() => {
+    void import('gsap')
+      .then(({ gsap }) => {
+        if (cancelled) return;
+        gsapRef.current = gsap;
+        gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
+        const initTl = gsap.timeline({ delay: 0.3 });
+        initTl.call(() => {
+          hasInitializedRef.current = true;
+          animateIn(slideList[0].score);
+        });
+      })
+      .catch(() => {
+        if (cancelled) return;
+        setMotionFallback(true);
         hasInitializedRef.current = true;
         animateIn(slideList[0].score);
       });
-    });
     return () => {
       cancelled = true;
     };
@@ -140,7 +150,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
 
   return (
     <section
-      className={prefixClassName}
+      className={clsx(prefixClassName, motionFallback && `${prefixClassName}--noGsap`)}
       aria-label={t(messages, ['section', 'ariaLabel'], locale)}
     >
       {/* 背景レイヤー */}

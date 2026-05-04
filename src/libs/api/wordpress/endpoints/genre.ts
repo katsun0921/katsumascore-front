@@ -9,6 +9,8 @@ import {
   shouldRetryStatus,
 } from "../client";
 import type { WpFetchOptions } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpGetGenreBySlug, mockWpGetGenres } from "@/mocks/wp/mockWpQueries";
 
 /** `wpContent.config` の REST コレクション名（スラッグ形式に正規化）。 */
 const genreRestCollectionPath = (): string => {
@@ -155,6 +157,10 @@ const fetchGenresPage = async (
   lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPGenreTerm[] | null> => {
+  if (isWpMockMode()) {
+    if (pageNum !== 1) return [];
+    return mockWpGetGenres(lang);
+  }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
@@ -219,6 +225,9 @@ const fetchGenreTermBySlug = async (
   lang: string | undefined,
   options: WpFetchOptions | undefined,
 ): Promise<WPGenreTerm | null> => {
+  if (isWpMockMode()) {
+    return mockWpGetGenreBySlug(slug);
+  }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {

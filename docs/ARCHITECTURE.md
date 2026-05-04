@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.6** ― WordPress ACF・CMSデータモデル（§5 に統合。旧稿は [`archive/katsumascore_acf_summary.md`](./archive/katsumascore_acf_summary.md)）  
+> **v1.7** ― §3.4 に Cloudflare Workers デプロイ（CI・Secrets・ローカル手順の要点）を追記。詳細手順の旧稿は [`archive/cloudflare_workers_deploy.md`](./archive/cloudflare_workers_deploy.md)。  
 > katsumascore.blog ｜ 2026年5月4日
 
 ---
@@ -102,6 +102,28 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 | `katsumascore.blog/wp-json/*` | Cache Level: Bypass | REST APIはキャッシュしない |
 | `katsumascore.blog/api/*` | Cache Level: Bypass | VOD API等の動的ルートはバイパス |
 | `katsumascore.blog/*` | Workers経由でキャッシュ制御 | フロントは高速配信 |
+
+### 3.4 デプロイ（Cloudflare Workers / GitHub Actions）
+
+本番フロントは **Next.js + `@opennextjs/cloudflare` + Wrangler** で Cloudflare Workers に載せる。`npm run deploy` は内部で `opennextjs-cloudflare build` のあと `wrangler deploy` を実行する。
+
+| 項目 | 内容 |
+|------|------|
+| **CI** | `.github/workflows/deploy-cloudflare-workers.yml` — `main` への `push`（マージ完了後）と `workflow_dispatch`。`concurrency: cloudflare-workers-deploy` / `cancel-in-progress: false` で直列化 |
+| **GitHub Secrets（必須目安）** | `CLOUDFLARE_API_TOKEN`、`WP_API_URL`、`NEXT_PUBLIC_WP_BASE_URL`、`NEXT_PUBLIC_SITE_URL`、`NEXT_PUBLIC_SITE_NAME` |
+| **任意** | `CLOUDFLARE_ACCOUNT_ID`（トークンだけでは足りない場合） |
+| **コード固定** | 季節レビュー親スラッグ・カテゴリスラッグ・`genre` / `vod` の REST パスは **`src/config/wpContent.config.ts`**。CI では渡さない |
+| **Worker 上の Secret** | `wrangler secret put` で登録した値（例: `WP_API_URL`、`REVALIDATE_SECRET`）はデプロイで毎回消えない。ISR Webhook は `POST /api/revalidate` + Bearer |
+
+**ローカル:** `npx wrangler login` のうえ `.env.local`（`.env.example` 参照）で `WP_API_URL` / `NEXT_PUBLIC_*` を用意し、同じく `npm run deploy` 可能。初回は `*.workers.dev` の URL がダッシュボードで確定するので、`NEXT_PUBLIC_SITE_URL` と `wrangler.jsonc` の `vars` を揃えて再デプロイする。
+
+**動作確認（例）:** `/`、`/posts/[slug]`、`/anime`、`/movie`、`/drama`、`/404`。`curl` で `POST .../api/revalidate`（`Authorization: Bearer <REVALIDATE_SECRET>`、`{"path":"/"}`）し `revalidated` を確認。
+
+**ローカルプレビュー:** `npm run preview` → `http://localhost:8787`（KV 必須の API は動かない場合あり）。
+
+**トラブル:** 初回デプロイ前に `wrangler secret list` だけ叩くと Worker 未作成エラーになりうる → 先に `npm run deploy`。ConoHa 等で **`curl` User-Agent が 403** でも、Workers からの fetch は別 UA のため本番は通ることがある。
+
+詳細なステップ・コマンド全文・関連チェックリストへのリンクは **アーカイブ** [`archive/cloudflare_workers_deploy.md`](./archive/cloudflare_workers_deploy.md) を参照。
 
 ---
 

@@ -258,11 +258,6 @@ export const mockVodFinderItems: VodFinderItem[] = [
   { vod: 'hulu', count: 4, href: '/vod/hulu' },
 ];
 
-/** Storybook / モック用。本番既定の Page Plugin URL と同じ構成。 */
-export const mockFacebookTimelineEmbedUrl = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
-  'https://www.facebook.com/people/Katsumascore/100072246676709/',
-)}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
-
 export const mockFeaturedItems: FeaturedItem[] = [
   {
     label: 'SPECIAL',

@@ -61,7 +61,7 @@ https://<WP_CMS_ORIGIN>/wp-json/wp/v2/...
 | `NEXT_PUBLIC_SITE_URL` | `https://katsumascore.blog` | canonical・OG・サイトマップ等の **公開正規 URL**。 |
 | `NEXT_PUBLIC_SITE_NAME` | 従来どおり | 表示名。 |
 
-詳細は [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md) および [cloudflare_workers_deploy.md](../features/cloudflare_workers_deploy.md) を参照。本ドキュメント確定後、それらの例示 URL を **`WP_CMS_ORIGIN` / `katsumascore.blog` の組み合わせ**に更新する。
+詳細は [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md) および [ARCHITECTURE.md](../ARCHITECTURE.md) の **§3.4 デプロイ** を参照。手順の全文は [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md)（アーカイブ）。本ドキュメント確定後、それらの例示 URL を **`WP_CMS_ORIGIN` / `katsumascore.blog` の組み合わせ**に更新する。
 
 ### 4.1 `NEXT_PUBLIC_WP_BASE_URL` と「ユーザーから隠す」の両立
 
@@ -116,7 +116,7 @@ https://<WP_CMS_ORIGIN>/wp-json/wp/v2/...
 | ドキュメント | 内容 |
 |--------------|------|
 | [../ARCHITECTURE.md](../ARCHITECTURE.md) | 全体アーキテクチャ（§3 の図を本設計に合わせて更新予定） |
-| [cloudflare_workers_deploy.md](../features/cloudflare_workers_deploy.md) | Wrangler・`NEXT_PUBLIC_SITE_URL` |
+| [ARCHITECTURE.md](../ARCHITECTURE.md) §3.4 / [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md) | Wrangler・`NEXT_PUBLIC_SITE_URL`・CI |
 | [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md) | シークレット一覧 |
 | [wordpress_production_api_verification.md](../features/wordpress_production_api_verification.md) | API 検証手順 |
 

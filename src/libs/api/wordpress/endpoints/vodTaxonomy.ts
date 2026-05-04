@@ -9,6 +9,8 @@ import {
   shouldRetryStatus,
 } from "../client";
 import type { WpFetchOptions } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpGetVodTermBySlug, mockWpGetVodTerms } from "@/mocks/wp/mockWpQueries";
 
 /** `wpContent.config` の REST コレクション名（スラッグ形式に正規化）。 */
 const vodRestCollectionPath = (): string => {
@@ -82,6 +84,9 @@ export const getVodTermBySlug = async (
 ): Promise<WPVodTerm | null> => {
   const trimmed = slug.trim();
   if (!trimmed) return null;
+  if (isWpMockMode()) {
+    return mockWpGetVodTermBySlug(trimmed);
+  }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
@@ -126,6 +131,9 @@ export const getVodTerms = async (
   lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPVodTerm[] | null> => {
+  if (isWpMockMode()) {
+    return mockWpGetVodTerms(lang);
+  }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {

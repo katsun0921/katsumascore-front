@@ -8,7 +8,6 @@ import {
   mockRecommendBlocks,
   mockVodFinderItems,
   mockFeaturedItems,
-  mockFacebookTimelineEmbedUrl,
 } from '@/components/ui-home/mocks/home';
 import { HomeTemplate } from './HomeTemplate';
 
@@ -33,7 +32,6 @@ const defaultArgs = {
   recommendBlocks: mockRecommendBlocks,
   vodFinderItems: mockVodFinderItems,
   featuredItems: mockFeaturedItems,
-  facebookTimelineEmbedUrl: mockFacebookTimelineEmbedUrl,
 };
 
 export const Default: Story = {

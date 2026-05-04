@@ -276,4 +276,10 @@
   &__swiperImage {
     object-fit: cover;
   }
+
+  /** GSAP チャンク読み込み失敗時 — __scoreBlock / __textBlock の opacity:0 を打ち消す */
+  &--noGsap &__scoreBlock,
+  &--noGsap &__textBlock {
+    opacity: 1;
+  }
 }

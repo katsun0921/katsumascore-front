@@ -7,6 +7,8 @@ import {
   shouldRetryStatus,
 } from "../client";
 import type { WpFetchOptions, WpPostsPagedResult } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpPostsList, mockWpPostsPaged } from "@/mocks/wp/mockWpQueries";
 
 /** 投稿一覧・検索・関連取得など `/posts` 系エンドポイントのラッパー。 */
 
@@ -113,6 +115,9 @@ const fetchPosts = async (
   query: PostsQuery,
   options?: WpFetchOptions,
 ): Promise<WPPost[] | null> => {
+  if (isWpMockMode()) {
+    return mockWpPostsList(query);
+  }
   if (query.genre || query.vod !== undefined) {
     const paged = await fetchPostsWithMetaOverHttp(query, options);
     return paged?.items ?? null;
@@ -151,6 +156,9 @@ const fetchPostsWithMeta = async (
   query: PostsQuery,
   options?: WpFetchOptions,
 ): Promise<WpPostsPagedResult<WPPost> | null> => {
+  if (isWpMockMode()) {
+    return mockWpPostsPaged(query);
+  }
   if (query.genre || query.vod !== undefined) return fetchPostsWithMetaOverHttp(query, options);
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
