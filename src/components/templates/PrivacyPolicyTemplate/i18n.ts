@@ -81,8 +81,8 @@ export const messages = {
     disclaimer: {
       title: { ja: '免責事項', en: 'Disclaimer' },
       p1: {
-        ja: '当サイトに掲載している、画像の肖像権及び著作権は、各権利所有者に属します。',
-        en: 'Portrait and copyrights in images on this site belong to their respective rights holders.',
+        ja: '当サイトに掲載しているコンテンツの肖像権及び著作権は、各権利所有者に属します。',
+        en: 'Portrait rights and copyrights in content on this site belong to their respective rights holders.',
       },
       p2: {
         ja: '当サイトからリンクおよびバナーなどによって、他のサイトに移動された場合において、リンク先のサイトで提供される情報およびサービス、それに準ずるものについて、当サイトは一切の責任を負いません。',
@@ -90,7 +90,7 @@ export const messages = {
       },
       p3BeforeLink: {
         ja: '当サイトのコンテンツおよび情報については、可能な限り正確な情報を掲載するよう努めておりますが、誤情報である場合や、お客様が閲覧した時点ですでに情報が古くなっていることもございます。その場合は',
-        en: 'We strive to keep content accurate, but information may be incorrect or outdated by the time you view it. In that case, please reach us through the ',
+        en: 'We strive to keep content accurate, but information may be incorrect or outdated by the time you view it. In that case, please contact us via our ',
       },
       contactFormLink: {
         ja: 'お問い合わせフォーム',
@@ -102,7 +102,7 @@ export const messages = {
       },
       p4: {
         ja: '当サイトに掲載された内容によって生じた損害等の一切の責任を負いかねます。あらかじめご了承ください。',
-        en: 'We accept no liability for any damage arising from use of this site’s content. Your use of the site is at your own risk.',
+        en: 'We accept no liability for any damage arising from use of this site’s content. Please be aware of this in advance.',
       },
     },
     links: {
