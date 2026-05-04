@@ -3,28 +3,45 @@ import { NextResponse } from 'next/server';
 
 const ARCHIVE_SEGMENTS = new Set(['movie', 'anime', 'drama']);
 
-type ArchiveMatch = { seg: string; localeEn: boolean };
+type ArchiveMatch = { seg: string; locale?: 'ja' | 'en' };
 
-const matchPostTypeArchiveRoot = (pathname: string): ArchiveMatch | null => {
+const resolveNextLocale = (locale: string): 'ja' | 'en' | undefined => {
+  if (locale === 'ja' || locale === 'en') return locale;
+  return undefined;
+};
+
+const matchPostTypeArchiveRoot = (
+  pathname: string,
+  nextLocale?: 'ja' | 'en',
+): ArchiveMatch | null => {
   const parts = pathname.split('/').filter(Boolean);
   if (parts.length === 0) return null;
 
-  if (parts[0] === 'en') {
+  if (parts[0] === 'ja' || parts[0] === 'en') {
     if (parts.length !== 2) return null;
     const seg = parts[1];
     if (!ARCHIVE_SEGMENTS.has(seg)) return null;
-    return { seg, localeEn: true };
+    return { seg, locale: parts[0] };
   }
 
   if (parts.length !== 1) return null;
   const seg = parts[0];
   if (!ARCHIVE_SEGMENTS.has(seg)) return null;
-  return { seg, localeEn: false };
+  return { seg, locale: nextLocale };
 };
 
 export const middleware = (request: NextRequest) => {
-  const parsed = matchPostTypeArchiveRoot(request.nextUrl.pathname);
+  const parsed = matchPostTypeArchiveRoot(
+    request.nextUrl.pathname,
+    resolveNextLocale(request.nextUrl.locale),
+  );
   if (!parsed) return NextResponse.next();
+
+  if (!parsed.locale) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/ja/${parsed.seg}`;
+    return NextResponse.redirect(url);
+  }
 
   const pageRaw = request.nextUrl.searchParams.get('page');
   if (!pageRaw) return NextResponse.next();
@@ -33,7 +50,7 @@ export const middleware = (request: NextRequest) => {
   if (!Number.isFinite(pageNum) || pageNum < 2) return NextResponse.next();
 
   const url = request.nextUrl.clone();
-  url.pathname = parsed.localeEn ? `/en/${parsed.seg}/page/${pageNum}` : `/${parsed.seg}/page/${pageNum}`;
+  url.pathname = `/${parsed.locale}/${parsed.seg}/page/${pageNum}`;
   url.searchParams.delete('page');
 
   return NextResponse.rewrite(url);
@@ -43,14 +60,20 @@ export const config = {
   matcher: [
     '/movie',
     '/movie/',
+    '/ja/movie',
+    '/ja/movie/',
     '/en/movie',
     '/en/movie/',
     '/anime',
     '/anime/',
+    '/ja/anime',
+    '/ja/anime/',
     '/en/anime',
     '/en/anime/',
     '/drama',
     '/drama/',
+    '/ja/drama',
+    '/ja/drama/',
     '/en/drama',
     '/en/drama/',
   ],

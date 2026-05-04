@@ -76,6 +76,10 @@ export const Pagination: Story = {
 };
 
 export const MoviePageQueryParity: Story = {
+  args: {
+    categoryName: '映画',
+    posts: [],
+  },
   parameters: {
     docs: {
       description: {

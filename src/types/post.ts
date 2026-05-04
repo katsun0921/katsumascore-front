@@ -4,6 +4,11 @@ import type { PostType } from '@/libs/route';
 export type { VodService } from '@/libs/vod';
 export type { PostType } from '@/libs/route';
 
+export type PostTaxonomy = {
+  name: string;
+  slug: string;
+};
+
 export type Post = {
   id: string;
   slug: string;
@@ -19,6 +24,8 @@ export type Post = {
   score?: number;
   isFeatured?: boolean;
   vods?: VodService[];
+  genres?: PostTaxonomy[];
+  tags?: PostTaxonomy[];
   year?: number;
 };
 

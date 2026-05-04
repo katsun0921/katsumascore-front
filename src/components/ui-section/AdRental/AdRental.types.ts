@@ -1,3 +1,3 @@
 export type AdRentalProps = {
-  heading: string
+  heading?: string
 }

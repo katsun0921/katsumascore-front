@@ -16,8 +16,9 @@ const nextConfig: NextConfig = {
     unoptimized: process.env.NODE_ENV === 'development',
   },
   i18n: {
-    locales: ['ja', 'en'],
-    defaultLocale: 'ja',
+    locales: ['default', 'ja', 'en'],
+    defaultLocale: 'default',
+    localeDetection: false,
   },
   async redirects() {
     return [

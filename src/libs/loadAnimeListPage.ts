@@ -1,7 +1,7 @@
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
 import type { Post } from "@/types/post";
-import type { WPCategory } from "@/types/wordpress";
+import type { WPCategory, WPPost } from "@/types/wordpress";
 
 export const ANIME_LIST_PER_PAGE = 12;
 
@@ -10,6 +10,7 @@ export type AnimeListPageResult =
   | {
       categoryName: string;
       posts: Post[];
+      allPosts: Post[];
       currentPage: number;
       totalPages: number;
     };
@@ -43,20 +44,29 @@ export const loadAnimeListPage = async (
   if (!meta) return { notFound: true };
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-  const fetched = await getPostsWithMeta({
-    category: meta.id,
-    page: safePage,
-    per_page: ANIME_LIST_PER_PAGE,
-    lang: currentLocale,
-  });
-  if (!fetched) return { notFound: true };
+  const rawPosts: WPPost[] = [];
+  let rawTotalPages = 1;
+  for (let rawPage = 1; rawPage <= rawTotalPages; rawPage += 1) {
+    const fetched = await getPostsWithMeta({
+      category: meta.id,
+      page: rawPage,
+      per_page: ANIME_LIST_PER_PAGE,
+      lang: currentLocale,
+    });
+    if (!fetched) return { notFound: true };
+    rawPosts.push(...fetched.items);
+    rawTotalPages = Math.max(1, fetched.meta.totalPages);
+  }
 
-  const totalPages = Math.max(1, fetched.meta.totalPages);
+  const normalizedPosts = normalizePosts(rawPosts, currentLocale);
+  const totalPages = Math.max(1, Math.ceil(normalizedPosts.length / ANIME_LIST_PER_PAGE));
   if (safePage > totalPages) return { notFound: true };
+  const start = (safePage - 1) * ANIME_LIST_PER_PAGE;
 
   return {
     categoryName: meta.name,
-    posts: normalizePosts(fetched.items, currentLocale),
+    posts: normalizedPosts.slice(start, start + ANIME_LIST_PER_PAGE),
+    allPosts: normalizedPosts,
     currentPage: safePage,
     totalPages,
   };

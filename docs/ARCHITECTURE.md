@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.4** ― Search System を追記  
-> katsumascore.blog ｜ 2026年5月2日
+> **v1.5** ― Archive List Filtering を追記  
+> katsumascore.blog ｜ 2026年5月4日
 
 ---
 
@@ -284,13 +284,90 @@ GET /wp-json/wp/v2/posts?country=us&lang=ja    → ja のアメリカ映画一�
 
 ---
 
-## 6. VOD在庫API（SSR設計）
+## 6. Archive List Filtering
 
 ### 6.1 概要
 
+映画・アニメ・ドラマの一覧ページは `ListTemplate` を共通テンプレートとして使用する。フィルタUIは `ListTemplate` が表示し、実際の絞り込み・URL生成・ページングは `pages/{movie,anime,drama}` 側で行う。
+
+対象ページ:
+
+| 種別 | URL |
+|---|---|
+| 映画 | `/ja/movie` / `/en/movie` |
+| アニメ | `/ja/anime` / `/en/anime` |
+| ドラマ | `/ja/drama` / `/en/drama` |
+
+### 6.2 URL設計
+
+フィルタ状態は `state` ではなく URL params を正とする。リンク遷移によりページを再生成し、リロード・共有・ページネーションで同じ状態を再現できるようにする。
+
+| 条件 | URL例 | 備考 |
+|---|---|---|
+| 評価順 | `/ja/anime` | デフォルト。`filter=score` は付与しない |
+| 新着 | `/ja/anime?filter=new` | 投稿公開日降順 |
+| 配信中 | `/ja/anime?filter=streaming` | VODありのみ |
+| genre | `/ja/anime?genre=sports` | `genre:{slug}` として内部表現 |
+| tag | `/ja/anime?tag=award` | `tag:{slug}` として内部表現 |
+| 並び替え + genre | `/ja/anime?filter=new&genre=sports` | 並び替えと taxonomy を併用 |
+| ページング | `/ja/anime?page=2&genre=sports` | middleware で内部的に `/ja/anime/page/2` へ rewrite |
+
+locale は必ず明示 prefix を付ける。`/anime` は `/ja/anime` へリダイレクトし、`/en/anime` は英語ページとして扱う。
+
+### 6.3 UI構造
+
+`ListTemplate` のフィルタバーは以下の行構成とする。
+
+| 行 | 内容 | 生成元 |
+|---|---|---|
+| 1行目 | 評価順 / 新着 / 配信中 | `ListTemplate` 固定定義 |
+| 2行目 | genre | `filterOptionPosts` の `post.genres` |
+| 3行目 | tag | `filterOptionPosts` の `post.tags` |
+
+`ListTemplate` は表示用の `posts` と、フィルタ候補生成用の `filterOptionPosts` を分けて受け取る。これにより、絞り込み後の投稿だけで候補が消えることを防ぐ。
+
+### 6.4 データフロー
+
+一覧ページでは、カテゴリ全体の正規化済み投稿を `allPosts` として取得し、URL params に基づいて絞り込み・並び替え・ページングを行う。
+
+```
+WP REST API
+  → normalizePosts()
+  → allPosts
+  → filterPostsByListFilters()
+  → paginatePosts()
+  → ListTemplate(posts, filterOptionPosts)
+```
+
+重要な順序:
+
+1. カテゴリ全体の投稿を正規化する
+2. `filter` / `genre` / `tag` の URL params を読む
+3. taxonomy で絞り込む
+4. `score` / `new` / `streaming` で並び替え・絞り込みする
+5. 最後にページングする
+
+現在ページの投稿だけで taxonomy を絞り込むと、`/ja/anime?genre=sports` の1ページ目が1件だけになるなど、件数がページ境界に依存してしまう。そのため必ず `allPosts` を起点にする。
+
+### 6.5 Active状態
+
+active状態は複数持てる。`/ja/anime?genre=sports` では `score` と `genre:sports` の両方が active になる。`/ja/anime?filter=new&genre=sports` では `new` と `genre:sports` が active になる。
+
+### 6.6 正規化データ
+
+UIは WordPress 生データを直接扱わない。`mapWPPostToPost()` で `Post.genres` / `Post.tags` に正規化した後、`ListTemplate` に渡す。
+
+英語ページでは term ACF の `name_en` / `genre_name_en` / `tag_name_en` を優先する。英語名が未設定で、WP term の `name` が日本語の場合は slug 由来の英語寄りラベルへフォールバックする。
+
+---
+
+## 7. VOD在庫API（SSR設計）
+
+### 7.1 概要
+
 Netflix・Amazon Prime・U-NEXTの在庫状況をリアルタイムで確認するAPIをCloudflare Workers上でSSR提供する。既存Python scraper（Cloud Run）で収集したデータをCloudflare KVに保存し、フロントからSSRで取得する構成。
 
-### 6.2 エンドポイント
+### 7.2 エンドポイント
 
 ```
 GET /api/vod?slug={post-slug}
@@ -304,7 +381,7 @@ GET /api/vod?slug={post-slug}
 | `is_cinema` | boolean | 劇場公開中（VOD非表示フラグ） |
 | `updated_at` | string（ISO8601） | 最終確認日時（Cloud Runが更新） |
 
-### 6.3 データフロー
+### 7.3 データフロー
 
 1. Cloud Scheduler（週1回）→ Cloud Run（Python scraper）が各VODサービスのURL確認
 2. 確認結果をCloudflare KV（またはCloud Storage）に書き込み
@@ -313,7 +390,7 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 7. 実装ロードマップ
+## 8. 実装ロードマップ
 
 | ステップ | 作業内容 | 優先度 |
 |---|---|---|
@@ -331,11 +408,11 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 8. 代替案（Workers値上げ・無料枠超過時）
+## 9. 代替案（Workers値上げ・無料枠超過時）
 
 Cloudflare Workersの料金体系変更または無料枠（10万リクエスト/日）超過が発生した場合の構成。コードの大幅変更は不要で、設定変更とGitHub Actionsのデプロイ先変更のみで対応できる。
 
-### 8.1 代替構成
+### 9.1 代替構成
 
 ```
 [ ConoHa Wing ]
@@ -346,7 +423,7 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
   api.katsumascore.blog    VOD在庫API のみ継続
 ```
 
-### 8.2 切り替え手順
+### 9.2 切り替え手順
 
 1. `next.config.ts` に `output: 'export'` を追加（1行のみ）
 2. GitHub Actionsのデプロイ先をCloudflare WorkersからConoHa Wing（rsync）に変更
@@ -359,21 +436,21 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
 
 ---
 
-## 9. 注意事項・既知の制約
+## 10. 注意事項・既知の制約
 
-### 9.1 Next.js on Cloudflare Workersの制約
+### 10.1 Next.js on Cloudflare Workersの制約
 
 - Node.js APIの一部（`fs`・`child_process`等）はWorkersランタイムで動作しない
 - Workers Freeプランのバンドルサイズ上限は3MiB（Paidは10MiB）
 - fetch cacheの2MB制限あり（`no-store`は別エラーになるため設定注意）
 
-### 9.2 Pages Router採用理由
+### 10.2 Pages Router採用理由
 
 - App RouterのRSC・`use client`/`use server`・Server Actionsの複雑さを回避
 - `unstable_cache` / `cache()` などの不安定なAPIを避ける
 - Pages RouterはOpenNextのCloudflareアダプターでの動作実績が豊富
 
-### 9.3 ACFフィールドのREST API公開設定
+### 10.3 ACFフィールドのREST API公開設定
 
 ACF Proの各フィールドをWP REST APIで取得するには、WordPressの`functions.php`で明示的に公開設定が必要。
 
@@ -385,9 +462,9 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 
 ---
 
-## 10. Search System
+## 11. Search System
 
-### 10.1 概要
+### 11.1 概要
 
 検索は2つの入口を持つ。ヘッダーのインクリメンタル検索（ドロップダウン）と、`/search?q=` の検索結果ページ。
 
@@ -396,7 +473,7 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 | ヘッダー検索 | `features/Search` | モックデータ（WP API接続は TODO） |
 | 検索結果ページ | `pages/search.tsx` + `SearchResultTemplate` | `/api/search`（API Route）経由でWP REST API |
 
-### 10.2 ファイル構成
+### 11.2 ファイル構成
 
 ```
 src/
@@ -435,7 +512,7 @@ src/
     └── search.ts                        ← SearchResult型（ヘッダー検索用）
 ```
 
-### 10.3 データフロー
+### 11.3 データフロー
 
 **検索結果ページ（`/search?q=xxx`）**
 
@@ -463,7 +540,7 @@ src/
 > `WP_API_URL` はサーバー専用環境変数のため、CSR（ブラウザ）から直接参照できない。
 > API Route をプロキシとして挟むことでCORSを回避し、サーバー側で `WP_API_URL` を使う。
 
-### 10.4 スコアリング（`searchRelevance.ts`）
+### 11.4 スコアリング（`searchRelevance.ts`）
 
 | フィールド | スコア |
 |---|---|
@@ -474,7 +551,7 @@ src/
 
 スコアが同点の場合はタイトルの五十音順でソート。
 
-### 10.5 次元フィルタ
+### 11.5 次元フィルタ
 
 検索結果ページのフィルターバーで絞り込める。
 
@@ -485,11 +562,11 @@ src/
 | `director` | 監督 | director マッチを含む結果のみ |
 | `genre` | ジャンル | genre マッチを含む結果のみ |
 
-### 10.6 HighlightText
+### 11.6 HighlightText
 
 `dangerouslySetInnerHTML` + DOMPurify を使わず、`text.split(regex)` でパーツに分割してReactで `<mark>` を返す方式を採用。XSSリスクなし。
 
-### 10.7 今後の対応（TODO）
+### 11.7 今後の対応（TODO）
 
 | 項目 | 内容 |
 |---|---|
@@ -499,4 +576,4 @@ src/
 
 ---
 
-*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.4 ｜ katsumascore.blog ｜ 2026年5月2日*
+*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.5 ｜ katsumascore.blog ｜ 2026年5月4日*

@@ -178,11 +178,30 @@ import { VOD_LABEL, VOD_COLOR_VAR, VOD_INITIAL } from '@/lib/vod';
 
 ## デプロイ
 
-Cloudflare Workers (OpenNext) を使用しています。
+Cloudflare Workers（[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)）を使用しています。
 
 ```bash
 npm run deploy
 ```
+
+事前に [WordPress 本番 API 接続確認](./docs/features/wordpress_production_api_verification.md) と [環境変数チェックリスト](./docs/features/wordpress_production_api_verification_checklist.md) に沿って `WP_API_URL` などを揃えてください。機密値は **リポジトリに含めず**、Cloudflare ダッシュボードの **Settings → Variables** または `wrangler secret put <NAME>` で登録します（手順の骨子は [wordpress_production_env_secrets.md](./docs/features/wordpress_production_env_secrets.md)）。
+
+### 本番検証の目安
+
+1. `wrangler login` 済みであること。
+2. 本番用の `WP_API_URL` / `NEXT_PUBLIC_SITE_URL` / `NEXT_PUBLIC_WP_BASE_URL` を Workers に設定したうえで `npm run deploy` が成功すること。
+3. `npm run preview`（`opennextjs-cloudflare build` + `wrangler dev`）で主要ページが表示されること（KV を使う API はバインディングが必要な場合あり）。
+4. デプロイログおよびブラウザで API 接続エラーが出ていないこと。
+
+### ISR 再検証（Webhook）
+
+`REVALIDATE_SECRET` を設定したうえで、`POST /api/revalidate` にシークレット付きでパスを渡すと On-Demand Revalidation が走ります。
+
+- 認証: `Authorization: Bearer <REVALIDATE_SECRET>`、`X-Revalidate-Secret: <REVALIDATE_SECRET>`、またはクエリ `?secret=`（ログに残りやすいので非推奨）。
+- 本文（JSON）: `{ "path": "/" }` または `{ "paths": ["/posts/example-slug", "/"] }`。クエリ `?path=` も併用可。
+- `REVALIDATE_SECRET` が未設定のときは **503**（誤って公開エンドポイントにならないようにするため）。
+
+WordPress 側では更新フックから上記 URL を `wp_remote_post` 等で呼び出す（プラグイン・外部ジョブ）運用を想定しています。i18n 付き URL（例: `/en/posts/...`）が必要なページは、そのパスで個別に revalidate してください。
 
 ---
 

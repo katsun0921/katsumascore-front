@@ -1,6 +1,5 @@
 // ISR: revalidate 60s — アニメカテゴリ記事一覧（/anime, /en/anime）
 import Head from 'next/head';
-import { useState } from 'react';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -11,38 +10,60 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
-import { getPostTypeArchiveUrl } from '@/libs/route';
+import { ANIME_LIST_PER_PAGE, loadAnimeListPage } from '@/libs/loadAnimeListPage';
+import {
+  filterPostsByListFilters,
+  getActiveListFilterValuesFromUrlParams,
+  getSortFilterFromUrlParams,
+  getTaxonomyFilterFromUrlParams,
+  getUrlParamsFromListFilter,
+  paginatePosts,
+} from '@/libs/listFilters';
+import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 type AnimeIndexProps = {
   categoryName: string;
   posts: Post[];
+  allPosts: Post[];
   currentPage: number;
   totalPages: number;
   locale: string;
 };
 
-const sortPosts = (posts: Post[], filter: string): Post[] => {
-  if (filter === 'score') return [...posts].sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
-  if (filter === 'new') return [...posts].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
-  return posts;
-};
-
 const AnimeIndexPage = ({
   categoryName,
-  posts,
+  allPosts,
   currentPage,
-  totalPages,
   locale,
 }: AnimeIndexProps) => {
   const router = useRouter();
-  const [activeFilter, setActiveFilter] = useState('score');
-  const sortedPosts = sortPosts(posts, activeFilter);
-  const loc = (locale ?? 'ja') as Locale;
+  const sortFilter = getSortFilterFromUrlParams(router.query);
+  const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
+  const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
+  const filteredPosts = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
+  const pagedPosts = paginatePosts(filteredPosts, currentPage, ANIME_LIST_PER_PAGE);
+  const filteredTotalPages = Math.max(1, Math.ceil(filteredPosts.length / ANIME_LIST_PER_PAGE));
+  const loc = normalizeRouteLocale(locale) as Locale;
+
+  const getArchiveUrl = (page: number, filter?: string) => {
+    const base = getPostTypeArchiveUrl({ type: 'anime', lang: loc, page });
+    const params = new URLSearchParams();
+    const nextParams = filter ? getUrlParamsFromListFilter(filter) : undefined;
+    const nextSortFilter = nextParams?.filter ?? sortFilter;
+    const nextTaxonomyFilter = nextParams?.genre || nextParams?.tag ? filter : taxonomyFilter;
+    const sortParams = getUrlParamsFromListFilter(nextSortFilter);
+    const taxonomyParams = nextTaxonomyFilter ? getUrlParamsFromListFilter(nextTaxonomyFilter) : undefined;
+    if (sortParams?.filter) params.set('filter', sortParams.filter);
+    if (taxonomyParams?.genre) params.set('genre', taxonomyParams.genre);
+    if (taxonomyParams?.tag) params.set('tag', taxonomyParams.tag);
+    if (params.size === 0) return base;
+    const separator = base.includes('?') ? '&' : '?';
+    return `${base}${separator}${params.toString()}`;
+  };
 
   const handlePageChange = (page: number) => {
-    void router.push(getPostTypeArchiveUrl({ type: 'anime', lang: loc, page }), undefined, {
+    void router.push(getArchiveUrl(page), undefined, {
       scroll: true,
       locale: false,
     });
@@ -57,11 +78,12 @@ const AnimeIndexPage = ({
       <ListTemplate
         categoryName={categoryName}
         categoryDescription={formatListPageCategoryDescription(categoryName, loc)}
-        posts={sortedPosts}
-        activeFilter={activeFilter}
-        onFilterSelect={setActiveFilter}
+        posts={pagedPosts}
+        filterOptionPosts={allPosts}
+        getFilterHref={(value) => getArchiveUrl(1, value)}
+        activeFilter={activeListFilters}
         currentPage={currentPage}
-        totalPages={totalPages}
+        totalPages={filteredTotalPages}
         onPageChange={handlePageChange}
       />
     </I18nProvider>
@@ -71,7 +93,7 @@ const AnimeIndexPage = ({
 export default AnimeIndexPage;
 
 export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }) => {
-  const currentLocale = locale ?? 'ja';
+  const currentLocale = normalizeRouteLocale(locale);
   const data = await loadAnimeListPage(currentLocale, 1);
   if ('notFound' in data) return { notFound: true };
 
@@ -79,6 +101,7 @@ export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }
     props: {
       categoryName: data.categoryName,
       posts: data.posts,
+      allPosts: data.allPosts,
       currentPage: data.currentPage,
       totalPages: data.totalPages,
       locale: currentLocale,

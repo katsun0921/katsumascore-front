@@ -6,9 +6,12 @@ export type EntityType = 'actor' | 'director' | 'company'
 
 const DEFAULT_LOCALE = 'ja';
 
-/** ja は `''`、en は `/en` */
+export const normalizeRouteLocale = (lang: string | undefined): 'ja' | 'en' =>
+  lang === 'en' ? 'en' : DEFAULT_LOCALE;
+
+/** ja は `/ja`、en は `/en` */
 export const getLocalePathPrefix = (lang: string): string =>
-  lang === DEFAULT_LOCALE ? '' : `/${lang}`;
+  `/${normalizeRouteLocale(lang)}`;
 
 // WP category slug → PostType mapping. Extend when actual WP slugs are known.
 const WP_CATEGORY_TO_POST_TYPE: Partial<Record<string, PostType>> = {

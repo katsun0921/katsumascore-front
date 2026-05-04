@@ -1,13 +1,19 @@
 
 .listFilterBar {
   display: flex;
-  gap: var(--space-8);
-  overflow-x: auto;
+  flex-direction: column;
+  gap: var(--space-6);
   padding-bottom: var(--space-4);
-  scrollbar-width: none;
 
-  &::-webkit-scrollbar {
-    display: none;
+  &__row {
+    display: flex;
+    gap: var(--space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   &__button {

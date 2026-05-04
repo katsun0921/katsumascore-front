@@ -49,6 +49,9 @@ next-env.d.ts
 storybook-static/
 .claude/*
 
+.open-next/
+.wrangler
+
 wordpress/*
 
 katsumascore_design_system/*

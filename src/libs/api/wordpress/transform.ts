@@ -38,7 +38,7 @@ export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
   return parsed.success ? parsed.data : null;
 };
 
-type TermLike = { name?: unknown; slug?: unknown; taxonomy?: unknown };
+type TermLike = { name?: unknown; slug?: unknown; taxonomy?: unknown; acf?: unknown };
 
 const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLowerCase();
 
@@ -54,7 +54,46 @@ export type PostTaxonomyLink = {
   slug: string
 };
 
-const extractTaxonomyLinks = (wp: ParsedWPPost, taxes: Set<string>): PostTaxonomyLink[] => {
+const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | undefined => {
+  for (const k of keys) {
+    const v = r[k];
+    if (typeof v === "string" && v.trim() !== "") return v.trim();
+  }
+  return undefined;
+};
+
+const extractTermAcfNames = (acfRaw: unknown): { ja?: string; en?: string } | undefined => {
+  if (acfRaw === false || acfRaw === null || acfRaw === undefined) return undefined;
+  if (typeof acfRaw !== "object" || Array.isArray(acfRaw)) return undefined;
+  const r = acfRaw as Record<string, unknown>;
+  const ja = pickFirstString(r, ["name_ja", "genre_name_ja", "tag_name_ja"]);
+  const en = pickFirstString(r, ["name_en", "genre_name_en", "tag_name_en"]);
+  if (ja === undefined && en === undefined) return undefined;
+  return { ...(ja !== undefined ? { ja } : {}), ...(en !== undefined ? { en } : {}) };
+};
+
+const containsJapaneseText = (value: string): boolean =>
+  /[\u3040-\u30ff\u3400-\u9fff]/.test(value);
+
+const slugToEnglishLabel = (slug: string): string =>
+  slug
+    .replace(/[-_]+/g, " ")
+    .replace(/\b[a-z]/g, (char) => char.toUpperCase());
+
+const termDisplayName = (term: TermLike, name: string, slug: string, locale?: string): string => {
+  const acfNames = extractTermAcfNames(term.acf);
+  if (locale === "en" && acfNames?.en) return acfNames.en;
+  if (locale === "en" && !containsJapaneseText(name)) return name;
+  if (locale === "en") return slugToEnglishLabel(slug);
+  if (acfNames?.ja) return acfNames.ja;
+  return name;
+};
+
+const extractTaxonomyLinks = (
+  wp: ParsedWPPost,
+  taxes: Set<string>,
+  locale?: string,
+): PostTaxonomyLink[] => {
   const groups = wp._embedded?.["wp:term"];
   if (!Array.isArray(groups)) return [];
   const seen = new Set<string>();
@@ -71,19 +110,19 @@ const extractTaxonomyLinks = (wp: ParsedWPPost, taxes: Set<string>): PostTaxonom
       if (!taxes.has(tax)) continue;
       if (seen.has(slug)) continue;
       seen.add(slug);
-      out.push({ name, slug });
+      out.push({ name: termDisplayName(t, name, slug, locale), slug });
     }
   }
   return out;
 };
 
 /** `_embedded['wp:term']` から genre / genres タクソノミーのリンク用データを抽出 */
-export const extractGenreLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
-  extractTaxonomyLinks(wp, GENRE_TAXONOMIES);
+export const extractGenreLinksFromParsedWp = (wp: ParsedWPPost, locale?: string): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, GENRE_TAXONOMIES, locale);
 
 /** `_embedded['wp:term']` から post_tag（および tag）のリンク用データを抽出 */
-export const extractPostTagLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
-  extractTaxonomyLinks(wp, POST_TAG_TAXONOMIES);
+export const extractPostTagLinksFromParsedWp = (wp: ParsedWPPost, locale?: string): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, POST_TAG_TAXONOMIES, locale);
 
 /** `_embedded['wp:term']` から film_studio（配給会社）のリンク用データを抽出 */
 export const extractFilmStudioLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
@@ -153,6 +192,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   const acfLang = wp.acf?.lang;
   const lang = detectLang(wp.link, acfLang);
   const isFeatured = wp.acf?.display_settings?.is_featured === true;
+  const genres = extractGenreLinksFromParsedWp(wp, lang);
+  const tags = extractPostTagLinksFromParsedWp(wp, lang);
 
   const acf = wp.acf;
   const vodList: import("@/libs/vod").VodService[] = [];
@@ -182,6 +223,8 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     ...(rs !== undefined ? { score: rs } : {}),
     ...(isFeatured ? { isFeatured } : {}),
     ...(vods && vods.length > 0 ? { vods } : {}),
+    ...(genres.length > 0 ? { genres } : {}),
+    ...(tags.length > 0 ? { tags } : {}),
     ...(year !== undefined ? { year } : {}),
   };
 };

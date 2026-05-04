@@ -6,8 +6,10 @@ export type ListTemplateProps = {
   categoryName: string;
   categoryDescription?: string;
   posts: Post[];
+  filterOptionPosts?: Post[];
   filterOptions?: FilterOption[];
-  activeFilter?: string;
+  getFilterHref?: (value: string) => string;
+  activeFilter?: string | string[];
   onFilterSelect?: (value: string) => void;
   currentPage?: number;
   totalPages?: number;

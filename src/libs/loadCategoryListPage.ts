@@ -11,6 +11,7 @@ export type CategoryListPageResult =
       categoryName: string;
       slug: string;
       posts: Post[];
+      allPosts: Post[];
       currentPage: number;
       totalPages: number;
     };
@@ -26,10 +27,8 @@ export const loadCategoryListPage = async (
   if (!category) return { notFound: true };
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-  const requiredPostCount = safePage * CATEGORY_LIST_PER_PAGE;
   const rawPosts: WPPost[] = [];
   let rawTotalPages = 1;
-  let reachedRawEnd = false;
   for (let rawPage = 1; rawPage <= rawTotalPages; rawPage += 1) {
     const fetched = await getPostsWithMeta({
       category: category.id,
@@ -40,13 +39,11 @@ export const loadCategoryListPage = async (
     if (!fetched) return { notFound: true };
     rawPosts.push(...fetched.items);
     rawTotalPages = Math.max(1, fetched.meta.totalPages);
-    reachedRawEnd = rawPage >= rawTotalPages;
-    if (normalizePosts(rawPosts, currentLocale).length >= requiredPostCount) break;
   }
 
   const normalizedPosts = normalizePosts(rawPosts, currentLocale);
   const normalizedTotalPages = Math.max(1, Math.ceil(normalizedPosts.length / CATEGORY_LIST_PER_PAGE));
-  const totalPages = reachedRawEnd ? normalizedTotalPages : rawTotalPages;
+  const totalPages = normalizedTotalPages;
   if (safePage > totalPages) return { notFound: true };
   const start = (safePage - 1) * CATEGORY_LIST_PER_PAGE;
 
@@ -54,6 +51,7 @@ export const loadCategoryListPage = async (
     categoryName: category.name,
     slug: category.slug,
     posts: normalizedPosts.slice(start, start + CATEGORY_LIST_PER_PAGE),
+    allPosts: normalizedPosts,
     currentPage: safePage,
     totalPages,
   };

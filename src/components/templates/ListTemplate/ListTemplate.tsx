@@ -7,6 +7,7 @@ import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
 import { Pagination } from '@/components/features/Pagination';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
+import { getPostTaxonomyFilterOptionRows } from '@/libs/listFilters';
 import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
 
@@ -14,7 +15,9 @@ export const ListTemplate = ({
   categoryName,
   categoryDescription,
   posts,
+  filterOptionPosts,
   filterOptions,
+  getFilterHref,
   activeFilter = 'score',
   onFilterSelect,
   currentPage = 1,
@@ -25,13 +28,28 @@ export const ListTemplate = ({
 }: ListTemplateProps) => {
   const locale = useLocale();
 
-  const defaultFilterOptions = [
+  const defaultFilterOptionPosts = filterOptionPosts ?? posts;
+  const withFilterHref = (option: { label: string; value: string }) => ({
+    ...option,
+    ...(getFilterHref ? { href: getFilterHref(option.value) } : {}),
+  });
+  const defaultSortFilterOptions = [
     { label: t(messages, ['filterOptions', 'score'], locale), value: 'score' },
     { label: t(messages, ['filterOptions', 'new'], locale), value: 'new' },
     { label: t(messages, ['filterOptions', 'streaming'], locale), value: 'streaming' },
+  ].map(withFilterHref);
+  const defaultTaxonomyFilterRows = getPostTaxonomyFilterOptionRows(defaultFilterOptionPosts, {
+      genre: t(messages, ['filterOptions', 'genre'], locale),
+      tag: t(messages, ['filterOptions', 'tag'], locale),
+    }).map((row) => row.map(withFilterHref));
+  const defaultFilterOptionRows = [
+    defaultSortFilterOptions,
+    ...defaultTaxonomyFilterRows,
   ];
+  const defaultFilterOptions = defaultFilterOptionRows.flat();
 
   const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
+  const resolvedFilterOptionRows = filterOptions ? [filterOptions] : defaultFilterOptionRows;
 
   const breadcrumbItems = [
     { label: t(messages, ['breadcrumb', 'home'], locale), href: '/' },
@@ -76,6 +94,7 @@ export const ListTemplate = ({
       <div className='py-4 px-4 bg-color-bg border-b border-color-border'>
         <ListFilterBar
           options={resolvedFilterOptions}
+          optionRows={resolvedFilterOptionRows}
           activeValue={activeFilter}
           onSelect={handleFilterSelect}
         />
