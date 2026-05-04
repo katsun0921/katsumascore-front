@@ -5,24 +5,21 @@ import { I18nProvider } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Locale } from '@/i18n/t';
 import { searchPageMessages } from '@/i18n/searchPageMessages';
-import { mapWPPostToPost } from '@/libs/api/wordpress';
-
-const searchPostsClient = async (query: string, lang: string): Promise<unknown[]> => {
-  const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&lang=${lang}`);
-  if (!res.ok) return [];
-  return res.json();
-};
 import { SearchResultTemplate } from '@/components/templates/SearchResultTemplate';
 import { SeoHead } from '@/components/features/seo/SeoHead';
-import {
-  prepareSearchResults,
-  type SearchDimensionFilter,
-} from '@/libs/searchRelevance';
+import type { SearchDimensionFilter } from '@/libs/searchRelevance';
+import type { Post } from '@/types/post';
 
 const DIMENSION_VALUES: SearchDimensionFilter[] = ['all', 'actor', 'director', 'genre'];
 
 const isSearchDimension = (v: string): v is SearchDimensionFilter =>
   DIMENSION_VALUES.includes(v as SearchDimensionFilter);
+
+const searchPostsClient = async (query: string, lang: string, dimension: SearchDimensionFilter): Promise<Post[]> => {
+  const res = await fetch(`/api/search?q=${encodeURIComponent(query)}&lang=${lang}&dimension=${dimension}`);
+  if (!res.ok) return [];
+  return res.json() as Promise<Post[]>;
+};
 
 const SearchPage = () => {
   const router = useRouter();
@@ -34,7 +31,7 @@ const SearchPage = () => {
     return typeof raw === 'string' ? raw.trim() : '';
   }, [router.query.q]);
 
-  const [rawHits, setRawHits] = useState<unknown[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
   const [dimension, setDimension] = useState<SearchDimensionFilter>('all');
   const [loading, setLoading] = useState(false);
 
@@ -45,13 +42,13 @@ const SearchPage = () => {
 
     let cancelled = false;
     // eslint-disable-next-line react-hooks/set-state-in-effect -- CSR 検索: 再取得前に一覧を空にする
-    setRawHits([]);
+    setPosts([]);
     setLoading(true);
 
-    searchPostsClient(q, lang)
-      .then((raw) => {
+    searchPostsClient(q, lang, dimension)
+      .then((data) => {
         if (cancelled) return;
-        setRawHits(raw);
+        setPosts(data);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -60,20 +57,7 @@ const SearchPage = () => {
     return () => {
       cancelled = true;
     };
-  }, [router.isReady, q, lang]);
-
-  const posts = useMemo(() => {
-    if (!q) return [];
-    const prepared = prepareSearchResults(rawHits, q, dimension);
-    return prepared
-      .map(({ wp }) => mapWPPostToPost(wp))
-      .filter((m): m is NonNullable<typeof m> => m !== null)
-      .map((m) => {
-        const { content, ...rest } = m;
-        void content;
-        return rest;
-      });
-  }, [rawHits, q, dimension]);
+  }, [router.isReady, q, lang, dimension]);
 
   const displayLoading = !router.isReady || (q.length > 0 && loading);
 

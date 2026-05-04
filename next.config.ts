@@ -11,9 +11,12 @@ const nextConfig: NextConfig = {
         pathname: '/wp-content/uploads/**',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
     // ローカル開発環境では katsumascore.blog が NAT64 プライベートIPに解決されるため
     // Next.js の画像最適化をバイパスして直接 URL を使用する
     unoptimized: process.env.NODE_ENV === 'development',
+    // CDN / ISR と整合しやすい TTL（秒）。要件に合わせて調整可
+    minimumCacheTTL: 60,
   },
   i18n: {
     locales: ['default', 'ja', 'en'],

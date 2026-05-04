@@ -9,7 +9,6 @@ import { messages } from './i18n';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards, Autoplay } from 'swiper/modules';
 import type { Swiper as SwiperInstance } from 'swiper';
-import { gsap } from 'gsap';
 import 'swiper/swiper.css';
 import 'swiper/css/effect-cards';
 
@@ -55,7 +54,8 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const textBlockRef     = useRef<HTMLDivElement>(null);
   const scoreNumRef      = useRef<HTMLDivElement>(null);
   const swiperRef        = useRef<SwiperInstance | null>(null);
-  const tlRef            = useRef<gsap.core.Timeline | null>(null);
+  const gsapRef          = useRef<typeof import('gsap').gsap | null>(null);
+  const tlRef            = useRef<{ kill: () => void } | null>(null);
   const isAnimatingRef   = useRef(false);
   const hasInitializedRef = useRef(false);
   const prefixClassName = 'homeHero';
@@ -67,19 +67,29 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const shortCopy = current.copy.length > 22 ? `${current.copy.slice(0, 22)}...` : current.copy;
 
   const animateOut = (onComplete: () => void) => {
+    const g = gsapRef.current;
+    if (!g) {
+      onComplete();
+      return;
+    }
     if (tlRef.current) tlRef.current.kill();
-    gsap.to([scoreBlockRef.current, textBlockRef.current], {
+    g.to([scoreBlockRef.current, textBlockRef.current], {
       opacity: 0, y: 12, duration: 0.25,
       onComplete,
     });
   };
 
   const animateIn = (score: number) => {
+    const g = gsapRef.current;
     const targetScore = Number.isFinite(score) ? score : 0;
     if (scoreNumRef.current) scoreNumRef.current.textContent = '0.0';
+    if (!g) {
+      if (scoreNumRef.current) scoreNumRef.current.textContent = targetScore.toFixed(1);
+      return;
+    }
 
     const counter = { val: 0 };
-    const tl = gsap.timeline();
+    const tl = g.timeline();
     tlRef.current = tl;
     tl.to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '+=0.05')
       .to(counter, {
@@ -93,14 +103,22 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
       .to(textBlockRef.current, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.7');
   };
 
-  // 初回登場
+  // 初回登場（GSAP は動的 import でメインバンドルから分離）
   useEffect(() => {
-    gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
-    const initTl = gsap.timeline({ delay: 0.3 });
-    initTl.call(() => {
-      hasInitializedRef.current = true;
-      animateIn(slideList[0].score);
+    let cancelled = false;
+    void import('gsap').then(({ gsap }) => {
+      if (cancelled) return;
+      gsapRef.current = gsap;
+      gsap.set([scoreBlockRef.current, textBlockRef.current], { opacity: 0, y: 0 });
+      const initTl = gsap.timeline({ delay: 0.3 });
+      initTl.call(() => {
+        hasInitializedRef.current = true;
+        animateIn(slideList[0].score);
+      });
     });
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

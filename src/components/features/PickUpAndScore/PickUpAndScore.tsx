@@ -50,7 +50,7 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
         <div className='sidebar-picks__body'>
           <span className='sidebar-picks__title'>{post.title}</span>
           {rank && (
-            <img
+            <Image
               src={rank.src}
               alt={`rank ${rank.label}`}
               width={20}

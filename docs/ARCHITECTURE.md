@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.5** ― Archive List Filtering を追記  
+> **v1.6** ― WordPress ACF・CMSデータモデル（§5 に統合。旧稿は [`archive/katsumascore_acf_summary.md`](./archive/katsumascore_acf_summary.md)）  
 > katsumascore.blog ｜ 2026年5月4日
 
 ---
@@ -59,6 +59,8 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 ---
 
 ## 3. 最終アーキテクチャ
+
+> **本番ドメイン分離（公開 `katsumascore.blog` → Workers、CMS 専用ドメインで WordPress）**の詳細は [archive/production_domain_split.md](./archive/production_domain_split.md) を参照。以下の図は移行完了前の参照構成を示す。
 
 ### 3.1 全体構成
 
@@ -124,20 +126,123 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 
 ---
 
-## 5. WordPress Taxonomy（コンテンツ分類）
+## 5. WordPress ACF・CMSデータモデル
+
+WordPress 側の ACF フィールドグループ・代表的メタキー・REST の取り方をここに一本化する。taxonomy の term フィールドや投稿への紐付けフィールドの詳細は §6 も参照する。
+
+### 5.1 フィールドグループ一覧
+
+| グループ名 | key | 対象 | 用途 |
+|---|---|---|---|
+| Common Fields | `group_common_fields` | post / page / series | 言語・description 共通 |
+| 基本情報 | `group_61201fa8a105c` | post | レビュー基本情報 |
+| 記事内容の共通項目 | `group_63e5c9ae2b6a9` | post | おすすめポイント・あらすじ・タグ等 |
+| Genre | `group_post_genre` | post / series | genre taxonomy 紐付け |
+| Genre Names | `group_genre_names` | genre taxonomy | genre 日英名 |
+| Country | `group_post_country` | post | country taxonomy 紐付け |
+| Country Names | `group_country_names` | country taxonomy | country 日英名 |
+| Category Names | `group_category_names` | category taxonomy | category 日英名 |
+| Tag Names | `group_tag_names` | post_tag taxonomy | tag 日英名 |
+| レビューサイト | `group_61207dbc9f029` | post | 外部レビューサイト URL |
+| コンテンツを配信しているVOD | `group_63f8503a182b9` | post | VOD 配信情報 |
+| コンテンツをレンタルしているサービス | `group_63fb01ac9d488` | post | レンタル URL |
+| 商品ブロック | `group_product_block` | post | 商品ブロック |
+| Page Display Control | `group_page_display_control` | page | ページ表示設定 |
+
+### 5.2 Common Fields（post / page / series）
+
+全投稿タイプ共通のフィールドグループ。
+
+| フィールド名 | name | key | 型 | 必須 | 備考 |
+|---|---|---|---|---|---|
+| 言語 | `lang` | `field_69f0c1f525649` | radio | ✅ | `ja` / `en`・デフォルト `ja` |
+| Description | `description` | `field_description` | textarea | ❌ | 最大160文字・aioseo_description 代替 |
+
+**`lang`**
+
+- 値：`ja`（日本語）/ `en`（English）。デフォルト：`ja`。
+- フロントの locale フィルタの正とする（Polylang は使わない）。`detectLang` / `normalizePosts` 後の `m.lang` で最終的に切り分ける。
+- ルーティング例：`/ja` → `lang = ja` の投稿のみ、`/en` → `lang = en` の投稿のみ。
+
+**`description`**
+
+- AIOSEO の `description` を代替する ACF フィールド。REST で取得しメタディスクリプション等に利用可能。
+- 推奨文字数：120文字前後（最大160文字）。
+
+### 5.3 基本情報（post・レビュー）
+
+post 専用のレビュー基本情報。`lang` はリニューアルに伴い Common Fields へ移動済み。
+
+| フィールド名 | name | key | 型 |
+|---|---|---|---|
+| 多言語の紐付け | `translation_post` | `field_69f0c3132564a` | post_object |
+| レビュースコア | `review_score` | `field_612020580983a` | number |
+| 日本語タイトル | `title_jp` | `field_6120505b43660` | text |
+| 英語タイトル | `title_en` | `field_612020910983b` | text |
+| コピーライト | `copyright` | `field_63f8586bb8403` | text |
+| 監督 | `director` | `field_63db4c604a564` | text |
+| 主要な登場人物一覧 | `actors_filed` | `field_63e5c5e2c9edc` | repeater |
+| 配給会社 | `film_studio` | `field_63db4cf14a566` | text |
+| 制作会社 | `production_studio` | `field_63db4d254a567` | text |
+| 公式サイトのURL | `official_url` | `field_612021110983c` | url |
+| 公式SNS | `official_sns` | `field_68c58083a98c3` | （複合） |
+| Video Code | `video_code` | `field_6120218a0983e` | text |
+| 上映劇場 | `cinema_info_filed` | `field_63e6d8a1ec24e` | （複合） |
+| 公開年 | `release` | `field_63e63818bef2c` | number |
+| 関連するポスト | `relation_fields` | `field_68c656f332fcf` | relationship |
+| シリーズ | `type_post_series` | `field_66298ccfca327` | （複合） |
+| タグ | `type_post_tag` | `field_6623292666e53` | （複合） |
+
+### 5.4 データ移行（参考・CMS側）
+
+| フィールド | 移行元 | 移行先 | 件数（当時） |
+|---|---|---|---|
+| `lang` | `基本情報` グループ | `Common Fields` グループ | 502件 |
+| `description` | `wp_aioseo_posts.description` | `wp_postmeta`（`description`） | 514件 |
+
+### 5.5 ACF JSON ファイル（リポジトリ）
+
+| ファイル | 内容 |
+|---|---|
+| `acf-common-fields-updated.json` | 全フィールドグループ（`lang` を Common Fields に移動済みの一式） |
+| `acf-genre-taxonomy.json` | genre taxonomy 定義 + `name_ja` / `name_en` + 投稿紐付け |
+| `acf-country-taxonomy.json` | country taxonomy 定義 + `name_ja` / `name_en` + 投稿紐付け |
+| `acf-category-names.json` | category term の `name_ja` / `name_en` |
+
+### 5.6 REST API（投稿・taxonomy・言語パラメータ）
+
+一覧・詳細の言語切り分けは正規化後の `lang` を正とする。互換のため `?lang=ja` / `?lang=en` を付与する場合がある（WP 側で無視されうる）。
+
+```
+// 投稿一覧（言語）
+GET /wp-json/wp/v2/posts?lang=ja
+GET /wp-json/wp/v2/posts?lang=en
+
+// taxonomy 一覧（term の name_ja / name_en を ACF 経由で含む）
+GET /wp-json/wp/v2/genre
+GET /wp-json/wp/v2/country
+
+// 絞り込み例
+GET /wp-json/wp/v2/posts?genre=action&lang=ja
+GET /wp-json/wp/v2/posts?country=us&lang=ja
+```
+
+---
+
+## 6. WordPress Taxonomy（コンテンツ分類）
 
 WordPress リニューアルに伴い、投稿の分類は以下の4 taxonomy で運用する。フロント（Next.js）では locale（`/ja` / `/en`）と REST の `lang` パラメーターで言語を切り替え、表示ラベルは ACF の `name_ja` / `name_en` を正とする。
 
-### 5.1 概要
+### 6.1 概要
 
 | taxonomy | 種類 | 件数（整理後） | 備考 |
 |---|---|---|---|
 | `category` | WP標準 | 3件 | 29件 → 3件にスリム化 |
-| `genre` | カスタム（新設） | 18ターム | `post_tag` から移行・新設（一覧は §5.4） |
+| `genre` | カスタム（新設） | 18ターム | `post_tag` から移行・新設（一覧は §6.4） |
 | `post_tag` | WP標準 | 60件 | 175件 → 60件に整理 |
 | `country` | カスタム（新設） | 16カ国 | category サブカテゴリから移行 |
 
-### 5.2 設計思想
+### 6.2 設計思想
 
 **分類ルール**
 
@@ -154,7 +259,7 @@ WordPress リニューアルに伴い、投稿の分類は以下の4 taxonomy �
 - Next.js の locale と REST の `lang` でフィルタリング
 - 日英ラベルは ACF Pro の `name_ja` / `name_en` で WordPress 管理
 
-### 5.3 Category
+### 6.3 Category
 
 **整理**: 整理前 29件 → 整理後 3件。
 
@@ -173,7 +278,7 @@ WordPress リニューアルに伴い、投稿の分類は以下の4 taxonomy �
 | 日本語名 | `field_category_name_ja` | text | ✅ |
 | English Name | `field_category_name_en` | text | ✅ |
 
-### 5.4 Genre（新設）
+### 6.4 Genre（新設）
 
 ACF Pro 6.1 以降のカスタムタクソノミーで新設。既存 `post_tag` から genre 相当のタームを移行。`post` / `series` に紐付け。
 
@@ -208,7 +313,7 @@ ACF Pro 6.1 以降のカスタムタクソノミーで新設。既存 `post_tag`
 | English Name | `field_genre_name_en` | text | ✅ |
 | Genre（投稿紐付け） | `field_genre_post` | taxonomy（checkbox） | ✅ |
 
-### 5.5 Post Tag
+### 6.5 Post Tag
 
 **整理**: 175件 → 60件。genre taxonomy へ17件移行、ja/en 重複統合74件、削除23件、残り60件を維持。
 
@@ -221,7 +326,7 @@ ACF Pro 6.1 以降のカスタムタクソノミーで新設。既存 `post_tag`
 
 60件の slug 一覧は運用リファレンスとして `docs/archive/katsumascore_taxonomy_summary.md` の Post Tag 節を参照する。
 
-### 5.6 Country（新設）
+### 6.6 Country（新設）
 
 ACF Pro 6.1 以降のカスタムタクソノミー。slug は **ISO 3166-1 alpha-2**。既存 category サブカテゴリから投稿を移行後にサブカテゴリ削除。`post` のみ紐付け（series / franchise は対象外）。
 
@@ -252,7 +357,7 @@ ACF Pro 6.1 以降のカスタムタクソノミー。slug は **ISO 3166-1 alph
 | English Name | `field_country_name_en` | text | ✅ |
 | Country（投稿紐付け） | `field_country_post` | taxonomy（checkbox） | ❌ |
 
-### 5.7 運用ルール
+### 6.7 運用ルール
 
 **投稿登録時**
 
@@ -265,28 +370,13 @@ ACF Pro 6.1 以降のカスタムタクソノミー。slug は **ISO 3166-1 alph
 
 **NG例**: genre と tag の重複登録、「映画」「おすすめ」など曖昧なタグ、country に ISO 以外の slug。
 
-### 5.8 ACF JSON（リポジトリ内の定義ファイル）
-
-| ファイル | 内容 |
-|---|---|
-| `acf-genre-taxonomy.json` | genre taxonomy 定義 + name_ja/name_en + 投稿紐付け |
-| `acf-country-taxonomy.json` | country taxonomy 定義 + name_ja/name_en + 投稿紐付け |
-| `acf-category-names.json` | category term の name_ja/name_en |
-
-### 5.9 REST API（例）
-
-```
-GET /wp-json/wp/v2/genre           → genre 一覧（acf.name_ja / acf.name_en）
-GET /wp-json/wp/v2/country         → country 一覧（acf.name_ja / acf.name_en）
-GET /wp-json/wp/v2/posts?genre=action&lang=ja  → ja のアクション映画一覧
-GET /wp-json/wp/v2/posts?country=us&lang=ja    → ja のアメリカ映画一覧
-```
+taxonomy 用 ACF JSON と REST の例は §5.5・§5.6 を参照する。
 
 ---
 
-## 6. Archive List Filtering
+## 7. Archive List Filtering
 
-### 6.1 概要
+### 7.1 概要
 
 映画・アニメ・ドラマの一覧ページは `ListTemplate` を共通テンプレートとして使用する。フィルタUIは `ListTemplate` が表示し、実際の絞り込み・URL生成・ページングは `pages/{movie,anime,drama}` 側で行う。
 
@@ -298,7 +388,7 @@ GET /wp-json/wp/v2/posts?country=us&lang=ja    → ja のアメリカ映画一�
 | アニメ | `/ja/anime` / `/en/anime` |
 | ドラマ | `/ja/drama` / `/en/drama` |
 
-### 6.2 URL設計
+### 7.2 URL設計
 
 フィルタ状態は `state` ではなく URL params を正とする。リンク遷移によりページを再生成し、リロード・共有・ページネーションで同じ状態を再現できるようにする。
 
@@ -314,7 +404,7 @@ GET /wp-json/wp/v2/posts?country=us&lang=ja    → ja のアメリカ映画一�
 
 locale は必ず明示 prefix を付ける。`/anime` は `/ja/anime` へリダイレクトし、`/en/anime` は英語ページとして扱う。
 
-### 6.3 UI構造
+### 7.3 UI構造
 
 `ListTemplate` のフィルタバーは以下の行構成とする。
 
@@ -326,7 +416,7 @@ locale は必ず明示 prefix を付ける。`/anime` は `/ja/anime` へリダ�
 
 `ListTemplate` は表示用の `posts` と、フィルタ候補生成用の `filterOptionPosts` を分けて受け取る。これにより、絞り込み後の投稿だけで候補が消えることを防ぐ。
 
-### 6.4 データフロー
+### 7.4 データフロー
 
 一覧ページでは、カテゴリ全体の正規化済み投稿を `allPosts` として取得し、URL params に基づいて絞り込み・並び替え・ページングを行う。
 
@@ -349,11 +439,11 @@ WP REST API
 
 現在ページの投稿だけで taxonomy を絞り込むと、`/ja/anime?genre=sports` の1ページ目が1件だけになるなど、件数がページ境界に依存してしまう。そのため必ず `allPosts` を起点にする。
 
-### 6.5 Active状態
+### 7.5 Active状態
 
 active状態は複数持てる。`/ja/anime?genre=sports` では `score` と `genre:sports` の両方が active になる。`/ja/anime?filter=new&genre=sports` では `new` と `genre:sports` が active になる。
 
-### 6.6 正規化データ
+### 7.6 正規化データ
 
 UIは WordPress 生データを直接扱わない。`mapWPPostToPost()` で `Post.genres` / `Post.tags` に正規化した後、`ListTemplate` に渡す。
 
@@ -361,13 +451,13 @@ UIは WordPress 生データを直接扱わない。`mapWPPostToPost()` で `Pos
 
 ---
 
-## 7. VOD在庫API（SSR設計）
+## 8. VOD在庫API（SSR設計）
 
-### 7.1 概要
+### 8.1 概要
 
 Netflix・Amazon Prime・U-NEXTの在庫状況をリアルタイムで確認するAPIをCloudflare Workers上でSSR提供する。既存Python scraper（Cloud Run）で収集したデータをCloudflare KVに保存し、フロントからSSRで取得する構成。
 
-### 7.2 エンドポイント
+### 8.2 エンドポイント
 
 ```
 GET /api/vod?slug={post-slug}
@@ -381,7 +471,7 @@ GET /api/vod?slug={post-slug}
 | `is_cinema` | boolean | 劇場公開中（VOD非表示フラグ） |
 | `updated_at` | string（ISO8601） | 最終確認日時（Cloud Runが更新） |
 
-### 7.3 データフロー
+### 8.3 データフロー
 
 1. Cloud Scheduler（週1回）→ Cloud Run（Python scraper）が各VODサービスのURL確認
 2. 確認結果をCloudflare KV（またはCloud Storage）に書き込み
@@ -390,7 +480,7 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 8. 実装ロードマップ
+## 9. 実装ロードマップ
 
 | ステップ | 作業内容 | 優先度 |
 |---|---|---|
@@ -408,11 +498,11 @@ GET /api/vod?slug={post-slug}
 
 ---
 
-## 9. 代替案（Workers値上げ・無料枠超過時）
+## 10. 代替案（Workers値上げ・無料枠超過時）
 
 Cloudflare Workersの料金体系変更または無料枠（10万リクエスト/日）超過が発生した場合の構成。コードの大幅変更は不要で、設定変更とGitHub Actionsのデプロイ先変更のみで対応できる。
 
-### 9.1 代替構成
+### 10.1 代替構成
 
 ```
 [ ConoHa Wing ]
@@ -423,7 +513,7 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
   api.katsumascore.blog    VOD在庫API のみ継続
 ```
 
-### 9.2 切り替え手順
+### 10.2 切り替え手順
 
 1. `next.config.ts` に `output: 'export'` を追加（1行のみ）
 2. GitHub Actionsのデプロイ先をCloudflare WorkersからConoHa Wing（rsync）に変更
@@ -436,21 +526,21 @@ Cloudflare Workersの料金体系変更または無料枠（10万リクエスト
 
 ---
 
-## 10. 注意事項・既知の制約
+## 11. 注意事項・既知の制約
 
-### 10.1 Next.js on Cloudflare Workersの制約
+### 11.1 Next.js on Cloudflare Workersの制約
 
 - Node.js APIの一部（`fs`・`child_process`等）はWorkersランタイムで動作しない
 - Workers Freeプランのバンドルサイズ上限は3MiB（Paidは10MiB）
 - fetch cacheの2MB制限あり（`no-store`は別エラーになるため設定注意）
 
-### 10.2 Pages Router採用理由
+### 11.2 Pages Router採用理由
 
 - App RouterのRSC・`use client`/`use server`・Server Actionsの複雑さを回避
 - `unstable_cache` / `cache()` などの不安定なAPIを避ける
 - Pages RouterはOpenNextのCloudflareアダプターでの動作実績が豊富
 
-### 10.3 ACFフィールドのREST API公開設定
+### 11.3 ACFフィールドのREST API公開設定
 
 ACF Proの各フィールドをWP REST APIで取得するには、WordPressの`functions.php`で明示的に公開設定が必要。
 
@@ -462,9 +552,9 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 
 ---
 
-## 11. Search System
+## 12. Search System
 
-### 11.1 概要
+### 12.1 概要
 
 検索は2つの入口を持つ。ヘッダーのインクリメンタル検索（ドロップダウン）と、`/search?q=` の検索結果ページ。
 
@@ -473,7 +563,7 @@ add_filter('acf/rest_api/post/get_fields', '__return_true');
 | ヘッダー検索 | `features/Search` | モックデータ（WP API接続は TODO） |
 | 検索結果ページ | `pages/search.tsx` + `SearchResultTemplate` | `/api/search`（API Route）経由でWP REST API |
 
-### 11.2 ファイル構成
+### 12.2 ファイル構成
 
 ```
 src/
@@ -512,7 +602,7 @@ src/
     └── search.ts                        ← SearchResult型（ヘッダー検索用）
 ```
 
-### 11.3 データフロー
+### 12.3 データフロー
 
 **検索結果ページ（`/search?q=xxx`）**
 
@@ -540,7 +630,7 @@ src/
 > `WP_API_URL` はサーバー専用環境変数のため、CSR（ブラウザ）から直接参照できない。
 > API Route をプロキシとして挟むことでCORSを回避し、サーバー側で `WP_API_URL` を使う。
 
-### 11.4 スコアリング（`searchRelevance.ts`）
+### 12.4 スコアリング（`searchRelevance.ts`）
 
 | フィールド | スコア |
 |---|---|
@@ -551,7 +641,7 @@ src/
 
 スコアが同点の場合はタイトルの五十音順でソート。
 
-### 11.5 次元フィルタ
+### 12.5 次元フィルタ
 
 検索結果ページのフィルターバーで絞り込める。
 
@@ -562,11 +652,11 @@ src/
 | `director` | 監督 | director マッチを含む結果のみ |
 | `genre` | ジャンル | genre マッチを含む結果のみ |
 
-### 11.6 HighlightText
+### 12.6 HighlightText
 
 `dangerouslySetInnerHTML` + DOMPurify を使わず、`text.split(regex)` でパーツに分割してReactで `<mark>` を返す方式を採用。XSSリスクなし。
 
-### 11.7 今後の対応（TODO）
+### 12.7 今後の対応（TODO）
 
 | 項目 | 内容 |
 |---|---|
@@ -576,4 +666,4 @@ src/
 
 ---
 
-*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.5 ｜ katsumascore.blog ｜ 2026年5月4日*
+*KatsumaScore フロントエンド刷新 アーキテクチャ設計書 v1.6 ｜ katsumascore.blog ｜ 2026年5月4日*

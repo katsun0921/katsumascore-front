@@ -1,7 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { mapWPPostToPost } from '@/libs/api/wordpress';
+import { prepareSearchResults, type SearchDimensionFilter } from '@/libs/searchRelevance';
+import type { Post } from '@/types/post';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { q, lang = 'ja' } = req.query;
+const VALID_DIMENSIONS: SearchDimensionFilter[] = ['all', 'actor', 'director', 'genre'];
+
+const isSearchDimension = (v: unknown): v is SearchDimensionFilter =>
+  typeof v === 'string' && VALID_DIMENSIONS.includes(v as SearchDimensionFilter);
+
+const handler = async (req: NextApiRequest, res: NextApiResponse<Post[]>) => {
+  const { q, lang = 'ja', dimension } = req.query;
   if (typeof q !== 'string' || !q.trim()) {
     res.status(200).json([]);
     return;
@@ -20,6 +28,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const data = await wpRes.json();
-  res.status(200).json(data);
+  const raw: unknown[] = await wpRes.json();
+  const dim = isSearchDimension(dimension) ? dimension : 'all';
+  const prepared = prepareSearchResults(raw, q, dim);
+
+  const posts = prepared
+    .map(({ wp }) => mapWPPostToPost(wp))
+    .filter((m): m is NonNullable<typeof m> => m !== null)
+    .map(({ content: _, ...rest }) => rest as Post);
+
+  res.status(200).json(posts);
 };
+
+export default handler;

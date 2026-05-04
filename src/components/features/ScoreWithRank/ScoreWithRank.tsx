@@ -1,7 +1,7 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import gsap from 'gsap';
 import { getRankingIcon } from './getRankingIcon';
 import type { RankLabel } from './getRankingIcon';
 
@@ -43,82 +43,84 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
     const root = rootRef.current;
     if (!root) return;
 
+    let cancelled = false;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.unobserve(root);
 
-        const tl = gsap.timeline();
+        void import('gsap').then(({ gsap }) => {
+          if (cancelled) return;
 
-        // ① 初期状態（テキスト全体）
-        gsap.set(textRef.current, { opacity: 0, scale: 0.9, filter: 'blur(4px)' });
+          const tl = gsap.timeline();
 
-        // ② ランク出現（終着点は SCSS の translateY(-10%) に合わせる）
-        if (badgeRef.current) {
-          gsap.set(badgeRef.current, { y: '-120%', opacity: 0, scale: 0.8 });
-          tl.to(badgeRef.current, {
-            y: '-10%',
-            opacity: 1,
-            scale: 1,
-            duration: 0.6,
-            ease: 'power3.out',
-          });
-          // バウンス感
-          tl.to(badgeRef.current, { scale: 1.05, duration: 0.1, ease: 'power1.in' }, '-=0.1');
-          tl.to(badgeRef.current, { scale: 1, duration: 0.15, ease: 'power2.out' });
-        }
+          gsap.set(textRef.current, { opacity: 0, scale: 0.9, filter: 'blur(4px)' });
 
-        // ③ スコアフェードイン
-        tl.to(
-          textRef.current,
-          { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' },
-          badgeRef.current ? '-=0.3' : '0',
-        );
+          if (badgeRef.current) {
+            gsap.set(badgeRef.current, { y: '-120%', opacity: 0, scale: 0.8 });
+            tl.to(badgeRef.current, {
+              y: '-10%',
+              opacity: 1,
+              scale: 1,
+              duration: 0.6,
+              ease: 'power3.out',
+            });
+            tl.to(badgeRef.current, { scale: 1.05, duration: 0.1, ease: 'power1.in' }, '-=0.1');
+            tl.to(badgeRef.current, { scale: 1, duration: 0.15, ease: 'power2.out' });
+          }
 
-        // ④ clip-path背景（width 0 → 100%）
-        if (slashRef.current) {
-          gsap.set(slashRef.current, { scaleX: 0, opacity: 0, transformOrigin: 'left center' });
           tl.to(
-            slashRef.current,
-            { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out' },
-            '-=0.3',
+            textRef.current,
+            { opacity: 1, scale: 1, filter: 'blur(0px)', duration: 0.4, ease: 'power2.out' },
+            badgeRef.current ? '-=0.3' : '0',
           );
-        }
 
-        // 数値カウントアップ（0 → value）
-        const counter = { val: 0 };
-        gsap.to(counter, {
-          val: value,
-          duration: 1.2,
-          ease: 'expo.out',
-          onUpdate() {
-            const cur = counter.val;
-            const str = Number.isInteger(value) ? String(Math.round(cur)) : cur.toFixed(1);
-            const dot = str.indexOf('.');
-            setDisplayInt(dot === -1 ? str : str.slice(0, dot));
-            setDisplayDecimal(dot === -1 ? '' : str.slice(dot));
-          },
-          onComplete() {
-            setDisplayInt(targetInt);
-            setDisplayDecimal(targetDecimal);
-          },
+          if (slashRef.current) {
+            gsap.set(slashRef.current, { scaleX: 0, opacity: 0, transformOrigin: 'left center' });
+            tl.to(
+              slashRef.current,
+              { scaleX: 1, opacity: 1, duration: 0.5, ease: 'power2.out' },
+              '-=0.3',
+            );
+          }
+
+          const counter = { val: 0 };
+          gsap.to(counter, {
+            val: value,
+            duration: 1.2,
+            ease: 'expo.out',
+            onUpdate() {
+              const cur = counter.val;
+              const str = Number.isInteger(value) ? String(Math.round(cur)) : cur.toFixed(1);
+              const dot = str.indexOf('.');
+              setDisplayInt(dot === -1 ? str : str.slice(0, dot));
+              setDisplayDecimal(dot === -1 ? '' : str.slice(dot));
+            },
+            onComplete() {
+              setDisplayInt(targetInt);
+              setDisplayDecimal(targetDecimal);
+            },
+          });
+
+          tl.to(textRef.current, { scale: 1.02, duration: 0.1, ease: 'power1.in' }, '+=1.1');
+          tl.to(textRef.current, { scale: 1, duration: 0.1, ease: 'power2.out' });
         });
-
-        // ⑤ フィードバック（完了後にスケールパルス）
-        tl.to(textRef.current, { scale: 1.02, duration: 0.1, ease: 'power1.in' }, '+=1.1');
-        tl.to(textRef.current, { scale: 1, duration: 0.1, ease: 'power2.out' });
       },
       { threshold: 0.5 },
     );
 
     observer.observe(root);
 
-    return () => observer.disconnect();
+    return () => {
+      cancelled = true;
+      observer.disconnect();
+    };
   }, [value, targetInt, targetDecimal]);
 
   if (imageOnly) {
     return rank ? (
-      <img
+      <Image
         src={rank.src}
         alt={`rank ${rank.label}`}
         width={96}
@@ -132,7 +134,7 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
     <div ref={rootRef} className={`${prefixClassName}__inner`}>
       {rank ? (
         <div ref={badgeRef} className={`${prefixClassName}__badge`}>
-          <img
+          <Image
             src={rank.src}
             alt={`rank ${rank.label}`}
             width={96}
