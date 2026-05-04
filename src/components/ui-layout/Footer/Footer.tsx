@@ -8,15 +8,8 @@ import { t } from '@/i18n/t';
 import { getPostTypeArchivePath } from '@/libs/route';
 import { messages } from './i18n';
 
-type VodKey = 'netflix' | 'amazonPrime' | 'unext';
 type MetaKey = 'about' | 'privacy' | 'contact';
 type SnsKey = 'x' | 'facebook' | 'rss';
-
-const VOD_ITEMS: { key: VodKey; href: string }[] = [
-  { key: 'netflix', href: '/vod/netflix' },
-  { key: 'amazonPrime', href: '/vod/amazon' },
-  { key: 'unext', href: '/vod/unext' },
-];
 
 const META_ITEMS: { key: MetaKey; href: string }[] = [
   { key: 'about', href: '/about' },
@@ -89,20 +82,7 @@ export const Footer = () => {
           </ul>
         </nav>
 
-        {/* 5. VOD */}
-        <nav className='mt-4' aria-label={t(messages, ['nav', 'vod', 'aria'], loc)}>
-          <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
-            {VOD_ITEMS.map(({ key, href }) => (
-              <li key={key}>
-                <Link href={href} className='footer-vod-link text-[var(--font-size-caption-sm)] block py-1'>
-                  {t(messages, ['vod', key, 'name'], loc)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* 6. SNS */}
+        {/* 5. SNS */}
         <ul className='flex gap-6 mt-10' aria-label={t(messages, ['nav', 'sns', 'aria'], loc)}>
           {SNS_ITEMS.map(({ key, href, icon }) => {
             const label = t(messages, ['sns', key, 'label'], loc);
@@ -122,7 +102,7 @@ export const Footer = () => {
           })}
         </ul>
 
-        {/* 7. Meta links */}
+        {/* 6. Meta links */}
         <nav className='mt-10' aria-label={t(messages, ['nav', 'siteInfo', 'aria'], loc)}>
           <ul className='flex flex-wrap justify-center gap-7 sm:gap-4'>
             {META_ITEMS.map(({ key, href }) => (
@@ -135,7 +115,7 @@ export const Footer = () => {
           </ul>
         </nav>
 
-        {/* 8. Copyright */}
+        {/* 7. Copyright */}
         <small className='footer-copyright mt-10 text-[var(--font-size-caption-sm)]'>
           {t(messages, ['copyright', 'line'], loc).replaceAll('{year}', String(currentYear))}
         </small>

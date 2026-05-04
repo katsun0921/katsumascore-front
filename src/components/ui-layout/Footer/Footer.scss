@@ -32,20 +32,6 @@
   opacity: 1;
 }
 
-/* VOD link — 補助情報・uppercase */
-.footer-vod-link {
-  font-family: var(--font-en-base);
-  letter-spacing: 0.18em;
-  color: rgba(var(--color-white-rgb), 0.5);
-  text-decoration: none;
-  text-transform: uppercase;
-  transition: color 0.3s ease;
-}
-.footer-vod-link:hover {
-  color: rgba(var(--color-white-rgb), 0.75);
-  opacity: 1;
-}
-
 /* SNS link — アイコンのみ・scale */
 .footer-sns-link {
   color: rgba(var(--color-white-rgb), 0.6);

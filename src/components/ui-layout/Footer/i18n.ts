@@ -15,25 +15,11 @@ export const messages = {
     categories: {
       aria: { ja: 'カテゴリ', en: 'Categories' },
     },
-    vod: {
-      aria: { ja: '配信サービス', en: 'Streaming services' },
-    },
     sns: {
       aria: { ja: 'SNSリンク', en: 'Social links' },
     },
     siteInfo: {
       aria: { ja: 'サイト情報', en: 'Site information' },
-    },
-  },
-  vod: {
-    netflix: {
-      name: { ja: 'Netflix', en: 'Netflix' },
-    },
-    amazonPrime: {
-      name: { ja: 'Amazon Prime', en: 'Amazon Prime' },
-    },
-    unext: {
-      name: { ja: 'U-NEXT', en: 'U-NEXT' },
     },
   },
   metaLinks: {
