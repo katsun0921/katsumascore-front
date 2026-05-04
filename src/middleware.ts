@@ -52,7 +52,7 @@ export const middleware = (request: NextRequest) => {
   if (!parsed.locale) {
     const url = request.nextUrl.clone();
     url.pathname = `/ja/${parsed.seg}`;
-    return NextResponse.rewrite(url);
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();

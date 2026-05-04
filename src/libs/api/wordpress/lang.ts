@@ -14,7 +14,9 @@ export const detectLang = (link: string | undefined, acfLang?: string): Locale =
   if (acfLang === "en" || acfLang === "ja") return acfLang;
   if (link) {
     try {
-      if (new URL(link).pathname.startsWith("/en/")) return "en";
+      const pathname = new URL(link).pathname;
+      if (pathname.startsWith("/en/")) return "en";
+      if (pathname.startsWith("/ja/")) return "ja";
     } catch {
       // fall through
     }

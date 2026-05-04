@@ -78,9 +78,20 @@ const displaySettingsSchema = z
   .passthrough()
   .optional();
 
+/** REST が `lang: "JA"` や空文字・想定外の型を返すと ACF オブジェクト全体の parse が落ちるため、有効値のみ通す。 */
+const acfLangFromRest = z.preprocess((v: unknown) => {
+  if (v == null || v === "") return undefined;
+  if (typeof v === "string") {
+    const t = v.trim().toLowerCase();
+    if (t === "ja" || t === "en") return t;
+    return undefined;
+  }
+  return undefined;
+}, z.enum(["ja", "en"]).optional());
+
 const wpPostAcfObjectSchema = z
   .object({
-    lang: z.enum(["ja", "en"]).optional(),
+    lang: acfLangFromRest,
     review_score: optionalReviewScore,
     acf_summary_group: acfSummaryGroupSchema,
     actors_filed: z.array(actorFieldSchema).optional(),
