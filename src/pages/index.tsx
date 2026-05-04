@@ -3,17 +3,23 @@ import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { HomeTemplate } from '@/components/templates/HomeTemplate';
 import type { HomeTemplateProps } from '@/components/templates/HomeTemplate/HomeTemplate.types';
+import { I18nProvider } from '@/i18n/provider';
+import type { Locale } from '@/i18n/t';
 import { loadHomeTemplateProps } from '@/libs/homeStaticProps';
+import { normalizeRouteLocale } from '@/libs/route';
 
-type Props = HomeTemplateProps;
+type Props = HomeTemplateProps & { locale: string };
 
-const Home = (props: Props) => {
+const Home = ({ locale, ...templateProps }: Props) => {
+  const loc = normalizeRouteLocale(locale) as Locale;
   return (
     <>
       <Head>
         <title>KatsumaScore</title>
       </Head>
-      <HomeTemplate {...props} />
+      <I18nProvider locale={loc}>
+        <HomeTemplate {...templateProps} />
+      </I18nProvider>
     </>
   );
 };
@@ -21,10 +27,10 @@ const Home = (props: Props) => {
 export default Home;
 
 export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
-  const locale = ctx.locale ?? 'ja';
-  const props = await loadHomeTemplateProps(locale);
+  const locale = normalizeRouteLocale(ctx.locale);
+  const templateProps = await loadHomeTemplateProps(locale);
   return {
-    props,
+    props: { ...templateProps, locale },
     revalidate: 60,
   };
 };

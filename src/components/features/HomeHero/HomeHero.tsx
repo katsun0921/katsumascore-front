@@ -3,6 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { EffectCards, Autoplay } from 'swiper/modules';
 import type { Swiper as SwiperInstance } from 'swiper';
@@ -34,6 +37,7 @@ const RANK_CLASS_MAP: Record<HomeHeroSlide['rank'], string> = {
 };
 
 export const HomeHero = ({ slides }: HomeHeroProps) => {
+  const locale = useLocale();
   const [activeIndex, setActiveIndex] = useState(0);
 
   const scoreBlockRef    = useRef<HTMLDivElement>(null);
@@ -103,7 +107,10 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   }, [activeIndex]);
 
   return (
-    <section className={prefixClassName} aria-label='ホームヒーローセクション'>
+    <section
+      className={prefixClassName}
+      aria-label={t(messages, ['section', 'ariaLabel'], locale)}
+    >
       {/* 背景レイヤー */}
       <div className={`${prefixClassName}__bg`} aria-hidden='true'>
         {slides.map((slide, i) => (
@@ -142,10 +149,12 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
           {/* テキスト */}
           <div className={`${prefixClassName}__textBlock`} ref={textBlockRef}>
             <p className={`${prefixClassName}__copy`}>{shortCopy}</p>
-            <p className={`${prefixClassName}__copySub`}>詳細レビューは下部へ</p>
+            <p className={`${prefixClassName}__copySub`}>
+              {t(messages, ['copy', 'subline'], locale)}
+            </p>
             <h2 className={`${prefixClassName}__title`}>{current.title}</h2>
             <Link href={current.href} className={`${prefixClassName}__readReview`}>
-              レビューを読む →
+              {t(messages, ['cta', 'readReview'], locale)}
             </Link>
           </div>
         </div>
