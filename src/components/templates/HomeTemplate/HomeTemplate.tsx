@@ -1,10 +1,11 @@
 import { HomeHero } from '@/components/features/HomeHero';
+import { AdBanner } from '@/components/ui-section/AdBanner';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
-import { HomeSeasonReview } from '@/components/ui-home/HomeSeasonReview';
+import { HomeFacebook } from '@/components/ui-home/HomeFacebook';
 import { HomePageEmbeds } from '@/components/features/HomePageEmbeds';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { useLocale } from '@/i18n/provider';
@@ -12,15 +13,12 @@ import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 /**
- * DOM順はSPファースト。
- * PCでは CSS grid の grid-column / grid-row でサイドバー列（右）に再配置する。
+ * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
+ * 2 列レイアウトは .homeTemplate__section--featuredFacebookRow 内のみ（特集 2 : Facebook 1、md 以上）。
  *
- * SP表示順:
- *   Hero → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend → Featured → VOD → Season
- *
- * PC表示:
- *   左列（main）: Ranking → 最新レビュー → 高評価 → Recommend → Featured → VOD
- *   右列（sidebar）: 注目のアニメ → Season
+ * 表示順:
+ *   Hero → 広告バナー（ja） → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend
+ *   → 特集＋Facebook（md 以上は横並び）→ VOD
  */
 export const HomeTemplate = ({
   hero,
@@ -31,7 +29,6 @@ export const HomeTemplate = ({
   highScorePosts,
   recommendBlocks,
   vodFinderItems,
-  seasonItems,
   featuredItems,
   facebookTimelineEmbedUrl,
   homeAdScriptSrcs,
@@ -40,11 +37,16 @@ export const HomeTemplate = ({
 
   return (
     <PageLayout>
-    <div className='homeTemplate'>
+    <div className='homeTemplate max-w-full min-w-0 overflow-x-hidden'>
       <HomeHero {...hero} />
 
-      <div className='homeTemplate__body'>
-        {/* ── SP: 1列目 / PC: 左列 ── */}
+      {locale === 'ja' && (
+        <div className='w-full px-4 pt-10 pb-6 md:px-8'>
+          <AdBanner inline />
+        </div>
+      )}
+
+      <div className='homeTemplate__body max-w-full min-w-0'>
         <section className='homeTemplate__section'>
           <HomeRanking
             title={t(messages, ['ranking', 'title'], locale)}
@@ -61,7 +63,7 @@ export const HomeTemplate = ({
           />
         </section>
 
-        <section className='homeTemplate__section homeTemplate__section--sidebar'>
+        <section className='homeTemplate__section'>
           <HomeCardScrollList
             title={t(messages, ['cardScrollList', 'anime'], locale)}
             posts={animePosts}
@@ -69,7 +71,6 @@ export const HomeTemplate = ({
           />
         </section>
 
-        {/* ── SP: 4列目 / PC: 左列続き ── */}
         <section className='homeTemplate__section'>
           <HomeCardScrollList
             title={t(messages, ['cardScrollList', 'highScore'], locale)}
@@ -86,8 +87,18 @@ export const HomeTemplate = ({
           />
         </section>
 
-        <section className='homeTemplate__section'>
-          <HomeFeatured title={t(messages, ['featured', 'title'], locale)} items={featuredItems} />
+        <section className='homeTemplate__section homeTemplate__section--featuredFacebookRow min-w-0 max-w-full'>
+          <div className='flex w-full min-w-0 max-w-full flex-col gap-10 md:grid md:grid-cols-3 md:items-start md:gap-10'>
+            <div className='min-w-0 max-w-full overflow-x-hidden md:col-span-2'>
+              <HomeFeatured title={t(messages, ['featured', 'title'], locale)} items={featuredItems} />
+            </div>
+            <div className='min-w-0 max-w-full overflow-x-hidden md:col-span-1'>
+              <HomeFacebook
+                title={t(messages, ['facebook', 'title'], locale)}
+                embedUrl={facebookTimelineEmbedUrl}
+              />
+            </div>
+          </div>
         </section>
 
         <section className='homeTemplate__section'>
@@ -97,18 +108,8 @@ export const HomeTemplate = ({
             items={vodFinderItems}
           />
         </section>
-
-        <section className='homeTemplate__section homeTemplate__section--sidebar'>
-          <HomeSeasonReview
-            title={t(messages, ['seasonReview', 'title'], locale)}
-            items={seasonItems}
-          />
-        </section>
       </div>
-      <HomePageEmbeds
-        facebookTimelineEmbedUrl={facebookTimelineEmbedUrl}
-        extraScriptSrcs={homeAdScriptSrcs}
-      />
+      <HomePageEmbeds extraScriptSrcs={homeAdScriptSrcs} />
     </div>
     </PageLayout>
   );

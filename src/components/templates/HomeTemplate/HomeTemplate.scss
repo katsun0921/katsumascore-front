@@ -4,6 +4,8 @@
   background: var(--color-footer);
   min-height: 100vh;
   color: var(--color-text-inverse);
+  // 子の最小幅（iframe 等）でグリッド列が膨らみビューポートからはみ出すのを防ぐ
+  min-width: 0;
 
   // ── SP: 縦積み ──
   &__body {
@@ -11,6 +13,7 @@
     flex-direction: column;
     gap: 40px;
     margin: 0 auto;
+    min-width: 0;
     padding-bottom: 32px;
     padding-inline: 16px;
 
@@ -18,28 +21,7 @@
       padding-bottom: 40px;
       padding-inline: 32px;
     }
-
-    // ── PC: 2カラム grid ──
-    // 左列（main）: 1fr　右列（sidebar）: 300px
-    // sidebar セクションは grid-column: 2 に配置し
-    // 左列セクションは自動的に grid-column: 1 に流し込む
-    @media (min-width: var(--breakpoint-lg)) {
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      grid-auto-rows: auto;
-      align-items: start;
-      gap: 40px 40px;
-
-      // 通常セクションは左列へ
-      .homeTemplate__section {
-        grid-column: 1;
-      }
-
-      // サイドバーセクションは右列へ積み上げ
-      .homeTemplate__section--sidebar {
-        grid-column: 2;
-      }
-    }
+    // PC も body は 1 列（縦積み）のみ。2 列は .homeTemplate__section--featuredFacebookRow 内だけ。
   }
 
   &__section {

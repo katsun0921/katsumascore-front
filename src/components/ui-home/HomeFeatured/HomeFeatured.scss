@@ -1,6 +1,7 @@
-@use "@/styles/scss/global/mixin/layout.scss" as *;
-
 .homeFeatured {
+  min-width: 0;
+  max-width: 100%;
+
   &__title {
     color: var(--color-text-inverse);
     font-family: var(--font-heading);
@@ -11,12 +12,9 @@
 
   &__grid {
     display: grid;
+    grid-template-columns: 1fr;
     gap: 12px;
     list-style: none;
-
-    @include layout-md {
-      grid-template-columns: 1fr 1fr;
-    }
   }
 }
 

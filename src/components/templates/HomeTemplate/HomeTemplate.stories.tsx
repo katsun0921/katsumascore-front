@@ -7,8 +7,8 @@ import {
   mockHighScorePosts,
   mockRecommendBlocks,
   mockVodFinderItems,
-  mockSeasonItems,
   mockFeaturedItems,
+  mockFacebookTimelineEmbedUrl,
 } from '@/components/ui-home/mocks/home';
 import { HomeTemplate } from './HomeTemplate';
 
@@ -32,8 +32,8 @@ const defaultArgs = {
   highScorePosts: mockHighScorePosts,
   recommendBlocks: mockRecommendBlocks,
   vodFinderItems: mockVodFinderItems,
-  seasonItems: mockSeasonItems,
   featuredItems: mockFeaturedItems,
+  facebookTimelineEmbedUrl: mockFacebookTimelineEmbedUrl,
 };
 
 export const Default: Story = {
@@ -48,7 +48,6 @@ export const MinimalData: Story = {
     animePosts: mockAnimePosts.slice(0, 2),
     recommendBlocks: mockRecommendBlocks.slice(0, 1),
     vodFinderItems: mockVodFinderItems.slice(0, 2),
-    seasonItems: mockSeasonItems.slice(0, 1),
     featuredItems: mockFeaturedItems.slice(0, 1),
   },
 };

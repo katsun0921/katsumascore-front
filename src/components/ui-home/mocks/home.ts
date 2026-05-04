@@ -1,7 +1,6 @@
 import type { Post } from '@/types/post';
 import type { HomeHeroProps } from '@/components/features/HomeHero';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
-import type { SeasonItem } from '@/components/ui-home/HomeSeasonReview';
 import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';
 import type { FeaturedItem } from '@/components/ui-home/HomeFeatured';
 
@@ -259,12 +258,10 @@ export const mockVodFinderItems: VodFinderItem[] = [
   { vod: 'hulu', count: 4, href: '/vod/hulu' },
 ];
 
-export const mockSeasonItems: SeasonItem[] = [
-  { label: '冬', period: '2026年 1-3月', href: '/season/2026-winter', isCurrent: true },
-  { label: '秋', period: '2025年 10-12月', href: '/season/2025-autumn' },
-  { label: '夏', period: '2025年 7-9月', href: '/season/2025-summer' },
-  { label: '春', period: '2025年 4-6月', href: '/season/2025-spring' },
-];
+/** Storybook / モック用。本番既定の Page Plugin URL と同じ構成。 */
+export const mockFacebookTimelineEmbedUrl = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
+  'https://www.facebook.com/people/Katsumascore/100072246676709/',
+)}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
 
 export const mockFeaturedItems: FeaturedItem[] = [
   {

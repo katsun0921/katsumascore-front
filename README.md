@@ -86,7 +86,7 @@ src/
 │   │   ├── HomeCardScrollList/
 │   │   ├── HomeRanking/
 │   │   ├── HomeVodFinder/
-│   │   ├── HomeSeasonReview/
+│   │   ├── HomeFacebook/
 │   │   ├── HomeRecommend/
 │   │   ├── HomeFeatured/
 │   │   └── mocks/
@@ -131,7 +131,7 @@ src/
 | `HomeRanking` | TOP 10 ランキングリスト |
 | `HomeCardScroll` | 横スクロールカードグリッド（最新・高評価・注目アニメ） |
 | `HomeVodFinder` | VODサービス別の作品リンク |
-| `HomeSeasonReview` | シーズン別レビューリンク |
+| `HomeFacebook` | Facebook Page Plugin（タイムライン埋め込み） |
 | `HomeRecommend` | ジャンルタグ付きおすすめセクション |
 | `HomeFeatured` | 特集カードグリッド |
 
