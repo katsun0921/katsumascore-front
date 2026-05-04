@@ -20,7 +20,7 @@ const VOD_ITEMS: { key: VodKey; href: string }[] = [
 
 const META_ITEMS: { key: MetaKey; href: string }[] = [
   { key: 'about', href: '/about' },
-  { key: 'privacy', href: '/privacy' },
+  { key: 'privacy', href: '/privacy-policy' },
   { key: 'contact', href: '/contact' },
 ];
 
