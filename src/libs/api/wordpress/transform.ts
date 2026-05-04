@@ -1,3 +1,6 @@
+/**
+ * WP 投稿レスポンスの HTML 除去・タクソノミー抽出・正規化 `Post` へのマッピング。
+ */
 import type { Post } from "@/types/post";
 import { WPPostSchema } from "./schema";
 import type { ParsedWPPost } from "./schema";
@@ -14,6 +17,7 @@ export type NormalizedPageContent = {
   html: string | null;
 };
 
+/** 簡易的なタグ除去と主要エンティティのデコード、前後トリム。 */
 export const stripHtml = (html: string): string =>
   html
     .replace(/<[^>]+>/g, "")
@@ -24,6 +28,7 @@ export const stripHtml = (html: string): string =>
     .replace(/&#039;/g, "'")
     .trim();
 
+/** 固定ページのタイトル文字列と本文 HTML を正規化する。 */
 export const normalizePageContent = (page: WPPageLike): NormalizedPageContent => ({
   title: stripHtml(page.title.rendered),
   html: page.content?.rendered ?? null,
@@ -33,6 +38,7 @@ export const normalizePageContent = (page: WPPageLike): NormalizedPageContent =>
 export const titleSearchBlobFromParsedWp = (wp: ParsedWPPost): string =>
   stripHtml(wp.title.rendered);
 
+/** `WPPostSchema` で検証し、成功時のみパース済みオブジェクトを返す。 */
 export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
   const parsed = WPPostSchema.safeParse(wp);
   return parsed.success ? parsed.data : null;
@@ -40,6 +46,7 @@ export const parseWPPostUnknown = (wp: unknown): ParsedWPPost | null => {
 
 type TermLike = { name?: unknown; slug?: unknown; taxonomy?: unknown; acf?: unknown };
 
+/** `wp_` 接頭辞を除き小文字化したタクソノミー識別子。 */
 const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLowerCase();
 
 const GENRE_TAXONOMIES = new Set(["genre", "genres"]);
@@ -54,6 +61,7 @@ export type PostTaxonomyLink = {
   slug: string
 };
 
+/** レコードからキー順に最初の非空文字列を返す。 */
 const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | undefined => {
   for (const k of keys) {
     const v = r[k];
@@ -62,6 +70,7 @@ const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | u
   return undefined;
 };
 
+/** ターム ACF から多言語表示名（ja / en）を抽出する。 */
 const extractTermAcfNames = (acfRaw: unknown): { ja?: string; en?: string } | undefined => {
   if (acfRaw === false || acfRaw === null || acfRaw === undefined) return undefined;
   if (typeof acfRaw !== "object" || Array.isArray(acfRaw)) return undefined;
@@ -72,14 +81,17 @@ const extractTermAcfNames = (acfRaw: unknown): { ja?: string; en?: string } | un
   return { ...(ja !== undefined ? { ja } : {}), ...(en !== undefined ? { en } : {}) };
 };
 
+/** ひらがな・カタカナ・漢字のいずれかを含むか。 */
 const containsJapaneseText = (value: string): boolean =>
   /[\u3040-\u30ff\u3400-\u9fff]/.test(value);
 
+/** スラッグを単語区切りの見出し風英字ラベルにする（en 表示のフォールバック）。 */
 const slugToEnglishLabel = (slug: string): string =>
   slug
     .replace(/[-_]+/g, " ")
     .replace(/\b[a-z]/g, (char) => char.toUpperCase());
 
+/** ロケールと ACF 名・REST 名から一覧表示用のターム名を決める。 */
 const termDisplayName = (term: TermLike, name: string, slug: string, locale?: string): string => {
   const acfNames = extractTermAcfNames(term.acf);
   if (locale === "en" && acfNames?.en) return acfNames.en;
@@ -89,6 +101,7 @@ const termDisplayName = (term: TermLike, name: string, slug: string, locale?: st
   return name;
 };
 
+/** 埋め込みタームから、指定タクソノミー集合に属する `{ name, slug }` を重複除去で列挙。 */
 const extractTaxonomyLinks = (
   wp: ParsedWPPost,
   taxes: Set<string>,
@@ -180,6 +193,7 @@ export const extractDirectorTermNamesFromParsedWp = (wp: ParsedWPPost): string[]
   return out;
 };
 
+/** パース済み WP 投稿をアプリの `Post`（`content` 含む）へ変換する。 */
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {
   const image = wp._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;
   const terms = wp._embedded?.["wp:term"];
@@ -229,6 +243,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   };
 };
 
+/** 未検証の WP 投稿をパースしてから `Post` へマップする。失敗時は `null`。 */
 export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | null => {
   const parsed = parseWPPostUnknown(wp);
   if (!parsed) return null;

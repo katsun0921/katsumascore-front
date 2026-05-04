@@ -1,9 +1,13 @@
+/**
+ * `/tags` エンドポイントとランダムタグ抽出。
+ */
 import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
 
 type WPTag = components["schemas"]["WPTag"];
 
+/** Fisher–Yates 風のインプレースシャッフル（コピー返却）。 */
 const shuffle = <T>(items: T[]): T[] => {
   const out = [...items];
   for (let i = out.length - 1; i > 0; i -= 1) {
@@ -13,6 +17,7 @@ const shuffle = <T>(items: T[]): T[] => {
   return out;
 };
 
+/** タグ一覧を再試行付きで取得する。 */
 const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag[] | null> => {
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
@@ -40,9 +45,11 @@ const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag
   return null;
 };
 
+/** タグ一覧。失敗時は空配列。 */
 export const getTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag[]> =>
   (await fetchTags(lang, options)) ?? [];
 
+/** 全タグからシャッフルして先頭 `count` 件を返す。 */
 export const pickRandomTags = async (
   count: number,
   lang?: string,

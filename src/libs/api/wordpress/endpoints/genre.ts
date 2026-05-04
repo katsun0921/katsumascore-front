@@ -1,3 +1,6 @@
+/**
+ * カスタムタクソノミー `genre` の一覧・スラッグ検索・表示ラベル解決。
+ */
 import {
   wpApiBaseUrl,
   defaultFetchOptions,
@@ -22,6 +25,7 @@ export type WPGenreTerm = {
   acf?: { ja?: string; en?: string };
 };
 
+/** オブジェクトから、最初に見つかった非空文字列を返す。 */
 const pickFirstString = (r: Record<string, unknown>, keys: string[]): string | undefined => {
   for (const k of keys) {
     const v = r[k];
@@ -47,13 +51,14 @@ export const normalizeGenreTermAcf = (
   return { ...(primary !== undefined ? { ja: primary } : {}), ...(alternate !== undefined ? { en: alternate } : {}) };
 };
 
-/** WP / プラグインにより `id`・`count` が文字列で返ることがある */
+/** WP / プラグインにより数値が文字列で返る場合を吸収し、有限整数にする。 */
 const coerceFiniteInt = (v: unknown): number | null => {
   if (typeof v === "number" && Number.isFinite(v)) return Math.trunc(v);
   if (typeof v === "string" && /^\d+$/.test(v.trim())) return Number.parseInt(v.trim(), 10);
   return null;
 };
 
+/** REST の `name` が文字列または `{ rendered }` のとき表示名を取り出す。 */
 const termNameString = (raw: unknown): string | null => {
   if (typeof raw === "string") return raw;
   if (raw && typeof raw === "object" && "rendered" in raw) {
@@ -63,6 +68,7 @@ const termNameString = (raw: unknown): string | null => {
   return null;
 };
 
+/** 厳密にパースして `WPGenreTerm` を組み立てる。必須フィールドが欠ける場合は `null`。 */
 const toWPGenreTerm = (x: unknown): WPGenreTerm | null => {
   if (typeof x !== "object" || x === null) return null;
   const o = x as Record<string, unknown>;
@@ -113,6 +119,7 @@ const toWPGenreTermLenient = (item: unknown, requestedSlug?: string): WPGenreTer
   };
 };
 
+/** REST の配列レスポンスを `WPGenreTerm[]` に変換する（厳密＋寛容パスの両方）。 */
 const parseGenreList = (data: unknown): WPGenreTerm[] => {
   if (!Array.isArray(data)) return [];
   const out: WPGenreTerm[] = [];
@@ -128,6 +135,7 @@ const parseGenreList = (data: unknown): WPGenreTerm[] => {
   return out;
 };
 
+/** ロケールに応じて ACF の多言語名または REST の `name` を選ぶ。 */
 export const genreDisplayLabel = (term: WPGenreTerm, locale: string): string => {
   const acf = term.acf;
   if (locale === "en") {
@@ -139,6 +147,7 @@ export const genreDisplayLabel = (term: WPGenreTerm, locale: string): string => 
   return term.name;
 };
 
+/** genre コレクションの 1 ページを生 `fetch` で取得する。 */
 const fetchGenresPage = async (
   pageNum: number,
   perPage: number,
@@ -175,12 +184,15 @@ const fetchGenresPage = async (
   return null;
 };
 
+/** 先頭ページ（最大 100 件）の genre 一覧。 */
 const fetchGenres = async (lang?: string, options?: WpFetchOptions): Promise<WPGenreTerm[] | null> =>
   fetchGenresPage(1, 100, lang, options);
 
+/** 利用可能な genre ターム一覧。失敗時は空配列。 */
 export const getGenres = async (lang?: string, options?: WpFetchOptions): Promise<WPGenreTerm[]> =>
   (await fetchGenres(lang, options)) ?? [];
 
+/** 一覧が 100 件を超える場合にページを進めてスラッグ一致を探す。 */
 const findGenreBySlugPaginated = async (
   slug: string,
   lang: string | undefined,
@@ -242,6 +254,10 @@ const fetchGenreTermBySlug = async (
   return null;
 };
 
+/**
+ * スラッグで genre タームを解決する。
+ * 直接 REST → 言語フォールバック → 全件一覧 → ページネーションの順で試す。
+ */
 export const getGenreBySlug = async (
   slug: string,
   lang?: string,

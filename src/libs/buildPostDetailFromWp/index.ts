@@ -1,3 +1,6 @@
+/**
+ * WP 投稿から PostDetail 用データを組み立てるモジュール群の再エクスポート。
+ */
 export type { BuildPostDetailFromWpInput, PostsGroupSpec } from "./types";
 
 export { buildPostDetailFromWp } from "./buildPostDetail";

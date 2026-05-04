@@ -18,6 +18,7 @@ export const resolveIsCinemaShowing = (
   return false;
 };
 
+/** `cinema_info_filed.cinema_list_filed` から http(s) の劇場ページ URL を取り出す。 */
 export const cinemaUrlFromCinemaInfoFiled = (acfRecord: Record<string, unknown> | undefined): string | undefined => {
   const group = acfRecord?.cinema_info_filed;
   if (!group || typeof group !== "object") return undefined;

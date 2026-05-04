@@ -1,6 +1,10 @@
+/**
+ * WordPress REST のベース URL・OpenAPI クライアント・再試行付き fetch の共通設定。
+ */
 import createClient from "openapi-fetch";
 import type { paths } from "./generated/wp-schema";
 
+/** 末尾スラッシュを除いた API ベース（例: `.../wp-json/wp/v2`）。空は `undefined`。 */
 const normalizeWpApiBaseUrl = (raw: string | undefined): string | undefined => {
   const t = raw?.trim();
   if (!t) return undefined;
@@ -22,6 +26,7 @@ const defaultParamsMiddleware: Parameters<
   },
 };
 
+/** `WP_API_URL` が有効なときだけ OpenAPI クライアントを生成する。無効時は `null`。 */
 const buildClient = () => {
   if (!wpApiBaseUrl) return null;
   const client = createClient<paths>({ baseUrl: wpApiBaseUrl });
@@ -43,11 +48,13 @@ export const defaultFetchOptions: Required<WpFetchOptions> = {
   initialBackoffMs: 500,
 };
 
+/** 再試行間隔などに使う Promise ベースの待機。 */
 export const sleep = (ms: number) =>
   new Promise<void>((resolve) => {
     setTimeout(resolve, ms);
   });
 
+/** 429 または 5xx のときに指数バックオフ再試行する対象ステータスか。 */
 export const shouldRetryStatus = (status: number) => status === 429 || status >= 500;
 
 export type WpPostsListMeta = {

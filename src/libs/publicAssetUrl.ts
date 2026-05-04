@@ -4,6 +4,7 @@
  * Next.js（ドメイン直下）では通常 `/images/...` のまま。
  * http(s) の絶対URLはそのまま返す。
  */
+/** Vite（Storybook 等）の `import.meta.env.BASE_URL` を読む。非 Vite 環境では `/`。 */
 const viteBaseUrl = (): string => {
   try {
     const env = (import.meta as ImportMeta & { env?: { BASE_URL?: string } }).env;
@@ -15,6 +16,7 @@ const viteBaseUrl = (): string => {
   return '/';
 };
 
+/** `public/` 相対パスをベース URL 付きで返す。絶対 URL はそのまま。 */
 export const publicAssetUrl = (path: string): string => {
   if (/^https?:\/\//i.test(path)) {
     return path;

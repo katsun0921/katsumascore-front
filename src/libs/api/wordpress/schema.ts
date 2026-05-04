@@ -1,3 +1,6 @@
+/**
+ * WordPress REST の投稿・カテゴリ・タグレスポンス用 Zod スキーマとパーサ。
+ */
 import { z } from "zod";
 
 const renderedBlock = z.object({
@@ -20,6 +23,7 @@ const featuredMediaItemSchema = z
   })
   .passthrough();
 
+/** `_embedded` の代表フィールド（アイキャッチ・ターム群）。 */
 export const WPEmbeddedSchema = z
   .object({
     "wp:featuredmedia": z.array(featuredMediaItemSchema).optional(),
@@ -123,6 +127,7 @@ const acfFromRest = z.preprocess((v: unknown) => {
   return v;
 }, wpPostAcfObjectSchema.optional());
 
+/** 投稿 1 件の REST 形（ACF は寛容に `.passthrough()`）。 */
 export const WPPostSchema = z
   .object({
     id: z.number(),
@@ -146,6 +151,7 @@ export const WPPostSchema = z
   })
   .passthrough();
 
+/** カテゴリターム。 */
 export const WPCategorySchema = z
   .object({
     id: z.number(),
@@ -156,6 +162,7 @@ export const WPCategorySchema = z
   })
   .passthrough();
 
+/** 投稿タグターム。 */
 export const WPTagSchema = z
   .object({
     id: z.number(),
@@ -167,6 +174,7 @@ export const WPTagSchema = z
 
 export type ParsedWPPost = z.infer<typeof WPPostSchema>;
 
+/** `WPPostSchema` で検証し、失敗時は `null`。 */
 export const parseWPPost = (data: unknown): ParsedWPPost | null => {
   const r = WPPostSchema.safeParse(data);
   return r.success ? r.data : null;

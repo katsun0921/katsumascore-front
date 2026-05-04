@@ -8,6 +8,8 @@ import {
 } from "../client";
 import type { WpFetchOptions, WpPostsPagedResult } from "../client";
 
+/** 投稿一覧・検索・関連取得など `/posts` 系エンドポイントのラッパー。 */
+
 type WPPost = components["schemas"]["WPPost"];
 
 /** `video_code` 等のカスタムメタは `meta` を要求しないと REST に含まれない */
@@ -40,6 +42,7 @@ type PostsParams = {
   vod?: number;
 };
 
+/** 呼び出し側の `category` / `tags` 等を WP REST の `categories` / `tags` クエリに写す。 */
 const buildPostsQuery = (params: PostsParams): PostsQuery => {
   const q: PostsQuery = { _fields: FIELDS };
   if (params.page) q.page = params.page;
@@ -52,6 +55,7 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   return q;
 };
 
+/** 生 `fetch` 用に `PostsQuery` を `URLSearchParams` へ直列化する（genre / vod 等 OpenAPI 外クエリ向け）。 */
 const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   const sp = new URLSearchParams();
   sp.set("_embed", "1");
@@ -70,6 +74,7 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   return sp;
 };
 
+/** OpenAPI 未対応クエリを含むときに HTTP で取得し、`X-WP-Total` 系ヘッダからメタを返す。 */
 const fetchPostsWithMetaOverHttp = async (
   query: PostsQuery,
   options?: WpFetchOptions,
@@ -103,6 +108,7 @@ const fetchPostsWithMetaOverHttp = async (
   return null;
 };
 
+/** 投稿配列のみが欲しい場合。`genre` / `vod` 指定時は常に HTTP 経由。 */
 const fetchPosts = async (
   query: PostsQuery,
   options?: WpFetchOptions,
@@ -140,6 +146,7 @@ const fetchPosts = async (
   return null;
 };
 
+/** ページネーション用にアイテムと総件数・総ページ数を返す。 */
 const fetchPostsWithMeta = async (
   query: PostsQuery,
   options?: WpFetchOptions,
@@ -176,11 +183,13 @@ const fetchPostsWithMeta = async (
   return null;
 };
 
+/** 条件に合う投稿一覧。失敗時は空配列。 */
 export const getPosts = async (
   params: PostsParams = {},
   options?: WpFetchOptions,
 ): Promise<WPPost[]> => (await fetchPosts(buildPostsQuery(params), options)) ?? [];
 
+/** 一覧と `X-WP-Total` / `X-WP-TotalPages` 相当のメタ。失敗時は `null`。 */
 export const getPostsWithMeta = async (
   params: PostsParams,
   options?: WpFetchOptions,
@@ -216,6 +225,7 @@ export const getPostsPagedMerge = async (
   return merged;
 };
 
+/** スラッグで 1 件取得。該当なしは `null`。 */
 export const getPostBySlug = async (
   slug: string,
   lang?: string,
@@ -227,6 +237,7 @@ export const getPostBySlug = async (
   return posts?.[0] ?? null;
 };
 
+/** 投稿 ID 配列で一括取得（順序は WP 依存）。 */
 export const getRelatedPosts = async (
   ids: number[],
   options?: WpFetchOptions,
@@ -235,6 +246,7 @@ export const getRelatedPosts = async (
   return (await fetchPosts({ include: ids.join(","), per_page: Math.min(ids.length, 100), _fields: FIELDS }, options)) ?? [];
 };
 
+/** `search` クエリによる全文検索結果。 */
 export const searchPosts = async (
   query: string,
   lang?: string,
@@ -245,12 +257,14 @@ export const searchPosts = async (
   return (await fetchPosts(q, options)) ?? [];
 };
 
+/** カテゴリ ID で絞った投稿一覧。 */
 export const getPostsByCategory = async (
   categoryId: number,
   lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPPost[]> => getPosts({ category: categoryId, lang }, options);
 
+/** タグ ID で絞った投稿一覧（件数・ページは `opts` で指定）。 */
 export const getPostsByTagId = async (
   tagId: number,
   opts: { per_page?: number; page?: number; lang?: string } = {},

@@ -32,3 +32,14 @@ export type Post = {
 export type PostContentData = {
   content: string;
 };
+
+/** フィルタリングと選択肢生成に必要な最小フィールド（allPosts 用） */
+export type FilterPost = {
+  id: string;
+  slug: string;
+  score?: number | null;
+  publishedAt: string;
+  vods?: VodService[] | null;
+  genres?: PostTaxonomy[] | null;
+  tags?: PostTaxonomy[] | null;
+};

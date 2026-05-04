@@ -1,3 +1,6 @@
+/**
+ * 固定ページ（子ページ・フィーチャー・スラッグ取得）の `/pages` ラッパー。
+ */
 import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
@@ -18,6 +21,7 @@ type WPPageWithAcf = {
 
 const BASE_URL = process.env.WP_API_URL?.replace(/\/+$/, "") ?? "";
 
+/** ACF の `display_settings.is_featured` が真のページのみ返す（生 `fetch`）。 */
 export const getFeaturedPages = async (lang?: string): Promise<WPPageWithAcf[]> => {
   if (!BASE_URL) return [];
   const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,acf" });
@@ -43,6 +47,7 @@ type PagesQuery = {
   order?: "asc" | "desc";
 };
 
+/** `/pages` を OpenAPI クライアント経由で再試行付き取得する。 */
 const fetchPages = async (
   query: PagesQuery,
   options?: WpFetchOptions,
@@ -73,6 +78,7 @@ const fetchPages = async (
   return null;
 };
 
+/** 指定親ページ ID の子ページをメニュー順で取得する。 */
 export const getChildPages = async (
   parentId: number,
   lang?: string,
@@ -88,6 +94,7 @@ export const getChildPages = async (
   return (await fetchPages(q, options)) ?? [];
 };
 
+/** スラッグで固定ページ 1 件。見つからなければ `null`。 */
 export const getPageBySlug = async (
   slug: string,
   lang?: string,

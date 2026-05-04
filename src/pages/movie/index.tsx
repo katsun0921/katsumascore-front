@@ -20,12 +20,12 @@ import {
   paginatePosts,
 } from '@/libs/listFilters';
 import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
-import type { Post } from '@/types/post';
+import type { FilterPost, Post } from '@/types/post';
 
 type MovieIndexProps = {
   categoryName: string;
   posts: Post[];
-  allPosts: Post[];
+  allPosts: FilterPost[];
   currentPage: number;
   totalPages: number;
   locale: string;
@@ -33,6 +33,7 @@ type MovieIndexProps = {
 
 const MovieIndexPage = ({
   categoryName,
+  posts,
   allPosts,
   currentPage,
   locale,
@@ -41,9 +42,15 @@ const MovieIndexPage = ({
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
-  const filteredPosts = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
-  const pagedPosts = paginatePosts(filteredPosts, currentPage, CATEGORY_LIST_PER_PAGE);
-  const filteredTotalPages = Math.max(1, Math.ceil(filteredPosts.length / CATEGORY_LIST_PER_PAGE));
+  const filteredIds = paginatePosts(
+    filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }),
+    currentPage,
+    CATEGORY_LIST_PER_PAGE,
+  ).map((p) => p.id);
+  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
+  const filteredTotalPages = Math.max(1, Math.ceil(
+    filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }).length / CATEGORY_LIST_PER_PAGE,
+  ));
   const loc = normalizeRouteLocale(locale) as Locale;
 
   const getArchiveUrl = (page: number, filter?: string) => {

@@ -1,3 +1,6 @@
+/**
+ * WordPress REST クライアントとレスポンス正規化（transform / schema）の公開エントリ。
+ */
 export type { WpFetchOptions, WpPostsListMeta, WpPostsPagedResult } from "./client";
 
 export {

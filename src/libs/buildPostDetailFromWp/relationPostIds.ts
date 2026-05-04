@@ -1,3 +1,4 @@
+/** ネストした配列・オブジェクトから正の投稿 ID を再帰的に `out` に集める。 */
 export const collectNumericIds = (v: unknown, out: Set<number>) => {
   if (v == null) return;
   if (typeof v === "number" && Number.isFinite(v) && v > 0) {

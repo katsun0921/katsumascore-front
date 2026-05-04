@@ -1,3 +1,6 @@
+/**
+ * TOP（HomeTemplate）向けのサーバー側データ組み立て。WP から取得した記事・タグ・季節レビュー等を正規化する。
+ */
 import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/HomeTemplate.types";
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
@@ -21,14 +24,18 @@ import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
 import { getPostTypeArchivePath } from "@/libs/route";
 
+/** 表示用ランク計算に使う 1〜5。不正値は中央の 3 とみなす。 */
 const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
   if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
   return 3;
 };
 
+/** スコア降順ソート用コンパレータ。 */
 const sortByScoreDesc = (a: Post, b: Post) => (b.score ?? 0) - (a.score ?? 0);
+/** 公開日降順ソート用コンパレータ。 */
 const sortByDateDesc = (a: Post, b: Post) => b.publishedAt.localeCompare(a.publishedAt);
 
+/** WP 生配列を `mapWPPostToPost` し、言語フィルタと `content` 除去を行う。 */
 const toMappedPosts = (raw: unknown[], locale?: string): Post[] => {
   const out: Post[] = [];
   for (const item of raw) {
@@ -42,6 +49,7 @@ const toMappedPosts = (raw: unknown[], locale?: string): Post[] => {
   return out;
 };
 
+/** スコア上位 3 件からヒーロースライド用データを作る。0 件時はプレースホルダ 1 枚。 */
 const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
   const top = [...posts].sort(sortByScoreDesc).slice(0, 3);
   const slides: HomeHeroProps["slides"] = top.map((p) => {
@@ -72,6 +80,7 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
   return { slides };
 };
 
+/** 先頭最大 6 件をフィーチャーカード用の行データに変換する。 */
 const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
   posts.slice(0, 6).map((p, i) => ({
     label: (p.category ?? "PICK").slice(0, 12).toUpperCase(),
@@ -82,6 +91,7 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
     isPrimary: i === 0,
   }));
 
+/** 季節レビュー子ページを、ラベル・期間・リンク付きの一覧行に変換する。 */
 const mapWpPagesToSeasonItems = (pages: WPPage[]): SeasonItem[] =>
   pages.map((p) => ({
     label: stripHtml(p.title.rendered),
@@ -89,6 +99,7 @@ const mapWpPagesToSeasonItems = (pages: WPPage[]): SeasonItem[] =>
     href: `/seasonal-reviews/${p.slug}`,
   }));
 
+/** 環境変数のカンマ区切りリストをトリム分割する。空なら `undefined`。 */
 const parseCommaList = (raw: string | undefined): string[] | undefined => {
   if (!raw?.trim()) return undefined;
   const parts = raw
@@ -98,6 +109,7 @@ const parseCommaList = (raw: string | undefined): string[] | undefined => {
   return parts.length > 0 ? parts : undefined;
 };
 
+/** 指定ロケールで Home テンプレートに渡す props をまとめて取得する。 */
 export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplateProps> => {
   const lang = locale === "en" ? "en" : "ja";
   const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie";

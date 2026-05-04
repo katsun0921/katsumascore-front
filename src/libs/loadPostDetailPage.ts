@@ -1,3 +1,6 @@
+/**
+ * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（ISR 60 秒）。
+ */
 // ISR: revalidate 60s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import {
@@ -29,12 +32,14 @@ export type PostDetailPageProps = {
   genres: GenreNavTag[];
 };
 
+/** 一覧用に `content` を除いた `Post` 形へ射影する。 */
 const toListPost = (m: Post & { content: string }): Post => {
   const { content: _c, ...rest } = m;
   void _c;
   return rest;
 };
 
+/** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: 'blocking'`。 */
 export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   const locs = locales ?? ['ja', 'en'];
   const paths: { params: { slug: string }; locale: string }[] = [];
@@ -51,6 +56,7 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   return { paths, fallback: 'blocking' };
 };
 
+/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 60` で返す。 */
 export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
   async ({ params, locale }) => {
     const slug = params?.slug;

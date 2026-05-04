@@ -1,3 +1,6 @@
+/**
+ * 記事種別・タクソノミー・人物エンティティの URL パスを組み立てる（ISR 用。クライアントから import しない）。
+ */
 // ISR: revalidate per page. This module is server-side only (no client imports).
 
 export type PostType = 'movie' | 'anime' | 'drama'
@@ -6,10 +9,11 @@ export type EntityType = 'actor' | 'director' | 'company'
 
 const DEFAULT_LOCALE = 'ja';
 
+/** 任意の `lang` 文字列をルーティング用の `ja` / `en` に正規化する。`en` 以外はすべて `ja`。 */
 export const normalizeRouteLocale = (lang: string | undefined): 'ja' | 'en' =>
   lang === 'en' ? 'en' : DEFAULT_LOCALE;
 
-/** ja は `/ja`、en は `/en` */
+/** ロケールに応じたパス接頭辞。`ja` は `/ja`、`en` は `/en`。 */
 export const getLocalePathPrefix = (lang: string): string =>
   `/${normalizeRouteLocale(lang)}`;
 
@@ -20,6 +24,7 @@ const WP_CATEGORY_TO_POST_TYPE: Partial<Record<string, PostType>> = {
   drama: 'drama',
 };
 
+/** 内部の PostType から、WordPress カテゴリスラッグ（アーカイブ URL 用）を逆引きする。未定義時は PostType 名をそのまま返す。 */
 export const getPostTypeCategorySlug = (postType: PostType): string => {
   const pairs = Object.entries(WP_CATEGORY_TO_POST_TYPE) as [string, PostType][];
   for (const [slug, t] of pairs) {
@@ -56,14 +61,18 @@ export const getPostTypeArchiveUrl = ({
   return `${base}?${new URLSearchParams({ page: String(page) }).toString()}`;
 };
 
+/** 記事詳細のパス（アーカイブ基底 + 投稿スラッグ）。 */
 export const getPostUrl = (type: PostType, slug: string, lang = DEFAULT_LOCALE): string =>
   `${getPostTypeArchivePath({ type, lang })}/${slug}`;
 
+/** ジャンル・タグ・フランチャイズなどタクソノミーアーカイブのパス。 */
 export const getTaxonomyUrl = (taxonomy: TaxonomyType, slug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/${taxonomy}/${slug}`;
 
+/** 俳優・監督・会社などエンティティページのパス。 */
 export const getEntityUrl = (type: EntityType, slug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/${type}/${slug}`;
 
+/** WP カテゴリスラッグから PostType を解決する。未マッピングは `movie`。 */
 export const resolvePostType = (categorySlug: string | undefined): PostType =>
   (categorySlug !== undefined ? WP_CATEGORY_TO_POST_TYPE[categorySlug] : undefined) ?? 'movie';

@@ -1,9 +1,13 @@
+/**
+ * ACF `official_sns` のオブジェクト・配列・JSON 文字列など多形状を TitleMeta 用に正規化する。
+ */
 import type { TTitleMetaProps } from "@/components/features/Post/PostTitleMeta";
 
 import { HTTP_URL_RE } from "./constants";
 
 type OfficialSnsEntry = NonNullable<TTitleMetaProps["officialSns"]>[string];
 
+/** 文字列またはオブジェクトの `link` / `url` / `href` から http(s) URL を取り出す。 */
 const extractSnsLink = (val: unknown): string | undefined => {
   if (typeof val === "string") {
     const t = val.trim();
@@ -22,12 +26,14 @@ const extractSnsLink = (val: unknown): string | undefined => {
 const stripSnsEmbedScripts = (html: string): string =>
   html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "").trim();
 
+/** 文字列が X（Twitter）埋め込み HTML なら script 除去後に返す。 */
 const extractXEmbedHtmlFromString = (raw: string): string | undefined => {
   const t = raw.trim();
   if (!/twitter-tweet/i.test(t)) return undefined;
   return stripSnsEmbedScripts(t);
 };
 
+/** オブジェクト内の代表的キーから X 埋め込み HTML を探す。 */
 const extractXEmbedHtmlFromObject = (val: unknown): string | undefined => {
   if (!val || typeof val !== "object") return undefined;
   const o = val as Record<string, unknown>;
@@ -39,12 +45,14 @@ const extractXEmbedHtmlFromObject = (val: unknown): string | undefined => {
   return undefined;
 };
 
+/** 文字列が Instagram 埋め込み HTML なら script 除去後に返す。 */
 const extractInstagramEmbedHtmlFromString = (raw: string): string | undefined => {
   const t = raw.trim();
   if (!/instagram-media/i.test(t) && !/data-instgrm-permalink/i.test(t)) return undefined;
   return stripSnsEmbedScripts(t);
 };
 
+/** オブジェクト内の代表的キーから Instagram 埋め込み HTML を探す。 */
 const extractInstagramEmbedHtmlFromObject = (val: unknown): string | undefined => {
   if (!val || typeof val !== "object") return undefined;
   const o = val as Record<string, unknown>;
@@ -69,12 +77,14 @@ const extractPermalinkFromInstagramEmbedHtml = (html: string): string | undefine
   return undefined;
 };
 
+/** 文字列が TikTok 埋め込み HTML なら script 除去後に返す。 */
 const extractTikTokEmbedHtmlFromString = (raw: string): string | undefined => {
   const t = raw.trim();
   if (!/tiktok-embed/i.test(t) && !/tiktok\.com\/embed\//i.test(t)) return undefined;
   return stripSnsEmbedScripts(t);
 };
 
+/** オブジェクト内の代表的キーから TikTok 埋め込み HTML を探す。 */
 const extractTikTokEmbedHtmlFromObject = (val: unknown): string | undefined => {
   if (!val || typeof val !== "object") return undefined;
   const o = val as Record<string, unknown>;
@@ -88,6 +98,7 @@ const extractTikTokEmbedHtmlFromObject = (val: unknown): string | undefined => {
   return undefined;
 };
 
+/** URL が tiktok.com の動画／embed パスか。 */
 const isTikTokVideoUrl = (url: string): boolean => {
   try {
     const u = new URL(url.trim());
@@ -111,6 +122,7 @@ const extractStatusUrlFromTweetEmbed = (html: string): string | undefined => {
   return m[1].replace(/&amp;/g, "&");
 };
 
+/** 同一プラットフォームの `link` / `embedHtml` をマージする。 */
 const mergeOfficialSnsEntry = (base: OfficialSnsEntry, add: OfficialSnsEntry): OfficialSnsEntry => {
   const merged: OfficialSnsEntry = {};
   const link = base.link ?? add.link;
@@ -131,6 +143,7 @@ const CANONICAL_KEY_BY_NORMALIZED_NAME: Record<string, string> = {
   tik_tok: "tiktok",
 };
 
+/** 埋め込み HTML の内容から TitleMeta 用の正規プラットフォームキーを推測する。 */
 const resolveCanonFromEmbedHtml = (embedHtml: string | undefined): string | undefined => {
   if (!embedHtml) return undefined;
   if (/twitter-tweet/i.test(embedHtml)) return "x";
@@ -146,6 +159,7 @@ type ResolveCanonicalSnsKeyArgs = {
   linkOk: boolean;
 };
 
+/** フィールド名・埋め込み・リンクから TitleMeta が期待するキーへ寄せる。 */
 const resolveCanonicalSnsKey = ({
   rawKey,
   embedHtml,
@@ -161,7 +175,7 @@ const resolveCanonicalSnsKey = ({
   return rawKey;
 };
 
-/** WP・ACF の表記ゆれ（twitter / Youtube 等）を TitleMeta が参照するキーへ寄せる */
+/** 中間マップのキーを正規化し、同一サービス行をマージする。 */
 const canonicalOfficialSnsKeys = (out: Record<string, OfficialSnsEntry>): Record<string, OfficialSnsEntry> => {
   const merged: Record<string, OfficialSnsEntry> = {};
   for (const [k, v] of Object.entries(out)) {
@@ -176,6 +190,7 @@ const canonicalOfficialSnsKeys = (out: Record<string, OfficialSnsEntry>): Record
   return merged;
 };
 
+/** ACF がオブジェクト辞書形式のときのパース。 */
 const parseOfficialSnsObjectShape = (raw: Record<string, unknown>): Record<string, OfficialSnsEntry> => {
   const out: Record<string, OfficialSnsEntry> = {};
   for (const [k, val] of Object.entries(raw)) {
@@ -224,6 +239,7 @@ const parseOfficialSnsObjectShape = (raw: Record<string, unknown>): Record<strin
   return canonicalOfficialSnsKeys(out);
 };
 
+/** ACF が `{ platform, link, embed }` 行の配列形式のときのパース。 */
 const parseOfficialSnsArrayShape = (raw: unknown[]): Record<string, OfficialSnsEntry> => {
   const out: Record<string, OfficialSnsEntry> = {};
   for (const item of raw) {
@@ -253,6 +269,7 @@ const parseOfficialSnsArrayShape = (raw: unknown[]): Record<string, OfficialSnsE
   return canonicalOfficialSnsKeys(out);
 };
 
+/** 任意の CMS 値を公式 SNS マップへ変換。解釈できなければ `undefined`。 */
 export const parseOfficialSns = (raw: unknown): TTitleMetaProps["officialSns"] => {
   if (raw == null) return undefined;
   if (Array.isArray(raw)) {

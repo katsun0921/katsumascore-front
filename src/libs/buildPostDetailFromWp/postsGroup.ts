@@ -3,6 +3,7 @@ import { parseWPPostUnknown, stripHtml } from "@/libs/api/wordpress";
 import { collectNumericIds } from "./relationPostIds";
 import type { PostsGroupSpec } from "./types";
 
+/** ACF の関連投稿グループ定義から見出し・説明・投稿 ID 列を抽出する。 */
 const extractPostsGroupIds = (acf: Record<string, unknown> | undefined): PostsGroupSpec[] => {
   if (!acf) return [];
   const raw = acf.relation_fields ?? acf.posts_groups ?? acf.post_groups ?? acf.related_groups;
@@ -22,6 +23,7 @@ const extractPostsGroupIds = (acf: Record<string, unknown> | undefined): PostsGr
   return groups;
 };
 
+/** 未パースの WP 投稿から関連グループ仕様の配列を取り出す。 */
 export const extractPostsGroupSpecsFromWp = (wp: unknown): PostsGroupSpec[] => {
   const p = parseWPPostUnknown(wp);
   if (!p) return [];

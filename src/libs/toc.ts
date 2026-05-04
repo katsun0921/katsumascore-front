@@ -1,10 +1,3 @@
-/**
- * 記事本文 HTML から h2 / h3 を抽出して目次アイテムを生成する。
- * getServerSideProps（サーバーサイド）で呼び出す。
- *
- * - h タグに id がある場合はそのまま利用
- * - id がない場合は "heading-{index}" を採番
- */
 import { parseDocument } from 'htmlparser2';
 import { findAll, textContent } from 'domutils';
 
@@ -14,6 +7,10 @@ export type TocItem = {
   level: 2 | 3 | 4
 }
 
+/**
+ * 記事本文 HTML から h2 / h3 / h4 を抽出して目次アイテムを生成する（サーバー側想定）。
+ * id 属性があればその値を使い、無い場合は `heading-{index}` を付与する。
+ */
 export const extractToc = (html: string): TocItem[] => {
   const dom = parseDocument(html);
   const headings = findAll(

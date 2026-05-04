@@ -20,12 +20,12 @@ import {
   paginatePosts,
 } from '@/libs/listFilters';
 import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
-import type { Post } from '@/types/post';
+import type { FilterPost, Post } from '@/types/post';
 
 type AnimeIndexProps = {
   categoryName: string;
   posts: Post[];
-  allPosts: Post[];
+  allPosts: FilterPost[];
   currentPage: number;
   totalPages: number;
   locale: string;
@@ -36,14 +36,16 @@ const AnimeIndexPage = ({
   allPosts,
   currentPage,
   locale,
+posts,
 }: AnimeIndexProps) => {
   const router = useRouter();
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
-  const filteredPosts = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
-  const pagedPosts = paginatePosts(filteredPosts, currentPage, ANIME_LIST_PER_PAGE);
-  const filteredTotalPages = Math.max(1, Math.ceil(filteredPosts.length / ANIME_LIST_PER_PAGE));
+  const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
+  const filteredIds = paginatePosts(filteredAll, currentPage, ANIME_LIST_PER_PAGE).map((p) => p.id);
+  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
+  const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / ANIME_LIST_PER_PAGE));
   const loc = normalizeRouteLocale(locale) as Locale;
 
   const getArchiveUrl = (page: number, filter?: string) => {

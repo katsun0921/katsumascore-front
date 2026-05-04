@@ -1,3 +1,4 @@
+/** 文字列または有限数値をトリムした文字列にし、それ以外は空文字。 */
 export const scalarToTrimmedString = (v: unknown): string => {
   if (typeof v === "string") return v.trim();
   if (typeof v === "number" && Number.isFinite(v)) return String(v).trim();

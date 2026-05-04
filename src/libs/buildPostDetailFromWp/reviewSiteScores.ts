@@ -10,6 +10,7 @@ type WpExternalScoreBlock = {
   score_audience?: unknown;
 };
 
+/** ACF の外部スコア値を正の有限数へ（不正・0 以下は 0）。 */
 const acfExternalScoreToPositiveNumber = (v: unknown): number => {
   if (v == null || v === "") return 0;
   const n = typeof v === "string" ? Number.parseFloat(v.trim()) : Number(v);
@@ -17,6 +18,7 @@ const acfExternalScoreToPositiveNumber = (v: unknown): number => {
   return n;
 };
 
+/** `site_url` が http(s) のときだけ返す。 */
 const acfExternalScoreUrl = (o: WpExternalScoreBlock): string | undefined => {
   const u = o.site_url;
   if (typeof u !== "string") return undefined;
@@ -25,11 +27,13 @@ const acfExternalScoreUrl = (o: WpExternalScoreBlock): string | undefined => {
   return t;
 };
 
+/** unknown を外部スコアブロック形として扱える場合だけキャストする。 */
 const asExternalScoreBlock = (raw: unknown): WpExternalScoreBlock | null => {
   if (!raw || typeof raw !== "object") return null;
   return raw as WpExternalScoreBlock;
 };
 
+/** IMDb / Rotten Tomatoes / Filmarks / 映画.com 等の ACF ブロックを ReviewSiteScores 用にまとめる。 */
 export const buildReviewSiteScoresFromAcf = (
   acf: Record<string, unknown> | undefined,
   meta: { updatedAt?: string; publishedDate?: string },

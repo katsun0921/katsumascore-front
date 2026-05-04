@@ -22,7 +22,10 @@ import type { BuildPostDetailFromWpInput } from "./types";
 import { buildVodIntroductionPayload } from "./vodIntroduction";
 import { extractYoutubeVideoId } from "./youtube";
 
-/** GSP から渡す WP 生データを PostDetail 向けに正規化・マージする */
+/**
+ * `getStaticProps` 等から渡す WP 生データをパースし、PostDetail 向けに正規化・マージする。
+ * 必須フィールドが欠ける場合は `null`。
+ */
 export const buildPostDetailFromWp = ({
   wp,
   locale,

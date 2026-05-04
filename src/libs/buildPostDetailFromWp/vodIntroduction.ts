@@ -1,3 +1,6 @@
+/**
+ * VOD 視聴ブロック（紹介文・関連記事・画像）用の ACF 解釈と関連ターム ID の抽出。
+ */
 import type { Post } from "@/types/post";
 import type { PostDetailData } from "@/components/templates/PostDetail/PostDetail.types";
 import type { ParsedWPPost } from "@/libs/api/wordpress";
@@ -7,6 +10,7 @@ import { vodLogoSrcBySlug } from "@assets/images/vod";
 import { acfTruthy } from "./acfScalars";
 import { HTTP_URL_RE } from "./constants";
 
+/** ターム参照オブジェクト・数値・文字列から VOD ターム ID を取り出す。 */
 const pickVodTermId = (raw: unknown): number | undefined => {
   if (typeof raw === "number" && Number.isFinite(raw) && raw > 0) {
     return Math.floor(raw);
@@ -27,6 +31,7 @@ const pickVodTermId = (raw: unknown): number | undefined => {
   return undefined;
 };
 
+/** `_embedded` の `vod` タクソノミーから、指定 ID の名前とスラッグを探す。 */
 const resolveVodTermFromEmbedded = (
   wp: ParsedWPPost,
   termId: number,
@@ -50,6 +55,7 @@ const resolveVodTermFromEmbedded = (
   return undefined;
 };
 
+/** ロゴ解決用にタームスラッグ末尾のリージョン接尾辞（`-cojp` 等）を除く。 */
 const stripVodTaxonomyRegionSuffix = (raw: string): string => {
   let s = raw.trim().toLowerCase();
   const suffixes = ["-cojp", "-com", "-jp", "-ja"] as const;
@@ -62,6 +68,7 @@ const stripVodTaxonomyRegionSuffix = (raw: string): string => {
   return s;
 };
 
+/** タクソノミースラッグから静的アセットの VOD ロゴ URL を引く。 */
 const vodImageUrlForTaxonomySlug = (rawSlug: string): string | undefined => {
   const base = stripVodTaxonomyRegionSuffix(rawSlug);
   const keys = [base, base.replace(/-/g, "_"), base.replace(/_/g, "-")];
@@ -72,6 +79,7 @@ const vodImageUrlForTaxonomySlug = (rawSlug: string): string | undefined => {
   return undefined;
 };
 
+/** `streaming_vod.watched_vod` のオブジェクトを安全に取り出す。 */
 const getWatchedVodRecord = (acf: Record<string, unknown>): Record<string, unknown> | undefined => {
   const sv = acf.streaming_vod;
   if (!sv || typeof sv !== "object" || Array.isArray(sv)) return undefined;
@@ -80,6 +88,7 @@ const getWatchedVodRecord = (acf: Record<string, unknown>): Record<string, unkno
   return wv as Record<string, unknown>;
 };
 
+/** 視聴中 VOD の表示名・スラッグを ACF と `_embedded` から解決する。 */
 const resolveVodServiceFromAcf = (
   wp: ParsedWPPost,
   acf: Record<string, unknown>,
@@ -98,6 +107,7 @@ const resolveVodServiceFromAcf = (
   return resolveVodTermFromEmbedded(wp, termId);
 };
 
+/** 条件を満たすときだけ `PostDetailData['vodIntroduction']` を組み立てる。 */
 export const buildVodIntroductionPayload = (
   parsed: ParsedWPPost,
   base: Post & { content: string },

@@ -1,3 +1,6 @@
+/**
+ * WordPress 検索結果をキーワードのヒット次元（タイトル・出演者等）でスコア付けし、並べ替え・フィルタする。
+ */
 import type { ParsedWPPost } from "@/libs/api/wordpress/schema";
 import { parseWPPostUnknown, stripHtml, titleSearchBlobFromParsedWp } from "@/libs/api/wordpress";
 
@@ -12,18 +15,22 @@ const WEIGHT: Record<Exclude<SearchMatchKind, "fallback">, number> = {
   genre: 3,
 };
 
+/** `needle` をトリムし、大文字小文字を無視して `haystack` に部分一致するか。空キーワードは不一致。 */
 const includesKeyword = (haystack: string, needle: string): boolean => {
   const n = needle.trim();
   if (!n) return false;
   return haystack.toLowerCase().includes(n.toLowerCase());
 };
 
+/** 重複しないよう `kinds` にマッチ種別を追加する。 */
 const pushKind = (kinds: SearchMatchKind[], kind: SearchMatchKind) => {
   if (!kinds.includes(kind)) kinds.push(kind);
 };
 
+/** 検索対象のタイトル文字列（HTML 除去済み）。 */
 const titleBlob = (wp: ParsedWPPost): string => titleSearchBlobFromParsedWp(wp);
 
+/** ACF 出演者リピーターから、名前・役名・説明などを連結した検索用テキストを作る。 */
 const actorsBlob = (wp: ParsedWPPost): string => {
   const rows = wp.acf?.actors_filed;
   if (!Array.isArray(rows) || rows.length === 0) return "";
@@ -42,8 +49,10 @@ const actorsBlob = (wp: ParsedWPPost): string => {
 
 type TermLike = { name?: string; taxonomy?: string };
 
+/** `wp_*` プレフィックスを除き小文字化したタクソノミー名。 */
 const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLowerCase();
 
+/** `_embedded['wp:term']` の各タームに対してコールバックを呼ぶ。 */
 const eachEmbeddedTerm = (wp: ParsedWPPost, fn: (name: string, taxonomy: string) => void) => {
   const groups = wp._embedded?.["wp:term"];
   if (!Array.isArray(groups)) return;
@@ -59,6 +68,7 @@ const eachEmbeddedTerm = (wp: ParsedWPPost, fn: (name: string, taxonomy: string)
   }
 };
 
+/** キーワードが当たった次元を列挙する。いずれにも当たらない場合は最後に `fallback` を付ける。 */
 export const getSearchMatchKinds = (wp: ParsedWPPost, keyword: string): SearchMatchKind[] => {
   const k = keyword.trim();
   const kinds: SearchMatchKind[] = [];
@@ -80,6 +90,7 @@ export const getSearchMatchKinds = (wp: ParsedWPPost, keyword: string): SearchMa
   return kinds;
 };
 
+/** マッチ種別に応じた重みの合計。`fallback` は加点しない。 */
 export const scoreFromKinds = (kinds: SearchMatchKind[]): number => {
   let score = 0;
   for (const kind of kinds) {
@@ -90,6 +101,7 @@ export const scoreFromKinds = (kinds: SearchMatchKind[]): number => {
   return score;
 };
 
+/** UI の検索次元フィルタに、現在のマッチ種別が一致するか。`all` は常に真。 */
 export const matchesSearchDimension = (
   kinds: SearchMatchKind[],
   filter: SearchDimensionFilter,
@@ -105,7 +117,7 @@ export type PreparedSearchRow = {
   score: number;
 };
 
-/** WP 検索結果を関連度で並べ替え、次元フィルタを適用する */
+/** WP 検索の生配列をパースし、キーワード・次元に合う行だけ残して関連度スコア順に並べ替える。 */
 export const prepareSearchResults = (
   raw: unknown[],
   keyword: string,

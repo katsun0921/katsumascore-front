@@ -6,7 +6,9 @@ import {
   extractDirectorTermNamesFromParsedWp,
 } from "@/libs/api/wordpress";
 
-/** ACF `director` の表記ゆれ（文字列 / 配列 / リレーション風オブジェクト）を名前配列へ */
+/**
+ * ACF `director` の表記ゆれ（文字列 / 配列 / リレーション風オブジェクト）を名前配列へ正規化する。
+ */
 const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
   if (raw == null) return [];
   if (typeof raw === "string") {
@@ -43,6 +45,7 @@ const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
   return [];
 };
 
+/** 監督名をターム・ACF の両方から集め、重複除去してクレジット行を返す。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
   const fromTerms = extractDirectorTermNamesFromParsedWp(wp);
   const acf = wp.acf as Record<string, unknown> | undefined;
@@ -60,7 +63,10 @@ export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCredi
   return [{ role, names }];
 };
 
-/** ACF リピータ1行の `actor`（リレーション）から表示名を取る。純粋な数値 ID のみは解決不能のため undefined */
+/**
+ * ACF リピータ1行の `actor`（リレーション）から表示名を取る。
+ * 純粋な数値 ID のみは解決不能のため `undefined`。
+ */
 const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
   if (raw == null) return undefined;
   if (typeof raw === "string") {
@@ -87,6 +93,7 @@ const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
   return undefined;
 };
 
+/** 出演者リピーター配列を、複数の候補フィールド名のうち最初に見つかったものから返す。 */
 const pickActorsRowsFromAcf = (acf: Record<string, unknown> | undefined): unknown[] => {
   if (!acf) return [];
   const candidates = [acf.actors_filed, acf.actors_field, acf.cast];
@@ -116,6 +123,7 @@ const buildActorTermIdMap = (wp: ParsedWPPost): Map<number, string> => {
   return map;
 };
 
+/** ACF 出演者行と actor タームをマージして `TActor[]` を構築する。 */
 export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
   const rows = pickActorsRowsFromAcf(acf);
