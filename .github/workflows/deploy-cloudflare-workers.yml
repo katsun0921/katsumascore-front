@@ -1,4 +1,5 @@
-# main への push（マージ完了後）で Cloudflare Workers へデプロイする。
+# main への push（マージ完了後）で Cloudflare Workers へデプロイし、
+# デプロイ成功後に vX.Y.Z 形式の Git タグを patch 更新する。
 #
 # 必要な GitHub Secrets（Repository settings → Secrets and variables → Actions）:
 #   CLOUDFLARE_API_TOKEN  — Workers デプロイ権限付き API トークン
@@ -24,7 +25,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 concurrency:
   group: cloudflare-workers-deploy
@@ -36,6 +37,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -55,3 +58,30 @@ jobs:
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME }}
         run: npm run deploy
+
+      - name: Update version tag
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          git fetch --tags --force
+
+          LATEST_TAG="$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)"
+
+          if [ -z "$LATEST_TAG" ]; then
+            NEXT_TAG="v1.0.0"
+          else
+            LATEST_TAG_SHA="$(git rev-list -n 1 "$LATEST_TAG")"
+
+            if [ "$LATEST_TAG_SHA" = "$GITHUB_SHA" ]; then
+              echo "Latest version tag $LATEST_TAG already points to this commit."
+              exit 0
+            fi
+
+            VERSION="${LATEST_TAG#v}"
+            IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
+            NEXT_TAG="v${MAJOR}.${MINOR}.$((PATCH + 1))"
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$NEXT_TAG" -m "Release $NEXT_TAG"
+          git push origin "$NEXT_TAG"
