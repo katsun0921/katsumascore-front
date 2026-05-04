@@ -4,6 +4,8 @@
 import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpGetCategories } from "@/mocks/wp/mockWpQueries";
 
 type WPCategory = components["schemas"]["WPCategory"];
 
@@ -12,6 +14,9 @@ const fetchCategories = async (
   lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPCategory[] | null> => {
+  if (isWpMockMode()) {
+    return mockWpGetCategories(lang);
+  }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {

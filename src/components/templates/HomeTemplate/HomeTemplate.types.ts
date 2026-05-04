@@ -14,6 +14,4 @@ export type HomeTemplateProps = {
   recommendBlocks: RecommendBlock[];
   vodFinderItems: VodFinderItem[];
   featuredItems: FeaturedItem[];
-  /** Facebook Page Plugin の iframe `src`（未設定時は Katsumascore 公式ページの既定プラグイン URL） */
-  facebookTimelineEmbedUrl: string;
 };

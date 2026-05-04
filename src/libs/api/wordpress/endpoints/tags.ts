@@ -4,6 +4,8 @@
 import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpGetTags } from "@/mocks/wp/mockWpQueries";
 
 type WPTag = components["schemas"]["WPTag"];
 
@@ -19,6 +21,9 @@ const shuffle = <T>(items: T[]): T[] => {
 
 /** タグ一覧を再試行付きで取得する。 */
 const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag[] | null> => {
+  if (isWpMockMode()) {
+    return mockWpGetTags(lang);
+  }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {

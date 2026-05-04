@@ -5,7 +5,6 @@ import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
-import { HomeFacebook } from '@/components/ui-home/HomeFacebook';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
@@ -13,11 +12,10 @@ import { messages } from './i18n';
 import type { HomeTemplateProps } from './HomeTemplate.types';
 /**
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
- * 2 列レイアウトは .homeTemplate__section--featuredFacebookRow 内のみ（特集 2 : Facebook 1、md 以上）。
  *
  * 表示順:
  *   Hero → 広告バナー（ja） → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend
- *   → 特集＋Facebook（md 以上は横並び）→ VOD
+ *   → 特集 → VOD
  */
 export const HomeTemplate = ({
   hero,
@@ -29,7 +27,6 @@ export const HomeTemplate = ({
   recommendBlocks,
   vodFinderItems,
   featuredItems,
-  facebookTimelineEmbedUrl,
 }: HomeTemplateProps) => {
   const locale = useLocale();
 
@@ -85,18 +82,8 @@ export const HomeTemplate = ({
           />
         </section>
 
-        <section className='homeTemplate__section homeTemplate__section--featuredFacebookRow min-w-0 max-w-full'>
-          <div className='flex w-full min-w-0 max-w-full flex-col gap-10 md:grid md:grid-cols-3 md:items-start md:gap-10'>
-            <div className='min-w-0 max-w-full overflow-x-hidden md:col-span-2'>
-              <HomeFeatured title={t(messages, ['featured', 'title'], locale)} items={featuredItems} />
-            </div>
-            <div className='min-w-0 max-w-full overflow-x-hidden md:col-span-1'>
-              <HomeFacebook
-                title={t(messages, ['facebook', 'title'], locale)}
-                embedUrl={facebookTimelineEmbedUrl}
-              />
-            </div>
-          </div>
+        <section className='homeTemplate__section'>
+          <HomeFeatured title={t(messages, ['featured', 'title'], locale)} items={featuredItems} />
         </section>
 
         <section className='homeTemplate__section'>

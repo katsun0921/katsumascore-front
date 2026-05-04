@@ -18,7 +18,4 @@ export const messages = {
     title: { ja: 'VODで探す', en: 'Find on VOD' },
     workCountSuffix: { ja: '作品', en: ' titles' },
   },
-  facebook: {
-    title: { ja: 'Facebook の投稿', en: 'Facebook' },
-  },
 } as const;

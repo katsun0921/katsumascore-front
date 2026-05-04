@@ -144,15 +144,6 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
     isPrimary: i === 0,
   }));
 
-/** Katsumascore 公式 Facebook（本サイト・katsumascore.blog の SNS 導線と揃える）。 */
-const KATSUMASCORE_FACEBOOK_PAGE_URL =
-  "https://www.facebook.com/people/Katsumascore/100072246676709/";
-
-/** Home タイムライン埋め込み用 Page Plugin の iframe `src`（固定。幅 300 は TOP 右列に合わせる）。 */
-const FACEBOOK_TIMELINE_EMBED_IFRAME_SRC = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
-  KATSUMASCORE_FACEBOOK_PAGE_URL,
-)}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
-
 /**
  * TOP の特集枠に固定ページを出す際のリンク先を決める。
  * 季節レビュー親ページの子は通常固定ページ直下ではなく `/seasonal-reviews/{slug}` に正規化する。
@@ -168,7 +159,7 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
  * TOP ページ（`HomeTemplate`）向けに、WordPress から必要データを並列取得して `HomeTemplateProps` を組み立てる。
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
- * アニメ枠・おすすめ（タグ）・特集・VOD ブロック・Facebook タイムライン埋め込み（固定 URL）を含む。
+ * アニメ枠・おすすめ（タグ）・特集・VOD ブロックを含む。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
@@ -249,6 +240,5 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromConfig(),
     featuredItems,
-    facebookTimelineEmbedUrl: FACEBOOK_TIMELINE_EMBED_IFRAME_SRC,
   };
 };

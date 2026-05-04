@@ -4,6 +4,8 @@
 import type { components } from "../generated/wp-schema";
 import { wpClient, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
+import { isWpMockMode } from "@/libs/wpMockMode";
+import { mockWpFetchPages, mockWpGetFeaturedPages } from "@/mocks/wp/mockWpQueries";
 
 type WPPageWithAcf = {
   id: number;
@@ -24,6 +26,9 @@ const BASE_URL = process.env.WP_API_URL?.replace(/\/+$/, "") ?? "";
 
 /** ACF の `display_settings.is_featured` が真のページのみ返す（生 `fetch`）。 */
 export const getFeaturedPages = async (lang?: string): Promise<WPPageWithAcf[]> => {
+  if (isWpMockMode()) {
+    return mockWpGetFeaturedPages() as WPPageWithAcf[];
+  }
   if (!BASE_URL) return [];
   const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,parent,acf" });
   if (lang) params.set("lang", lang);
@@ -53,6 +58,9 @@ const fetchPages = async (
   query: PagesQuery,
   options?: WpFetchOptions,
 ): Promise<WPPage[] | null> => {
+  if (isWpMockMode()) {
+    return mockWpFetchPages(query);
+  }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {

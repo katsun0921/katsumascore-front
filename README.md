@@ -178,7 +178,7 @@ import { VOD_LABEL, VOD_COLOR_VAR, VOD_INITIAL } from '@/lib/vod';
 
 ## デプロイ
 
-Cloudflare Workers（[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)）を使用しています。
+Cloudflare Workers（[`@opennextjs/cloudflare`](https://opennext.js.org/cloudflare)）を使用しています。**CI・Secrets・手順の要点**は [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) の **§3.4 デプロイ**。ステップの全文は [docs/archive/cloudflare_workers_deploy.md](./docs/archive/cloudflare_workers_deploy.md)（アーカイブ）。
 
 ```bash
 npm run deploy
@@ -209,6 +209,7 @@ WordPress 側では更新フックから上記 URL を `wp_remote_post` 等で�
 
 | ドキュメント | 内容 |
 |---|---|
+| [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md) | アーキテクチャ設計書（§3.4 に Workers / GitHub Actions デプロイ） |
 | [CLAUDE.md](./CLAUDE.md) | 設計規約・レイヤー構成・スタイリング方針 |
 | [Todo.md](./docs/features/MigrationNextjsTodo.md) | 移行進捗 TODO（フェーズ別チェックリスト） |
 | [docs/archive/wordpress-to-nextjs-migration.md](./docs/archive/wordpress-to-nextjs-migration.md) | WordPress → Next.js 移行手順（アーカイブ・2026-04 実装完了時点） |
