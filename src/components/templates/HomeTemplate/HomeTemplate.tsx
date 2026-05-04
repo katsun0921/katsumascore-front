@@ -6,7 +6,6 @@ import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { HomeFacebook } from '@/components/ui-home/HomeFacebook';
-import { HomePageEmbeds } from '@/components/features/HomePageEmbeds';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
@@ -31,7 +30,6 @@ export const HomeTemplate = ({
   vodFinderItems,
   featuredItems,
   facebookTimelineEmbedUrl,
-  homeAdScriptSrcs,
 }: HomeTemplateProps) => {
   const locale = useLocale();
 
@@ -109,7 +107,6 @@ export const HomeTemplate = ({
           />
         </section>
       </div>
-      <HomePageEmbeds extraScriptSrcs={homeAdScriptSrcs} />
     </div>
     </PageLayout>
   );

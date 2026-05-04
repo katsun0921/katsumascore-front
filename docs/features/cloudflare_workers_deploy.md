@@ -78,9 +78,7 @@ NEXT_PUBLIC_SITE_NAME=KatsumaScore
 # ISR webhook シークレット（任意の強固な文字列）
 REVALIDATE_SECRET=<ランダム文字列>
 
-# --- 以下は WordPress 管理画面で値を確認して設定 ---
-# WP_SEASONAL_REVIEW_PARENT_ID=
-# WP_ANIME_CATEGORY_ID=
+# 季節レビュー・カテゴリスラッグ等は src/config/wpContent.config.ts で固定（env 不要）
 ```
 
 > `REVALIDATE_SECRET` の生成例:
@@ -103,13 +101,6 @@ npx wrangler secret put WP_API_URL
 
 npx wrangler secret put REVALIDATE_SECRET
 # → プロンプトに値を貼り付けて Enter
-```
-
-オプション変数（WordPress 管理画面で値を確認してから設定）:
-
-```bash
-npx wrangler secret put WP_SEASONAL_REVIEW_PARENT_ID
-npx wrangler secret put WP_ANIME_CATEGORY_ID
 ```
 
 ### 4-2. 公開変数を `wrangler.jsonc` に追記する

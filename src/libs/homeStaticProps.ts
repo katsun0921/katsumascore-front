@@ -14,16 +14,16 @@ import {
   pickRandomTags,
   getPostsByTagId,
   getCategoryBySlug,
-  getPageBySlug,
   getFeaturedPages,
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
 import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
 import { getPostTypeArchivePath } from "@/libs/route";
+import { WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
+import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
-const WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG = "seasonal-anime-and-dramas-reviews";
 
 /**
  * レビュースコアをヒーロー表示用の 1〜5 の整数ランクに正規化する。
@@ -148,27 +148,10 @@ const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
 const KATSUMASCORE_FACEBOOK_PAGE_URL =
   "https://www.facebook.com/people/Katsumascore/100072246676709/";
 
-/**
- * Facebook Page Plugin 用 iframe の `src` を組み立てる。
- * `NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL` 未設定時の既定値。幅 300 は TOP グリッド右列（300px）に合わせる。
- *
- * @returns `plugins/page.php?...` 形式の絶対 URL。
- */
-const buildDefaultFacebookPagePluginSrc = (): string =>
-  `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
-    KATSUMASCORE_FACEBOOK_PAGE_URL,
-  )}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
-
-/**
- * 季節レビュー親固定ページの ID を、環境変数または既知の WordPress 親スラッグから解決する。
- * `WP_SEASONAL_REVIEW_PARENT_ID` が未設定の環境でも TOP の季節レビューリンクを組み立てられるようにする。
- */
-const resolveSeasonalReviewParentId = async (lang: "ja" | "en"): Promise<number | null> => {
-  const parentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
-  if (parentRaw && /^\d+$/.test(parentRaw)) return Number(parentRaw);
-  const parent = await getPageBySlug(WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG, lang);
-  return parent?.id ?? null;
-};
+/** Home タイムライン埋め込み用 Page Plugin の iframe `src`（固定。幅 300 は TOP 右列に合わせる）。 */
+const FACEBOOK_TIMELINE_EMBED_IFRAME_SRC = `https://www.facebook.com/plugins/page.php?href=${encodeURIComponent(
+  KATSUMASCORE_FACEBOOK_PAGE_URL,
+)}&tabs=timeline&width=300&height=600&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true`;
 
 /**
  * TOP の特集枠に固定ページを出す際のリンク先を決める。
@@ -182,33 +165,17 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
 };
 
 /**
- * 環境変数などの「カンマ区切り URL リスト」をトリム分割し、空要素を除いた配列にする。
- * 未設定・空白のみのときは `undefined` を返し、呼び出し側で props を省略しやすくする。
- *
- * @param raw — カンマ区切りの文字列。`undefined` 可。
- * @returns 非空トークンの配列。入力が無効なら `undefined`。
- */
-const parseCommaList = (raw: string | undefined): string[] | undefined => {
-  if (!raw?.trim()) return undefined;
-  const parts = raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean);
-  return parts.length > 0 ? parts : undefined;
-};
-
-/**
  * TOP ページ（`HomeTemplate`）向けに、WordPress から必要データを並列取得して `HomeTemplateProps` を組み立てる。
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
- * アニメ枠・おすすめ（タグ）・特集・VOD ブロック・Facebook タイムライン埋め込み・任意の追加スクリプトを含む。
+ * アニメ枠・おすすめ（タグ）・特集・VOD ブロック・Facebook タイムライン埋め込み（固定 URL）を含む。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
  */
 export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplateProps> => {
   const lang = locale === "en" ? "en" : "ja";
-  const movieSlug = process.env.WP_MOVIE_CATEGORY_SLUG ?? "movie";
+  const movieSlug = WP_MOVIE_CATEGORY_SLUG;
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
@@ -272,13 +239,6 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const featuredItems =
     featuredItemsFromPages.length > 0 ? featuredItemsFromPages : toFeaturedItems(featuredSource);
 
-  const envFacebookEmbed = process.env.NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL?.trim();
-  const facebookTimelineEmbedUrl =
-    envFacebookEmbed && envFacebookEmbed.length > 0
-      ? envFacebookEmbed
-      : buildDefaultFacebookPagePluginSrc();
-  const homeAdScriptSrcs = parseCommaList(process.env.NEXT_PUBLIC_HOME_EXTRA_SCRIPT_SRCS);
-
   return {
     hero: buildHeroFromPosts(pool),
     rankingPosts,
@@ -289,7 +249,6 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromConfig(),
     featuredItems,
-    facebookTimelineEmbedUrl,
-    ...(homeAdScriptSrcs ? { homeAdScriptSrcs } : {}),
+    facebookTimelineEmbedUrl: FACEBOOK_TIMELINE_EMBED_IFRAME_SRC,
   };
 };

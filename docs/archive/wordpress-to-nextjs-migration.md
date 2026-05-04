@@ -63,7 +63,7 @@ pages（getStaticProps / getServerSideProps）
 
 ### 3-1. ホームページ
 
-- 実装: `loadHomeTemplateProps`（`src/lib/homeStaticProps.ts`）— ランダムタグ、`movie` 特集、季節子ページ、任意で Facebook iframe / `next/script`（`HomePageEmbeds`）。
+- 実装: `loadHomeTemplateProps`（`src/libs/homeStaticProps.ts`）— ランダムタグ、`movie` 特集、季節子ページ、Facebook iframe（固定 URL）。サイト全体の計測・広告スクリプトは `_app.tsx` の `next/script`。
 
 ### 3-2. アーカイブ
 
@@ -124,22 +124,19 @@ pages（getStaticProps / getServerSideProps）
 
 ### 広告コード
 
-`next/script`（例: `lazyOnload`）。ホームでは `HomePageEmbeds` の `extraScriptSrcs`。
+`next/script`（`_app.tsx` ほか。必要に応じて各テンプレート・セクションで追加）。
 
 ### Facebook ページ埋め込み
 
-iframe は CSS クラスで寸法管理（`style` prop 禁止ルールに準拠）。
+`HomeFacebook` の iframe は CSS クラスで寸法管理（`style` prop 禁止ルールに準拠）。
 
 ### 映画公開中フラグ
 
 `is_cinema_showing` を正規化し、Sidebar の VOD / レンタル表示と連動。
 
-### 環境変数（例）
+### WordPress スラッグ・REST パス（固定）
 
-- `WP_SEASONAL_REVIEW_PARENT_ID` — 季節レビュー親ページ ID  
-- `WP_MOVIE_CATEGORY_SLUG` — 既定 `movie`  
-- `WP_TOP_PAGE_SLUG` / `WP_FEATURED_CATEGORY_SLUG`  
-- `NEXT_PUBLIC_FACEBOOK_TIMELINE_EMBED_URL` / `NEXT_PUBLIC_HOME_EXTRA_SCRIPT_SRCS`（任意）
+`src/config/wpContent.config.ts`（季節レビュー親、カテゴリスラッグ、`genre` / `vod` の `rest_base` 相当）。
 
 ---
 

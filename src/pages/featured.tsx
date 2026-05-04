@@ -5,6 +5,7 @@ import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
+import { WP_FEATURED_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { getCategoryBySlug, getPostsWithMeta } from '@/libs/api/wordpress';
 import { normalizePosts } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
@@ -60,7 +61,7 @@ export default FeaturedPage;
 export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale }) => {
   const currentLocale = (locale === 'en' ? 'en' : 'ja') as import('@/libs/api/wordpress/lang').Locale;
   const lang = currentLocale === 'en' ? 'en' : 'ja';
-  const slug = process.env.WP_FEATURED_CATEGORY_SLUG ?? 'featured';
+  const slug = WP_FEATURED_CATEGORY_SLUG;
   const category = await getCategoryBySlug(slug, lang);
   if (!category) return { notFound: true };
 
@@ -78,6 +79,6 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
       posts: normalizePosts(fetched.items, currentLocale),
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 600,
   };
 };

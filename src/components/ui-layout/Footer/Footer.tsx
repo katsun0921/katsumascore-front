@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { XIcon, FacebookIcon, RssIcon } from '@/assets/icons';
-import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/postTypeArchiveNav.config';
+import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/wpContent.config';
 import type { Locale } from '@/i18n/t';
 import { t } from '@/i18n/t';
 import { getPostTypeArchivePath } from '@/libs/route';

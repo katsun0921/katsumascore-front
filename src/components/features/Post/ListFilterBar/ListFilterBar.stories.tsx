@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/postTypeArchiveNav.config';
+import { POST_TYPE_ARCHIVE_NAV_ITEMS } from '@/config/wpContent.config';
 import { ListFilterBar } from './ListFilterBar';
 
 const postTypeFilterOptionsJa = POST_TYPE_ARCHIVE_NAV_ITEMS.map((item) => ({

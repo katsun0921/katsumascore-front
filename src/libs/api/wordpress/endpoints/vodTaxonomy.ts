@@ -1,6 +1,7 @@
 /**
  * カスタムタクソノミー `vod` のターム取得（一覧ページの `vod` クエリ用 ID 解決）。
  */
+import { WP_VOD_REST_PATH } from "@/config/wpContent.config";
 import {
   wpApiBaseUrl,
   defaultFetchOptions,
@@ -9,9 +10,9 @@ import {
 } from "../client";
 import type { WpFetchOptions } from "../client";
 
-/** WP 登録の `rest_base` が `vod` 以外のとき `WP_VOD_REST_PATH` で指定する。 */
+/** `wpContent.config` の REST コレクション名（スラッグ形式に正規化）。 */
 const vodRestCollectionPath = (): string => {
-  const raw = process.env.WP_VOD_REST_PATH?.trim();
+  const raw = WP_VOD_REST_PATH.trim();
   if (raw && /^[a-z0-9-]+$/i.test(raw)) return raw.replace(/^\/+|\/+$/g, "");
   return "vod";
 };

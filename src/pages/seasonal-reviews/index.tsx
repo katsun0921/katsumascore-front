@@ -5,7 +5,11 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getChildPages, getPageBySlug, normalizePageContent } from '@/libs/api/wordpress';
+import { getChildPages, normalizePageContent } from '@/libs/api/wordpress';
+import {
+  resolveSeasonalReviewParentId,
+  WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG_DEFAULT,
+} from '@/libs/seasonalReviewParent';
 import type { Post } from '@/types/post';
 
 type SeasonalIndexProps = {
@@ -15,7 +19,7 @@ type SeasonalIndexProps = {
 
 export const SEASONAL_REVIEWS_BASE_PATH = '/seasonal-reviews';
 export const WORDPRESS_SEASONAL_REVIEWS_BASE_PATH = '/seasonal-anime-and-dramas-reviews';
-export const WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG = 'seasonal-anime-and-dramas-reviews';
+export const WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG = WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG_DEFAULT;
 
 const pageSortDate = (page: { modified?: string; date: string }): string => page.modified ?? page.date;
 
@@ -31,12 +35,7 @@ const pageFeaturedImage = (page: unknown): string | null => {
   return typeof sourceUrl === 'string' ? sourceUrl : null;
 };
 
-export const resolveSeasonalReviewParentId = async (lang: 'ja' | 'en'): Promise<number | null> => {
-  const parentRaw = process.env.WP_SEASONAL_REVIEW_PARENT_ID;
-  if (parentRaw && /^\d+$/.test(parentRaw)) return Number(parentRaw);
-  const parent = await getPageBySlug(WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG, lang);
-  return parent?.id ?? null;
-};
+export { resolveSeasonalReviewParentId };
 
 const SeasonalIndexPage = ({ items, locale }: SeasonalIndexProps) => {
   const loc = (locale ?? 'ja') as Locale;
@@ -96,6 +95,6 @@ export const buildSeasonalIndexProps = async (
 export const getStaticProps: GetStaticProps<SeasonalIndexProps> = async ({ locale }) => {
   return {
     props: await buildSeasonalIndexProps(locale),
-    revalidate: 60,
+    revalidate: 600,
   };
 };

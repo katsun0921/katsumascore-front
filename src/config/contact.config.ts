@@ -1,10 +1,10 @@
-/** お問い合わせ（Google フォーム）。環境変数で上書き可 */
-const DEFAULT_FORM_ID = '1FAIpQLSdTrLwTHMItxAdMhZO8e8PnNevCOAJWPloTrsax386XalzZYQ';
+/** お問い合わせ（Google フォーム）。URL は固定（環境変数では上書きしない）。 */
+const DEFAULT_FORM_ID = "1FAIpQLSdTrLwTHMItxAdMhZO8e8PnNevCOAJWPloTrsax386XalzZYQ";
 
-const base = `https://docs.google.com/forms/d/e/${DEFAULT_FORM_ID}/viewform`;
+const viewFormBase = `https://docs.google.com/forms/d/e/${DEFAULT_FORM_ID}/viewform`;
 
-export const CONTACT_FORM_EMBED_SRC =
-  process.env.NEXT_PUBLIC_CONTACT_FORM_EMBED_URL ?? `${base}?embedded=true`;
+/** 別タブで開くフォームの URL */
+export const CONTACT_FORM_VIEW_URL = viewFormBase;
 
-export const CONTACT_FORM_VIEW_URL =
-  process.env.NEXT_PUBLIC_CONTACT_FORM_URL ?? base;
+/** iframe 埋め込み用の `src` */
+export const CONTACT_FORM_EMBED_SRC = `${viewFormBase}?embedded=true`;

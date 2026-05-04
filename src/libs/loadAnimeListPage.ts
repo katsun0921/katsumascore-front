@@ -1,6 +1,7 @@
 /**
  * アニメカテゴリ記事一覧ページ用。WP から全ページ取得後に正規化し、クライアント用フィルター向けに軽量行も返す。
  */
+import { WP_ANIME_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { getCategoriesForArchiveResolve, getPostsWithMeta } from "@/libs/api/wordpress";
 import { normalizePosts } from "@/utils/normalizePost";
 import { toSerializableValue } from "@/utils/toSerializableValue";
@@ -20,17 +21,17 @@ export type AnimeListPageResult =
       totalPages: number;
     };
 
-/** TOP のアニメ枠と同じルールで WP カテゴリ（アニメ）を解決する */
+/** 互換: アニメカテゴリスラッグ（`wpContent.config` と同一）。 */
+export const WORDPRESS_ANIME_CATEGORY_SLUG_DEFAULT = WP_ANIME_CATEGORY_SLUG;
+
+/**
+ * TOP のアニメ枠と同じルールで WP カテゴリ（アニメ）を解決する。
+ * まず {@link WP_ANIME_CATEGORY_SLUG} で一致を探し、無ければ名称ヒューリスティック。
+ */
 export const resolveAnimeCategoryMeta = (
   categories: WPCategory[],
 ): { id: number; name: string } | undefined => {
-  const fromEnv = process.env.WP_ANIME_CATEGORY_ID;
-  if (fromEnv && /^\d+$/.test(fromEnv)) {
-    const id = Number(fromEnv);
-    const found = categories.find((c) => c.id === id);
-    if (found) return { id: found.id, name: found.name };
-  }
-  const bySlug = categories.find((c) => c.slug === "anime");
+  const bySlug = categories.find((c) => c.slug === WP_ANIME_CATEGORY_SLUG);
   if (bySlug) return { id: bySlug.id, name: bySlug.name };
   const byNameJa = categories.find((c) => c.name.includes("アニメ"));
   if (byNameJa) return { id: byNameJa.id, name: byNameJa.name };

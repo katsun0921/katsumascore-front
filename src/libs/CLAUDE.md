@@ -14,6 +14,7 @@
 | `ranking.ts` | スコアランク変換関数（1〜5 → SS/S/A/B/C） |
 | `i18n.ts` | 多言語ヘルパー関数 |
 | `vod.ts` | Cloudflare KV アクセス |
+| `seasonalReviewParent.ts` | 季節レビュー親固定ページをスラッグから ID に解決 |
 
 ## wordpress.ts の関数一覧
 

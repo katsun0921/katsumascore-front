@@ -1,6 +1,5 @@
 /* Next.js 16: global SCSS は Custom App（および Storybook preview）からのみ読み込む */
 @use "../components/features/GenreNav/GenreNav";
-@use "../components/features/HomePageEmbeds/HomePageEmbeds";
 @use "../components/features/HomeHero/HomeHero";
 @use "../components/features/OfficialSns/OfficialSns";
 @use "../components/features/PickUpAndScore/PickUpAndScore";

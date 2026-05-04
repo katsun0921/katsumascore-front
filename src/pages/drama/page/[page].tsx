@@ -10,6 +10,7 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
+import { WP_DRAMA_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { CATEGORY_LIST_PER_PAGE } from '@/libs/listFilters';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import {
@@ -107,7 +108,7 @@ export const getStaticProps: GetStaticProps<DramaPagedProps> = async ({ params, 
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
   const currentLocale = normalizeRouteLocale(locale);
-  const dramaSlug = process.env.WP_DRAMA_CATEGORY_SLUG ?? 'drama';
+  const dramaSlug = WP_DRAMA_CATEGORY_SLUG;
   const data = await loadCategoryListPage(dramaSlug, currentLocale, pageNum);
   if ('notFound' in data) return { notFound: true };
 
@@ -120,6 +121,6 @@ export const getStaticProps: GetStaticProps<DramaPagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 600,
   };
 };

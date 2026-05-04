@@ -1,6 +1,7 @@
 /**
  * カスタムタクソノミー `genre` の一覧・スラッグ検索・表示ラベル解決。
  */
+import { WP_GENRE_REST_PATH } from "@/config/wpContent.config";
 import {
   wpApiBaseUrl,
   defaultFetchOptions,
@@ -9,9 +10,9 @@ import {
 } from "../client";
 import type { WpFetchOptions } from "../client";
 
-/** WP 登録の `rest_base` が `genre` 以外のとき `WP_GENRE_REST_PATH` で指定（例: `genres`） */
+/** `wpContent.config` の REST コレクション名（スラッグ形式に正規化）。 */
 const genreRestCollectionPath = (): string => {
-  const raw = process.env.WP_GENRE_REST_PATH?.trim();
+  const raw = WP_GENRE_REST_PATH.trim();
   if (raw && /^[a-z0-9-]+$/i.test(raw)) return raw.replace(/^\/+|\/+$/g, "");
   return "genre";
 };

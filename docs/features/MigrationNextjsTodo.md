@@ -158,7 +158,7 @@
 - [x] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
 - [x] Cloudflare Workers デプロイの本番検証（https://katsumascore.sato-katsumasa.workers.dev）
 - [x] 広告コード（A8.net / admax）を `next/script` で管理（GA / AdSense は `_app.tsx` で `next/script` 済み。Admax は iframe 隔離、A8 画像バナーは Geo/Tsutaya の静的マークアップ）
-- [x] Facebook ページ埋め込みの CSS クラス管理（`HomePageEmbeds` の iframe は `className` + SCSS。`style` prop 未使用）
+- [x] Facebook ページ埋め込みの CSS クラス管理（`HomeFacebook` の iframe は `className` + SCSS。`style` prop 未使用）
 - [x] パフォーマンス最適化（`next/image` 最適化・Code Splitting）
 - [x] ISR Webhook用 API（`POST /api/revalidate`・`REVALIDATE_SECRET`）— [README.md](../../README.md) / [.env.example](../../.env.example) 参照
 - [x] WordPress 更新時に `POST /api/revalidate` を呼び出す（プラグイン `katsumascore-revalidate` を作成・有効化済み。KV/R2 未導入のため現時点では revalidate は ISR 60秒自動反映で運用）
