@@ -104,6 +104,6 @@ export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 600,
   };
 };

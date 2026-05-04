@@ -93,6 +93,6 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 300,
   };
 };

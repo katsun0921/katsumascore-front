@@ -10,6 +10,6 @@ export default SeasonalIndexPage;
 export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: await buildSeasonalIndexProps(locale, WORDPRESS_SEASONAL_REVIEWS_BASE_PATH),
-    revalidate: 60,
+    revalidate: 600,
   };
 };

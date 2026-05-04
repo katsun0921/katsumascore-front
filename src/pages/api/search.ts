@@ -37,6 +37,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Post[]>) => {
     .filter((m): m is NonNullable<typeof m> => m !== null)
     .map(({ content: _, ...rest }) => rest as Post);
 
+  res.setHeader('Cache-Control', 'private, no-cache');
   res.status(200).json(posts);
 };
 

@@ -1,7 +1,7 @@
 /**
- * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（ISR 60 秒）。
+ * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（ISR 300 秒）。
  */
-// ISR: revalidate 60s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
+// ISR: revalidate 300s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import {
   genreDisplayLabel,
@@ -56,7 +56,7 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   return { paths, fallback: 'blocking' };
 };
 
-/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 60` で返す。 */
+/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 300` で返す。 */
 export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
   async ({ params, locale }) => {
     const slug = params?.slug;
@@ -165,6 +165,6 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
         locale: loc,
         genres,
       },
-      revalidate: 60,
+      revalidate: 300,
     };
   };

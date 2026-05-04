@@ -83,5 +83,5 @@ export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) =>
   props: {
     locale: normalizeRouteLocale(locale),
   },
-  revalidate: 60,
+  revalidate: 600,
 });

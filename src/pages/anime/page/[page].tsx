@@ -119,6 +119,6 @@ export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 60,
+    revalidate: 600,
   };
 };

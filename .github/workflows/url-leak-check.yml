@@ -1,0 +1,69 @@
+# URL 正規化漏れを検査する E2E テスト。
+#
+# 必要な GitHub 設定（Settings → Secrets and variables → Actions → Variables）:
+#   NORMALIZE_VERSION — src/libs/cache/version.ts の NORMALIZE_VERSION と同じ値を登録する。
+#                       バージョンを上げたらここも同時に更新する。
+#
+# 必要な GitHub Secrets:
+#   WP_API_URL / NEXT_PUBLIC_WP_BASE_URL / NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_SITE_NAME
+#   DISCORD_WEBHOOK — カナリア失敗時の通知先（任意）
+
+name: URL Leak Check
+
+on:
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 */6 * * *'  # 6時間ごとの本番カナリア
+  workflow_dispatch:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Build
+        run: npm run build
+        env:
+          WP_API_URL: ${{ secrets.WP_API_URL }}
+          NEXT_PUBLIC_WP_BASE_URL: ${{ secrets.NEXT_PUBLIC_WP_BASE_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME }}
+
+      - name: Start server
+        run: npm run start &
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000
+
+      - name: Run URL leak test
+        run: npx playwright test tests/e2e/url-leak.spec.ts
+        env:
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000
+          EXPECTED_NORMALIZE_VERSION: ${{ vars.NORMALIZE_VERSION }}
+
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+      - name: Notify Discord on failure
+        if: failure() && github.event_name == 'schedule'
+        run: |
+          curl -X POST "${{ secrets.DISCORD_WEBHOOK }}" \
+            -H "Content-Type: application/json" \
+            -d '{"content":"🚨 URL Leak カナリア検知：本番で CMS オリジンの漏れを確認しました。Playwright レポートを確認してください。"}'
