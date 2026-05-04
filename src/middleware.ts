@@ -37,23 +37,25 @@ export const middleware = (request: NextRequest) => {
   );
   if (!parsed) return NextResponse.next();
 
+  const locale = parsed.locale ?? 'ja';
+
+  const pageRaw = request.nextUrl.searchParams.get('page');
+  const pageNum = pageRaw ? Number.parseInt(pageRaw, 10) : NaN;
+
+  if (Number.isFinite(pageNum) && pageNum >= 2) {
+    const url = request.nextUrl.clone();
+    url.pathname = `/${locale}/${parsed.seg}/page/${pageNum}`;
+    url.searchParams.delete('page');
+    return NextResponse.rewrite(url);
+  }
+
   if (!parsed.locale) {
     const url = request.nextUrl.clone();
     url.pathname = `/ja/${parsed.seg}`;
-    return NextResponse.redirect(url);
+    return NextResponse.rewrite(url);
   }
 
-  const pageRaw = request.nextUrl.searchParams.get('page');
-  if (!pageRaw) return NextResponse.next();
-
-  const pageNum = Number.parseInt(pageRaw, 10);
-  if (!Number.isFinite(pageNum) || pageNum < 2) return NextResponse.next();
-
-  const url = request.nextUrl.clone();
-  url.pathname = `/${parsed.locale}/${parsed.seg}/page/${pageNum}`;
-  url.searchParams.delete('page');
-
-  return NextResponse.rewrite(url);
+  return NextResponse.next();
 };
 
 export const config = {

@@ -28,6 +28,17 @@ export type HomeHeroProps = {
 
 const SWIPER_MODULES = [EffectCards, Autoplay];
 
+const FALLBACK_SLIDES: HomeHeroSlide[] = [
+  {
+    title: 'KatsumaScore',
+    copy: '',
+    score: 3,
+    rank: 'A',
+    href: '/posts',
+    image: '/images/mock-image.webp',
+  },
+];
+
 const RANK_CLASS_MAP: Record<HomeHeroSlide['rank'], string> = {
   SS: 'homeHero__rank--ss',
   S: 'homeHero__rank--s',
@@ -49,8 +60,10 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const hasInitializedRef = useRef(false);
   const prefixClassName = 'homeHero';
 
-  const current = slides[activeIndex] ?? slides[0];
+  const slideList = Array.isArray(slides) && slides.length > 0 ? slides : FALLBACK_SLIDES;
+  const current = slideList[activeIndex] ?? slideList[0];
   const rankClassName = RANK_CLASS_MAP[current.rank] ?? RANK_CLASS_MAP.A;
+  const displayScore = Number.isFinite(current.score) ? current.score : 0;
   const shortCopy = current.copy.length > 22 ? `${current.copy.slice(0, 22)}...` : current.copy;
 
   const animateOut = (onComplete: () => void) => {
@@ -62,6 +75,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   };
 
   const animateIn = (score: number) => {
+    const targetScore = Number.isFinite(score) ? score : 0;
     if (scoreNumRef.current) scoreNumRef.current.textContent = '0.0';
 
     const counter = { val: 0 };
@@ -69,7 +83,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
     tlRef.current = tl;
     tl.to(scoreBlockRef.current, { opacity: 1, y: 0, duration: 0.4 }, '+=0.05')
       .to(counter, {
-        val: score,
+        val: targetScore,
         duration: 1.0,
         ease: 'power3.out',
         onUpdate: () => {
@@ -85,7 +99,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
     const initTl = gsap.timeline({ delay: 0.3 });
     initTl.call(() => {
       hasInitializedRef.current = true;
-      animateIn(slides[0].score);
+      animateIn(slideList[0].score);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -102,7 +116,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   // activeIndex が変わったらアニメーションIn
   useEffect(() => {
     if (!hasInitializedRef.current) return; // 初回はuseEffect[0]が担う
-    animateIn(slides[activeIndex].score);
+    animateIn(slideList[activeIndex].score);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeIndex]);
 
@@ -113,10 +127,9 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
     >
       {/* 背景レイヤー */}
       <div className={`${prefixClassName}__bg`} aria-hidden='true'>
-        {slides.map((slide, i) => (
-          <div key={slide.image} className={`${prefixClassName}__bgOverlay`}>
+        {slideList.map((slide, i) => (
+          <div key={`${prefixClassName}__bg-${i}`} className={`${prefixClassName}__bgOverlay`}>
             <Image
-              key={slide.image}
               src={slide.image}
               alt=''
               fill
@@ -138,7 +151,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
             <div className={`${prefixClassName}__scoreCard`}>
               <span className={`${prefixClassName}__scoreLabel`}>KATSUMASCORE</span>
               <div ref={scoreNumRef} className={`${prefixClassName}__scoreVal`}>
-                {current.score.toFixed(1)}
+                {displayScore.toFixed(1)}
               </div>
               <span className={`${prefixClassName}__scoreRank`}>
                 {current.rank} RANK
@@ -175,8 +188,8 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
             onSwiper={(swiper) => { swiperRef.current = swiper; swiper.autoplay.start(); }}
             onRealIndexChange={(swiper) => handleSlideChange(swiper.realIndex)}
           >
-            {slides.map((slide, i) => (
-              <SwiperSlide key={slide.image} className={`${prefixClassName}__swiperSlide`}>
+            {slideList.map((slide, i) => (
+              <SwiperSlide key={`${prefixClassName}__card-${i}`} className={`${prefixClassName}__swiperSlide`}>
                 <Image
                   src={slide.image}
                   alt={slide.title}

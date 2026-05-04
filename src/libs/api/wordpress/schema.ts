@@ -127,10 +127,21 @@ const acfFromRest = z.preprocess((v: unknown) => {
   return v;
 }, wpPostAcfObjectSchema.optional());
 
+/** REST が `null` を返す環境があるため、アイキャッチ未設定を 0 に正規化する。 */
+const featuredMediaIdFromRest = z.preprocess((v: unknown) => {
+  if (v == null || v === "") return 0;
+  if (typeof v === "number" && Number.isFinite(v)) return v;
+  if (typeof v === "string") {
+    const n = Number.parseInt(v, 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+  return 0;
+}, z.number());
+
 /** 投稿 1 件の REST 形（ACF は寛容に `.passthrough()`）。 */
 export const WPPostSchema = z
   .object({
-    id: z.number(),
+    id: z.coerce.number(),
     slug: z.string(),
     link: z.string().optional(),
     title: renderedBlock,
@@ -138,7 +149,7 @@ export const WPPostSchema = z
     excerpt: renderedBlock,
     date: z.string(),
     modified: z.string().optional(),
-    featured_media: z.number(),
+    featured_media: featuredMediaIdFromRest,
     meta: z.preprocess(
       (v) => {
         if (v == null || typeof v !== "object" || Array.isArray(v)) return undefined;
