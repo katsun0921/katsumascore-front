@@ -5,7 +5,7 @@ Storybookの設定ファイルを管理するディレクトリ。
 ## 作業ルール
 
 - Storybookのスタイル移行・調整を行う前に、必ず `docs/` 配下のスタイルガイドを読み込む
-- 現時点では `docs/katsumascore_design_rules.md` を優先して参照する
+- 現時点では `DESIGN.md` を優先して参照する
 - `katsumascore_design_system` からの移行作業は `docs/storybook_style_migration.md` の手順に沿って進める
 - SCSSは `src/styles` のような専用ディレクトリにまとめず、対応するTSXと同じディレクトリに配置する
 - 形式は `Component.tsx` と `Component.scss` を基本とする

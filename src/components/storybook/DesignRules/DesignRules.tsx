@@ -137,7 +137,7 @@ export const DesignRules = () => {
         <div className='sb-design-rules-eyebrow'>Docs / Design Rules</div>
         <h1>Storybook から KatsumaScore のデザインルールを確認する</h1>
         <p className='sb-design-rules-lead'>
-          ルール本文は <span className='sb-design-rules-code'>docs/katsumascore_design_rules.md</span>、
+          ルール本文は <span className='sb-design-rules-code'>DESIGN.md</span>、
           実装の受け皿は <span className='sb-design-rules-code'>src/styles/globals.css</span>{' '}
           を基準にしています。Storybook では、色・Typography・実装責務をすぐ確認できるように整理しています。
         </p>
