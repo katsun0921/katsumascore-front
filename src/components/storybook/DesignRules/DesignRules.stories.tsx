@@ -11,7 +11,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'KatsumaScore のデザインルールを Storybook 上で確認するための docs ページです。`docs/katsumascore_design_rules.md` と `src/styles/globals.css` の運用方針をまとめています。',
+          'KatsumaScore のデザインルールを Storybook 上で確認するための docs ページです。`DESIGN.md` と `src/styles/globals.css` の運用方針をまとめています。',
       },
     },
   },

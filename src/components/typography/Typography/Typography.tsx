@@ -395,7 +395,7 @@ const OverviewSection = () => (
         <div>
           <h2>Quick Rules</h2>
           <p className='sb-typography-muted'>
-            `docs/katsumascore_design_rules.md` の方針を Storybook で確認しやすい形に寄せています。
+            `DESIGN.md` の方針を Storybook で確認しやすい形に寄せています。
           </p>
         </div>
         <p>色は役割で選び、本文と見出しは token ベースのフォントで統一します。</p>
@@ -490,7 +490,7 @@ const FontSection = () => (
         </article>
       ))}
       <div className='sb-typography-note'>
-        グローバル方針は `src/styles/globals.css` と `docs/katsumascore_design_rules.md` を基準にし、
+        グローバル方針は `src/styles/globals.css` と `DESIGN.md` を基準にし、
         Storybook ではその運用ルールを日英で確認できるようにしています。
       </div>
     </div>
