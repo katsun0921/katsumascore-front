@@ -13,6 +13,7 @@
     flex-direction: column;
     gap: 40px;
     margin: 0 auto;
+    max-width: var(--layout-width-content-max);
     min-width: 0;
     padding-bottom: 32px;
     padding-inline: 16px;
