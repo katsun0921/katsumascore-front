@@ -1,5 +1,7 @@
-import { Admax } from '@/components/ui-parts/Affiliate/Admax';
+import dynamic from 'next/dynamic';
 import { WowowSquareBanner } from '@/components/ui-parts/Affiliate/Wowow';
+
+const Admax = dynamic(() => import('@/components/ui-parts/Affiliate/Admax').then((m) => m.Admax), { ssr: false });
 
 export type AdBannerProps = {
   /** true のときバナーを横並び（TOP 等ワイド枠向け） */
