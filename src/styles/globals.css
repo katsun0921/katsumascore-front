@@ -5,6 +5,7 @@
 
 @theme inline {
   --layout-width-lg: 768px;
+  --layout-width-content-max: 1440px;
 }
 
 /* ─── globals.css 運用ルール ─────────────────────────────────────
@@ -28,6 +29,7 @@
 
 :root {
   --layout-width-lg: 768px;
+  --layout-width-content-max: 1440px;
   --measure-readable: 40rem;
 
   /* Brand */
