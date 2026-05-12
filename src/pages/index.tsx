@@ -11,12 +11,17 @@ import { toSerializableValue } from '@/utils/toSerializableValue';
 
 type Props = HomeTemplateProps & { locale: string };
 
+const pageTitles: Record<Locale, string> = {
+  ja: 'katsumascore - 映画とアニメなどを独自視点で考察・感想・解説',
+  en: 'katsumascore - Reviews & Analysis of Movies and Anime from a Unique Perspective',
+};
+
 const Home = ({ locale, ...templateProps }: Props) => {
   const loc = normalizeRouteLocale(locale) as Locale;
   return (
     <>
       <Head>
-        <title>KatsumaScore</title>
+        <title>{pageTitles[loc]}</title>
       </Head>
       <I18nProvider locale={loc}>
         <HomeTemplate {...templateProps} />
