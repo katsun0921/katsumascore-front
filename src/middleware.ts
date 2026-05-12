@@ -57,6 +57,13 @@ const matchUnprefixedVodSlug = (pathname: string): { slug: string } | null => {
 export const middleware = (request: NextRequest) => {
   const pathname = request.nextUrl.pathname;
 
+  // ロケール未指定（defaultロケール）の場合、/ja へリダイレクト
+  if (resolveNextLocale(request.nextUrl.locale) === undefined) {
+    const url = request.nextUrl.clone();
+    url.pathname = pathname === '/' ? '/ja' : `/ja${pathname}`;
+    return NextResponse.redirect(url);
+  }
+
   const vodSlug = matchLocaleVodSlugArchive(pathname);
   if (vodSlug) {
     const pageRaw = request.nextUrl.searchParams.get('page');
@@ -116,34 +123,6 @@ export const middleware = (request: NextRequest) => {
 
 export const config = {
   matcher: [
-    '/movie',
-    '/movie/',
-    '/ja/movie',
-    '/ja/movie/',
-    '/en/movie',
-    '/en/movie/',
-    '/anime',
-    '/anime/',
-    '/ja/anime',
-    '/ja/anime/',
-    '/en/anime',
-    '/en/anime/',
-    '/drama',
-    '/drama/',
-    '/ja/drama',
-    '/ja/drama/',
-    '/en/drama',
-    '/en/drama/',
-    '/vod',
-    '/vod/',
-    '/vod/:slug',
-    '/ja/vod',
-    '/ja/vod/',
-    '/ja/vod/:slug',
-    '/en/vod',
-    '/en/vod/',
-    '/en/vod/:slug',
-    '/ja/vod/:slug/page/:page',
-    '/en/vod/:slug/page/:page',
+    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|server-sitemap\\.xml|feed|api/).*)',
   ],
 };
