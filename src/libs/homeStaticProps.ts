@@ -91,15 +91,18 @@ const dedupePostsById = (posts: Post[]): Post[] => {
 
 /**
  * ヒーロー（`HomeHero`）向けスライドデータを、プール投稿から組み立てる。
- * スコア降順で上位最大 3 件をスライドにし、タイトル・抜粋・スコア・ランク・リンク・画像を埋める。
- * 投稿が 0 件のときはサイト名のみのプレースホルダ 1 枚を返す。
+ * スコア 3.5 以上の投稿を候補とし、最大 8 件をクライアント側でランダム選択できるよう渡す。
+ * 候補が 0 件のときはサイト名のみのプレースホルダ 1 枚を返す。
  *
  * @param posts — 既にルート言語でフィルタ済みの `Post` 配列（ランキング元と同じプールでよい）。
  * @returns `HomeHero` に渡す `slides` を含む props オブジェクト。
  */
 const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
-  const top = [...posts].sort(sortByScoreDesc).slice(0, 3);
-  const slides: HomeHeroProps["slides"] = top.map((p) => {
+  const candidates = posts
+    .filter((p) => (p.score ?? 0) >= 3.5)
+    .sort(sortByScoreDesc)
+    .slice(0, 8);
+  const slides: HomeHeroProps["slides"] = candidates.map((p) => {
     const rs = rankFromScore(p.score);
     return {
       title: p.title,

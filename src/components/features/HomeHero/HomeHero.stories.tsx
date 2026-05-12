@@ -41,3 +41,8 @@ export const LowScore: Story = {
     ],
   },
 };
+
+/** 8件プールからランダム3件を選ぶ — リロードごとに表示が変わる */
+export const RandomPool: Story = {
+  args: mockHeroData,
+};
