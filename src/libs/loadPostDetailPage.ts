@@ -41,7 +41,7 @@ const toListPost = (m: Post & { content: string }): Post => {
 
 /** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: 'blocking'`。 */
 export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
-  const locs = locales ?? ['ja', 'en'];
+  const locs = (locales ?? ['ja', 'en']).filter((l: string) => l !== 'default');
   const paths: { params: { slug: string }; locale: string }[] = [];
 
   for (const loc of locs) {
@@ -62,7 +62,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const slug = params?.slug;
     if (typeof slug !== 'string') return { notFound: true };
 
-    const loc = locale ?? 'ja';
+    const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
     const wpPost = await getPostBySlug(slug, loc);
     if (!wpPost) return { notFound: true };
 

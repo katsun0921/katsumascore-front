@@ -8,7 +8,7 @@ import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getCategoriesForArchiveResolve } from '@/libs/api/wordpress';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
-import { getEntityUrl } from '@/libs/route';
+import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
@@ -67,8 +67,8 @@ export default ActorPage;
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
-  for (const loc of locales) {
-    const categories = await getCategoriesForArchiveResolve(loc === 'en' ? 'en' : 'ja');
+  for (const loc of locales.filter((l) => l !== 'default')) {
+    const categories = await getCategoriesForArchiveResolve(normalizeRouteLocale(loc));
     for (const category of categories) {
       paths.push({ params: { slug: category.slug }, locale: loc });
     }
@@ -80,7 +80,7 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
 
-  const currentLocale = locale ?? 'ja';
+  const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(slug, currentLocale, 1);
   if ('notFound' in data) return { notFound: true };
 

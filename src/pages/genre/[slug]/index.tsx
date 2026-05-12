@@ -8,7 +8,7 @@ import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getGenres } from '@/libs/api/wordpress';
 import { loadGenreListPage } from '@/libs/loadGenreListPage';
-import { getTaxonomyUrl } from '@/libs/route';
+import { getTaxonomyUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
@@ -68,8 +68,8 @@ export default GenrePage;
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
-  for (const loc of locales) {
-    const lang = loc === 'en' ? 'en' : 'ja';
+  for (const loc of locales.filter((l) => l !== 'default')) {
+    const lang = normalizeRouteLocale(loc);
     const genres = await getGenres(lang);
     for (const genre of genres) {
       paths.push({ params: { slug: genre.slug }, locale: loc });
@@ -88,7 +88,7 @@ export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, l
   const slug = paramAsString(params?.slug);
   if (slug === undefined) return { notFound: true };
 
-  const currentLocale = locale ?? 'ja';
+  const currentLocale = normalizeRouteLocale(locale);
   const data = await loadGenreListPage(slug, currentLocale, 1);
   if ('notFound' in data) return { notFound: true };
 

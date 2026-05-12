@@ -7,7 +7,7 @@ import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadGenreListPage } from '@/libs/loadGenreListPage';
-import { getTaxonomyUrl } from '@/libs/route';
+import { getTaxonomyUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
@@ -91,7 +91,7 @@ export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, 
   const pageNum = Number.parseInt(rawP, 10);
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
-  const currentLocale = locale ?? 'ja';
+  const currentLocale = normalizeRouteLocale(locale);
   const data = await loadGenreListPage(slug, currentLocale, pageNum);
   if ('notFound' in data) return { notFound: true };
 
