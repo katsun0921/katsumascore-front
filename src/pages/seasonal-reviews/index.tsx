@@ -71,7 +71,7 @@ export const buildSeasonalIndexProps = async (
   locale: string | undefined,
   basePath = SEASONAL_REVIEWS_BASE_PATH,
 ): Promise<SeasonalIndexProps> => {
-  const currentLocale = locale ?? 'ja';
+  const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
   const lang = currentLocale === 'en' ? 'en' : 'ja';
   const parentId = await resolveSeasonalReviewParentId(lang);
   let items: Post[] = [];
