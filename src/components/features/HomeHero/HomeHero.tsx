@@ -39,6 +39,18 @@ const FALLBACK_SLIDES: HomeHeroSlide[] = [
   },
 ];
 
+const DISPLAY_COUNT = 3;
+
+/** スライド配列をフィッシャー–イェーツ法でシャッフルし先頭 n 件を返す */
+const pickRandom = (slides: HomeHeroSlide[], n: number): HomeHeroSlide[] => {
+  const arr = [...slides];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr.slice(0, n);
+};
+
 const RANK_CLASS_MAP: Record<HomeHeroSlide['rank'], string> = {
   SS: 'homeHero__rank--ss',
   S: 'homeHero__rank--s',
@@ -63,7 +75,10 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const hasInitializedRef = useRef(false);
   const prefixClassName = 'homeHero';
 
-  const slideList = Array.isArray(slides) && slides.length > 0 ? slides : FALLBACK_SLIDES;
+  const [slideList] = useState<HomeHeroSlide[]>(() => {
+    const pool = Array.isArray(slides) && slides.length > 0 ? slides : FALLBACK_SLIDES;
+    return pool.length <= DISPLAY_COUNT ? pool : pickRandom(pool, DISPLAY_COUNT);
+  });
   const current = slideList[activeIndex] ?? slideList[0];
   const rankClassName = RANK_CLASS_MAP[current.rank] ?? RANK_CLASS_MAP.A;
   const displayScore = Number.isFinite(current.score) ? current.score : 0;
