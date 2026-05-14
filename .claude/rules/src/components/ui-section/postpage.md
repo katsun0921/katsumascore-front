@@ -1,3 +1,8 @@
+---
+paths:
+  - src/components/ui-section/PostPage/**
+---
+
 # ui-section / post ディレクトリ設計ガイド
 
 ## ■ 概要

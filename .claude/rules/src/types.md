@@ -1,3 +1,8 @@
+---
+paths:
+  - src/types/**
+---
+
 # src/types/
 
 TypeScript型定義を管理するディレクトリ。

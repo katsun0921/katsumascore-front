@@ -1,3 +1,8 @@
+---
+paths:
+  - src/pages/api/**
+---
+
 # src/pages/api/
 
 Next.js API Routes（サーバーサイドエンドポイント）を管理するディレクトリ。

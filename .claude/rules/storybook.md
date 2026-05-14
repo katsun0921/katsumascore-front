@@ -1,3 +1,8 @@
+---
+paths:
+  - .storybook/**
+---
+
 # .storybook/
 
 Storybookの設定ファイルを管理するディレクトリ。
