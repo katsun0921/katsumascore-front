@@ -1,0 +1,1 @@
+export { PersonTemplate } from './PersonTemplate';

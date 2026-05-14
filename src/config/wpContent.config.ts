@@ -26,6 +26,12 @@ export const WP_GENRE_REST_PATH = "genre";
 /** カスタムタクソノミー `vod` の REST コレクション名（`rest_base`） */
 export const WP_VOD_REST_PATH = "vod";
 
+/** CPT `person` の REST コレクション名（`rest_base`） */
+export const WP_PERSON_REST_PATH = "person";
+
+/** CPT `company` の REST コレクション名（`rest_base`） */
+export const WP_COMPANY_REST_PATH = "company";
+
 export type PostTypeArchiveNavItem = {
   postType: PostType;
   label: Record<Locale, string>;

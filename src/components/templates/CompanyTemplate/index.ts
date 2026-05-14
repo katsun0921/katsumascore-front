@@ -1,0 +1,1 @@
+export { CompanyTemplate } from './CompanyTemplate';

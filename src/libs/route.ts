@@ -5,7 +5,7 @@
 
 export type PostType = 'movie' | 'anime' | 'drama'
 export type TaxonomyType = 'genre' | 'tag' | 'franchise'
-export type EntityType = 'actor' | 'director' | 'company'
+export type EntityType = 'person' | 'company' | 'actor' | 'director'
 
 const DEFAULT_LOCALE = 'ja';
 

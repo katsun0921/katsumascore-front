@@ -249,3 +249,99 @@ export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | nul
   if (!parsed) return null;
   return mapParsedWPPostToPost(parsed);
 };
+
+// ─── Person / Company 正規化 ────────────────────────────────────────────────
+
+import type { Person, Company, PersonRole, CompanyRole } from "@/types/entity";
+
+/** `acf.image` / `acf.logo` フィールドから URL を抽出する（object / 文字列 / null を吸収）。 */
+const extractAcfImageUrl = (v: unknown): string | null => {
+  if (!v) return null;
+  if (typeof v === "string") return v.trim() || null;
+  if (typeof v === "object" && "url" in v) {
+    const url = (v as Record<string, unknown>).url;
+    if (typeof url === "string") return url.trim() || null;
+  }
+  return null;
+};
+
+/** WP CPT `person` のレスポンスを正規化済み `Person` へ変換する。 */
+export const mapWPPersonToPerson = (raw: unknown): Person | null => {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const id = typeof r.id === "number" ? r.id : Number.parseInt(String(r.id ?? ""), 10);
+  if (!Number.isFinite(id)) return null;
+  const slug = typeof r.slug === "string" ? r.slug.trim() : "";
+  if (!slug) return null;
+
+  const titleObj = r.title as Record<string, unknown> | undefined;
+  const titleRendered = typeof titleObj?.rendered === "string" ? stripHtml(titleObj.rendered) : "";
+
+  const acf = r.acf && typeof r.acf === "object" && !Array.isArray(r.acf)
+    ? (r.acf as Record<string, unknown>)
+    : {};
+
+  const name =
+    (typeof acf.name === "string" && acf.name.trim()) ||
+    titleRendered ||
+    slug;
+
+  const rawRoles = Array.isArray(acf.roles) ? acf.roles : [];
+  const VALID_PERSON_ROLES = new Set<PersonRole>(["actor", "director"]);
+  const roles: PersonRole[] = rawRoles
+    .filter((v): v is string => typeof v === "string")
+    .filter((v): v is PersonRole => VALID_PERSON_ROLES.has(v as PersonRole));
+
+  const bio = typeof acf.bio === "string" ? acf.bio.trim() || undefined : undefined;
+  const image = extractAcfImageUrl(acf.image);
+
+  return {
+    id: String(id),
+    slug,
+    name,
+    roles,
+    ...(bio !== undefined ? { bio } : {}),
+    image: image ?? null,
+  };
+};
+
+/** WP CPT `company` のレスポンスを正規化済み `Company` へ変換する。 */
+export const mapWPCompanyToCompany = (raw: unknown): Company | null => {
+  if (!raw || typeof raw !== "object") return null;
+  const r = raw as Record<string, unknown>;
+  const id = typeof r.id === "number" ? r.id : Number.parseInt(String(r.id ?? ""), 10);
+  if (!Number.isFinite(id)) return null;
+  const slug = typeof r.slug === "string" ? r.slug.trim() : "";
+  if (!slug) return null;
+
+  const titleObj = r.title as Record<string, unknown> | undefined;
+  const titleRendered = typeof titleObj?.rendered === "string" ? stripHtml(titleObj.rendered) : "";
+
+  const acf = r.acf && typeof r.acf === "object" && !Array.isArray(r.acf)
+    ? (r.acf as Record<string, unknown>)
+    : {};
+
+  const name =
+    (typeof acf.name === "string" && acf.name.trim()) ||
+    titleRendered ||
+    slug;
+
+  const rawRoles = Array.isArray(acf.roles) ? acf.roles : [];
+  const VALID_COMPANY_ROLES = new Set<CompanyRole>(["production", "distributor"]);
+  const roles: CompanyRole[] = rawRoles
+    .filter((v): v is string => typeof v === "string")
+    .filter((v): v is CompanyRole => VALID_COMPANY_ROLES.has(v as CompanyRole));
+
+  const description =
+    typeof acf.description === "string" ? acf.description.trim() || undefined : undefined;
+  const logo = extractAcfImageUrl(acf.logo);
+
+  return {
+    id: String(id),
+    slug,
+    name,
+    roles,
+    ...(description !== undefined ? { description } : {}),
+    logo: logo ?? null,
+  };
+};

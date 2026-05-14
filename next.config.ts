@@ -52,6 +52,15 @@ const nextConfig: NextConfig = {
         source: '/actor/:slug',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
       },
+      // person / company エンティティページ（ISR 3600s）
+      {
+        source: '/:locale(ja|en)?/person/:slug',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
+      },
+      {
+        source: '/:locale(ja|en)?/company/:slug',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],
+      },
       // TOP ページ（ISR 300s に対応）
       {
         source: '/',
