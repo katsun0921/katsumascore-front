@@ -1,3 +1,8 @@
+---
+paths:
+  - src/components/**
+---
+
 # ■ Components Architecture
 
 KatsumaScore フロントエンドにおける  

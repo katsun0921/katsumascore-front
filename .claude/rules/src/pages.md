@@ -1,3 +1,8 @@
+---
+paths:
+  - src/pages/**
+---
+
 # src/pages/
 
 Next.js 15 Pages Router のページファイルを管理するディレクトリ。
