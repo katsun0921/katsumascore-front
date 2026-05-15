@@ -49,6 +49,7 @@ next-env.d.ts
 storybook-static/
 .claude/*
 !.claude/rules/
+!.claude/skills/
 
 .open-next/
 .wrangler
