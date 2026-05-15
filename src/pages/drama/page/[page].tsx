@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — ドラマ一覧 2 ページ目以降。公開 URL は /drama?page=N（rewrite で本ファイルに到達）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -49,6 +51,7 @@ const DramaPagedPage = ({
   const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
   const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / CATEGORY_LIST_PER_PAGE));
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'drama', lang: loc, page: currentPage })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
     const base = getPostTypeArchiveUrl({ type: 'drama', lang: loc, page });
@@ -78,6 +81,7 @@ const DramaPagedPage = ({
       <Head>
         <title>{formatListPagePagedTitle(categoryName, currentPage, loc)}</title>
         <meta name='description' content={formatListPagePagedMetaDescription(categoryName, currentPage, loc)} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}

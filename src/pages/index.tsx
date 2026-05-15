@@ -6,8 +6,10 @@ import type { HomeTemplateProps } from '@/components/templates/HomeTemplate/Home
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { loadHomeTemplateProps } from '@/libs/homeStaticProps';
-import { normalizeRouteLocale } from '@/libs/route';
+import { getLocalePathPrefix, normalizeRouteLocale } from '@/libs/route';
 import { toSerializableValue } from '@/utils/toSerializableValue';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 
 type Props = HomeTemplateProps & { locale: string };
 
@@ -18,10 +20,12 @@ const pageTitles: Record<Locale, string> = {
 
 const Home = ({ locale, ...templateProps }: Props) => {
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getLocalePathPrefix(loc)}`;
   return (
     <>
       <Head>
         <title>{pageTitles[loc]}</title>
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <I18nProvider locale={loc}>
         <HomeTemplate {...templateProps} />

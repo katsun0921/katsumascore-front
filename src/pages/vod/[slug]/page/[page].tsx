@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -52,6 +54,7 @@ const VodSlugPagedPage = ({
   const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
   const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / VOD_ARCHIVE_LIST_PER_PAGE));
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getVodArchiveUrl(pathSlug, loc, currentPage)}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
     const base = getVodArchiveUrl(pathSlug, loc, page);
@@ -81,6 +84,7 @@ const VodSlugPagedPage = ({
       <Head>
         <title>{formatListPagePagedTitle(categoryName, currentPage, loc)}</title>
         <meta name='description' content={formatListPagePagedMetaDescription(categoryName, currentPage, loc)} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}
