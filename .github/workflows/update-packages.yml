@@ -1,0 +1,144 @@
+# 毎週月曜日に npm パッケージの自動アップデート PR を作成する。
+# workflow_dispatch で手動実行・対象バージョン範囲の指定も可能。
+#
+# 必要な権限:
+#   contents: write    — ブランチ作成・コミット
+#   pull-requests: write — PR 作成
+#
+# アップデート対象:
+#   minor  — メジャーバージョン固定でマイナー・パッチを更新（デフォルト）
+#   patch  — パッチのみ更新
+#   latest — 最新バージョン（メジャー含む）に更新
+
+name: パッケージ自動アップデート
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'アップデート対象バージョン範囲'
+        required: false
+        default: 'minor'
+        type: choice
+        options:
+          - minor
+          - patch
+          - latest
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: npm-check-updates をインストール
+        run: npm install -g npm-check-updates
+
+      - name: アップデート可能なパッケージを確認
+        id: check
+        run: |
+          TARGET="${{ inputs.target || 'minor' }}"
+          ncu --target "$TARGET" --jsonUpgraded 2>/dev/null > /tmp/updated.json || true
+          COUNT=$(node -e "const d=require('/tmp/updated.json'); console.log(Object.keys(d).length)")
+          echo "count=$COUNT" >> "$GITHUB_OUTPUT"
+          echo "target=$TARGET" >> "$GITHUB_OUTPUT"
+          if [ "$COUNT" = "0" ]; then
+            echo "アップデート対象のパッケージはありませんでした。"
+          else
+            echo "アップデート対象: ${COUNT} パッケージ"
+          fi
+
+      - name: package.json を更新
+        if: steps.check.outputs.count != '0'
+        run: ncu --target "${{ steps.check.outputs.target }}" -u
+
+      - name: package-lock.json を再生成
+        if: steps.check.outputs.count != '0'
+        run: npm install
+
+      - name: アップデート一覧を生成
+        if: steps.check.outputs.count != '0'
+        id: summary
+        run: |
+          PACKAGES=$(node -e "
+            const d = require('/tmp/updated.json');
+            const lines = Object.entries(d)
+              .sort(([a], [b]) => a.localeCompare(b))
+              .map(([pkg, ver]) => '- \`' + pkg + '\` → \`' + ver + '\`');
+            console.log(lines.join('\n'));
+          ")
+          {
+            echo "packages<<PACKAGES_EOF"
+            echo "$PACKAGES"
+            echo "PACKAGES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Pull Request を作成
+        if: steps.check.outputs.count != '0'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: chore/auto-update-packages
+          commit-message: "chore: パッケージを自動アップデート (${{ steps.check.outputs.target }})"
+          title: "chore: パッケージの自動アップデート (${{ steps.check.outputs.target }})"
+          labels: dependencies
+          delete-branch: true
+          body: |
+            <!--
+              このPRは GitHub Actions（パッケージ自動アップデート ワークフロー）によって自動生成されました。
+            -->
+
+            ## 変更種別
+
+            - [ ] feature: 新機能
+            - [ ] bug: バグ修正
+            - [ ] refactor: リファクタリング（機能変更なし）
+            - [ ] style: スタイル変更（ロジック変更なし）
+            - [ ] docs: ドキュメント
+            - [x] chore: ビルド / 依存関係 / 設定
+            - [ ] test: テスト追加 / 修正
+
+            ---
+
+            ## 概要
+
+            GitHub Actions の定期実行による npm パッケージの自動アップデート。
+
+            - 実行トリガー: `${{ github.event_name }}`
+            - アップデート戦略: `${{ steps.check.outputs.target }}`
+            - 更新パッケージ数: `${{ steps.check.outputs.count }}` 件
+
+            ---
+
+            ## コード変更サマリー
+
+            以下のパッケージを更新した:
+
+            ${{ steps.summary.outputs.packages }}
+
+            ---
+
+            ## チェックリスト
+
+            - [ ] CI（ESLint / Stylelint / Storybook ビルド）がグリーンであることを確認した
+            - [ ] 破壊的変更（メジャーバージョンアップ）がある場合は動作確認した
+            - [ ] `package-lock.json` が正しく更新されている
+
+            ---
+
+            ## 関連 Issue
+
+            _なし_
