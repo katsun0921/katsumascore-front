@@ -65,7 +65,7 @@
     "eslint-plugin-storybook": "10.3.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.4",
+    "lint-staged": "^17.0.4",
     "openapi-typescript": "^7.13.0",
     "playwright": "^1.59.1",
     "sass": "^1.98.0",
