@@ -39,9 +39,9 @@ export const SeoHead = (props: SeoHeadProps) => {
   const enUrl = `${SITE_URL.replace(/\/$/, '')}/en${path}`;
 
   const breadcrumbItems = [
-    { position: 1, name: 'HOME', item: SITE_URL },
-    ...(post.category ? [{ position: 2, name: post.category }] : []),
-    { position: post.category ? 3 : 2, name: post.title, item: canonicalUrl },
+    { '@type': 'ListItem', position: 1, name: 'HOME', item: SITE_URL },
+    ...(post.category ? [{ '@type': 'ListItem', position: 2, name: post.category }] : []),
+    { '@type': 'ListItem', position: post.category ? 3 : 2, name: post.title, item: canonicalUrl },
   ];
 
   const productJsonLd = {
