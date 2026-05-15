@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — アニメカテゴリ記事一覧（/anime, /en/anime）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -48,6 +50,7 @@ posts,
   const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
   const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / ANIME_LIST_PER_PAGE));
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'anime', lang: loc, page: 1 })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
     const base = getPostTypeArchiveUrl({ type: 'anime', lang: loc, page });
@@ -77,6 +80,7 @@ posts,
       <Head>
         <title>{formatListPageIndexTitle(categoryName, loc)}</title>
         <meta name='description' content={formatListPageIndexMetaDescription(categoryName, loc)} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}

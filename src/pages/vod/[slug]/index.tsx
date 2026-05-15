@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -61,6 +63,7 @@ const VodSlugIndexPage = ({
     ),
   );
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getVodArchiveUrl(pathSlug, loc, 1)}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
     const base = getVodArchiveUrl(pathSlug, loc, page);
@@ -90,6 +93,7 @@ const VodSlugIndexPage = ({
       <Head>
         <title>{formatListPageIndexTitle(categoryName, loc)}</title>
         <meta name='description' content={formatListPageIndexMetaDescription(categoryName, loc)} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}

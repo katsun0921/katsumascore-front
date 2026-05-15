@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -37,6 +39,7 @@ const GenrePage = ({ genreName, slug, posts, currentPage, totalPages, locale }: 
   const [activeFilter, setActiveFilter] = useState('score');
   const sortedPosts = sortPosts(posts, activeFilter);
   const loc = (locale ?? 'ja') as Locale;
+  const canonicalUrl = `${SITE_URL}${getTaxonomyUrl('genre', slug, loc)}`;
 
   const handlePageChange = (page: number) => {
     const base = getTaxonomyUrl('genre', slug, loc);
@@ -48,6 +51,7 @@ const GenrePage = ({ genreName, slug, posts, currentPage, totalPages, locale }: 
       <Head>
         <title>{genreName} | KatsumaScore</title>
         <meta name='description' content={`${genreName}の記事一覧 — スコアで選ぶ`} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={genreName}

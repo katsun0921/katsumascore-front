@@ -1,5 +1,7 @@
 // ISR: revalidate 60s — 映画カテゴリ記事一覧（/movie, /en/movie）。2 ページ目以降は ?page=N（内部 rewrite で page/[page].tsx）
 import Head from 'next/head';
+
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -54,6 +56,7 @@ const MovieIndexPage = ({
     filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }).length / CATEGORY_LIST_PER_PAGE,
   ));
   const loc = normalizeRouteLocale(locale) as Locale;
+  const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'movie', lang: loc, page: 1 })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
     const base = getPostTypeArchiveUrl({ type: 'movie', lang: loc, page });
@@ -83,6 +86,7 @@ const MovieIndexPage = ({
       <Head>
         <title>{formatListPageIndexTitle(categoryName, loc)}</title>
         <meta name='description' content={formatListPageIndexMetaDescription(categoryName, loc)} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}
