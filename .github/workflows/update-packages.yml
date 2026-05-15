@@ -1,4 +1,4 @@
-# 毎月1日に npm パッケージの自動アップデート PR を作成する。
+# 毎週月曜日に npm パッケージの自動アップデート PR を作成する。
 # workflow_dispatch で手動実行・対象バージョン範囲の指定も可能。
 #
 # 必要な権限:
@@ -14,7 +14,7 @@ name: パッケージ自動アップデート
 
 on:
   schedule:
-    - cron: '0 0 1 * *'
+    - cron: '0 0 * * 1'
   workflow_dispatch:
     inputs:
       target:
