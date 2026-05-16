@@ -8,38 +8,9 @@ updates:
       time: "09:00"
       timezone: "Asia/Tokyo"
     groups:
-      framework:
+      all-dependencies:
         patterns:
-          - "next"
-          - "react"
-          - "react-dom"
-          - "@types/react"
-          - "@types/react-dom"
-      storybook:
-        patterns:
-          - "@storybook/*"
-          - "storybook"
-          - "chromatic"
-          - "eslint-plugin-storybook"
-      eslint:
-        patterns:
-          - "eslint"
-          - "eslint-*"
-          - "eslint-config-*"
-          - "eslint-plugin-*"
-      tailwind:
-        patterns:
-          - "tailwindcss"
-          - "@tailwindcss/*"
-          - "postcss"
-      vitest:
-        patterns:
-          - "vitest"
-          - "@vitest/*"
-          - "playwright"
-      cloudflare:
-        patterns:
-          - "@opennextjs/*"
+          - "*"
     commit-message:
       prefix: "chore"
     open-pull-requests-limit: 10
