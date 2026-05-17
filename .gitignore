@@ -55,3 +55,6 @@ storybook-static/
 wordpress/*
 
 katsumascore_wordpress_theme/*
+
+# tech blog
+zenn/*

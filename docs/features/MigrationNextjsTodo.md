@@ -168,70 +168,22 @@
 
 ## 📋 今後の予定
 
-### Storybook 品質確認（フェーズ 5）
-- [ ] 全 `ui-parts` コンポーネントに異常系 Story を追加
-  - [ ] `LongTitle` — 長いタイトル
-  - [ ] `NoImage` — サムネイルなし
-  - [ ] `MixedData` — 欠損混在データ
-  - [ ] `Dense`（10 件以上）
-  - [ ] `Extreme`（20 件以上）
-- [ ] `ui-section` コンポーネントの Story 整備
-- [ ] `features` コンポーネントの Story 整備
-- [ ] Storybook GitHub Pages への自動デプロイ確認（`release/v1` ブランチ）
+### Storybook品質確認（フェーズ5）
 
-### 品質・テスト（フェーズ 6）
-- [ ] Vitest によるユニットテスト整備（`lib/api/` / `lib/utils/` 優先）
-- [ ] ESLint カスタムルール `katsumascore-ui/no-hardcoded-i18n` の全コンポーネント適用確認
-- [ ] ESLint ルールの `warn` → `error` 昇格
-- [ ] Lighthouse スコア確認（Performance / SEO / A11y）
-- [ ] アクセシビリティ対応（ARIA 属性・キーボード操作）
+> 詳細なTodoは[storybook_todo.md](../top-priority/storybook_todo.md)を参照。
 
-### 公開後対応（フェーズ 7）
-- [ ] 全コンポーネントに Storybook Story 作成
-- [ ] 異常系 Story（NoImage / LongTitle / MixedData / Dense / Extreme）
-- [ ] Lighthouse スコア確認（Performance / SEO / A11y）
-- [ ] WordPress との表示比較（主要ページ）
-- [ ] パフォーマンス最適化・アクセシビリティ対応
-- [ ] 全 ui-parts に異常系 Story（LongTitle / NoImage / MixedData / Dense / Extreme）を追加
+### 品質・テスト（フェーズ6）
 
-### リニューアル施策（フェーズ 8）
+> 詳細なTodoは[quality_test_todo.md](../top-priority/quality_test_todo.md)を参照。
 
-- [ ] Franchise（シリーズ）特集ページの実装（[設計書](./franchise_acf_design.md)）
-  - [ ] WordPress 側: franchise taxonomy + ACF フィールド設定
-  - [ ] `lib/api/wordpress.ts` に `getPostsByFranchise(slug)` を追加
-  - [ ] `transformPost()` で franchise ACF フィールドを正規化
-  - [ ] `pages/franchise/[slug].tsx` の新規作成（ISR）
-  - [ ] FranchiseTemplate の実装（Hero / 概要 / ハイライト / 年表 / 作品一覧 / スコア比較 / CTA）
-  - [ ] SEO: title = シリーズ名 + ガイド、description = シリーズ概要要約
+### リニューアル施策（フェーズ8）
+
+#### Franchise（シリーズ）特集ページ
+
+> 詳細なTodoは[franchise_todo.md](../top-priority/franchise_todo.md)を参照。
 
 ---
 
-### 🔴 最優先: Entity統合（person / company）CPT 移行（[設計書](../renewal/entity_design_complete.md)）
+### 🔴 最優先: Entity統合（person / company）CPT 移行
 
-> actor / director / company を taxonomy から CPT へ移行し、人・企業を「分類」ではなく「主役」として扱う。
-
-#### Phase 1 — taxonomy 運用（現状）
-- [x] `/ja/actor/{slug}` / `/ja/director/{slug}` を taxonomy として運用中
-
-#### Phase 2 — CPT 導入（WordPress + フロントエンド）
-- [ ] WordPress 側: `person` CPT + ACF フィールド設定（name / slug / roles / bio / image）
-- [ ] WordPress 側: `company` CPT + ACF フィールド設定（name / slug / roles / description / logo）
-- [ ] WordPress 側: Post に `cast` / `director` / `production_companies` / `distributors` の relationship フィールド追加
-- [ ] `lib/api/wordpress/generated/wp-schema.d.ts` を再生成（person / company エンドポイント追加）
-- [ ] `lib/api/wordpress/endpoints/persons.ts` 新設（`getPerson` / `getPersonBySlug` / `getPersonsByRole`）
-- [ ] `lib/api/wordpress/endpoints/companies.ts` 新設（`getCompany` / `getCompanyBySlug`）
-- [ ] `lib/api/wordpress/transform.ts` に person / company の正規化処理を追加
-- [ ] `src/lib/route.ts` に `getEntityUrl(type, slug, lang)` を追加
-- [ ] `pages/person/[slug].tsx` 新設（ISR）— プロフィール / 出演作品 / 監督作品 / 平均スコア
-- [ ] `pages/company/[slug].tsx` 新設（ISR）— 概要 / 制作作品 / 配給作品
-- [ ] PersonTemplate / CompanyTemplate の実装
-- [ ] Breadcrumb 対応（Home > Person > Name / Home > Company > Name）
-- [ ] SEO: entity ページを index 対象・内部リンクのハブ化・canonical 統一
-
-#### Phase 3 — 完全移行（リダイレクト）
-- [ ] `next.config.ts` に 301 リダイレクト追加
-  - `/actor/:slug` → `/person/:slug`
-  - `/director/:slug` → `/person/:slug`
-  - `/production/:slug` → `/company/:slug`
-  - `/distributor/:slug` → `/company/:slug`
-- [ ] slug 固定・重複禁止の確認（移行後に変更禁止）
+> 詳細な設計・実装Todoは [entity_design_complete.md](../top-priority/entity_design_complete.md) を参照。
