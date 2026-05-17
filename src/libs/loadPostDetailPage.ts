@@ -66,14 +66,14 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
     // Polylang の ?lang= フィルタを回避するため lang 未指定で取得し、ACF lang で検証する。
     const wpPost = await getPostBySlug(slug);
-    if (!wpPost) return { notFound: true };
+    if (!wpPost) return { notFound: true, revalidate: 60 };
     const wpAny = wpPost as Record<string, unknown>;
     const wpAcf = wpAny.acf as Record<string, unknown> | undefined;
     const postLang = detectLang(
       typeof wpAny.link === 'string' ? wpAny.link : undefined,
       typeof wpAcf?.lang === 'string' ? wpAcf.lang : undefined,
     );
-    if (postLang !== loc) return { notFound: true };
+    if (postLang !== loc) return { notFound: true, revalidate: 60 };
 
     const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
     const relationIds = extractRelationPostIds(acfRecord);
@@ -132,7 +132,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
       vodRelatedPosts,
     });
-    if (!detail) return { notFound: true };
+    if (!detail) return { notFound: true, revalidate: 60 };
 
     const toc = extractToc(detail.content);
 
