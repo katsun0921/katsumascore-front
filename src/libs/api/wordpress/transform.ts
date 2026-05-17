@@ -249,3 +249,74 @@ export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | nul
   if (!parsed) return null;
   return mapParsedWPPostToPost(parsed);
 };
+
+export interface Person {
+  id: number;
+  slug: string;
+  nameJa: string;
+  nameEn: string;
+  roles: ("actor" | "director")[];
+  bio: string;
+  image: {
+    url: string;
+    alt: string;
+    width: number;
+    height: number;
+  } | null;
+}
+
+export interface Company {
+  id: number;
+  slug: string;
+  nameJa: string;
+  nameEn: string;
+  roles: ("production" | "distributor")[];
+  description: string;
+  logo: {
+    url: string;
+    alt: string;
+  } | null;
+}
+
+type WPPerson = import("./generated/wp-schema").components["schemas"]["WPPerson"];
+type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompany"];
+
+/** WPPerson をアプリの `Person` 型へ変換する。 */
+export const transformPerson = (wp: WPPerson): Person => {
+  const acf = wp.acf;
+  return {
+    id: wp.id,
+    slug: acf.slug ?? wp.slug,
+    nameJa: acf.name_ja ?? "",
+    nameEn: acf.name_en ?? "",
+    roles: acf.roles ?? [],
+    bio: acf.bio ?? "",
+    image: acf.image
+      ? {
+          url: acf.image.url,
+          alt: acf.image.alt ?? acf.name_ja,
+          width: acf.image.width ?? 0,
+          height: acf.image.height ?? 0,
+        }
+      : null,
+  };
+};
+
+/** WPCompany をアプリの `Company` 型へ変換する。 */
+export const transformCompany = (wp: WPCompany): Company => {
+  const acf = wp.acf;
+  return {
+    id: wp.id,
+    slug: acf.slug ?? wp.slug,
+    nameJa: acf.name_ja ?? "",
+    nameEn: acf.name_en ?? "",
+    roles: acf.roles ?? [],
+    description: acf.description ?? "",
+    logo: acf.logo
+      ? {
+          url: acf.logo.url,
+          alt: acf.logo.alt ?? acf.name_ja,
+        }
+      : null,
+  };
+};
