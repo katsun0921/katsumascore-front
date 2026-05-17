@@ -1,4 +1,4 @@
-// SSR: WPデータを含む XML sitemap をリクエスト時に生成
+// SSR: WPデータを含む XML sitemap をリクエスト時に生成。Cache-Control でエッジキャッシュに乗せる
 import type { GetServerSideProps } from 'next';
 import { getPosts, getCategoriesForArchiveResolve, getChildPages } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
@@ -20,8 +20,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   if (!seasonalParentId) seasonalParentId = await resolveSeasonalReviewParentId('en');
 
   const [jaPosts, enPosts, jaCategories, enCategories, jaSeasonal, enSeasonal] = await Promise.all([
-    getPosts({ per_page: 1000, lang: 'ja' }),
-    getPosts({ per_page: 1000, lang: 'en' }),
+    getPosts({ per_page: 100, lang: 'ja' }),
+    getPosts({ per_page: 100, lang: 'en' }),
     getCategoriesForArchiveResolve('ja'),
     getCategoriesForArchiveResolve('en'),
     seasonalParentId ? getChildPages(seasonalParentId, 'ja') : Promise.resolve([]),
@@ -91,8 +91,9 @@ ${field.lastmod ? `    <lastmod>${field.lastmod}</lastmod>` : ''}
   .join('\n')}
 </urlset>`;
 
+  // 24時間エッジキャッシュ。Cloudflare が初回リクエスト後はキャッシュから返すため Workers の CPU 制限を回避できる
   res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, s-maxage=3600, stale-while-revalidate=86400');
+  res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=86400');
   res.write(xml);
   res.end();
 
