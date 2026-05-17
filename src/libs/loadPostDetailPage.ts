@@ -12,6 +12,7 @@ import {
   getRelatedPosts,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
+import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
 import { pickRandom } from '@/libs/highscore';
 import {
@@ -63,8 +64,16 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     if (typeof slug !== 'string') return { notFound: true };
 
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
-    const wpPost = await getPostBySlug(slug, loc);
+    // Polylang の ?lang= フィルタを回避するため lang 未指定で取得し、ACF lang で検証する。
+    const wpPost = await getPostBySlug(slug);
     if (!wpPost) return { notFound: true };
+    const wpAny = wpPost as Record<string, unknown>;
+    const wpAcf = wpAny.acf as Record<string, unknown> | undefined;
+    const postLang = detectLang(
+      typeof wpAny.link === 'string' ? wpAny.link : undefined,
+      typeof wpAcf?.lang === 'string' ? wpAcf.lang : undefined,
+    );
+    if (postLang !== loc) return { notFound: true };
 
     const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
     const relationIds = extractRelationPostIds(acfRecord);
