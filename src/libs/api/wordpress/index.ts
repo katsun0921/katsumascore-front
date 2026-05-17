@@ -51,6 +51,8 @@ export {
   extractProductionStudioLinksFromParsedWp,
   extractDirectorTermNamesFromParsedWp,
   extractActorTermNamesFromParsedWp,
+  extractDirectorLinksFromParsedWp,
+  extractActorLinksFromParsedWp,
 } from "./transform";
 export type { NormalizedPageContent, PostTaxonomyLink, Person, Company } from "./transform";
 export { transformPerson, transformCompany } from "./transform";

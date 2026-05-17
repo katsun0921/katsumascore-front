@@ -46,7 +46,7 @@ const basePost: PostDetailData = {
   credits: [
     {
       role: '監督',
-      names: ['土井裕泰'],
+      names: [{ name: '土井裕泰', href: '/director/doi-nobuhiro' }],
     },
   ],
   actors: [

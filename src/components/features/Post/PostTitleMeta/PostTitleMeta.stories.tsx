@@ -31,10 +31,10 @@ export const Minimal: Story = {
 export const WithCredits: Story = {
   args: {
     credits: [
-      { role: '監督', names: ['外崎春雄'] },
-      { role: 'キャラクターデザイン', names: ['松島晃'] },
-      { role: '音楽', names: ['梶浦由記', 'Elliott Smith'] },
-      { role: '制作', names: ['ufotable'] },
+      { role: '監督', names: [{ name: '外崎春雄', href: '/director/sotodzaki-haruo' }] },
+      { role: 'キャラクターデザイン', names: [{ name: '松島晃' }] },
+      { role: '音楽', names: [{ name: '梶浦由記', href: '/director/kajiura-yuki' }, { name: 'Elliott Smith' }] },
+      { role: '制作', names: [{ name: 'ufotable' }] },
     ],
   },
 };
@@ -42,7 +42,7 @@ export const WithCredits: Story = {
 export const WithActors: Story = {
   args: {
     credits: [
-      { role: '監督', names: ['クリストファー・ノーラン'] },
+      { role: '監督', names: [{ name: 'クリストファー・ノーラン', href: '/director/christopher-nolan' }] },
     ],
     actors: [
       {
@@ -78,8 +78,8 @@ export const WithActors: Story = {
 export const CreditsAndActors: Story = {
   args: {
     credits: [
-      { role: '監督', names: ['外崎春雄'] },
-      { role: '脚本', names: ['ufotable'] },
+      { role: '監督', names: [{ name: '外崎春雄', href: '/director/sotodzaki-haruo' }] },
+      { role: '脚本', names: [{ name: 'ufotable' }] },
     ],
     actors: [
       {

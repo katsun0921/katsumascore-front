@@ -146,52 +146,20 @@ export const extractProductionStudioLinksFromParsedWp = (wp: ParsedWPPost): Post
   extractTaxonomyLinks(wp, PRODUCTION_STUDIO_TAXONOMIES);
 
 /** `_embedded['wp:term']` の actor / actors ターム名（出演者一覧のフォールバック） */
-export const extractActorTermNamesFromParsedWp = (wp: ParsedWPPost): string[] => {
-  const groups = wp._embedded?.["wp:term"];
-  if (!Array.isArray(groups)) return [];
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const group of groups) {
-    if (!Array.isArray(group)) continue;
-    for (const term of group) {
-      const t = term as TermLike;
-      const name = typeof t.name === "string" ? t.name.trim() : "";
-      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
-      if (!name) continue;
-      const tax = normalizeTaxonomy(taxRaw);
-      if (!ACTOR_TAXONOMIES.has(tax)) continue;
-      const key = name.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
-      out.push(name);
-    }
-  }
-  return out;
-};
+export const extractActorTermNamesFromParsedWp = (wp: ParsedWPPost): string[] =>
+  extractActorLinksFromParsedWp(wp).map((l) => l.name);
 
 /** `_embedded['wp:term']` の director / directors ターム名（スラッグ不要・スタッフ表示用） */
-export const extractDirectorTermNamesFromParsedWp = (wp: ParsedWPPost): string[] => {
-  const groups = wp._embedded?.["wp:term"];
-  if (!Array.isArray(groups)) return [];
-  const seen = new Set<string>();
-  const out: string[] = [];
-  for (const group of groups) {
-    if (!Array.isArray(group)) continue;
-    for (const term of group) {
-      const t = term as TermLike;
-      const name = typeof t.name === "string" ? t.name.trim() : "";
-      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
-      if (!name) continue;
-      const tax = normalizeTaxonomy(taxRaw);
-      if (!DIRECTOR_TAXONOMIES.has(tax)) continue;
-      const key = name.toLowerCase();
-      if (seen.has(key)) continue;
-      seen.add(key);
-      out.push(name);
-    }
-  }
-  return out;
-};
+export const extractDirectorTermNamesFromParsedWp = (wp: ParsedWPPost): string[] =>
+  extractDirectorLinksFromParsedWp(wp).map((l) => l.name);
+
+/** `_embedded['wp:term']` から actor / actors タクソノミーの `{ name, slug }` を抽出 */
+export const extractActorLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, ACTOR_TAXONOMIES);
+
+/** `_embedded['wp:term']` から director / directors タクソノミーの `{ name, slug }` を抽出 */
+export const extractDirectorLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, DIRECTOR_TAXONOMIES);
 
 /** パース済み WP 投稿をアプリの `Post`（`content` 含む）へ変換する。 */
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {
