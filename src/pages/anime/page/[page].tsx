@@ -112,7 +112,7 @@ export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, 
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadAnimeListPage(currentLocale, pageNum);
-  if ('notFound' in data) return { notFound: true };
+  if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {
