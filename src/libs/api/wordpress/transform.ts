@@ -55,6 +55,7 @@ const FILM_STUDIO_TAXONOMIES = new Set(["film_studio"]);
 const PRODUCTION_STUDIO_TAXONOMIES = new Set(["production_studio"]);
 const DIRECTOR_TAXONOMIES = new Set(["director", "directors"]);
 const ACTOR_TAXONOMIES = new Set(["actor", "actors"]);
+const PERSON_TAXONOMIES = new Set(["person", "persons"]);
 
 export type PostTaxonomyLink = {
   name: string
@@ -160,6 +161,10 @@ export const extractActorLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLin
 /** `_embedded['wp:term']` から director / directors タクソノミーの `{ name, slug }` を抽出 */
 export const extractDirectorLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
   extractTaxonomyLinks(wp, DIRECTOR_TAXONOMIES);
+
+/** `_embedded['wp:term']` から person / persons タクソノミーの `{ name, slug }` を抽出 */
+export const extractPersonLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
+  extractTaxonomyLinks(wp, PERSON_TAXONOMIES);
 
 /** パース済み WP 投稿をアプリの `Post`（`content` 含む）へ変換する。 */
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {

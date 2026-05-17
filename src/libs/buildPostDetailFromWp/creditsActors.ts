@@ -2,8 +2,8 @@ import type { ParsedWPPost } from "@/libs/api/wordpress";
 import type { TActor, TCreditEntry } from "@/components/features/Post/PostTitleMeta";
 import {
   stripHtml,
-  extractDirectorLinksFromParsedWp,
   extractActorLinksFromParsedWp,
+  extractPersonLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
 /**
@@ -45,23 +45,16 @@ const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
   return [];
 };
 
-/** 監督名をターム・ACF の両方から集め、重複除去してクレジット行を返す。ターム由来はタクソノミーページへのリンク付き。 */
+/** 監督名を ACF フィールドのみから集め、重複除去してクレジット行を返す。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
-  const termLinks = extractDirectorLinksFromParsedWp(wp);
-  const termNameSet = new Set(termLinks.map((l) => l.name.toLowerCase()));
   const acf = wp.acf as Record<string, unknown> | undefined;
   const fromAcf = collectDirectorNamesFromAcf(acf?.director);
+  if (fromAcf.length === 0) return undefined;
   const seen = new Set<string>();
   const names: TCreditEntry["names"] = [];
-  for (const link of termLinks) {
-    const k = link.name.toLowerCase();
-    if (seen.has(k)) continue;
-    seen.add(k);
-    names.push({ name: link.name, href: `/director/${link.slug}` });
-  }
   for (const n of fromAcf) {
     const k = n.toLowerCase();
-    if (seen.has(k) || termNameSet.has(k)) continue;
+    if (seen.has(k)) continue;
     seen.add(k);
     names.push({ name: n });
   }
@@ -110,9 +103,9 @@ const pickActorsRowsFromAcf = (acf: Record<string, unknown> | undefined): unknow
   return [];
 };
 
-/** `_embedded['wp:term']` の actor タクソノミーから term ID → name のマップを構築 */
-const buildActorTermIdMap = (wp: ParsedWPPost): Map<number, string> => {
-  const map = new Map<number, string>();
+/** `_embedded['wp:term']` の actor/actors/person/persons ターム ID → {name, url} のマップを構築 */
+const buildTermIdToActorInfoMap = (wp: ParsedWPPost): Map<number, { name: string; url: string }> => {
+  const map = new Map<number, { name: string; url: string }>();
   const groups = wp._embedded?.["wp:term"];
   if (!Array.isArray(groups)) return map;
   for (const group of groups) {
@@ -121,68 +114,61 @@ const buildActorTermIdMap = (wp: ParsedWPPost): Map<number, string> => {
       const t = term as Record<string, unknown>;
       const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
       const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
-      if (tax !== "actor" && tax !== "actors") continue;
       const id = typeof t.id === "number" ? t.id : undefined;
       const name = typeof t.name === "string" ? t.name.trim() : "";
-      if (id !== undefined && name) map.set(id, name);
-    }
-  }
-  return map;
-};
-
-/** `_embedded['wp:term']` の actor タクソノミーから term ID → slug のマップを構築 */
-const buildActorTermIdSlugMap = (wp: ParsedWPPost): Map<number, string> => {
-  const map = new Map<number, string>();
-  const groups = wp._embedded?.["wp:term"];
-  if (!Array.isArray(groups)) return map;
-  for (const group of groups) {
-    if (!Array.isArray(group)) continue;
-    for (const term of group) {
-      const t = term as Record<string, unknown>;
-      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
-      const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
-      if (tax !== "actor" && tax !== "actors") continue;
-      const id = typeof t.id === "number" ? t.id : undefined;
       const slug = typeof t.slug === "string" ? t.slug.trim() : "";
-      if (id !== undefined && slug) map.set(id, slug);
+      if (id === undefined || !name || !slug) continue;
+      if (tax === "actor" || tax === "actors") {
+        map.set(id, { name, url: `/actor/${slug}` });
+      } else if (tax === "person" || tax === "persons") {
+        map.set(id, { name, url: `/person/${slug}` });
+      }
     }
   }
   return map;
 };
 
-/** ACF 出演者行と actor タームをマージして `TActor[]` を構築する。ターム由来の出演者はタクソノミーページへのリンク付き。 */
+/** ACF 出演者行から `TActor[]` を構築する。actor/person タームへのリンクは埋め込みタームから解決する。 */
 export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
   const rows = pickActorsRowsFromAcf(acf);
-  const actorTermIdMap = buildActorTermIdMap(wp);
-  const actorTermIdSlugMap = buildActorTermIdSlugMap(wp);
+  const termIdToInfo = buildTermIdToActorInfoMap(wp);
   const actorLinks = extractActorLinksFromParsedWp(wp);
-  const actorSlugByName = new Map(actorLinks.map((l) => [l.name.toLowerCase(), l.slug]));
+  const personLinks = extractPersonLinksFromParsedWp(wp);
+  // person タクソノミーが actor タクソノミーより優先（後から上書き）
+  const nameToActorUrl = new Map<string, string>();
+  for (const l of actorLinks) {
+    nameToActorUrl.set(l.name.toLowerCase(), `/actor/${l.slug}`);
+  }
+  for (const l of personLinks) {
+    nameToActorUrl.set(l.name.toLowerCase(), `/person/${l.slug}`);
+  }
   const out: TActor[] = [];
-  const seenNames = new Set<string>();
 
   for (const row of rows) {
     if (!row || typeof row !== "object") continue;
     const ext = row as Record<string, unknown>;
     let nameStr: string | undefined;
-    let actorSlug: string | undefined;
+    let actorUrl: string | undefined;
     if (typeof ext.name === "string" && ext.name.trim()) {
       nameStr = ext.name.trim();
     }
     if (!nameStr) {
       nameStr = pickActorDisplayNameFromUnknown(ext.actor);
     }
-    // actor が数値 term ID の場合、_embedded の actor タームから名前・slugを解決する
+    // actor が数値 term ID の場合、_embedded の actor/person タームから名前・URL を解決する
     if (typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
-      const termId = ext.actor as number;
-      if (!nameStr) nameStr = actorTermIdMap.get(termId);
-      actorSlug = actorTermIdSlugMap.get(termId);
+      const info = termIdToInfo.get(ext.actor as number);
+      if (info) {
+        if (!nameStr) nameStr = info.name;
+        actorUrl = info.url;
+      }
     }
     if (!nameStr && typeof ext.actor_name === "string" && ext.actor_name.trim()) {
       nameStr = ext.actor_name.trim();
     }
-    if (!actorSlug && nameStr) {
-      actorSlug = actorSlugByName.get(nameStr.toLowerCase());
+    if (!actorUrl && nameStr) {
+      actorUrl = nameToActorUrl.get(nameStr.toLowerCase());
     }
     const charStr =
       typeof ext.character === "string" && ext.character.trim() ? ext.character.trim() : undefined;
@@ -194,17 +180,9 @@ export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
     out.push({
       ...(displayCharacter ? { character: displayCharacter } : {}),
       ...(nameStr ? { actorName: nameStr } : {}),
-      ...(actorSlug ? { actorUrl: `/actor/${actorSlug}` } : {}),
+      ...(actorUrl ? { actorUrl } : {}),
       ...(descStr ? { description: descStr } : {}),
     });
-    if (nameStr) seenNames.add(nameStr.toLowerCase());
-  }
-
-  for (const link of actorLinks) {
-    const k = link.name.toLowerCase();
-    if (seenNames.has(k)) continue;
-    seenNames.add(k);
-    out.push({ actorName: link.name, actorUrl: `/actor/${link.slug}` });
   }
 
   return out.length > 0 ? out : undefined;
