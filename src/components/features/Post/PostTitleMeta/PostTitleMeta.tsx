@@ -10,9 +10,14 @@ export type TStudioEntry = {
   href?: string
 }
 
+export type TCreditName = {
+  name: string
+  href?: string
+}
+
 export type TCreditEntry = {
   role: string
-  names: string[]
+  names: TCreditName[]
 }
 
 export type TActor = {
@@ -92,7 +97,20 @@ export const TitleMeta = ({
                 <span className='font-ui mb-1 flex gap-[0.3em] text-ui font-bold tracking-[0.1em] text-color-secondary uppercase'>
                   {entry.role}
                 </span>
-                <div className='text-h3 font-bold leading-[1.4] text-color-primary'>{entry.names.join(' / ')}</div>
+                <div className='text-h3 font-bold leading-[1.4] text-color-primary'>
+                  {entry.names.map((n, j) => (
+                    <span key={j}>
+                      {j > 0 && ' / '}
+                      {n.href ? (
+                        <Link href={n.href} className='text-inherit no-underline hover:underline'>
+                          {n.name}
+                        </Link>
+                      ) : (
+                        n.name
+                      )}
+                    </span>
+                  ))}
+                </div>
               </div>
             ))}
 
