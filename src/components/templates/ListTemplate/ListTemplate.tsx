@@ -115,7 +115,7 @@ export const ListTemplate = ({
             <div className='flex flex-col gap-3 lg:gap-4'>
               {leadPost && <PostCardImgLeft post={leadPost} priority />}
               {gridPosts.length > 0 && (
-                <ol className='m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-4 lg:gap-4'>
+                <ol className='m-0 grid list-none grid-cols-2 gap-3 p-0 lg:grid-cols-3 lg:gap-4'>
                   {gridPosts.map((item) => (
                     <li key={item.id}>
                       <PostCardImgTop post={item} />

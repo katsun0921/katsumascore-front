@@ -108,6 +108,38 @@ const eslintConfig = defineConfig([
       'unused-imports/no-unused-imports': 'error',
     },
   },
+  // ─────────────────────────────────────────────────────────────────────────────
+  // ESLint v10 compatibility: eslint-plugin-react@7.x uses the removed
+  // getFilename() API throughout its shared version.js utility, breaking all
+  // react/* rules. Disable them all until the plugin supports ESLint v10.
+  // Most rules are redundant with TypeScript + React 19's new JSX transform.
+  // ─────────────────────────────────────────────────────────────────────────────
+  {
+    rules: {
+      'react/display-name': 'off',
+      'react/jsx-key': 'off',
+      'react/jsx-no-comment-textnodes': 'off',
+      'react/jsx-no-duplicate-props': 'off',
+      'react/jsx-no-target-blank': 'off',
+      'react/jsx-no-undef': 'off',
+      'react/jsx-uses-react': 'off',
+      'react/jsx-uses-vars': 'off',
+      'react/no-children-prop': 'off',
+      'react/no-danger-with-children': 'off',
+      'react/no-deprecated': 'off',
+      'react/no-direct-mutation-state': 'off',
+      'react/no-find-dom-node': 'off',
+      'react/no-is-mounted': 'off',
+      'react/no-render-return-value': 'off',
+      'react/no-string-refs': 'off',
+      'react/no-unescaped-entities': 'off',
+      'react/no-unknown-property': 'off',
+      'react/no-unsafe': 'off',
+      'react/prop-types': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/require-render-return': 'off',
+    },
+  },
   ...storybook.configs["flat/recommended"]
 ])
 
