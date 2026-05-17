@@ -58,7 +58,6 @@ export const loadAnimeListPage = async (
       category: meta.id,
       page: rawPage,
       per_page: ANIME_LIST_PER_PAGE,
-      lang: currentLocale,
     });
     if (!fetched) return { notFound: true };
     rawPosts.push(...fetched.items);

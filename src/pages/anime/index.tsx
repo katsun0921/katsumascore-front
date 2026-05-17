@@ -102,7 +102,7 @@ export default AnimeIndexPage;
 export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadAnimeListPage(currentLocale, 1);
-  if ('notFound' in data) return { notFound: true };
+  if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {
