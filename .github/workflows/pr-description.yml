@@ -13,6 +13,8 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
+    # PR本文がすでに記入されている場合（claude/ ブランチ等）はスキップする
+    if: ${{ github.event.pull_request.body == null || github.event.pull_request.body == '' }}
 
     steps:
       - name: Checkout

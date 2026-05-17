@@ -157,6 +157,38 @@ export interface components {
             parent?: number;
             menu_order?: number;
         };
+        WPImage: {
+            url: string;
+            alt?: string;
+            width?: number;
+            height?: number;
+        };
+        WPPerson: {
+            id: number;
+            slug: string;
+            title: components["schemas"]["RenderedBlock"];
+            acf: {
+                name_ja: string;
+                name_en: string;
+                slug?: string;
+                roles: ("actor" | "director")[];
+                bio?: string;
+                image?: components["schemas"]["WPImage"];
+            };
+        };
+        WPCompany: {
+            id: number;
+            slug: string;
+            title: components["schemas"]["RenderedBlock"];
+            acf: {
+                name_ja: string;
+                name_en: string;
+                slug?: string;
+                roles: ("production" | "distributor")[];
+                description?: string;
+                logo?: components["schemas"]["WPImage"];
+            };
+        };
     };
     responses: never;
     parameters: {
