@@ -44,9 +44,9 @@
 
 ## 変更時チェック（§1 と対応）
 
-- [ ] `WP_API_URL` / `NEXT_PUBLIC_WP_BASE_URL` / `NEXT_PUBLIC_SITE_URL` が本番値
-- [ ] `wpContent.config.ts` のスラッグ・REST パスが本番 WordPress と一致
-- [ ] 変数値がコードやドキュメント本文に誤コミットされていない
+- [x] `WP_API_URL` / `NEXT_PUBLIC_WP_BASE_URL` / `NEXT_PUBLIC_SITE_URL` が本番値
+- [x] `wpContent.config.ts` のスラッグ・REST パスが本番 WordPress と一致
+- [x] 変数値がコードやドキュメント本文に誤コミットされていない
 
 ---
 
