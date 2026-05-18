@@ -60,16 +60,14 @@ export default FeaturedPage;
 
 export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale }) => {
   const currentLocale = (locale === 'en' ? 'en' : 'ja') as import('@/libs/api/wordpress/lang').Locale;
-  const lang = currentLocale === 'en' ? 'en' : 'ja';
   const slug = WP_FEATURED_CATEGORY_SLUG;
-  const category = await getCategoryBySlug(slug, lang);
+  const category = await getCategoryBySlug(slug);
   if (!category) return { notFound: true };
 
   const fetched = await getPostsWithMeta({
     category: category.id,
     page: 1,
     per_page: 100,
-    lang,
   });
   if (!fetched) return { notFound: true };
 

@@ -16,16 +16,12 @@ const escapeXml = (str: string): string =>
   str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  let seasonalParentId = await resolveSeasonalReviewParentId('ja');
-  if (!seasonalParentId) seasonalParentId = await resolveSeasonalReviewParentId('en');
+  const seasonalParentId = await resolveSeasonalReviewParentId();
 
-  const [jaPosts, enPosts, jaCategories, enCategories, jaSeasonal, enSeasonal] = await Promise.all([
-    getPosts({ per_page: 100, lang: 'ja' }),
-    getPosts({ per_page: 100, lang: 'en' }),
-    getCategoriesForArchiveResolve('ja'),
-    getCategoriesForArchiveResolve('en'),
-    seasonalParentId ? getChildPages(seasonalParentId, 'ja') : Promise.resolve([]),
-    seasonalParentId ? getChildPages(seasonalParentId, 'en') : Promise.resolve([]),
+  const [posts, categories, seasonal] = await Promise.all([
+    getPosts({ per_page: 100 }),
+    getCategoriesForArchiveResolve(),
+    seasonalParentId ? getChildPages(seasonalParentId) : Promise.resolve([]),
   ]);
 
   const staticPaths: SitemapItem[] = [
@@ -41,35 +37,35 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
 
   const fields: SitemapItem[] = [
     ...staticPaths,
-    ...jaPosts.map((post) => ({
+    ...posts.map((post) => ({
       loc: `${SITE_URL}/posts/${post.slug}`,
       lastmod: new Date(post.date).toISOString(),
       changefreq: 'monthly',
       priority: 0.7,
     })),
-    ...enPosts.map((post) => ({
+    ...posts.map((post) => ({
       loc: `${SITE_URL}/en/posts/${post.slug}`,
       lastmod: new Date(post.date).toISOString(),
       changefreq: 'monthly',
       priority: 0.7,
     })),
-    ...jaCategories.map((cat) => ({
+    ...categories.map((cat) => ({
       loc: `${SITE_URL}/categories/${cat.slug}`,
       changefreq: 'weekly',
       priority: 0.5,
     })),
-    ...enCategories.map((cat) => ({
+    ...categories.map((cat) => ({
       loc: `${SITE_URL}/en/categories/${cat.slug}`,
       changefreq: 'weekly',
       priority: 0.5,
     })),
-    ...jaSeasonal.map((p) => ({
+    ...seasonal.map((p) => ({
       loc: `${SITE_URL}/seasonal-reviews/${p.slug}`,
       lastmod: new Date(p.modified ?? p.date).toISOString(),
       changefreq: 'monthly',
       priority: 0.55,
     })),
-    ...enSeasonal.map((p) => ({
+    ...seasonal.map((p) => ({
       loc: `${SITE_URL}/en/seasonal-reviews/${p.slug}`,
       lastmod: new Date(p.modified ?? p.date).toISOString(),
       changefreq: 'monthly',

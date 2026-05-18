@@ -11,11 +11,10 @@ type WPCategory = components["schemas"]["WPCategory"];
 
 /** カテゴリ一覧を再試行付きで取得する。 */
 const fetchCategories = async (
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPCategory[] | null> => {
   if (isWpMockMode()) {
-    return mockWpGetCategories(lang);
+    return mockWpGetCategories();
   }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
@@ -24,7 +23,6 @@ const fetchCategories = async (
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const { data, response } = await wpClient.GET("/categories", {
-        params: { query: lang ? { lang: lang as "ja" | "en" } : {} },
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -43,34 +41,21 @@ const fetchCategories = async (
   return null;
 };
 
-/** 言語指定付きカテゴリ一覧。失敗時は空配列。 */
+/** カテゴリ一覧。失敗時は空配列。 */
 export const getCategories = async (
-  lang?: string,
   options?: WpFetchOptions,
-): Promise<WPCategory[]> => (await fetchCategories(lang, options)) ?? [];
+): Promise<WPCategory[]> => (await fetchCategories(options)) ?? [];
 
-/**
- * アーカイブ・スラッグ解決用のカテゴリ一覧。
- * Polylang 不使用の環境では `lang=en` の `/categories` が空配列になりうるが、ターム ID は投稿と共通のため
- * その場合は `lang` 無しで再取得する。
- */
+/** アーカイブ・スラッグ解決用のカテゴリ一覧。 */
 export const getCategoriesForArchiveResolve = async (
-  locale?: string,
   options?: WpFetchOptions,
-): Promise<WPCategory[]> => {
-  if (locale === "ja" || locale === "en") {
-    const localized = await getCategories(locale, options);
-    if (localized.length > 0) return localized;
-  }
-  return getCategories(undefined, options);
-};
+): Promise<WPCategory[]> => getCategories(options);
 
 /** 解決済みカテゴリ一覧からスラッグで 1 件探す。 */
 export const getCategoryBySlug = async (
   slug: string,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPCategory | null> => {
-  const categories = await getCategoriesForArchiveResolve(lang, options);
+  const categories = await getCategoriesForArchiveResolve(options);
   return categories.find((c) => c.slug === slug) ?? null;
 };

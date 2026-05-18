@@ -154,12 +154,11 @@ export const genreDisplayLabel = (term: WPGenreTerm, locale: string): string => 
 const fetchGenresPage = async (
   pageNum: number,
   perPage: number,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPGenreTerm[] | null> => {
   if (isWpMockMode()) {
     if (pageNum !== 1) return [];
-    return mockWpGetGenres(lang);
+    return mockWpGetGenres();
   }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
@@ -172,7 +171,6 @@ const fetchGenresPage = async (
       u.searchParams.set("per_page", String(perPage));
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      if (lang) u.searchParams.set("lang", lang);
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
@@ -192,23 +190,22 @@ const fetchGenresPage = async (
 };
 
 /** 先頭ページ（最大 100 件）の genre 一覧。 */
-const fetchGenres = async (lang?: string, options?: WpFetchOptions): Promise<WPGenreTerm[] | null> =>
-  fetchGenresPage(1, 100, lang, options);
+const fetchGenres = async (options?: WpFetchOptions): Promise<WPGenreTerm[] | null> =>
+  fetchGenresPage(1, 100, options);
 
 /** 利用可能な genre ターム一覧。失敗時は空配列。 */
-export const getGenres = async (lang?: string, options?: WpFetchOptions): Promise<WPGenreTerm[]> =>
-  (await fetchGenres(lang, options)) ?? [];
+export const getGenres = async (options?: WpFetchOptions): Promise<WPGenreTerm[]> =>
+  (await fetchGenres(options)) ?? [];
 
 /** 一覧が 100 件を超える場合にページを進めてスラッグ一致を探す。 */
 const findGenreBySlugPaginated = async (
   slug: string,
-  lang: string | undefined,
   options: WpFetchOptions | undefined,
   maxPages: number,
 ): Promise<WPGenreTerm | null> => {
   const perPage = 100;
   for (let pageNum = 1; pageNum <= maxPages; pageNum += 1) {
-    const list = await fetchGenresPage(pageNum, perPage, lang, options);
+    const list = await fetchGenresPage(pageNum, perPage, options);
     if (!list) return null;
     const found = list.find((g) => g.slug === slug);
     if (found) return found;
@@ -222,7 +219,6 @@ const findGenreBySlugPaginated = async (
  */
 const fetchGenreTermBySlug = async (
   slug: string,
-  lang: string | undefined,
   options: WpFetchOptions | undefined,
 ): Promise<WPGenreTerm | null> => {
   if (isWpMockMode()) {
@@ -239,7 +235,6 @@ const fetchGenreTermBySlug = async (
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      if (lang) u.searchParams.set("lang", lang);
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
@@ -266,34 +261,18 @@ const fetchGenreTermBySlug = async (
 
 /**
  * スラッグで genre タームを解決する。
- * 直接 REST → 言語フォールバック → 全件一覧 → ページネーションの順で試す。
+ * 直接 REST → 全件一覧 → ページネーションの順で試す。
  */
 export const getGenreBySlug = async (
   slug: string,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPGenreTerm | null> => {
   const trimmed = slug.trim();
   if (!trimmed) return null;
-  let direct = await fetchGenreTermBySlug(trimmed, lang, options);
+  const direct = await fetchGenreTermBySlug(trimmed, options);
   if (direct) return direct;
-  if (lang) {
-    direct = await fetchGenreTermBySlug(trimmed, undefined, options);
-    if (direct) return direct;
-  }
-  let genres = await getGenres(lang, options);
-  let found = genres.find((g) => g.slug === trimmed);
+  const genres = await getGenres(options);
+  const found = genres.find((g) => g.slug === trimmed);
   if (found) return found;
-  if (lang) {
-    genres = await getGenres(undefined, options);
-    found = genres.find((g) => g.slug === trimmed);
-    if (found) return found;
-  }
-  let paged = await findGenreBySlugPaginated(trimmed, lang, options, 20);
-  if (paged) return paged;
-  if (lang) {
-    paged = await findGenreBySlugPaginated(trimmed, undefined, options, 20);
-    if (paged) return paged;
-  }
-  return null;
+  return findGenreBySlugPaginated(trimmed, options, 20);
 };

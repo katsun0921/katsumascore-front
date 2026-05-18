@@ -138,7 +138,7 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 WordPress API → lib/api → features（正規化） → components → pages
 ```
 
-- **言語判定:** Polylang不使用。ACF `lang` フィールドを正とする（`detectLang`）
+- **言語判定:** ACF `lang` フィールドを正とする（`detectLang`）
 - **最終フィルタ:** `normalizePosts` / `mapWPPostToPost` 後の `m.lang` で行う
 
 ---

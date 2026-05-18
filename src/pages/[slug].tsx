@@ -35,8 +35,7 @@ export default WPPage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths: { params: { slug: string }; locale: string }[] = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
-    const lang = loc === 'en' ? 'en' : 'ja';
-    const pages = await getFeaturedPages(lang);
+    const pages = await getFeaturedPages();
     for (const p of pages) {
       paths.push({ params: { slug: p.slug }, locale: loc });
     }
@@ -48,8 +47,7 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
-  const lang = currentLocale === 'en' ? 'en' : 'ja';
-  const page = await getPageBySlug(slug, lang);
+  const page = await getPageBySlug(slug);
   if (!page) return { notFound: true };
   const normalized = normalizePageContent(page);
 

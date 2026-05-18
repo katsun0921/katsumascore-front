@@ -36,10 +36,9 @@ export default SeasonalDetailPage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths: { params: { slug: string }; locale: string }[] = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
-    const lang = loc === 'en' ? 'en' : 'ja';
-    const parentId = await resolveSeasonalReviewParentId(lang);
+    const parentId = await resolveSeasonalReviewParentId();
     if (!parentId) continue;
-    const children = await getChildPages(parentId, lang);
+    const children = await getChildPages(parentId);
     for (const p of children) {
       paths.push({ params: { slug: p.slug }, locale: loc });
     }
@@ -51,8 +50,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
-  const lang = currentLocale === 'en' ? 'en' : 'ja';
-  const page = await getPageBySlug(slug, lang);
+  const page = await getPageBySlug(slug);
   if (!page) return { notFound: true };
   const normalized = normalizePageContent(page);
 

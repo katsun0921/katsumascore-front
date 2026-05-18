@@ -11,10 +11,9 @@ export const WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG_DEFAULT = WP_SEASONAL_REVIEW
  * 季節レビュー親固定ページの数値 ID を返す。
  * {@link WP_SEASONAL_REVIEW_PARENT_SLUG} を `getPageBySlug` に渡して解決する。
  *
- * @param lang — Polylang 相当の言語（`ja` / `en`）。
  * @returns 親ページの `id`。取得できなければ `null`。
  */
-export const resolveSeasonalReviewParentId = async (lang: "ja" | "en"): Promise<number | null> => {
-  const parent = await getPageBySlug(WP_SEASONAL_REVIEW_PARENT_SLUG, lang);
+export const resolveSeasonalReviewParentId = async (): Promise<number | null> => {
+  const parent = await getPageBySlug(WP_SEASONAL_REVIEW_PARENT_SLUG);
   return parent?.id ?? null;
 };

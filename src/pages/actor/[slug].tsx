@@ -68,7 +68,7 @@ export default ActorPage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
-    const categories = await getCategoriesForArchiveResolve(normalizeRouteLocale(loc));
+    const categories = await getCategoriesForArchiveResolve();
     for (const category of categories) {
       paths.push({ params: { slug: category.slug }, locale: loc });
     }

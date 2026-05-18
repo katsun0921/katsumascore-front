@@ -1,7 +1,6 @@
 /**
  * モック WP データに対する一覧フィルタ・ページネーション（REST クエリのサブセット）。
  */
-import { detectLang } from "@/libs/api/wordpress/lang";
 import {
   MOCK_WP_CATEGORIES,
   MOCK_WP_GENRES,
@@ -21,7 +20,6 @@ import type { WpPostsListMeta, WpPostsPagedResult } from "@/libs/api/wordpress/c
 type PostsQuery = {
   page?: number;
   per_page?: number;
-  lang?: "ja" | "en";
   categories?: number;
   tags?: number;
   genre?: string;
@@ -81,16 +79,6 @@ const postHasVodId = (post: MockWPPost, vodId: number): boolean => {
   return found;
 };
 
-const matchesLang = (post: MockWPPost, lang: string | undefined): boolean => {
-  if (!lang) return true;
-  const acfLang = post.acf && typeof post.acf === "object" && !Array.isArray(post.acf)
-    ? (post.acf as { lang?: string }).lang
-    : undefined;
-  const link = (post as { link?: string }).link;
-  const resolved = detectLang(link, acfLang === "en" || acfLang === "ja" ? acfLang : undefined);
-  return resolved === lang;
-};
-
 const matchesSearch = (post: MockWPPost, q: string): boolean => {
   const needle = q.trim().toLowerCase();
   if (!needle) return false;
@@ -123,7 +111,6 @@ export const mockWpPostsPaged = (query: PostsQuery): WpPostsPagedResult<MockWPPo
   if (query.include) {
     list = filterByInclude(list, query.include);
   } else {
-    if (query.lang) list = list.filter((p) => matchesLang(p, query.lang));
     const categoryId = query.categories;
     if (categoryId !== undefined) {
       list = list.filter((p) => primaryCategoryId(p) === categoryId);
@@ -163,31 +150,20 @@ export const mockWpPostsPaged = (query: PostsQuery): WpPostsPagedResult<MockWPPo
 /** メタ不要時はアイテム列のみ */
 export const mockWpPostsList = (query: PostsQuery): MockWPPost[] => mockWpPostsPaged(query).items;
 
-const categoriesForLang = (lang: string | undefined): MockWPCategory[] => {
-  void lang;
-  return [...MOCK_WP_CATEGORIES];
-};
-
 /**
  * `getCategories` / `getCategoriesForArchiveResolve` 向け。
  */
-export const mockWpGetCategories = (lang?: string): MockWPCategory[] => categoriesForLang(lang);
+export const mockWpGetCategories = (): MockWPCategory[] => [...MOCK_WP_CATEGORIES];
 
 /**
  * `getTags` 向け。
  */
-export const mockWpGetTags = (lang?: string): MockWPTag[] => {
-  void lang;
-  return [...MOCK_WP_TAGS];
-};
+export const mockWpGetTags = (): MockWPTag[] => [...MOCK_WP_TAGS];
 
 /**
  * `getGenres` 向け。
  */
-export const mockWpGetGenres = (lang?: string): MockGenreTerm[] => {
-  void lang;
-  return [...MOCK_WP_GENRES];
-};
+export const mockWpGetGenres = (): MockGenreTerm[] => [...MOCK_WP_GENRES];
 
 /**
  * `getGenreBySlug` / slug 検索向け。
@@ -198,10 +174,7 @@ export const mockWpGetGenreBySlug = (slug: string): MockGenreTerm | null =>
 /**
  * `getVodTerms` 向け。
  */
-export const mockWpGetVodTerms = (lang?: string): MockVodTerm[] => {
-  void lang;
-  return [...MOCK_WP_VOD_TERMS];
-};
+export const mockWpGetVodTerms = (): MockVodTerm[] => [...MOCK_WP_VOD_TERMS];
 
 /**
  * `getVodTermBySlug` 向け（候補 slug のいずれかに一致）。
@@ -218,7 +191,6 @@ export const mockWpGetVodTermBySlug = (slug: string): MockVodTerm | null => {
 
 type PagesQuery = {
   per_page?: number;
-  lang?: "ja" | "en";
   parent?: number;
   slug?: string;
   orderby?: string;

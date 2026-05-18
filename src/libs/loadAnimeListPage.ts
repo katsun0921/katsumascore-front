@@ -46,7 +46,7 @@ export const loadAnimeListPage = async (
   page: number,
 ): Promise<AnimeListPageResult> => {
   const currentLocale = locale === "en" ? "en" : "ja";
-  const categories = await getCategoriesForArchiveResolve(currentLocale);
+  const categories = await getCategoriesForArchiveResolve();
   const meta = resolveAnimeCategoryMeta(categories);
   if (!meta) return { notFound: true };
 

@@ -46,7 +46,7 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   const paths: { params: { slug: string }; locale: string }[] = [];
 
   for (const loc of locs) {
-    const posts = await getPosts({ per_page: 100, lang: loc });
+    const posts = await getPosts({ per_page: 100 });
     for (const p of posts) {
       if (typeof p.slug === 'string') {
         paths.push({ params: { slug: p.slug }, locale: loc });
@@ -64,7 +64,6 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     if (typeof slug !== 'string') return { notFound: true };
 
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
-    // Polylang の ?lang= フィルタを回避するため lang 未指定で取得し、ACF lang で検証する。
     const wpPost = await getPostBySlug(slug);
     if (!wpPost) return { notFound: true, revalidate: 60 };
     const wpAny = wpPost as Record<string, unknown>;
@@ -115,7 +114,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const vodTermId = extractVodIntroductionRelatedPostsTermId(wpPost);
     let vodRelatedPosts: Post[] | undefined;
     if (vodTermId !== undefined) {
-      const vodFetched = await getPosts({ per_page: 12, lang: loc, vod: vodTermId });
+      const vodFetched = await getPosts({ per_page: 12, vod: vodTermId });
       const mapped = vodFetched
         .filter((p) => p.id !== wpPost.id)
         .map((p) => mapWPPostToPost(p))
@@ -137,8 +136,8 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const toc = extractToc(detail.content);
 
     const [allHighScore, allGenres] = await Promise.all([
-      getPostsPagedMerge({ per_page: 100, lang: loc }, 5),
-      getGenres(loc),
+      getPostsPagedMerge({ per_page: 100 }, 5),
+      getGenres(),
     ]);
 
     const highScorePosts = pickRandom(

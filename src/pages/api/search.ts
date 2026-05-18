@@ -9,13 +9,13 @@ const isSearchDimension = (v: unknown): v is SearchDimensionFilter =>
   typeof v === 'string' && VALID_DIMENSIONS.includes(v as SearchDimensionFilter);
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<Post[]>) => {
-  const { q, lang = 'ja', dimension } = req.query;
+  const { q, dimension } = req.query;
   if (typeof q !== 'string' || !q.trim()) {
     res.status(200).json([]);
     return;
   }
 
-  const raw = await searchPosts(q.trim(), lang === 'en' ? 'en' : 'ja');
+  const raw = await searchPosts(q.trim());
   const dim = isSearchDimension(dimension) ? dimension : 'all';
   const prepared = prepareSearchResults(raw, q, dim);
 

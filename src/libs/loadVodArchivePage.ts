@@ -58,23 +58,14 @@ export const loadVodArchivePage = async (
   const candidates = vodWpSlugLookupCandidates(trimmed);
   let term = null;
   for (let i = 0; i < candidates.length; i += 1) {
-    const resolved = await getVodTermBySlug(candidates[i], currentLocale);
+    const resolved = await getVodTermBySlug(candidates[i]);
     if (resolved) {
       term = resolved;
       break;
     }
   }
   if (!term) {
-    for (let i = 0; i < candidates.length; i += 1) {
-      const resolved = await getVodTermBySlug(candidates[i], undefined);
-      if (resolved) {
-        term = resolved;
-        break;
-      }
-    }
-  }
-  if (!term) {
-    const list = (await getVodTerms(currentLocale)) ?? (await getVodTerms(undefined));
+    const list = await getVodTerms();
     if (list) term = pickVodTermFromList(list, candidates);
   }
   if (!term) return { notFound: true };
@@ -87,7 +78,6 @@ export const loadVodArchivePage = async (
       vod: term.id,
       page: rawPage,
       per_page: VOD_ARCHIVE_LIST_PER_PAGE,
-      lang: currentLocale,
     });
     if (!fetched) {
       if (rawPage === 1) {
