@@ -46,7 +46,7 @@ export const getPerson = async (
   id: number,
   options?: WpFetchOptions,
 ): Promise<WPPerson | null> =>
-  fetchPersons<WPPerson>(`/wp/v2/persons/${id}?acf_format=standard`, options);
+  fetchPersons<WPPerson>(`/persons/${id}?acf_format=standard`, options);
 
 /** slug で person を取得する。 */
 export const getPersonBySlug = async (
@@ -54,7 +54,7 @@ export const getPersonBySlug = async (
   options?: WpFetchOptions,
 ): Promise<WPPerson | null> => {
   const results = await fetchPersons<WPPerson[]>(
-    `/wp/v2/persons?slug=${encodeURIComponent(slug)}&acf_format=standard`,
+    `/persons?slug=${encodeURIComponent(slug)}&acf_format=standard`,
     options,
   );
   return results?.[0] ?? null;
@@ -67,6 +67,6 @@ export const getPersonsByRole = async (
   options?: WpFetchOptions,
 ): Promise<WPPerson[]> =>
   (await fetchPersons<WPPerson[]>(
-    `/wp/v2/persons?acf_format=standard&per_page=${perPage}&acf[roles]=${role}`,
+    `/persons?acf_format=standard&per_page=${perPage}&acf[roles]=${role}`,
     options,
   )) ?? [];
