@@ -62,3 +62,34 @@ export const pickRandomTags = async (
   const tags = await getTags(options);
   return shuffle(tags).slice(0, Math.max(0, count));
 };
+
+/** スラッグで 1 件取得。該当なしは `null`。 */
+export const getTagBySlug = async (
+  slug: string,
+  options?: WpFetchOptions,
+): Promise<WPTag | null> => {
+  if (!wpClient) return null;
+  const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const { data, response } = await wpClient.GET("/tags", {
+        params: { query: { slug: [slug], per_page: 1 } },
+        signal: controller.signal,
+      });
+      clearTimeout(timeoutId);
+      if (!response.ok) {
+        if (!shouldRetryStatus(response.status) || attempt === maxRetries) return null;
+        await sleep(initialBackoffMs * 2 ** attempt);
+        continue;
+      }
+      return data?.[0] ?? null;
+    } catch {
+      clearTimeout(timeoutId);
+      if (attempt === maxRetries) return null;
+      await sleep(initialBackoffMs * 2 ** attempt);
+    }
+  }
+  return null;
+};
