@@ -99,7 +99,7 @@ export const TitleMeta = ({
                 </span>
                 <div className='text-h3 font-bold leading-[1.4] text-color-primary'>
                   {entry.names.map((n, j) => (
-                    <span key={j}>
+                    <div key={j}>
                       {j > 0 && ' / '}
                       {n.href ? (
                         <Link href={n.href} className='text-inherit no-underline hover:underline'>
@@ -108,7 +108,7 @@ export const TitleMeta = ({
                       ) : (
                         n.name
                       )}
-                    </span>
+                    </div>
                   ))}
                 </div>
               </div>
