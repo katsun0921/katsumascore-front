@@ -1,0 +1,74 @@
+.franchisePostList {
+  margin-top: 2rem;
+
+  &__heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    letter-spacing: 0.04em;
+    margin-bottom: 1.5rem;
+  }
+
+  &__group {
+    margin-bottom: 2rem;
+  }
+
+  &__subheading {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-accent-soft);
+    margin-bottom: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 3px solid var(--color-accent-soft);
+  }
+}
+
+.franchiseScoreRanking {
+  margin-top: 2rem;
+
+  &__heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    letter-spacing: 0.04em;
+    margin-bottom: 1rem;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background-color: var(--color-score-bg);
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+  }
+
+  &__rank {
+    flex-shrink: 0;
+    width: 2rem;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.125rem;
+    color: var(--color-accent-soft);
+  }
+
+  &__title {
+    flex: 1;
+    font-size: 0.9375rem;
+    color: var(--color-text-inverse);
+    line-height: 1.4;
+  }
+
+  &__score {
+    flex-shrink: 0;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--color-accent-strong);
+  }
+}

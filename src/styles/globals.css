@@ -64,6 +64,7 @@
   /* Score */
   --color-score-bg: #14082e;
   --color-score-accent: #ff2dfc;
+  --color-accent-soft: #c084fc;
   --color-score-rank-low: #64748b;
   --color-score-rank-mid: #2563eb;
   --color-score-rank-high: #c026d3;
@@ -115,6 +116,7 @@
 
   /* RGB channel variables for alpha color compositions */
   --color-primary-rgb: 37, 99, 235;
+  --color-bg-dark-rgb: 10, 6, 24;
   --color-secondary-rgb: 30, 27, 75;
   --color-white-rgb: 255, 255, 255;
   --color-black-rgb: 0, 0, 0;

@@ -1,0 +1,1 @@
+export { FranchiseTemplate } from './FranchiseTemplate';
