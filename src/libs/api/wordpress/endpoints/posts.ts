@@ -27,6 +27,10 @@ type PostsQuery = {
   genre?: string;
   /** カスタム taxonomy `vod` のターム ID（OpenAPI 未定義のためクエリは生 URL で付与） */
   vod?: number;
+  /** カスタム taxonomy `actor` のスラッグ（フィルモグラフィー取得用） */
+  actor?: string;
+  /** カスタム taxonomy `person` のスラッグ（フィルモグラフィー取得用） */
+  person?: string;
   slug?: string;
   search?: string;
   include?: string;
@@ -40,6 +44,8 @@ type PostsParams = {
   tags?: number;
   genre?: string;
   vod?: number;
+  actor?: string;
+  person?: string;
 };
 
 /** 呼び出し側の `category` / `tags` 等を WP REST の `categories` / `tags` クエリに写す。 */
@@ -51,6 +57,8 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   if (params.tags) q.tags = params.tags;
   if (params.genre) q.genre = params.genre;
   if (params.vod !== undefined) q.vod = params.vod;
+  if (params.actor) q.actor = params.actor;
+  if (params.person) q.person = params.person;
   return q;
 };
 
@@ -66,6 +74,8 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   if (q.tags !== undefined) sp.set("tags", String(q.tags));
   if (q.genre) sp.set("genre", q.genre);
   if (q.vod !== undefined) sp.set("vod", String(q.vod));
+  if (q.actor) sp.set("actor", q.actor);
+  if (q.person) sp.set("person", q.person);
   if (q.slug) sp.set("slug", q.slug);
   if (q.search) sp.set("search", q.search);
   if (q.include) sp.set("include", q.include);
@@ -106,7 +116,7 @@ const fetchPostsWithMetaOverHttp = async (
   return null;
 };
 
-/** 投稿配列のみが欲しい場合。`genre` / `vod` 指定時は常に HTTP 経由。 */
+/** 投稿配列のみが欲しい場合。`genre` / `vod` / `actor` / `person` 指定時は常に HTTP 経由。 */
 const fetchPosts = async (
   query: PostsQuery,
   options?: WpFetchOptions,
@@ -114,7 +124,7 @@ const fetchPosts = async (
   if (isWpMockMode()) {
     return mockWpPostsList(query);
   }
-  if (query.genre || query.vod !== undefined) {
+  if (query.genre || query.vod !== undefined || query.actor || query.person) {
     const paged = await fetchPostsWithMetaOverHttp(query, options);
     return paged?.items ?? null;
   }
@@ -155,7 +165,7 @@ const fetchPostsWithMeta = async (
   if (isWpMockMode()) {
     return mockWpPostsPaged(query);
   }
-  if (query.genre || query.vod !== undefined) return fetchPostsWithMetaOverHttp(query, options);
+  if (query.genre || query.vod !== undefined || query.actor || query.person) return fetchPostsWithMetaOverHttp(query, options);
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -269,3 +279,17 @@ export const getPostsByTagId = async (
     { tags: tagId, per_page: opts.per_page ?? 10, page: opts.page },
     options,
   );
+
+/** actor タクソノミースラッグで絞った投稿一覧（フィルモグラフィー用）。 */
+export const getPostsByActorSlug = async (
+  slug: string,
+  perPage = 6,
+  options?: WpFetchOptions,
+): Promise<WPPost[]> => getPosts({ actor: slug, per_page: perPage }, options);
+
+/** person タクソノミースラッグで絞った投稿一覧（フィルモグラフィー用）。 */
+export const getPostsByPersonSlug = async (
+  slug: string,
+  perPage = 6,
+  options?: WpFetchOptions,
+): Promise<WPPost[]> => getPosts({ person: slug, per_page: perPage }, options);
