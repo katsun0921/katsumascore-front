@@ -128,7 +128,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
         </div>
 
         {/* ── サイドバー ── */}
-        <div className='md:w-[320px] shrink-0 px-4'>
+        <div className='md:w-[320px] shrink-0'>
           <Sidebar
             profile={post.profile}
             pickupPosts={post.pickupPosts}
