@@ -4,6 +4,7 @@
  */
 import type { Locale } from "@/i18n/t";
 import type { PostType } from "@/libs/route";
+import type { WPCategory } from "@/types/wordpress";
 
 /** 季節レビュー親固定ページのスラッグ（`getPageBySlug` → 子ページ取得） */
 export const WP_SEASONAL_REVIEW_PARENT_SLUG = "seasonal-anime-and-dramas-reviews";
@@ -19,6 +20,18 @@ export const WP_MOVIE_CATEGORY_SLUG = "movie";
 
 /** ドラマカテゴリのスラッグ */
 export const WP_DRAMA_CATEGORY_SLUG = "drama";
+
+/**
+ * WP カテゴリ一覧からスラッグで 1 件解決する。
+ * HOME・アーカイブで anime / movie / drama を問わず共用できる。
+ */
+export const resolveCategoryMeta = (
+  categories: WPCategory[],
+  slug: string,
+): { id: number; name: string } | undefined => {
+  const found = categories.find((c) => c.slug === slug);
+  return found ? { id: found.id, name: found.name } : undefined;
+};
 
 /** カスタムタクソノミー `genre` の REST コレクション名（`rest_base`） */
 export const WP_GENRE_REST_PATH = "genre";

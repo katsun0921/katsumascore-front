@@ -18,9 +18,8 @@ import {
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
-import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
+import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { getPostTypeArchivePath } from "@/libs/route";
-import { WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
@@ -194,7 +193,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const latestPosts = [...pool].sort(sortByDateDesc).slice(0, 8);
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
 
-  const animeCategoryId = resolveAnimeCategoryMeta(categories)?.id;
+  const animeCategoryId = resolveCategoryMeta(categories, WP_ANIME_CATEGORY_SLUG)?.id;
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
   const [animeRaw, movieCategory, recommendBlockRows, featuredPages] = await Promise.all([

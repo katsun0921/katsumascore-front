@@ -12,8 +12,9 @@ import {
 } from '@/components/templates/ListTemplate/i18n';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
+import { WP_ANIME_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { ANIME_LIST_PER_PAGE } from '@/libs/listFilters';
-import { loadAnimeListPage } from '@/libs/loadAnimeListPage';
+import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,
@@ -111,7 +112,7 @@ export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, 
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
   const currentLocale = normalizeRouteLocale(locale);
-  const data = await loadAnimeListPage(currentLocale, pageNum);
+  const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, pageNum);
   if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
