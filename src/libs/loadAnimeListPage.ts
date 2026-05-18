@@ -57,7 +57,7 @@ export const loadAnimeListPage = async (
     const fetched = await getPostsWithMeta({
       category: meta.id,
       page: rawPage,
-      per_page: ANIME_LIST_PER_PAGE,
+      per_page: 100,
     });
     if (!fetched) return { notFound: true };
     rawPosts.push(...fetched.items);

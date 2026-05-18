@@ -39,7 +39,7 @@ export const loadCategoryListPage = async (
     const fetched = await getPostsWithMeta({
       category: category.id,
       page: rawPage,
-      per_page: CATEGORY_LIST_PER_PAGE,
+      per_page: 100,
     });
     if (!fetched) return { notFound: true };
     rawPosts.push(...fetched.items);
