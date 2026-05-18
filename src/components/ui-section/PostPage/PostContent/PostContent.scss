@@ -762,11 +762,14 @@
       border-radius: 2px;
       background: var(--color-border);
     }
+
+    table {
+      min-width: 480px; // スクロールラッパー内のみ横スクロールを発動
+    }
   }
 
   table {
     width: 100%;
-    min-width: 480px; // 横スクロールの発動基準
     border-collapse: collapse;
     border: 1px solid var(--color-border);
     background-color: var(--color-bg);
@@ -809,10 +812,11 @@
     }
   }
 
-  // table が .wp-block-table の外で直接使われる場合
+  // table が .wp-block-table / .table-wrapper の外で直接使われる場合
   > table {
     display: block;
     overflow-x: auto;
+    min-width: 480px; // 自己スクロールが効く直接子テーブルのみ min-width を許可
   }
 
   // ─────────────────────────────────────────────
