@@ -10,6 +10,8 @@ import {
   getPosts,
   getPostsPagedMerge,
   getRelatedPosts,
+  getPostsByActorSlug,
+  getPostsByPersonSlug,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
 import { detectLang } from '@/libs/api/wordpress/lang';
@@ -132,6 +134,43 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       vodRelatedPosts,
     });
     if (!detail) return { notFound: true, revalidate: 60 };
+
+    // キャストごとの他作品（フィルモグラフィー）を並列取得して otherWorks に付与する
+    if (detail.actors && detail.actors.length > 0) {
+      detail.actors = await Promise.all(
+        detail.actors.map(async (actor) => {
+          if (!actor.actorUrl) return actor;
+          const urlParts = actor.actorUrl.split('/').filter(Boolean);
+          const taxType = urlParts[0];
+          const actorSlug = urlParts[1];
+          if (!actorSlug) return actor;
+
+          let posts: Awaited<ReturnType<typeof getPostsByActorSlug>> = [];
+          if (taxType === 'actor' || taxType === 'actors') {
+            posts = await getPostsByActorSlug(actorSlug);
+          } else if (taxType === 'person' || taxType === 'persons') {
+            posts = await getPostsByPersonSlug(actorSlug);
+          }
+
+          const otherWorks = posts
+            .filter((p) => p.id !== wpPost.id)
+            .slice(0, 5)
+            .map((p) => {
+              const m = mapWPPostToPost(p);
+              if (!m) return null;
+              return {
+                title: m.title,
+                href: m.slug,
+                ...(m.score !== undefined ? { score: m.score } : {}),
+              };
+            })
+            .filter((w): w is NonNullable<typeof w> => w !== null);
+
+          if (otherWorks.length === 0) return actor;
+          return { ...actor, otherWorks };
+        }),
+      );
+    }
 
     const toc = extractToc(detail.content);
 
