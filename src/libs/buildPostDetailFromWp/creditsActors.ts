@@ -45,18 +45,23 @@ const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
   return [];
 };
 
-/** 監督名を ACF フィールドのみから集め、重複除去してクレジット行を返す。 */
+/** 監督名を ACF フィールドから集め、person タクソノミーでリンク解決して返す。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
   const fromAcf = collectDirectorNamesFromAcf(acf?.director);
   if (fromAcf.length === 0) return undefined;
+  const nameToUrl = new Map<string, string>();
+  for (const l of extractPersonLinksFromParsedWp(wp)) {
+    nameToUrl.set(l.name.toLowerCase(), `/person/${l.slug}`);
+  }
   const seen = new Set<string>();
   const names: TCreditEntry["names"] = [];
   for (const n of fromAcf) {
     const k = n.toLowerCase();
     if (seen.has(k)) continue;
     seen.add(k);
-    names.push({ name: n });
+    const href = nameToUrl.get(k);
+    names.push({ name: n, ...(href ? { href } : {}) });
   }
   if (names.length === 0) return undefined;
   const role = locale === "en" ? "Director" : "監督";

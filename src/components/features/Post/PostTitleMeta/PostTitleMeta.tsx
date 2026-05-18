@@ -60,9 +60,10 @@ export const TitleMeta = ({
     const y = releaseDate.slice(0, 4);
     const m = releaseDate.slice(4, 6);
     const d = releaseDate.slice(6, 8);
+    const monthNamesEn = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     parsedDate =
       locale === 'en'
-        ? new Date(`${y}-${m}-${d}`).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        ? `${monthNamesEn[parseInt(m, 10) - 1]} ${parseInt(d, 10)}, ${y}`
         : `${y}${t(messages, ['date', 'yearSuffix'], locale)}${parseInt(m)}${t(messages, ['date', 'monthSuffix'], locale)}${parseInt(d)}${t(messages, ['date', 'daySuffix'], locale)}`;
   }
 
@@ -99,7 +100,7 @@ export const TitleMeta = ({
                 </span>
                 <div className='text-h3 font-bold leading-[1.4] text-color-primary'>
                   {entry.names.map((n, j) => (
-                    <span key={j}>
+                    <div key={j}>
                       {j > 0 && ' / '}
                       {n.href ? (
                         <Link href={n.href} className='text-inherit no-underline hover:underline'>
@@ -108,7 +109,7 @@ export const TitleMeta = ({
                       ) : (
                         n.name
                       )}
-                    </span>
+                    </div>
                   ))}
                 </div>
               </div>
