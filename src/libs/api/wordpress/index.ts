@@ -22,7 +22,7 @@ export {
   getCategoryBySlug,
 } from "./endpoints/categories";
 
-export { getTags, pickRandomTags } from "./endpoints/tags";
+export { getTags, pickRandomTags, getTagBySlug } from "./endpoints/tags";
 
 export {
   getGenres,

@@ -94,6 +94,14 @@ const nextConfig: NextConfig = {
         source: '/featured',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
       },
+      {
+        source: '/:locale(ja|en)?/tag/:slug',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
+      },
+      {
+        source: '/:locale(ja|en)?/tag/:slug/p/:page',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
+      },
       // RSS / sitemap（SSR で個別に設定済みだが念のため統一）
       {
         source: '/:file(sitemap.xml|feed)',
@@ -121,12 +129,6 @@ const nextConfig: NextConfig = {
       // 月別アーカイブ
       {
         source: "/:year(\\d{4})/:month(\\d{2})",
-        destination: "/404",
-        permanent: false,
-      },
-      // タグアーカイブ
-      {
-        source: "/tag/:slug",
         destination: "/404",
         permanent: false,
       },
