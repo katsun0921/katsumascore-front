@@ -28,7 +28,7 @@ export const loadCategoryListPage = async (
   page: number,
 ): Promise<CategoryListPageResult> => {
   const currentLocale = locale === "en" ? "en" : "ja";
-  const categories = await getCategoriesForArchiveResolve(currentLocale);
+  const categories = await getCategoriesForArchiveResolve();
   const category = categories.find((c) => c.slug === slug);
   if (!category) return { notFound: true };
 
@@ -40,7 +40,6 @@ export const loadCategoryListPage = async (
       category: category.id,
       page: rawPage,
       per_page: CATEGORY_LIST_PER_PAGE,
-      lang: currentLocale,
     });
     if (!fetched) return { notFound: true };
     rawPosts.push(...fetched.items);

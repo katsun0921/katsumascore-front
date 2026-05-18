@@ -1,9 +1,8 @@
 export type Locale = "ja" | "en";
 
 /**
- * 記事の言語は Polylang ではなく **ACF の `lang` フィールド**を正とする。
- * REST の `?lang=` は環境によって無視されるため、一覧・詳細の最終的な言語切り分けは
- * `normalizePosts` 等で `detectLang` の結果（`m.lang`）を使う。
+ * 記事の言語は **ACF の `lang` フィールド**を正とする。
+ * 一覧・詳細の最終的な言語切り分けは `normalizePosts` 等で `detectLang` の結果（`m.lang`）を使う。
  *
  * 判定順:
  *   1. ACF `lang`（`ja` / `en`）— 最優先

@@ -73,8 +73,7 @@ export default GenrePage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
-    const lang = normalizeRouteLocale(loc);
-    const genres = await getGenres(lang);
+    const genres = await getGenres();
     for (const genre of genres) {
       paths.push({ params: { slug: genre.slug }, locale: loc });
     }

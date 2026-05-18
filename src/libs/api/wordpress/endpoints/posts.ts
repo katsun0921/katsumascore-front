@@ -21,7 +21,6 @@ const FIELDS =
 type PostsQuery = {
   page?: number;
   per_page?: number;
-  lang?: "ja" | "en";
   categories?: number;
   tags?: number;
   /** カスタム taxonomy `genre` — WP 実装では多くの場合ターム ID（文字列の数値）。slug が効かないときは ID を渡す */
@@ -37,7 +36,6 @@ type PostsQuery = {
 type PostsParams = {
   page?: number;
   per_page?: number;
-  lang?: string;
   category?: number;
   tags?: number;
   genre?: string;
@@ -49,7 +47,6 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   const q: PostsQuery = { _fields: FIELDS };
   if (params.page) q.page = params.page;
   if (params.per_page) q.per_page = params.per_page;
-  if (params.lang) q.lang = params.lang as "ja" | "en";
   if (params.category) q.categories = params.category;
   if (params.tags) q.tags = params.tags;
   if (params.genre) q.genre = params.genre;
@@ -65,7 +62,6 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   sp.set("_fields", q._fields ?? FIELDS);
   if (q.page !== undefined) sp.set("page", String(q.page));
   if (q.per_page !== undefined) sp.set("per_page", String(q.per_page));
-  if (q.lang) sp.set("lang", q.lang);
   if (q.categories !== undefined) sp.set("categories", String(q.categories));
   if (q.tags !== undefined) sp.set("tags", String(q.tags));
   if (q.genre) sp.set("genre", q.genre);
@@ -236,12 +232,9 @@ export const getPostsPagedMerge = async (
 /** スラッグで 1 件取得。該当なしは `null`。 */
 export const getPostBySlug = async (
   slug: string,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPPost | null> => {
-  const q: PostsQuery = { slug, _fields: FIELDS };
-  if (lang) q.lang = lang as "ja" | "en";
-  const posts = await fetchPosts(q, options);
+  const posts = await fetchPosts({ slug, _fields: FIELDS }, options);
   return posts?.[0] ?? null;
 };
 
@@ -257,28 +250,22 @@ export const getRelatedPosts = async (
 /** `search` クエリによる全文検索結果。 */
 export const searchPosts = async (
   query: string,
-  lang?: string,
   options?: WpFetchOptions,
-): Promise<WPPost[]> => {
-  const q: PostsQuery = { search: query, _fields: FIELDS };
-  if (lang) q.lang = lang as "ja" | "en";
-  return (await fetchPosts(q, options)) ?? [];
-};
+): Promise<WPPost[]> => (await fetchPosts({ search: query, _fields: FIELDS }, options)) ?? [];
 
 /** カテゴリ ID で絞った投稿一覧。 */
 export const getPostsByCategory = async (
   categoryId: number,
-  lang?: string,
   options?: WpFetchOptions,
-): Promise<WPPost[]> => getPosts({ category: categoryId, lang }, options);
+): Promise<WPPost[]> => getPosts({ category: categoryId }, options);
 
 /** タグ ID で絞った投稿一覧（件数・ページは `opts` で指定）。 */
 export const getPostsByTagId = async (
   tagId: number,
-  opts: { per_page?: number; page?: number; lang?: string } = {},
+  opts: { per_page?: number; page?: number } = {},
   options?: WpFetchOptions,
 ): Promise<WPPost[]> =>
   getPosts(
-    { tags: tagId, per_page: opts.per_page ?? 10, page: opts.page, lang: opts.lang },
+    { tags: tagId, per_page: opts.per_page ?? 10, page: opts.page },
     options,
   );

@@ -75,11 +75,9 @@ const parseVodList = (data: unknown): WPVodTerm[] => {
 /**
  * `slug` クエリで `vod` タームを 1 件取得する。該当なしは `null`。
  * @param slug — WP ターム slug（例: `amazon-prime-video`）
- * @param lang — REST の `lang` クエリ（任意）
  */
 export const getVodTermBySlug = async (
   slug: string,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPVodTerm | null> => {
   const trimmed = slug.trim();
@@ -98,7 +96,6 @@ export const getVodTermBySlug = async (
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      if (lang) u.searchParams.set("lang", lang);
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
@@ -128,11 +125,10 @@ export const getVodTermBySlug = async (
  * `slug` クエリで取れないタームを、一覧から正規化 slug で突き合わせる用途向け。
  */
 export const getVodTerms = async (
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPVodTerm[] | null> => {
   if (isWpMockMode()) {
-    return mockWpGetVodTerms(lang);
+    return mockWpGetVodTerms();
   }
   if (!wpApiBaseUrl) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
@@ -145,7 +141,6 @@ export const getVodTerms = async (
       u.searchParams.set("per_page", "100");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      if (lang) u.searchParams.set("lang", lang);
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {

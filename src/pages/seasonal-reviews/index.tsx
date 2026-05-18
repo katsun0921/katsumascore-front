@@ -73,10 +73,10 @@ export const buildSeasonalIndexProps = async (
 ): Promise<SeasonalIndexProps> => {
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
   const lang = currentLocale === 'en' ? 'en' : 'ja';
-  const parentId = await resolveSeasonalReviewParentId(lang);
+  const parentId = await resolveSeasonalReviewParentId();
   let items: Post[] = [];
   if (parentId) {
-    items = [...(await getChildPages(parentId, lang))]
+    items = [...(await getChildPages(parentId))]
       .sort((a, b) => pageSortDate(b).localeCompare(pageSortDate(a)))
       .map((p) => ({
         id: String(p.id),

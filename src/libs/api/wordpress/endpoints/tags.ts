@@ -20,9 +20,9 @@ const shuffle = <T>(items: T[]): T[] => {
 };
 
 /** タグ一覧を再試行付きで取得する。 */
-const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag[] | null> => {
+const fetchTags = async (options?: WpFetchOptions): Promise<WPTag[] | null> => {
   if (isWpMockMode()) {
-    return mockWpGetTags(lang);
+    return mockWpGetTags();
   }
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
@@ -31,7 +31,7 @@ const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
       const { data, response } = await wpClient.GET("/tags", {
-        params: { query: { per_page: 100, ...(lang ? { lang: lang as "ja" | "en" } : {}) } },
+        params: { query: { per_page: 100 } },
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
@@ -51,15 +51,14 @@ const fetchTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag
 };
 
 /** タグ一覧。失敗時は空配列。 */
-export const getTags = async (lang?: string, options?: WpFetchOptions): Promise<WPTag[]> =>
-  (await fetchTags(lang, options)) ?? [];
+export const getTags = async (options?: WpFetchOptions): Promise<WPTag[]> =>
+  (await fetchTags(options)) ?? [];
 
 /** 全タグからシャッフルして先頭 `count` 件を返す。 */
 export const pickRandomTags = async (
   count: number,
-  lang?: string,
   options?: WpFetchOptions,
 ): Promise<WPTag[]> => {
-  const tags = await getTags(lang, options);
+  const tags = await getTags(options);
   return shuffle(tags).slice(0, Math.max(0, count));
 };

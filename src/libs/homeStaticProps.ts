@@ -174,9 +174,9 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
   const [categories, poolRaw, randomTags] = await Promise.all([
-    getCategoriesForArchiveResolve(lang),
-    getPosts({ per_page: 100, lang }, homePoolFetchOptions),
-    pickRandomTags(3, lang),
+    getCategoriesForArchiveResolve(),
+    getPosts({ per_page: 100 }, homePoolFetchOptions),
+    pickRandomTags(3),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -185,7 +185,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   let poolPage = 1;
   while (pool.length < minHomePool && poolPage <= maxExtraPoolPages) {
     poolPage += 1;
-    const moreRaw = await getPosts({ per_page: 100, lang, page: poolPage }, homePoolFetchOptions);
+    const moreRaw = await getPosts({ per_page: 100, page: poolPage }, homePoolFetchOptions);
     if (moreRaw.length === 0) break;
     pool = dedupePostsById([...pool, ...toMappedPostsForRoute(moreRaw, lang)]);
   }
@@ -195,14 +195,14 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
 
   const animeCategoryId = resolveAnimeCategoryMeta(categories)?.id;
-  const seasonalParentId = await resolveSeasonalReviewParentId(lang);
+  const seasonalParentId = await resolveSeasonalReviewParentId();
 
   const [animeRaw, movieCategory, recommendBlockRows, featuredPages] = await Promise.all([
-    animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId, lang }) : Promise.resolve([]),
-    getCategoryBySlug(movieSlug, lang),
+    animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId }) : Promise.resolve([]),
+    getCategoryBySlug(movieSlug),
     Promise.all(
       randomTags.map(async (tag) => {
-        const raw = await getPostsByTagId(tag.id, { per_page: 6, lang });
+        const raw = await getPostsByTagId(tag.id, { per_page: 6 });
         return {
           tag: tag.name,
           posts: toMappedPostsForRoute(raw, lang),
@@ -210,7 +210,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
         } satisfies RecommendBlock;
       }),
     ),
-    getFeaturedPages(lang),
+    getFeaturedPages(),
   ]);
 
   const animePosts = toMappedPostsForRoute(animeRaw, lang);
@@ -225,7 +225,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   }));
 
   const movieRaw = featuredItemsFromPages.length === 0 && movieCategory
-    ? await getPosts({ per_page: 6, category: movieCategory.id, lang })
+    ? await getPosts({ per_page: 6, category: movieCategory.id })
     : [];
   const moviePosts = toMappedPostsForRoute(movieRaw, lang);
   const featuredSource =
