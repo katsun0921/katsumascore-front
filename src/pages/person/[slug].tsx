@@ -2,19 +2,27 @@
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { I18nProvider } from '@/i18n/provider';
-import { getPersonBySlug } from '@/libs/api/wordpress';
-import { transformPerson } from '@/libs/api/wordpress';
+import {
+  getPersonBySlug,
+  getPersonTaxTermBySlug,
+  getPostsByActorTermId,
+  getPostsByDirectorTermId,
+  mapWPPostToPost,
+  transformPerson,
+} from '@/libs/api/wordpress';
 import { PersonTemplate } from '@/components/templates/PersonTemplate';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
+import type { Post } from '@/types/post';
 import type { Locale } from '@/i18n/t';
 
 type PersonPageProps = {
   person: Person;
+  posts: Post[];
   locale: string;
 };
 
-const PersonPage = ({ person, locale }: PersonPageProps) => {
+const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
   const displayName = loc === 'en' ? person.nameEn : person.nameJa;
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
@@ -51,7 +59,7 @@ const PersonPage = ({ person, locale }: PersonPageProps) => {
           }}
         />
       </Head>
-      <PersonTemplate person={person} breadcrumbs={breadcrumbs} />
+      <PersonTemplate person={person} posts={posts} breadcrumbs={breadcrumbs} />
     </I18nProvider>
   );
 };
@@ -71,9 +79,30 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
   const wp = await getPersonBySlug(slug);
   if (!wp) return { notFound: true };
 
+  const [actorTerm, directorTerm] = await Promise.all([
+    getPersonTaxTermBySlug('actor', slug),
+    getPersonTaxTermBySlug('director', slug),
+  ]);
+
+  const [actorPosts, directorPosts] = await Promise.all([
+    actorTerm ? getPostsByActorTermId(actorTerm.id, 100) : Promise.resolve([]),
+    directorTerm ? getPostsByDirectorTermId(directorTerm.id, 100) : Promise.resolve([]),
+  ]);
+
+  const seenIds = new Set<string>();
+  const mergedPosts: Post[] = [];
+  for (const wpPost of [...directorPosts, ...actorPosts]) {
+    const post = mapWPPostToPost(wpPost);
+    if (!seenIds.has(post.id)) {
+      seenIds.add(post.id);
+      mergedPosts.push(post);
+    }
+  }
+
   return {
     props: {
       person: transformPerson(wp),
+      posts: mergedPosts,
       locale: currentLocale,
     },
     revalidate: 60 * 60 * 24,
