@@ -6,38 +6,59 @@ import {
   extractPersonLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
+/** WPPerson オブジェクト（REST API 形式 / WP_Post 形式）から name と slug を抽出する。 */
+const extractPersonInfoFromObject = (o: Record<string, unknown>): { name: string; slug: string } | undefined => {
+  const acfFields =
+    typeof o.acf === "object" && o.acf !== null ? (o.acf as Record<string, unknown>) : undefined;
+
+  // name: acf.name_ja → acf.name_en → title.rendered → post_title
+  let name =
+    (acfFields && typeof acfFields.name_ja === "string" ? acfFields.name_ja.trim() : "") ||
+    (acfFields && typeof acfFields.name_en === "string" ? acfFields.name_en.trim() : "");
+  if (!name && typeof o.name === "string") name = stripHtml(o.name).trim();
+  if (!name && typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
+    name = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
+  }
+  if (!name && typeof o.title === "string") name = stripHtml(o.title).trim();
+  if (!name && typeof o.post_title === "string") name = stripHtml(o.post_title).trim();
+
+  // slug: acf.slug → slug → post_name
+  const slug =
+    (acfFields && typeof acfFields.slug === "string" ? acfFields.slug.trim() : "") ||
+    (typeof o.slug === "string" ? o.slug.trim() : "") ||
+    (typeof o.post_name === "string" ? o.post_name.trim() : "");
+
+  return name ? { name, slug } : undefined;
+};
+
 /**
- * ACF `director` の表記ゆれ（文字列 / 配列 / リレーション風オブジェクト）を名前配列へ正規化する。
+ * ACF `director` の表記ゆれ（文字列 / 配列 / person CPT オブジェクト）を
+ * name + slug エントリの配列へ正規化する。
  */
-const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
+const collectDirectorEntriesFromAcf = (raw: unknown): { name: string; slug: string }[] => {
   if (raw == null) return [];
   if (typeof raw === "string") {
     return raw
       .split(/[,、\n|]/)
-      .map((s) => stripHtml(s).trim())
-      .filter(Boolean);
+      .map((s) => ({ name: stripHtml(s).trim(), slug: "" }))
+      .filter((e) => e.name.length > 0);
+  }
+  // 単一オブジェクト（person CPT post_object フィールド）
+  if (!Array.isArray(raw) && typeof raw === "object" && raw !== null) {
+    const info = extractPersonInfoFromObject(raw as Record<string, unknown>);
+    return info ? [info] : [];
   }
   if (Array.isArray(raw)) {
-    const out: string[] = [];
+    const out: { name: string; slug: string }[] = [];
     for (const item of raw) {
       if (typeof item === "string") {
-        const t = stripHtml(item).trim();
-        if (t) out.push(t);
+        const n = stripHtml(item).trim();
+        if (n) out.push({ name: n, slug: "" });
         continue;
       }
       if (item && typeof item === "object") {
-        const o = item as Record<string, unknown>;
-        const name = typeof o.name === "string" ? stripHtml(o.name).trim() : "";
-        let titleRendered = "";
-        if (typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
-          titleRendered = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
-        }
-        if (!titleRendered && typeof o.title === "string") {
-          titleRendered = stripHtml(o.title).trim();
-        }
-        const postTitle = typeof o.post_title === "string" ? stripHtml(o.post_title).trim() : "";
-        const chosen = name || titleRendered || postTitle;
-        if (chosen) out.push(chosen);
+        const info = extractPersonInfoFromObject(item as Record<string, unknown>);
+        if (info) out.push(info);
       }
     }
     return out;
@@ -45,18 +66,18 @@ const collectDirectorNamesFromAcf = (raw: unknown): string[] => {
   return [];
 };
 
-/** 監督名を ACF フィールドのみから集め、重複除去してクレジット行を返す。 */
+/** 監督名を ACF フィールドから集め、重複除去してクレジット行を返す。person CPT の場合は /person/{slug} を href に設定する。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
-  const fromAcf = collectDirectorNamesFromAcf(acf?.director);
-  if (fromAcf.length === 0) return undefined;
+  const entries = collectDirectorEntriesFromAcf(acf?.director);
+  if (entries.length === 0) return undefined;
   const seen = new Set<string>();
   const names: TCreditEntry["names"] = [];
-  for (const n of fromAcf) {
-    const k = n.toLowerCase();
+  for (const entry of entries) {
+    const k = entry.name.toLowerCase();
     if (seen.has(k)) continue;
     seen.add(k);
-    names.push({ name: n });
+    names.push({ name: entry.name, ...(entry.slug ? { href: `/person/${entry.slug}` } : {}) });
   }
   if (names.length === 0) return undefined;
   const role = locale === "en" ? "Director" : "監督";
@@ -66,6 +87,7 @@ export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCredi
 /**
  * ACF リピータ1行の `actor`（リレーション）から表示名を取る。
  * 純粋な数値 ID のみは解決不能のため `undefined`。
+ * person CPT オブジェクトの場合は acf.name_ja / acf.name_en を優先する。
  */
 const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
   if (raw == null) return undefined;
@@ -77,18 +99,8 @@ const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
   }
   if (typeof raw === "number" && Number.isFinite(raw)) return undefined;
   if (typeof raw === "object") {
-    const o = raw as Record<string, unknown>;
-    const name = typeof o.name === "string" ? stripHtml(o.name).trim() : "";
-    let titleRendered = "";
-    if (typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
-      titleRendered = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
-    }
-    if (!titleRendered && typeof o.title === "string") {
-      titleRendered = stripHtml(o.title).trim();
-    }
-    const postTitle = typeof o.post_title === "string" ? stripHtml(o.post_title).trim() : "";
-    const chosen = name || titleRendered || postTitle;
-    return chosen || undefined;
+    const info = extractPersonInfoFromObject(raw as Record<string, unknown>);
+    return info?.name || undefined;
   }
   return undefined;
 };
@@ -191,6 +203,14 @@ export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
       if (info) {
         if (!nameStr) nameStr = info.name;
         actorUrl = info.url;
+      }
+    }
+    // actor が person CPT オブジェクトの場合、slug から /person/{slug} URL を解決する
+    if (!actorUrl && typeof ext.actor === "object" && ext.actor !== null && !Array.isArray(ext.actor)) {
+      const personInfo = extractPersonInfoFromObject(ext.actor as Record<string, unknown>);
+      if (personInfo) {
+        if (!nameStr) nameStr = personInfo.name;
+        if (personInfo.slug) actorUrl = `/person/${personInfo.slug}`;
       }
     }
     if (!nameStr && typeof ext.actor_name === "string" && ext.actor_name.trim()) {
