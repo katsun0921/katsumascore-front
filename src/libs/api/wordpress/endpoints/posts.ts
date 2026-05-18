@@ -221,22 +221,32 @@ export const getPostsPagedMerge = async (
 ): Promise<WPPost[]> => {
   if (maxPages < 1) return [];
   const perPage = base.per_page ?? 100;
-  const merged: WPPost[] = [];
-  const seenIds = new Set<number>();
-  let totalPages = 1;
 
-  for (let page = 1; page <= maxPages; page += 1) {
-    const batch = await getPostsWithMeta({ ...base, page, per_page: perPage }, options);
-    if (!batch || batch.items.length === 0) break;
-    totalPages = batch.meta.totalPages;
-    for (const p of batch.items) {
-      if (seenIds.has(p.id)) continue;
-      seenIds.add(p.id);
-      merged.push(p);
+  // 1ページ目を取得して totalPages を確定する
+  const first = await getPostsWithMeta({ ...base, page: 1, per_page: perPage }, options);
+  if (!first || first.items.length === 0) return [];
+
+  const totalPages = Math.min(first.meta.totalPages, maxPages);
+  const results: WPPost[] = [...first.items];
+
+  // 残りのページを並列取得する
+  if (totalPages > 1) {
+    const remaining = Array.from({ length: totalPages - 1 }, (_, i) => i + 2);
+    const batches = await Promise.all(
+      remaining.map((page) => getPostsWithMeta({ ...base, page, per_page: perPage }, options)),
+    );
+    for (const batch of batches) {
+      if (batch) results.push(...batch.items);
     }
-    if (page >= totalPages) break;
   }
-  return merged;
+
+  // 重複除去
+  const seenIds = new Set<number>();
+  return results.filter((p) => {
+    if (seenIds.has(p.id)) return false;
+    seenIds.add(p.id);
+    return true;
+  });
 };
 
 /** スラッグで 1 件取得。該当なしは `null`。 */

@@ -177,7 +177,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const toc = extractToc(detail.content);
 
     const [allHighScore, allGenres] = await Promise.all([
-      getPostsPagedMerge({ per_page: 100 }, 5),
+      getPostsPagedMerge({ per_page: 100 }, 3),
       getGenres(),
     ]);
 
