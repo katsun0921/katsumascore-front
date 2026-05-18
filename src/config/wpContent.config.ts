@@ -22,19 +22,15 @@ export const WP_MOVIE_CATEGORY_SLUG = "movie";
 export const WP_DRAMA_CATEGORY_SLUG = "drama";
 
 /**
- * WP カテゴリ一覧からアニメカテゴリを解決する。
- * slug 完全一致 → 日本語名 → 英語名の順でフォールバックし、HOME・アーカイブで共用する。
+ * WP カテゴリ一覧からスラッグで 1 件解決する。
+ * HOME・アーカイブで anime / movie / drama を問わず共用できる。
  */
-export const resolveAnimeCategoryMeta = (
+export const resolveCategoryMeta = (
   categories: WPCategory[],
+  slug: string,
 ): { id: number; name: string } | undefined => {
-  const bySlug = categories.find((c) => c.slug === WP_ANIME_CATEGORY_SLUG);
-  if (bySlug) return { id: bySlug.id, name: bySlug.name };
-  const byNameJa = categories.find((c) => c.name.includes("アニメ"));
-  if (byNameJa) return { id: byNameJa.id, name: byNameJa.name };
-  const byNameEn = categories.find((c) => c.name.toLowerCase().includes("anime"));
-  if (byNameEn) return { id: byNameEn.id, name: byNameEn.name };
-  return undefined;
+  const found = categories.find((c) => c.slug === slug);
+  return found ? { id: found.id, name: found.name } : undefined;
 };
 
 /** カスタムタクソノミー `genre` の REST コレクション名（`rest_base`） */
