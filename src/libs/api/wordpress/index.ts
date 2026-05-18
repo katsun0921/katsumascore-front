@@ -12,8 +12,8 @@ export {
   searchPosts,
   getPostsByCategory,
   getPostsByTagId,
-  getPostsByActorSlug,
-  getPostsByPersonSlug,
+  getPostsByActorTermId,
+  getPostsByPersonTermId,
 } from "./endpoints/posts";
 
 export {

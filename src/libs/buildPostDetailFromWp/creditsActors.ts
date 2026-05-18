@@ -128,6 +128,35 @@ const buildTermIdToActorInfoMap = (wp: ParsedWPPost): Map<number, { name: string
   return map;
 };
 
+/**
+ * `_embedded['wp:term']` から actor / person タクソノミーの `{ termId, taxType }` を
+ * キャスト名をキーにして返す。フィルモグラフィー取得時のターム ID 解決に使用する。
+ */
+export const buildActorTermIdMap = (
+  wp: ParsedWPPost,
+): Map<string, { termId: number; taxType: "actor" | "person" }> => {
+  const map = new Map<string, { termId: number; taxType: "actor" | "person" }>();
+  const groups = wp._embedded?.["wp:term"];
+  if (!Array.isArray(groups)) return map;
+  for (const group of groups) {
+    if (!Array.isArray(group)) continue;
+    for (const term of group) {
+      const t = term as Record<string, unknown>;
+      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
+      const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
+      const id = typeof t.id === "number" ? t.id : undefined;
+      const name = typeof t.name === "string" ? t.name.trim() : "";
+      if (id === undefined || !name) continue;
+      if (tax === "actor" || tax === "actors") {
+        map.set(name.toLowerCase(), { termId: id, taxType: "actor" });
+      } else if (tax === "person" || tax === "persons") {
+        map.set(name.toLowerCase(), { termId: id, taxType: "person" });
+      }
+    }
+  }
+  return map;
+};
+
 /** ACF 出演者行から `TActor[]` を構築する。actor/person タームへのリンクは埋め込みタームから解決する。 */
 export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;

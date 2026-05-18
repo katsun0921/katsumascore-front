@@ -10,8 +10,9 @@ import {
   getPosts,
   getPostsPagedMerge,
   getRelatedPosts,
-  getPostsByActorSlug,
-  getPostsByPersonSlug,
+  getPostsByActorTermId,
+  getPostsByPersonTermId,
+  parseWPPostUnknown,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
 import { detectLang } from '@/libs/api/wordpress/lang';
@@ -19,6 +20,7 @@ import { extractToc } from '@/libs/toc';
 import { pickRandom } from '@/libs/highscore';
 import {
   buildPostDetailFromWp,
+  buildActorTermIdMap,
   extractRelationPostIds,
   extractPostsGroupSpecsFromWp,
   extractVodIntroductionRelatedPostsTermId,
@@ -135,22 +137,22 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     });
     if (!detail) return { notFound: true, revalidate: 60 };
 
-    // キャストごとの他作品（フィルモグラフィー）を並列取得して otherWorks に付与する
+    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する
+    const parsedForActors = parseWPPostUnknown(wpPost);
+    const actorTermIdMap = parsedForActors ? buildActorTermIdMap(parsedForActors) : new Map();
+
+    // キャストごとの他作品（フィルモグラフィー）をターム ID で並列取得して otherWorks に付与する
     if (detail.actors && detail.actors.length > 0) {
       detail.actors = await Promise.all(
         detail.actors.map(async (actor) => {
-          if (!actor.actorUrl) return actor;
-          const urlParts = actor.actorUrl.split('/').filter(Boolean);
-          const taxType = urlParts[0];
-          const actorSlug = urlParts[1];
-          if (!actorSlug) return actor;
+          if (!actor.actorName) return actor;
+          const termInfo = actorTermIdMap.get(actor.actorName.toLowerCase());
+          if (!termInfo) return actor;
 
-          let posts: Awaited<ReturnType<typeof getPostsByActorSlug>> = [];
-          if (taxType === 'actor' || taxType === 'actors') {
-            posts = await getPostsByActorSlug(actorSlug);
-          } else if (taxType === 'person' || taxType === 'persons') {
-            posts = await getPostsByPersonSlug(actorSlug);
-          }
+          const posts =
+            termInfo.taxType === 'actor'
+              ? await getPostsByActorTermId(termInfo.termId)
+              : await getPostsByPersonTermId(termInfo.termId);
 
           const otherWorks = posts
             .filter((p) => p.id !== wpPost.id)
