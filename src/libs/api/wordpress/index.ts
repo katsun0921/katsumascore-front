@@ -13,6 +13,7 @@ export {
   getPostsByCategory,
   getPostsByTagId,
   getPostsByActorTermId,
+  getPostsByDirectorTermId,
   getPostsByPersonTermId,
 } from "./endpoints/posts";
 
@@ -37,7 +38,7 @@ export type { WPVodTerm } from "./endpoints/vodTaxonomy";
 
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
-export { getPerson, getPersonBySlug, getPersonsByRole } from "./endpoints/persons";
+export { getPerson, getPersonBySlug, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
 
 export { getCompany, getCompanyBySlug } from "./endpoints/companies";
 

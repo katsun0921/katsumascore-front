@@ -2,17 +2,20 @@
 import Image from 'next/image';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
+import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { Person } from '@/libs/api/wordpress/transform';
+import type { Post } from '@/types/post';
 
 type PersonTemplateProps = {
   person: Person;
+  posts: Post[];
   breadcrumbs: { label: string; href: string }[];
 };
 
-export const PersonTemplate = ({ person, breadcrumbs }: PersonTemplateProps) => {
+export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplateProps) => {
   const locale = useLocale();
   const displayName = locale === 'en' ? person.nameEn : person.nameJa;
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
@@ -53,6 +56,20 @@ export const PersonTemplate = ({ person, breadcrumbs }: PersonTemplateProps) => 
             </div>
           </div>
         </article>
+        {posts.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['filmography', 'heading'], locale)}
+            </h2>
+            <ul className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
+              {posts.map((post) => (
+                <li key={post.id}>
+                  <PostCardImgTop post={post} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </PageLayout>
   );
