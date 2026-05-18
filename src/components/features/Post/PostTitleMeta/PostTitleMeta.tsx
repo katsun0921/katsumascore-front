@@ -5,6 +5,8 @@ import { OfficialSns } from '@/components/features/OfficialSns';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
+import { useActorWorks } from './useActorWorks';
+import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 export type TStudioEntry = {
   name: string
   href?: string
@@ -25,7 +27,6 @@ export type TActor = {
   actorName?: string
   actorUrl?: string
   description?: string
-  otherWorks?: { title: string; href: string; character?: string; score?: number }[]
 }
 
 /** ACF 公式SNS1件（リンク / X・TikTok 等の埋め込みHTML） */
@@ -44,6 +45,10 @@ export type TTitleMetaProps = {
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
   actors?: TActor[]
+  /** CSR で otherWorks を取得するためのキャスト termId 情報 */
+  actorTermEntries?: ActorTermEntry[]
+  /** otherWorks フェッチ時に自記事を除外するための記事 ID */
+  postId?: number
 }
 
 export const TitleMeta = ({
@@ -53,8 +58,11 @@ export const TitleMeta = ({
   officialSns,
   credits,
   actors,
+  actorTermEntries,
+  postId,
 }: TTitleMetaProps) => {
   const locale = useLocale();
+  const worksMap = useActorWorks(actorTermEntries ?? [], postId ?? 0);
   let parsedDate: string | null = null;
   if (releaseDate && releaseDate.length === 8) {
     const y = releaseDate.slice(0, 4);
@@ -136,9 +144,9 @@ export const TitleMeta = ({
                 {actor.description && (
                   <p className='mt-2 text-color-secondary leading-[1.6]'>{actor.description}</p>
                 )}
-                {actor.otherWorks && actor.otherWorks.length > 0 && (
+                {actor.actorName && worksMap.get(actor.actorName.toLowerCase()) && (
                   <div className='flex gap-2 overflow-x-auto pt-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-                    {actor.otherWorks.map((work, j) => (
+                    {worksMap.get(actor.actorName.toLowerCase())!.map((work, j) => (
                       <Link
                         key={j}
                         href={work.href}
@@ -147,9 +155,6 @@ export const TitleMeta = ({
                         <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
                         {work.score !== undefined && (
                           <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
-                        )}
-                        {work.character && (
-                          <span className='mt-1 block overflow-hidden text-ellipsis whitespace-nowrap text-ui text-color-secondary'>{work.character}</span>
                         )}
                       </Link>
                     ))}

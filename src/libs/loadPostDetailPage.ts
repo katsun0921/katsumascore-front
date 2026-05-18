@@ -10,8 +10,6 @@ import {
   getPosts,
   getPostsPagedMerge,
   getRelatedPosts,
-  getPostsByActorTermId,
-  getPostsByPersonTermId,
   parseWPPostUnknown,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
@@ -31,10 +29,21 @@ import type { Post } from '@/types/post';
 import type { TRelationPostItem } from '@/components/features/RelationPost';
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup';
 
+/** キャスト名 → termId / taxType のシリアライズ可能なマップエントリ */
+export type ActorTermEntry = {
+  actorName: string;
+  termId: number;
+  taxType: 'actor' | 'person';
+};
+
 export type PostDetailPageProps = {
   post: PostDetailProps['post'];
   locale: string;
   genres: GenreNavTag[];
+  /** CSR で otherWorks を取得するためのキャスト termId 情報 */
+  actorTermEntries: ActorTermEntry[];
+  /** 現在の記事 ID（otherWorks フェッチ時に自記事を除外するため） */
+  postId: number;
 };
 
 /** 一覧用に `content` を除いた `Post` 形へ射影する。 */
@@ -137,42 +146,19 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     });
     if (!detail) return { notFound: true, revalidate: 60 };
 
-    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する
+    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
     const actorTermIdMap = parsedForActors ? buildActorTermIdMap(parsedForActors) : new Map();
-
-    // キャストごとの他作品（フィルモグラフィー）をターム ID で並列取得して otherWorks に付与する
-    if (detail.actors && detail.actors.length > 0) {
-      detail.actors = await Promise.all(
-        detail.actors.map(async (actor) => {
-          if (!actor.actorName) return actor;
-          const termInfo = actorTermIdMap.get(actor.actorName.toLowerCase());
-          if (!termInfo) return actor;
-
-          const posts =
-            termInfo.taxType === 'actor'
-              ? await getPostsByActorTermId(termInfo.termId)
-              : await getPostsByPersonTermId(termInfo.termId);
-
-          const otherWorks = posts
-            .filter((p) => p.id !== wpPost.id)
-            .slice(0, 5)
-            .map((p) => {
-              const m = mapWPPostToPost(p);
-              if (!m) return null;
-              return {
-                title: m.title,
-                href: m.slug,
-                ...(m.score !== undefined ? { score: m.score } : {}),
-              };
-            })
-            .filter((w): w is NonNullable<typeof w> => w !== null);
-
-          if (otherWorks.length === 0) return actor;
-          return { ...actor, otherWorks };
-        }),
-      );
-    }
+    const actorTermEntries: ActorTermEntry[] = detail.actors
+      ? detail.actors
+          .filter((actor) => actor.actorName !== undefined)
+          .map((actor) => {
+            const termInfo = actorTermIdMap.get(actor.actorName!.toLowerCase());
+            if (!termInfo) return null;
+            return { actorName: actor.actorName!, termId: termInfo.termId, taxType: termInfo.taxType };
+          })
+          .filter((e): e is ActorTermEntry => e !== null)
+      : [];
 
     const toc = extractToc(detail.content);
 
@@ -213,6 +199,8 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
         post: { ...detail, toc, highScorePosts, profile },
         locale: loc,
         genres,
+        actorTermEntries,
+        postId: wpPost.id,
       },
       revalidate: 300,
     };

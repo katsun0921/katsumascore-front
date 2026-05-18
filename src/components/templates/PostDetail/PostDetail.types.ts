@@ -1,6 +1,7 @@
 import type { Post } from '@/types/post';
 import type { TocItem } from '@/libs/toc';
 import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta';
+import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores';
 import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod';
 import type { TRentalService } from '@/components/features/AdRental/AdRental';
@@ -81,4 +82,6 @@ export type PostDetailData = Post & {
 export type PostDetailProps = {
   post: PostDetailData
   genres?: GenreNavTag[]
+  actorTermEntries?: ActorTermEntry[]
+  postId?: number
 }

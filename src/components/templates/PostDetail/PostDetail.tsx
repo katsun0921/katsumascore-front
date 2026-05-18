@@ -17,7 +17,7 @@ import { useLocale } from '@/i18n/provider';
 import type { ReactNode } from 'react';
 import type { PostDetailProps } from './PostDetail.types';
 
-export const PostDetail = ({ post, genres }: PostDetailProps) => {
+export const PostDetail = ({ post, genres, actorTermEntries, postId }: PostDetailProps) => {
   const locale = useLocale();
   const workTitle =
     locale === 'en' ? (post.originalTitle ?? post.title) : post.title;
@@ -75,7 +75,7 @@ export const PostDetail = ({ post, genres }: PostDetailProps) => {
 
             {/* 基本情報・キャスト情報 */}
             {(post.TitleMeta || (post.credits && post.credits.length > 0) || (post.actors && post.actors.length > 0)) && (
-              <TitleMeta {...post.TitleMeta} credits={post.credits} actors={post.actors} />
+              <TitleMeta {...post.TitleMeta} credits={post.credits} actors={post.actors} actorTermEntries={actorTermEntries} postId={postId} />
             )}
           </section>
 
