@@ -75,19 +75,10 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
   const hasInitializedRef = useRef(false);
   const prefixClassName = 'homeHero';
 
-  const [slideList, setSlideList] = useState<HomeHeroSlide[]>(() => {
+  const [slideList] = useState<HomeHeroSlide[]>(() => {
     const pool = Array.isArray(slides) && slides.length > 0 ? slides : FALLBACK_SLIDES;
-    return pool.slice(0, DISPLAY_COUNT);
+    return pool.length <= DISPLAY_COUNT ? pool : pickRandom(pool, DISPLAY_COUNT);
   });
-
-  // Math.random() を useEffect 内で実行することで SSR/CSR のハイドレーション不一致を防ぐ
-  useEffect(() => {
-    const pool = Array.isArray(slides) && slides.length > 0 ? slides : FALLBACK_SLIDES;
-    if (pool.length > DISPLAY_COUNT) {
-      setSlideList(pickRandom(pool, DISPLAY_COUNT));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   const current = slideList[activeIndex] ?? slideList[0];
   const rankClassName = RANK_CLASS_MAP[current.rank] ?? RANK_CLASS_MAP.A;
   const displayScore = Number.isFinite(current.score) ? current.score : 0;
