@@ -18,7 +18,7 @@ import {
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
-import { resolveAnimeCategoryMeta } from "@/libs/loadAnimeListPage";
+import { resolveAnimeCategoryMeta } from "@/config/wpContent.config";
 import { getPostTypeArchivePath } from "@/libs/route";
 import { WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
