@@ -257,11 +257,12 @@ type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompan
 /** WPPerson をアプリの `Person` 型へ変換する。 */
 export const transformPerson = (wp: WPPerson): Person => {
   const acf = wp.acf;
+  const titleFallback = stripHtml(wp.title?.rendered ?? "");
   return {
     id: wp.id,
     slug: acf.slug ?? wp.slug,
-    nameJa: acf.name_ja ?? "",
-    nameEn: acf.name_en ?? "",
+    nameJa: acf.name_ja || titleFallback,
+    nameEn: acf.name_en || titleFallback,
     roles: acf.roles ?? [],
     bio: acf.bio ?? "",
     image: acf.image
