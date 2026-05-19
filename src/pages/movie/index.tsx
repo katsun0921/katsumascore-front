@@ -109,7 +109,7 @@ export const getStaticProps: GetStaticProps<MovieIndexProps> = async ({ locale }
   const currentLocale = normalizeRouteLocale(locale);
   const movieSlug = WP_MOVIE_CATEGORY_SLUG;
   const data = await loadCategoryListPage(movieSlug, currentLocale, 1);
-  if ('notFound' in data) return { notFound: true };
+  if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {

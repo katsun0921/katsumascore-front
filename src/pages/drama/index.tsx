@@ -104,7 +104,7 @@ export const getStaticProps: GetStaticProps<DramaIndexProps> = async ({ locale }
   const currentLocale = normalizeRouteLocale(locale);
   const dramaSlug = WP_DRAMA_CATEGORY_SLUG;
   const data = await loadCategoryListPage(dramaSlug, currentLocale, 1);
-  if ('notFound' in data) return { notFound: true };
+  if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {
