@@ -1,15 +1,18 @@
 // ISR: revalidate 86400s (24h) — person 一覧ページ
 import Head from 'next/head';
 import Link from 'next/link';
-import Image from 'next/image';
+import { useState } from 'react';
 import type { GetStaticProps } from 'next';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
+import { Pagination } from '@/components/features/Pagination';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { getPersonsByRole, transformPerson } from '@/libs/api/wordpress';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
+
+const PER_PAGE = 20;
 
 type PersonListPageProps = {
   persons: Person[];
@@ -18,10 +21,20 @@ type PersonListPageProps = {
 
 const PersonListPage = ({ persons, locale }: PersonListPageProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
+  const [currentPage, setCurrentPage] = useState(1);
+
   // eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n
   const heading = loc === 'en' ? 'Person' : '人物';
   // eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n
   const description = loc === 'en' ? 'Actors and directors' : '俳優・監督一覧';
+
+  const totalPages = Math.ceil(persons.length / PER_PAGE);
+  const pagedPersons = persons.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <I18nProvider locale={loc}>
@@ -38,37 +51,31 @@ const PersonListPage = ({ persons, locale }: PersonListPageProps) => {
             ]}
           />
           <h1 className='mt-6 text-2xl font-bold'>{heading}</h1>
-          <ul className='mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4'>
-            {persons.map((person) => {
+          <ul className='mt-6 divide-y divide-[var(--color-border-muted)]'>
+            {pagedPersons.map((person) => {
               const name = loc === 'en' ? person.nameEn : person.nameJa;
               const href = getEntityUrl('person', person.slug, loc);
               return (
                 <li key={person.id}>
                   <Link
                     href={href}
-                    className='flex flex-col items-center gap-2 rounded-lg border border-color-border bg-color-bg p-4 no-underline transition-opacity hover:opacity-90'
+                    className='block py-3 text-sm text-color-primary no-underline hover:underline'
                   >
-                    {person.image ? (
-                      <Image
-                        src={person.image.url}
-                        alt={person.image.alt}
-                        width={80}
-                        height={80}
-                        className='rounded-full object-cover'
-                      />
-                    ) : (
-                      <span className='flex h-20 w-20 items-center justify-center rounded-full bg-[var(--color-surface-2)] font-bold text-2xl text-color-secondary'>
-                        {name.slice(0, 1)}
-                      </span>
-                    )}
-                    <span className='text-center font-ui text-sm font-medium text-color-primary leading-tight'>
-                      {name}
-                    </span>
+                    {name}
                   </Link>
                 </li>
               );
             })}
           </ul>
+          {totalPages > 1 && (
+            <div className='mt-8'>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </div>
       </PageLayout>
     </I18nProvider>
