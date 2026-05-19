@@ -1,19 +1,25 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getPostsPagedMerge, mapWPPostToPost } from '@/libs/api/wordpress';
+import { getPosts, mapWPPostToPost } from '@/libs/api/wordpress';
 import { pickRandom } from '@/libs/highscore';
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
 
 type ResponseData = PickUpPost[] | { error: string };
 
-/** スコア4以上の投稿からランダム5件を返す。ISR の Worker CPU 超過を避けるため CSR 専用エンドポイントとして分離。 */
+/**
+ * スコア4以上の投稿からランダム5件を返す。ISR の Worker CPU 超過を避けるため CSR 専用エンドポイントとして分離。
+ *
+ * getPostsPagedMerge は OpenAPI クライアント経由のため acf_format=standard が付かず
+ * acf.review_score が undefined になる。getPosts（生HTTP）を使い mapWPPostToPost 後の
+ * score で判定することで正しくフィルタできる。
+ */
 const handler = async (_req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
-  const all = await getPostsPagedMerge({ per_page: 100 }, 1);
+  const all = await getPosts({ per_page: 100 });
 
   const posts = pickRandom(
     all
-      .filter((p) => (p.acf?.review_score ?? 0) >= 4)
       .map((p) => mapWPPostToPost(p))
       .filter((m): m is NonNullable<typeof m> => m !== null)
+      .filter((m) => (m.score ?? 0) >= 4)
       .map((m) => ({
         slug: m.slug,
         title: m.title,
