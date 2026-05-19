@@ -33,17 +33,34 @@ export const loadCategoryListPage = async (
   if (!category) return { notFound: true };
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-  const rawPosts: WPPost[] = [];
-  let rawTotalPages = 1;
-  for (let rawPage = 1; rawPage <= rawTotalPages; rawPage += 1) {
-    const fetched = await getPostsWithMeta({
-      category: category.id,
-      page: rawPage,
-      per_page: 100,
-    });
-    if (!fetched) return { notFound: true };
-    rawPosts.push(...fetched.items);
-    rawTotalPages = Math.max(1, fetched.meta.totalPages);
+
+  // 1ページ目で totalPages を確定する
+  const first = await getPostsWithMeta({
+    category: category.id,
+    page: 1,
+    per_page: 100,
+  });
+  if (!first) return { notFound: true };
+  const rawTotalPages = Math.max(1, first.meta.totalPages);
+  const rawPosts: WPPost[] = [...first.items];
+
+  // 2ページ目以降は並列取得する（逐次だと記事数増加で WP API の合計待ち時間が膨らみ
+  // 1ページでもタイムアウトするとカテゴリ全体が 404 に落ちるため）
+  if (rawTotalPages > 1) {
+    const remainingPages = Array.from({ length: rawTotalPages - 1 }, (_, i) => i + 2);
+    const batches = await Promise.all(
+      remainingPages.map((rawPage) =>
+        getPostsWithMeta({
+          category: category.id,
+          page: rawPage,
+          per_page: 100,
+        }),
+      ),
+    );
+    if (batches.some((batch) => batch === null)) return { notFound: true };
+    for (const batch of batches) {
+      if (batch) rawPosts.push(...batch.items);
+    }
   }
 
   const normalizedPosts = normalizePosts(rawPosts, currentLocale);
