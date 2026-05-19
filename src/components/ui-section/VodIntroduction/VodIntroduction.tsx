@@ -1,5 +1,5 @@
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
-import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft';
+import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Post } from '@/types/post';
