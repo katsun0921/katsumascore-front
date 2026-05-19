@@ -75,6 +75,16 @@ export const getPersonTaxTermBySlug = async (
   return results?.[0] ?? null;
 };
 
+/** 全 persons を取得する（サイトマップ生成などの用途）。 */
+export const getPersons = async (
+  perPage = 100,
+  options?: WpFetchOptions,
+): Promise<WPPerson[]> =>
+  (await fetchPersons<WPPerson[]>(
+    `/persons?acf_format=standard&per_page=${perPage}`,
+    options,
+  )) ?? [];
+
 /** role で persons を取得する（actor / director）。 */
 export const getPersonsByRole = async (
   role: "actor" | "director",

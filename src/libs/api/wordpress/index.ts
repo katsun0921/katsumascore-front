@@ -38,7 +38,7 @@ export type { WPVodTerm } from "./endpoints/vodTaxonomy";
 
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
-export { getPerson, getPersonBySlug, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
+export { getPerson, getPersonBySlug, getPersons, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
 
 export { getCompany, getCompanyBySlug } from "./endpoints/companies";
 
