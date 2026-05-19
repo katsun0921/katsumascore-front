@@ -4,20 +4,14 @@
 // ISR: revalidate 300s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import {
-  genreDisplayLabel,
-  getGenres,
   getPostBySlug,
   getPosts,
-  getPostsPagedMerge,
   getRelatedPosts,
-  getPostsByActorTermId,
-  getPostsByPersonTermId,
   parseWPPostUnknown,
   mapWPPostToPost,
 } from '@/libs/api/wordpress';
 import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
-import { pickRandom } from '@/libs/highscore';
 import {
   buildPostDetailFromWp,
   buildActorTermIdMap,
@@ -25,23 +19,30 @@ import {
   extractPostsGroupSpecsFromWp,
   extractVodIntroductionRelatedPostsTermId,
 } from '@/libs/buildPostDetailFromWp';
+import { loadStaticGenreNavTags } from '@/libs/getStaticGenres';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 import type { PostDetailProps } from '@/components/templates/PostDetail/PostDetail.types';
 import type { Post } from '@/types/post';
 import type { TRelationPostItem } from '@/components/features/RelationPost';
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup';
 
+/** キャスト名 → termId / taxType のシリアライズ可能なマップエントリ */
+export type ActorTermEntry = {
+  actorName: string;
+  termId: number;
+  taxType: 'actor' | 'person';
+};
+
 export type PostDetailPageProps = {
   post: PostDetailProps['post'];
   locale: string;
   genres: GenreNavTag[];
-};
-
-/** 一覧用に `content` を除いた `Post` 形へ射影する。 */
-const toListPost = (m: Post & { content: string }): Post => {
-  const { content: _c, ...rest } = m;
-  void _c;
-  return rest;
+  /** CSR で otherWorks を取得するためのキャスト termId 情報 */
+  actorTermEntries: ActorTermEntry[];
+  /** 現在の記事 ID（otherWorks / vod-related フェッチ時に自記事を除外するため） */
+  postId: number;
+  /** CSR で VOD 関連記事を取得するための VOD ターム ID（存在する場合のみ） */
+  vodTermId?: number;
 };
 
 /** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: 'blocking'`。 */
@@ -109,97 +110,42 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
             const raw = relatedRaw.find((p) => p.id === id);
             if (!raw) return null;
             const m = mapWPPostToPost(raw);
-            return m ? toListPost(m) : null;
+            if (!m) return null;
+            const { content: _c, ...rest } = m;
+            void _c;
+            return rest as Post;
           })
           .filter((p): p is Post => p !== null),
       }))
       .filter((g) => g.posts.length > 0);
 
     const vodTermId = extractVodIntroductionRelatedPostsTermId(wpPost);
-    let vodRelatedPosts: Post[] | undefined;
-    if (vodTermId !== undefined) {
-      const vodFetched = await getPosts({ per_page: 12, vod: vodTermId });
-      const mapped = vodFetched
-        .filter((p) => p.id !== wpPost.id)
-        .map((p) => mapWPPostToPost(p))
-        .filter((m): m is NonNullable<typeof m> => m !== null)
-        .map(toListPost);
-      const picked = pickRandom(mapped, 3);
-      if (picked.length > 0) vodRelatedPosts = picked;
-    }
 
     const detail = buildPostDetailFromWp({
       wp: wpPost,
       locale: loc,
       relationPosts: relationPosts.length > 0 ? relationPosts : undefined,
       postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
-      vodRelatedPosts,
     });
     if (!detail) return { notFound: true, revalidate: 60 };
 
-    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する
+    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
     const actorTermIdMap = parsedForActors ? buildActorTermIdMap(parsedForActors) : new Map();
-
-    // キャストごとの他作品（フィルモグラフィー）をターム ID で並列取得して otherWorks に付与する
-    if (detail.actors && detail.actors.length > 0) {
-      detail.actors = await Promise.all(
-        detail.actors.map(async (actor) => {
-          if (!actor.actorName) return actor;
-          const termInfo = actorTermIdMap.get(actor.actorName.toLowerCase());
-          if (!termInfo) return actor;
-
-          const posts =
-            termInfo.taxType === 'actor'
-              ? await getPostsByActorTermId(termInfo.termId)
-              : await getPostsByPersonTermId(termInfo.termId);
-
-          const otherWorks = posts
-            .filter((p) => p.id !== wpPost.id)
-            .slice(0, 5)
-            .map((p) => {
-              const m = mapWPPostToPost(p);
-              if (!m) return null;
-              return {
-                title: m.title,
-                href: m.slug,
-                ...(m.score !== undefined ? { score: m.score } : {}),
-              };
-            })
-            .filter((w): w is NonNullable<typeof w> => w !== null);
-
-          if (otherWorks.length === 0) return actor;
-          return { ...actor, otherWorks };
-        }),
-      );
-    }
+    const actorTermEntries: ActorTermEntry[] = detail.actors
+      ? detail.actors
+          .filter((actor) => actor.actorName !== undefined)
+          .map((actor) => {
+            const termInfo = actorTermIdMap.get(actor.actorName!.toLowerCase());
+            if (!termInfo) return null;
+            return { actorName: actor.actorName!, termId: termInfo.termId, taxType: termInfo.taxType };
+          })
+          .filter((e): e is ActorTermEntry => e !== null)
+      : [];
 
     const toc = extractToc(detail.content);
 
-    const [allHighScore, allGenres] = await Promise.all([
-      getPostsPagedMerge({ per_page: 100 }, 1),
-      getGenres(),
-    ]);
-
-    const highScorePosts = pickRandom(
-      allHighScore
-        .filter((p) => (p.acf?.review_score ?? 0) >= 4)
-        .map((p) => mapWPPostToPost(p))
-        .filter((m): m is NonNullable<typeof m> => m !== null)
-        .map((mapped) => ({
-          slug: mapped.slug,
-          title: mapped.title,
-          ...(mapped.image ? { thumbnailUrl: mapped.image } : {}),
-          ...(mapped.score !== undefined ? { score: mapped.score } : {}),
-        })),
-      5,
-    );
-
-    const genres = allGenres.map((g) => ({
-      slug: g.slug,
-      name: genreDisplayLabel(g, loc),
-      count: g.count,
-    }));
+    const genres = await loadStaticGenreNavTags(loc);
 
     const excerptTrimmed = detail.excerpt.trim();
     const commentTrimmed = detail.authorComment?.trim() ?? "";
@@ -210,9 +156,12 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     return {
       props: {
-        post: { ...detail, toc, highScorePosts, profile },
+        post: { ...detail, toc, profile },
         locale: loc,
         genres,
+        actorTermEntries,
+        postId: wpPost.id,
+        ...(vodTermId !== undefined ? { vodTermId } : {}),
       },
       revalidate: 300,
     };

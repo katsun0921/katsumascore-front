@@ -1,0 +1,59 @@
+.vod-related-skeleton {
+  margin-top: 24px;
+
+  &__heading {
+    width: 60%;
+    height: 16px;
+    border-radius: 4px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-bg-muted) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+    border-top: 1px solid var(--color-border-muted);
+
+    &:first-child {
+      border-top: none;
+    }
+  }
+
+  &__thumb {
+    flex-shrink: 0;
+    width: 72px;
+    height: 72px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-bg-muted) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  &__line {
+    height: 12px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, var(--color-surface) 25%, var(--color-bg-muted) 50%, var(--color-surface) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s ease infinite;
+
+    &--long  { width: 80%; }
+    &--short { width: 50%; }
+  }
+}

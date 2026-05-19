@@ -14,6 +14,7 @@ export type SidebarProps = {
   // ❼ PICK UP / HIGH SCORE
   pickupPosts?: PickUpPost[]
   highScorePosts?: PickUpPost[]
+  highScoreLoading?: boolean
 
   // ❽ ジャンルナビ
   genres?: GenreNavTag[]

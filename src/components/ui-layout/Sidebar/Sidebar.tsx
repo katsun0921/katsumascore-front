@@ -16,6 +16,7 @@ export const Sidebar = ({
   relatedPosts,
   pickupPosts = [],
   highScorePosts = [],
+  highScoreLoading = false,
   genres,
   activeGenreSlug,
   relationPosts,
@@ -56,7 +57,7 @@ export const Sidebar = ({
       )}
 
       {/* PICK UP / HIGH SCORE */}
-      <PickUpAndScore pickupPosts={pickupPosts} highScorePosts={highScorePosts} />
+      <PickUpAndScore pickupPosts={pickupPosts} highScorePosts={highScorePosts} highScoreLoading={highScoreLoading} />
 
       {/* ジャンルナビ */}
       {genres && genres.length > 0 && (

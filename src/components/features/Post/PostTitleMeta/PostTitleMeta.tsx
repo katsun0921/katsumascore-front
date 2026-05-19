@@ -5,6 +5,8 @@ import { OfficialSns } from '@/components/features/OfficialSns';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
+import { useActorWorks } from './useActorWorks';
+import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 export type TStudioEntry = {
   name: string
   href?: string
@@ -25,7 +27,6 @@ export type TActor = {
   actorName?: string
   actorUrl?: string
   description?: string
-  otherWorks?: { title: string; href: string; character?: string; score?: number }[]
 }
 
 /** ACF 公式SNS1件（リンク / X・TikTok 等の埋め込みHTML） */
@@ -44,6 +45,10 @@ export type TTitleMetaProps = {
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
   actors?: TActor[]
+  /** CSR で otherWorks を取得するためのキャスト termId 情報 */
+  actorTermEntries?: ActorTermEntry[]
+  /** otherWorks フェッチ時に自記事を除外するための記事 ID */
+  postId?: number
 }
 
 export const TitleMeta = ({
@@ -53,8 +58,11 @@ export const TitleMeta = ({
   officialSns,
   credits,
   actors,
+  actorTermEntries,
+  postId,
 }: TTitleMetaProps) => {
   const locale = useLocale();
+  const { worksMap, loading: actorWorksLoading } = useActorWorks(actorTermEntries ?? [], postId ?? 0);
   let parsedDate: string | null = null;
   if (releaseDate && releaseDate.length === 8) {
     const y = releaseDate.slice(0, 4);
@@ -136,25 +144,48 @@ export const TitleMeta = ({
                 {actor.description && (
                   <p className='mt-2 text-color-secondary leading-[1.6]'>{actor.description}</p>
                 )}
-                {actor.otherWorks && actor.otherWorks.length > 0 && (
-                  <div className='flex gap-2 overflow-x-auto pt-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-                    {actor.otherWorks.map((work, j) => (
-                      <Link
-                        key={j}
-                        href={work.href}
-                        className='block basis-[120px] shrink-0 rounded-[12px] border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.04)] px-3 py-2 no-underline transition-[border-color,background] duration-200 ease-in-out hover:border-accent hover:bg-[rgba(var(--color-secondary-rgb),0.08)]'
-                      >
-                        <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
-                        {work.score !== undefined && (
-                          <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
-                        )}
-                        {work.character && (
-                          <span className='mt-1 block overflow-hidden text-ellipsis whitespace-nowrap text-ui text-color-secondary'>{work.character}</span>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                {actor.actorName && (() => {
+                  const key = actor.actorName.toLowerCase();
+                  const hasTermEntry = actorTermEntries?.some((e) => e.actorName.toLowerCase() === key);
+                  const works = worksMap.get(key);
+
+                  if (actorWorksLoading && hasTermEntry) {
+                    // ローディング中：横スクロール領域の高さを確保するスケルトン
+                    return (
+                      <div className='flex gap-2 pt-3 pb-2 overflow-hidden' aria-hidden='true'>
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className='basis-[120px] shrink-0 h-16 rounded-[12px]'
+                            style={{
+                              background: 'linear-gradient(90deg, rgba(var(--color-secondary-rgb),0.08) 25%, rgba(var(--color-secondary-rgb),0.15) 50%, rgba(var(--color-secondary-rgb),0.08) 75%)',
+                              backgroundSize: '200% 100%',
+                              animation: 'skeleton-shimmer 1.4s ease infinite',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    );
+                  }
+
+                  if (!works || works.length === 0) return null;
+                  return (
+                    <div className='flex gap-2 overflow-x-auto pt-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                      {works.map((work, j) => (
+                        <Link
+                          key={j}
+                          href={work.href}
+                          className='block basis-[120px] shrink-0 rounded-[12px] border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.04)] px-3 py-2 no-underline transition-[border-color,background] duration-200 ease-in-out hover:border-accent hover:bg-[rgba(var(--color-secondary-rgb),0.08)]'
+                        >
+                          <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
+                          {work.score !== undefined && (
+                            <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             ))}
           </div>

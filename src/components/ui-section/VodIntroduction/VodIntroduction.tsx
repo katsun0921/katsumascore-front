@@ -4,6 +4,7 @@ import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Post } from '@/types/post';
 import { messages } from './i18n';
+import './VodIntroduction.scss';
 
 type TWrittenFrom = { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
 
@@ -13,15 +14,37 @@ export type TVodIntroductionProps = {
   publishedAt: string
   updatedAt?: string
   relatedPosts?: Post[]
+  /** CSR フェッチ中は true。スケルトンを表示してレイアウトシフトを防ぐ */
+  relatedPostsLoading?: boolean
   /** ACF `streaming_vod_watched_vod_affiliate_code`（テーマでは生 HTML を出力） */
   affiliateHtml?: string
 }
+
+const SKELETON_COUNT = 3;
+
+const VodRelatedSkeleton = () => (
+  <div className='vod-related-skeleton' aria-hidden='true'>
+    <div className='vod-related-skeleton__heading' />
+    <div className='vod-related-skeleton__list'>
+      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+        <div key={i} className='vod-related-skeleton__card'>
+          <div className='vod-related-skeleton__thumb' />
+          <div className='vod-related-skeleton__body'>
+            <div className='vod-related-skeleton__line vod-related-skeleton__line--long' />
+            <div className='vod-related-skeleton__line vod-related-skeleton__line--short' />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 export const VodIntroduction = ({
   title,
   writtenFrom,
   publishedAt,
   relatedPosts = [],
+  relatedPostsLoading = false,
   affiliateHtml,
 }: TVodIntroductionProps) => {
   const locale = useLocale();
@@ -93,7 +116,9 @@ export const VodIntroduction = ({
           publishedAt
         }} />
       )}
-      {relatedPosts.length > 0 && (
+      {relatedPostsLoading ? (
+        <VodRelatedSkeleton />
+      ) : relatedPosts.length > 0 ? (
         <div className='mt-6'>
           <h3 className='font-heading text-body font-bold mb-3'>
             {text(['vod', 'relatedHeading', 'prefix'])}
@@ -102,7 +127,7 @@ export const VodIntroduction = ({
           </h3>
           <PostCardListVertical posts={relatedPosts} />
         </div>
-      )}
+      ) : null}
       <p className='text-ui text-color-secondary mt-4 font-bold'>
         {text(['vod', 'note', 'prefix'])}
         {dateStr}

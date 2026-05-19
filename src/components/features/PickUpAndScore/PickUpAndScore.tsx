@@ -18,6 +18,8 @@ export type PickUpPost = {
 export type PickUpAndScoreProps = {
   pickupPosts: PickUpPost[]
   highScorePosts: PickUpPost[]
+  /** CSR フェッチ中は true。スケルトンを表示してレイアウトシフトを防ぐ */
+  highScoreLoading?: boolean
 }
 
 type Tab = 'pickup' | 'highscore'
@@ -64,15 +66,38 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
   );
 };
 
+const SKELETON_COUNT = 5;
+
+const PickUpAndScoreSkeleton = () => (
+  <div className='sidebar-picks'>
+    <div className='sidebar-picks__skeleton-tab' aria-hidden='true' />
+    <ul className='sidebar-picks__skeleton-list'>
+      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
+        <li key={i} className='sidebar-picks__skeleton-item'>
+          <div className='sidebar-picks__skeleton-thumb' />
+          <div className='sidebar-picks__skeleton-body'>
+            <div className='sidebar-picks__skeleton-line sidebar-picks__skeleton-line--long' />
+            <div className='sidebar-picks__skeleton-line sidebar-picks__skeleton-line--short' />
+          </div>
+        </li>
+      ))}
+    </ul>
+  </div>
+);
+
 export const PickUpAndScore = ({
   pickupPosts,
   highScorePosts,
+  highScoreLoading = false,
 }: PickUpAndScoreProps) => {
   const locale = useLocale();
 
   // PICK UP が空なら HIGH SCORE をデフォルトタブにする
   const defaultTab: Tab = pickupPosts.length > 0 ? 'pickup' : 'highscore';
   const [activeTab, setActiveTab] = useState<Tab>(defaultTab);
+
+  // ローディング中はスケルトンを表示（レイアウトシフト防止）
+  if (highScoreLoading && pickupPosts.length === 0) return <PickUpAndScoreSkeleton />;
 
   // 両方空なら非表示
   if (pickupPosts.length === 0 && highScorePosts.length === 0) return null;
