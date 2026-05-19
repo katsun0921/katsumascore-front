@@ -8,6 +8,12 @@ type OtherWork = { title: string; href: string; score?: number };
 /** キャスト名 → otherWorks の CSR フェッチ結果マップ */
 export type ActorWorksMap = Map<string, OtherWork[]>;
 
+export type ActorWorksState = {
+  worksMap: ActorWorksMap;
+  /** キャストが存在する場合にフェッチが完了するまで true */
+  loading: boolean;
+};
+
 /**
  * キャストのフィルモグラフィー（otherWorks）をクライアントサイドで並列取得する。
  * ISR 時の Worker CPU 超過を避けるために Server 側フェッチから分離。
@@ -15,8 +21,9 @@ export type ActorWorksMap = Map<string, OtherWork[]>;
 export const useActorWorks = (
   actorTermEntries: ActorTermEntry[],
   postId: number,
-): ActorWorksMap => {
+): ActorWorksState => {
   const [worksMap, setWorksMap] = useState<ActorWorksMap>(new Map());
+  const [loading, setLoading] = useState(actorTermEntries.length > 0);
 
   useEffect(() => {
     if (actorTermEntries.length === 0) return;
@@ -42,10 +49,11 @@ export const useActorWorks = (
         if (entry) map.set(entry[0], entry[1]);
       }
       setWorksMap(map);
+      setLoading(false);
     };
 
     void fetchAll();
   }, [actorTermEntries, postId]);
 
-  return worksMap;
+  return { worksMap, loading };
 };

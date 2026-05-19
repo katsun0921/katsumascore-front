@@ -8,7 +8,7 @@ import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getGenres } from '@/libs/api/wordpress';
+import { loadStaticGenres } from '@/libs/getStaticGenres';
 import { loadGenreListPage } from '@/libs/loadGenreListPage';
 import { getTaxonomyUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
@@ -73,7 +73,7 @@ export default GenrePage;
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   const paths = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
-    const genres = await getGenres();
+    const genres = await loadStaticGenres();
     for (const genre of genres) {
       paths.push({ params: { slug: genre.slug }, locale: loc });
     }

@@ -62,7 +62,7 @@ export const TitleMeta = ({
   postId,
 }: TTitleMetaProps) => {
   const locale = useLocale();
-  const worksMap = useActorWorks(actorTermEntries ?? [], postId ?? 0);
+  const { worksMap, loading: actorWorksLoading } = useActorWorks(actorTermEntries ?? [], postId ?? 0);
   let parsedDate: string | null = null;
   if (releaseDate && releaseDate.length === 8) {
     const y = releaseDate.slice(0, 4);
@@ -144,22 +144,48 @@ export const TitleMeta = ({
                 {actor.description && (
                   <p className='mt-2 text-color-secondary leading-[1.6]'>{actor.description}</p>
                 )}
-                {actor.actorName && worksMap.get(actor.actorName.toLowerCase()) && (
-                  <div className='flex gap-2 overflow-x-auto pt-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
-                    {worksMap.get(actor.actorName.toLowerCase())!.map((work, j) => (
-                      <Link
-                        key={j}
-                        href={work.href}
-                        className='block basis-[120px] shrink-0 rounded-[12px] border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.04)] px-3 py-2 no-underline transition-[border-color,background] duration-200 ease-in-out hover:border-accent hover:bg-[rgba(var(--color-secondary-rgb),0.08)]'
-                      >
-                        <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
-                        {work.score !== undefined && (
-                          <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
-                        )}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                {actor.actorName && (() => {
+                  const key = actor.actorName.toLowerCase();
+                  const hasTermEntry = actorTermEntries?.some((e) => e.actorName.toLowerCase() === key);
+                  const works = worksMap.get(key);
+
+                  if (actorWorksLoading && hasTermEntry) {
+                    // ローディング中：横スクロール領域の高さを確保するスケルトン
+                    return (
+                      <div className='flex gap-2 pt-3 pb-2 overflow-hidden' aria-hidden='true'>
+                        {[1, 2, 3].map((i) => (
+                          <div
+                            key={i}
+                            className='basis-[120px] shrink-0 h-16 rounded-[12px]'
+                            style={{
+                              background: 'linear-gradient(90deg, rgba(var(--color-secondary-rgb),0.08) 25%, rgba(var(--color-secondary-rgb),0.15) 50%, rgba(var(--color-secondary-rgb),0.08) 75%)',
+                              backgroundSize: '200% 100%',
+                              animation: 'skeleton-shimmer 1.4s ease infinite',
+                            }}
+                          />
+                        ))}
+                      </div>
+                    );
+                  }
+
+                  if (!works || works.length === 0) return null;
+                  return (
+                    <div className='flex gap-2 overflow-x-auto pt-3 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                      {works.map((work, j) => (
+                        <Link
+                          key={j}
+                          href={work.href}
+                          className='block basis-[120px] shrink-0 rounded-[12px] border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.04)] px-3 py-2 no-underline transition-[border-color,background] duration-200 ease-in-out hover:border-accent hover:bg-[rgba(var(--color-secondary-rgb),0.08)]'
+                        >
+                          <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
+                          {work.score !== undefined && (
+                            <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  );
+                })()}
               </div>
             ))}
           </div>

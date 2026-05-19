@@ -84,4 +84,5 @@ export type PostDetailProps = {
   genres?: GenreNavTag[]
   actorTermEntries?: ActorTermEntry[]
   postId?: number
+  vodTermId?: number
 }
