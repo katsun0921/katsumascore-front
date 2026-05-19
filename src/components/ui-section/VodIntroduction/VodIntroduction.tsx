@@ -4,7 +4,6 @@ import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import type { Post } from '@/types/post';
 import { messages } from './i18n';
-import './VodIntroduction.scss';
 
 type TWrittenFrom = { type: 'vod'; vodName: string; vodUrl: string; vodImageUrl?: string }
 
