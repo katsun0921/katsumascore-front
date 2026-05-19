@@ -93,6 +93,7 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
   const mergedPosts: Post[] = [];
   for (const wpPost of [...directorPosts, ...actorPosts]) {
     const post = mapWPPostToPost(wpPost);
+    if (!post) continue;
     if (!seenIds.has(post.id)) {
       seenIds.add(post.id);
       mergedPosts.push(post);
