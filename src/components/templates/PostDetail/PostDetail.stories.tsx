@@ -54,9 +54,6 @@ const basePost: PostDetailData = {
       character: '山音麦',
       actorName: '菅田将暉',
       description: '就活をせず映画・音楽・本に埋もれて生きる青年。',
-      otherWorks: [
-        { title: '銀魂', href: '/posts/gintama', character: '坂田銀時' },
-      ],
     },
     {
       character: '八谷絹',
