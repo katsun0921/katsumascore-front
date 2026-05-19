@@ -41,7 +41,7 @@ const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
   return (
     <I18nProvider locale={loc}>
       <Head>
-        <title>{`${displayName}（${altName}）| KatsumaScore`}</title>
+        <title>{altName ? `${displayName}（${altName}）| KatsumaScore` : `${displayName} | KatsumaScore`}</title>
         <meta name='description' content={description} />
         <link
           rel='canonical'
