@@ -49,27 +49,14 @@ export const WithActors: Story = {
         actorName: 'レオナルド・ディカプリオ',
         character: 'コブ',
         description: '企業スパイ。夢の中に侵入し情報を盗む専門家。',
-        otherWorks: [
-          { title: 'インセプション', href: '/posts/inception', score: 9.0 },
-          { title: 'ダークナイト', href: '/posts/dark-knight', score: 9.5 },
-          { title: 'インターステラー', href: '/posts/interstellar', score: 8.8 },
-        ],
       },
       {
         actorName: 'エミリー・ブラント',
         character: 'キャサリン',
-        otherWorks: [
-          { title: 'クワイエット・プレイス', href: '/posts/quiet-place' },
-          { title: 'オール・ユー・ニード・イズ・キル', href: '/posts/all-you-need-is-kill' },
-        ],
       },
       {
         actorName: 'ロバート・ダウニー・Jr',
         description: 'マーベル作品で広く知られる。',
-        otherWorks: [
-          { title: 'アイアンマン', href: '/posts/iron-man' },
-          { title: 'アベンジャーズ', href: '/posts/avengers' },
-        ],
       },
     ],
   },
@@ -85,19 +72,10 @@ export const CreditsAndActors: Story = {
       {
         actorName: '花江夏樹',
         character: '竈門炭治郎',
-        otherWorks: [
-          { title: '東京喰種', href: '/posts/tokyo-ghoul' },
-          { title: 'ノーゲーム・ノーライフ', href: '/posts/no-game-no-life' },
-        ],
       },
       {
         actorName: '鬼頭明里',
         character: '竈門禰豆子',
-        otherWorks: [
-          { title: '僕のヒーローアカデミア', href: '/posts/mha' },
-          { title: '五等分の花嫁', href: '/posts/gotoubun' },
-          { title: 'ヴァイオレット・エヴァーガーデン', href: '/posts/violet' },
-        ],
       },
     ],
     officialUrl: 'https://kimetsu.com',
