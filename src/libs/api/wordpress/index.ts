@@ -15,6 +15,7 @@ export {
   getPostsByActorTermId,
   getPostsByDirectorTermId,
   getPostsByPersonTermId,
+  getPostsByFranchiseTermId,
 } from "./endpoints/posts";
 
 export {
@@ -41,6 +42,14 @@ export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/page
 export { getPerson, getPersonBySlug, getPersons, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
 
 export { getCompany, getCompanyBySlug } from "./endpoints/companies";
+
+export {
+  getFranchises,
+  getAllFranchiseSlugs,
+  getFranchiseBySlug,
+  transformFranchise,
+} from "./endpoints/franchise";
+export type { WPFranchiseTerm, WPFranchiseAcf } from "./endpoints/franchise";
 
 export {
   stripHtml,

@@ -33,6 +33,8 @@ type PostsQuery = {
   director?: number;
   /** カスタム taxonomy `person` のターム ID（フィルモグラフィー取得用） */
   person?: number;
+  /** カスタム taxonomy `franchise` のターム ID（シリーズ特集ページ用） */
+  franchise?: number;
   slug?: string;
   search?: string;
   include?: string;
@@ -49,6 +51,7 @@ type PostsParams = {
   actor?: number;
   director?: number;
   person?: number;
+  franchise?: number;
 };
 
 /** 呼び出し側の `category` / `tags` 等を WP REST の `categories` / `tags` クエリに写す。 */
@@ -63,6 +66,7 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   if (params.actor !== undefined) q.actor = params.actor;
   if (params.director !== undefined) q.director = params.director;
   if (params.person !== undefined) q.person = params.person;
+  if (params.franchise !== undefined) q.franchise = params.franchise;
   return q;
 };
 
@@ -81,6 +85,7 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   if (q.actor !== undefined) sp.set("actor", String(q.actor));
   if (q.director !== undefined) sp.set("director", String(q.director));
   if (q.person !== undefined) sp.set("person", String(q.person));
+  if (q.franchise !== undefined) sp.set("franchise", String(q.franchise));
   if (q.slug) sp.set("slug", q.slug);
   if (q.search) sp.set("search", q.search);
   if (q.include) sp.set("include", q.include);
@@ -129,7 +134,7 @@ const fetchPosts = async (
   if (isWpMockMode()) {
     return mockWpPostsList(query);
   }
-  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined) {
+  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined || query.franchise !== undefined) {
     const paged = await fetchPostsWithMetaOverHttp(query, options);
     return paged?.items ?? null;
   }
@@ -170,7 +175,7 @@ const fetchPostsWithMeta = async (
   if (isWpMockMode()) {
     return mockWpPostsPaged(query);
   }
-  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined) return fetchPostsWithMetaOverHttp(query, options);
+  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined || query.franchise !== undefined) return fetchPostsWithMetaOverHttp(query, options);
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -315,3 +320,10 @@ export const getPostsByPersonTermId = async (
   perPage = 6,
   options?: WpFetchOptions,
 ): Promise<WPPost[]> => getPosts({ person: termId, per_page: perPage }, options);
+
+/** franchise タクソノミーのターム ID で絞った投稿一覧（シリーズ特集ページ用）。 */
+export const getPostsByFranchiseTermId = async (
+  termId: number,
+  perPage = 100,
+  options?: WpFetchOptions,
+): Promise<WPPost[]> => getPosts({ franchise: termId, per_page: perPage }, options);

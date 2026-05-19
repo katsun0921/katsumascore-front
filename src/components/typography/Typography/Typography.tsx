@@ -55,6 +55,7 @@ const textAndFeatureColors: Swatch[] = [
   { name: 'Accent Yellow', token: '--color-accent-yellow', value: '#eab308' },
   { name: 'Score BG', token: '--color-score-bg', value: '#14082e', textColor: '#ffffff' },
   { name: 'Score Accent', token: '--color-score-accent', value: '#ff2dfc' },
+  { name: 'Accent Soft', token: '--color-accent-soft', value: '#c084fc' },
   { name: 'Score Rank Low', token: '--color-score-rank-low', value: '#64748b' },
   { name: 'Score Rank Mid', token: '--color-score-rank-mid', value: '#2563eb' },
   { name: 'Score Rank High', token: '--color-score-rank-high', value: '#c026d3' },
