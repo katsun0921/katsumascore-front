@@ -6,7 +6,8 @@ import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
 import type { Post } from "@/types/post";
-import { getScoreRank } from "@/types/wordpress";
+import { getRankingIcon } from "@/components/features/ScoreWithRank/getRankingIcon";
+import type { ScoreRank } from "@/types/wordpress";
 import {
   getPosts,
   getCategoriesForArchiveResolve,
@@ -24,17 +25,9 @@ import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
 
-/**
- * レビュースコアをヒーロー表示用の 1〜5 の整数ランクに正規化する。
- * `undefined` や範囲外の数値は表示崩れを避けるため 3（中央）として扱う。
- *
- * @param score — ACF のレビュースコア（1〜5）。欠損可。
- * @returns 1 / 2 / 3 / 4 / 5 のいずれか。
- */
-const rankFromScore = (score: number | undefined): 1 | 2 | 3 | 4 | 5 => {
-  if (score === 1 || score === 2 || score === 3 || score === 4 || score === 5) return score;
-  return 3;
-};
+/** スコア（小数可）からヒーロー表示用の ScoreRank を返す。範囲外は 'A'（中央）。 */
+const rankFromScore = (score: number | undefined): ScoreRank =>
+  getRankingIcon(score ?? 3)?.label ?? 'A';
 
 /**
  * TOP 用 `Post` 配列をスコアの高い順に並べ替えるための比較関数。
@@ -106,8 +99,8 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
     return {
       title: p.title,
       copy: p.excerpt.length > 0 ? p.excerpt : p.title,
-      score: p.score ?? rs,
-      rank: getScoreRank(rs),
+      score: p.score ?? 3,
+      rank: rs,
       href: p.slug,
       image: p.image ?? "/images/mock-image.webp",
     };
