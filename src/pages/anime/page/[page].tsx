@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — アニメ一覧 2 ページ目以降。公開 URL は /anime?page=N（rewrite で本ファイルに到達）
+// ISR: revalidate 600s — アニメ一覧 2 ページ目以降。allPosts は CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -15,6 +15,7 @@ import type { Locale } from '@/i18n/t';
 import { WP_ANIME_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { ANIME_LIST_PER_PAGE } from '@/libs/listFilters';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
+import { useCategoryFilterPosts } from '@/libs/useCategoryFilterPosts';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,
@@ -24,12 +25,11 @@ import {
   paginatePosts,
 } from '@/libs/listFilters';
 import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
-import type { FilterPost, Post } from '@/types/post';
+import type { Post } from '@/types/post';
 
 type AnimePagedProps = {
   categoryName: string;
   posts: Post[];
-  allPosts: FilterPost[];
   currentPage: number;
   totalPages: number;
   locale: string;
@@ -38,19 +38,24 @@ type AnimePagedProps = {
 const AnimePagedPage = ({
   categoryName,
   posts,
-  allPosts,
   currentPage,
+  totalPages,
   locale,
 }: AnimePagedProps) => {
   const router = useRouter();
+  const loc = normalizeRouteLocale(locale) as Locale;
+  const { allPosts, isLoading } = useCategoryFilterPosts(WP_ANIME_CATEGORY_SLUG, loc, ANIME_LIST_PER_PAGE);
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
   const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
   const filteredIds = paginatePosts(filteredAll, currentPage, ANIME_LIST_PER_PAGE).map((p) => p.id);
-  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / ANIME_LIST_PER_PAGE));
-  const loc = normalizeRouteLocale(locale) as Locale;
+  const pagedPosts = isLoading
+    ? posts
+    : filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
+  const filteredTotalPages = isLoading
+    ? totalPages
+    : Math.max(1, Math.ceil(filteredAll.length / ANIME_LIST_PER_PAGE));
   const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'anime', lang: loc, page: currentPage })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
@@ -93,6 +98,7 @@ const AnimePagedPage = ({
         currentPage={currentPage}
         totalPages={filteredTotalPages}
         onPageChange={handlePageChange}
+        isLoading={isLoading}
       />
     </I18nProvider>
   );
@@ -112,14 +118,13 @@ export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, 
   if (!Number.isFinite(pageNum) || pageNum < 2) return { notFound: true };
 
   const currentLocale = normalizeRouteLocale(locale);
-  const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, pageNum);
+  const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, pageNum, ANIME_LIST_PER_PAGE);
   if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {
       categoryName: data.categoryName,
       posts: data.posts,
-      allPosts: data.allPosts,
       currentPage: data.currentPage,
       totalPages: data.totalPages,
       locale: currentLocale,

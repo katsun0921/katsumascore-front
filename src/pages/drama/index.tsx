@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — ドラマカテゴリ記事一覧（/drama, /en/drama）
+// ISR: revalidate 600s — ドラマカテゴリ記事一覧（/drama, /en/drama）。allPosts は CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -15,6 +15,7 @@ import type { Locale } from '@/i18n/t';
 import { WP_DRAMA_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { CATEGORY_LIST_PER_PAGE } from '@/libs/listFilters';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
+import { useCategoryFilterPosts } from '@/libs/useCategoryFilterPosts';
 import {
   filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,
@@ -24,12 +25,11 @@ import {
   paginatePosts,
 } from '@/libs/listFilters';
 import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
-import type { FilterPost, Post } from '@/types/post';
+import type { Post } from '@/types/post';
 
 type DramaIndexProps = {
   categoryName: string;
   posts: Post[];
-  allPosts: FilterPost[];
   currentPage: number;
   totalPages: number;
   locale: string;
@@ -37,20 +37,25 @@ type DramaIndexProps = {
 
 const DramaIndexPage = ({
   categoryName,
-  allPosts,
+  posts,
   currentPage,
+  totalPages,
   locale,
-posts,
 }: DramaIndexProps) => {
   const router = useRouter();
+  const loc = normalizeRouteLocale(locale) as Locale;
+  const { allPosts, isLoading } = useCategoryFilterPosts(WP_DRAMA_CATEGORY_SLUG, loc, CATEGORY_LIST_PER_PAGE);
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
   const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
   const filteredIds = paginatePosts(filteredAll, currentPage, CATEGORY_LIST_PER_PAGE).map((p) => p.id);
-  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / CATEGORY_LIST_PER_PAGE));
-  const loc = normalizeRouteLocale(locale) as Locale;
+  const pagedPosts = isLoading
+    ? posts
+    : filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
+  const filteredTotalPages = isLoading
+    ? totalPages
+    : Math.max(1, Math.ceil(filteredAll.length / CATEGORY_LIST_PER_PAGE));
   const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'drama', lang: loc, page: 1 })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
@@ -93,6 +98,7 @@ posts,
         currentPage={currentPage}
         totalPages={filteredTotalPages}
         onPageChange={handlePageChange}
+        isLoading={isLoading}
       />
     </I18nProvider>
   );
@@ -102,15 +108,13 @@ export default DramaIndexPage;
 
 export const getStaticProps: GetStaticProps<DramaIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
-  const dramaSlug = WP_DRAMA_CATEGORY_SLUG;
-  const data = await loadCategoryListPage(dramaSlug, currentLocale, 1);
+  const data = await loadCategoryListPage(WP_DRAMA_CATEGORY_SLUG, currentLocale, 1);
   if ('notFound' in data) return { notFound: true, revalidate: 60 };
 
   return {
     props: {
       categoryName: data.categoryName,
       posts: data.posts,
-      allPosts: data.allPosts,
       currentPage: data.currentPage,
       totalPages: data.totalPages,
       locale: currentLocale,
