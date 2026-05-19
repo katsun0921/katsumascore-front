@@ -7,15 +7,15 @@ const renderedBlock = z.object({
   rendered: z.string(),
 });
 
-/** ACF review_score: coerce; omit when missing or out of 1–5 */
+/** ACF review_score: coerce; 小数点第1位まで保持（1.0〜5.0）。範囲外は omit。 */
 const optionalReviewScore = z.preprocess((arg: unknown) => {
   if (arg == null || arg === "") return undefined;
   const n = typeof arg === "string" ? Number.parseFloat(arg) : Number(arg);
   if (!Number.isFinite(n)) return undefined;
-  const r = Math.round(n);
+  const r = Math.round(n * 10) / 10;
   if (r < 1 || r > 5) return undefined;
   return r;
-}, z.union([z.literal(1), z.literal(2), z.literal(3), z.literal(4), z.literal(5)]).optional());
+}, z.number().min(1).max(5).optional());
 
 const featuredMediaItemSchema = z
   .object({
