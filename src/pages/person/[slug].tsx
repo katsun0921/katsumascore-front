@@ -24,7 +24,9 @@ type PersonPageProps = {
 
 const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
-  const displayName = loc === 'en' ? person.nameEn : person.nameJa;
+  const displayName = loc === 'en'
+    ? (person.nameEn || person.nameJa)
+    : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
   const description = person.bio
     ? person.bio.slice(0, 120)
@@ -39,7 +41,7 @@ const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
   return (
     <I18nProvider locale={loc}>
       <Head>
-        <title>{`${displayName}（${altName}）| KatsumaScore`}</title>
+        <title>{altName ? `${displayName}（${altName}）| KatsumaScore` : `${displayName} | KatsumaScore`}</title>
         <meta name='description' content={description} />
         <link
           rel='canonical'

@@ -1,6 +1,6 @@
 // SSR: WPデータを含む XML sitemap をリクエスト時に生成。Cache-Control でエッジキャッシュに乗せる
 import type { GetServerSideProps } from 'next';
-import { getPosts, getCategoriesForArchiveResolve, getChildPages } from '@/libs/api/wordpress';
+import { getPosts, getCategoriesForArchiveResolve, getChildPages, getPersons } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
@@ -18,10 +18,11 @@ const escapeXml = (str: string): string =>
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
-  const [posts, categories, seasonal] = await Promise.all([
+  const [posts, categories, seasonal, persons] = await Promise.all([
     getPosts({ per_page: 100 }),
     getCategoriesForArchiveResolve(),
     seasonalParentId ? getChildPages(seasonalParentId) : Promise.resolve([]),
+    getPersons(100),
   ]);
 
   const staticPaths: SitemapItem[] = [
@@ -70,6 +71,16 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       lastmod: new Date(p.modified ?? p.date).toISOString(),
       changefreq: 'monthly',
       priority: 0.55,
+    })),
+    ...persons.map((p) => ({
+      loc: `${SITE_URL}/ja/person/${p.acf.slug ?? p.slug}`,
+      changefreq: 'monthly',
+      priority: 0.5,
+    })),
+    ...persons.map((p) => ({
+      loc: `${SITE_URL}/en/person/${p.acf.slug ?? p.slug}`,
+      changefreq: 'monthly',
+      priority: 0.5,
     })),
   ];
 
