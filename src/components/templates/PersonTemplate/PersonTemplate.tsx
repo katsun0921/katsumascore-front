@@ -17,7 +17,9 @@ type PersonTemplateProps = {
 
 export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplateProps) => {
   const locale = useLocale();
-  const displayName = locale === 'en' ? person.nameEn : person.nameJa;
+  const displayName = locale === 'en'
+    ? (person.nameEn || person.nameJa)
+    : (person.nameJa || person.nameEn);
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
 
   return (
