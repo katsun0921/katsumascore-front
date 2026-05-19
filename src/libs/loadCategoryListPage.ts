@@ -21,6 +21,9 @@ export type CategoryListPageResult =
       totalPages: number;
     };
 
+// _embed=1 付き 100件取得はデフォルト 3s では足りないため 10s に拡張する
+const POSTS_FETCH_OPTIONS = { timeoutMs: 10000, maxRetries: 1 } as const;
+
 /** カテゴリ `slug` の一覧をページ分割して返す。存在しないカテゴリやページ範囲外は `notFound`。 */
 export const loadCategoryListPage = async (
   slug: string,
@@ -28,7 +31,7 @@ export const loadCategoryListPage = async (
   page: number,
 ): Promise<CategoryListPageResult> => {
   const currentLocale = locale === "en" ? "en" : "ja";
-  const categories = await getCategoriesForArchiveResolve();
+  const categories = await getCategoriesForArchiveResolve(POSTS_FETCH_OPTIONS);
   const category = categories.find((c) => c.slug === slug);
   if (!category) return { notFound: true };
 
@@ -39,7 +42,7 @@ export const loadCategoryListPage = async (
     category: category.id,
     page: 1,
     per_page: 100,
-  });
+  }, POSTS_FETCH_OPTIONS);
   if (!first) return { notFound: true };
   const rawTotalPages = Math.max(1, first.meta.totalPages);
   const rawPosts: WPPost[] = [...first.items];
@@ -54,7 +57,7 @@ export const loadCategoryListPage = async (
           category: category.id,
           page: rawPage,
           per_page: 100,
-        }),
+        }, POSTS_FETCH_OPTIONS),
       ),
     );
     if (batches.some((batch) => batch === null)) return { notFound: true };
