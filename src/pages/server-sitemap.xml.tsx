@@ -73,7 +73,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       priority: 0.55,
     })),
     ...persons.map((p) => ({
-      loc: `${SITE_URL}/person/${p.acf.slug ?? p.slug}`,
+      loc: `${SITE_URL}/ja/person/${p.acf.slug ?? p.slug}`,
       changefreq: 'monthly',
       priority: 0.5,
     })),
