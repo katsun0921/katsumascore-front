@@ -15,12 +15,15 @@ export type VodRelatedPostsState = {
 
 export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number): VodRelatedPostsState => {
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(vodTermId !== undefined);
+  // SSR/CSR ハイドレーション不一致（React #418）を防ぐため初期値は false。
+  // マウント後の useEffect でフェッチ開始時に true にセットする。
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (vodTermId === undefined) return;
 
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/vod-related?termId=${vodTermId}&excludeId=${postId}`);
         if (!res.ok) return;
