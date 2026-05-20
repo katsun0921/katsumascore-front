@@ -228,6 +228,38 @@ export const transformFranchise = (
 export const getFranchises = async (options?: WpFetchOptions): Promise<WPFranchiseTerm[]> =>
   (await fetchFranchises(options)) ?? [];
 
+/** 投稿 ID に紐付く franchise タームを取得する。失敗時は空配列。 */
+export const getFranchiseTermsByPostId = async (
+  postId: number,
+  options?: WpFetchOptions,
+): Promise<WPFranchiseTerm[]> => {
+  if (!wpApiBaseUrl) return [];
+  const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
+  for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const u = new URL(`${wpApiBaseUrl}/${FRANCHISE_REST_PATH}`);
+      u.searchParams.set("post", String(postId));
+      u.searchParams.set("per_page", "100");
+      u.searchParams.set("acf_format", "standard");
+      const res = await fetch(u.toString(), { signal: controller.signal });
+      clearTimeout(timeoutId);
+      if (!res.ok) {
+        if (!shouldRetryStatus(res.status) || attempt === maxRetries) return [];
+        await sleep(initialBackoffMs * 2 ** attempt);
+        continue;
+      }
+      return parseFranchiseList(await res.json());
+    } catch {
+      clearTimeout(timeoutId);
+      if (attempt === maxRetries) return [];
+      await sleep(initialBackoffMs * 2 ** attempt);
+    }
+  }
+  return [];
+};
+
 /** ISR 静的パス生成用に全 franchise スラッグを返す。失敗時は空配列。 */
 export const getAllFranchiseSlugs = async (options?: WpFetchOptions): Promise<string[]> => {
   const terms = await getFranchises(options);

@@ -166,32 +166,6 @@ export const extractDirectorLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomy
 export const extractPersonLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
   extractTaxonomyLinks(wp, PERSON_TAXONOMIES);
 
-export type FranchiseTerm = { id: number; name: string; slug: string };
-
-/** `_embedded['wp:term']` から franchise タクソノミーのターム（ID・名前・スラッグ）を抽出。 */
-export const extractFranchiseTermsFromParsedWp = (wp: ParsedWPPost): FranchiseTerm[] => {
-  const groups = wp._embedded?.["wp:term"];
-  if (!Array.isArray(groups)) return [];
-  const seen = new Set<number>();
-  const out: FranchiseTerm[] = [];
-  for (const group of groups) {
-    if (!Array.isArray(group)) continue;
-    for (const term of group) {
-      const t = term as Record<string, unknown>;
-      const tax = typeof t.taxonomy === "string" ? normalizeTaxonomy(t.taxonomy) : "";
-      if (tax !== "franchise") continue;
-      const id = typeof t.id === "number" ? t.id : null;
-      if (id === null || seen.has(id)) continue;
-      const name = typeof t.name === "string" ? t.name.trim() : "";
-      const slug = typeof t.slug === "string" ? t.slug.trim() : "";
-      if (!name || !slug) continue;
-      seen.add(id);
-      out.push({ id, name, slug });
-    }
-  }
-  return out;
-};
-
 /** パース済み WP 投稿をアプリの `Post`（`content` 含む）へ変換する。 */
 const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => {
   const image = wp._embedded?.["wp:featuredmedia"]?.[0]?.source_url ?? null;

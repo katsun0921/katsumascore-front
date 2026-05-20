@@ -10,7 +10,7 @@ import {
   parseWPPostUnknown,
   mapWPPostToPost,
   getPostsByFranchiseTermId,
-  extractFranchiseTermsFromParsedWp,
+  getFranchiseTermsByPostId,
 } from '@/libs/api/wordpress';
 import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
@@ -125,8 +125,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     const vodTermId = extractVodIntroductionRelatedPostsTermId(wpPost);
 
     // フランチャイズ関連記事を取得する（最大3件ランダム、自記事除外）
-    const parsedForFranchise = parseWPPostUnknown(wpPost);
-    const franchiseTerms = parsedForFranchise ? extractFranchiseTermsFromParsedWp(parsedForFranchise) : [];
+    const franchiseTerms = await getFranchiseTermsByPostId(wpPost.id);
     const franchises: PostDetailFranchiseItem[] = [];
     for (const term of franchiseTerms) {
       const rawPosts = await getPostsByFranchiseTermId(term.id, 100);

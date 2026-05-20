@@ -47,6 +47,7 @@ export {
   getFranchises,
   getAllFranchiseSlugs,
   getFranchiseBySlug,
+  getFranchiseTermsByPostId,
   transformFranchise,
 } from "./endpoints/franchise";
 export type { WPFranchiseTerm, WPFranchiseAcf } from "./endpoints/franchise";
@@ -66,9 +67,8 @@ export {
   extractDirectorLinksFromParsedWp,
   extractActorLinksFromParsedWp,
   extractPersonLinksFromParsedWp,
-  extractFranchiseTermsFromParsedWp,
 } from "./transform";
-export type { NormalizedPageContent, PostTaxonomyLink, FranchiseTerm, Person, Company } from "./transform";
+export type { NormalizedPageContent, PostTaxonomyLink, Person, Company } from "./transform";
 export { transformPerson, transformCompany } from "./transform";
 
 export type { ParsedWPPost } from "./schema";
