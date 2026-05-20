@@ -14,12 +14,7 @@ type FranchisePostListProps = {
   heading: string;
   showScore: boolean;
   scoreHeading: string;
-};
-
-const TYPE_LABELS: Record<PostType, string> = {
-  movie: '映画',
-  anime: 'アニメ',
-  drama: 'ドラマ',
+  typeLabels: Record<PostType, string>;
 };
 
 export const FranchisePostList = ({
@@ -27,12 +22,13 @@ export const FranchisePostList = ({
   heading,
   showScore,
   scoreHeading,
+  typeLabels,
 }: FranchisePostListProps) => {
   if (posts.length === 0) return null;
 
   const groups: PostGroup[] = (['movie', 'anime', 'drama'] as PostType[]).flatMap((type) => {
     const filtered = posts.filter((p) => p.type === type);
-    return filtered.length > 0 ? [{ type, label: TYPE_LABELS[type], posts: filtered }] : [];
+    return filtered.length > 0 ? [{ type, label: typeLabels[type], posts: filtered }] : [];
   });
 
   const ungrouped = posts.filter((p) => !p.type || !(['movie', 'anime', 'drama'] as PostType[]).includes(p.type));
