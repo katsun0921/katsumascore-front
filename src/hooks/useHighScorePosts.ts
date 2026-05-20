@@ -15,7 +15,7 @@ export type HighScorePostsState = {
   loading: boolean;
 };
 
-export const useHighScorePosts = (): HighScorePostsState => {
+export const useHighScorePosts = (locale: 'ja' | 'en' = 'ja'): HighScorePostsState => {
   const [posts, setPosts] = useState<PickUpPost[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +23,7 @@ export const useHighScorePosts = (): HighScorePostsState => {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/high-score');
+        const res = await fetch(`/api/high-score?lang=${locale}`);
         if (!res.ok) return;
         const data: PickUpPost[] = await res.json();
         setPosts(data);
@@ -34,7 +34,7 @@ export const useHighScorePosts = (): HighScorePostsState => {
       }
     };
     void fetchPosts();
-  }, []);
+  }, [locale]);
 
   return { posts, loading };
 };
