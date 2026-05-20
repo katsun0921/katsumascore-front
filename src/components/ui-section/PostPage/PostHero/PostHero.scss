@@ -29,12 +29,14 @@
     align-self: end;
     padding: var(--space-16);
     box-sizing: border-box;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     @include layout-md {
       grid-area: summary;
       align-self: stretch;
       padding: var(--space-0);
       padding-left: var(--space-16);
       background: none;
+      text-shadow: none;
     }
   }
 
