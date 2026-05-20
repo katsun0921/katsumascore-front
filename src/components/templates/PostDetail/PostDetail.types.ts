@@ -1,5 +1,12 @@
 import type { Post } from '@/types/post';
 import type { TocItem } from '@/libs/toc';
+export type PostDetailFranchiseItem = {
+  id: number
+  title: string
+  slug: string
+  posts: Post[]
+}
+
 import type { TTitleMetaProps, TCreditEntry, TActor } from '@/components/features/Post/PostTitleMeta';
 import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 import type { TReviewSite } from '@/components/features/ReviewSiteScores/ReviewSiteScores';
@@ -77,6 +84,9 @@ export type PostDetailData = Post & {
 
   // シェアボタン用
   shareUrl?: string
+
+  // 関連フランチャイズ（最大3件ランダム）
+  franchises?: PostDetailFranchiseItem[]
 }
 
 export type PostDetailProps = {

@@ -13,6 +13,7 @@ import { VodIntroduction } from '@/components/ui-section/VodIntroduction';
 import { ShareButtons } from '@/components/ui-parts/ShareButtons';
 import { Sidebar } from '@/components/ui-layout/Sidebar';
 import { PostDate } from '@/components/ui-section/PostDate';
+import { PostDetailFranchises } from '@/components/ui-section/PostDetailFranchises';
 import { useLocale } from '@/i18n/provider';
 import { useHighScorePosts } from '@/hooks/useHighScorePosts';
 import { useVodRelatedPosts } from '@/hooks/useVodRelatedPosts';
@@ -130,6 +131,13 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
           )}
 
           {vodIntroductionSection}
+
+          {post.franchises && post.franchises.length > 0 && (
+            <div className='mt-8'>
+              <PostDetailFranchises franchises={post.franchises} />
+            </div>
+          )}
+
           <div className='mt-3'>
             <Breadcrumbs
               title={post.title}
