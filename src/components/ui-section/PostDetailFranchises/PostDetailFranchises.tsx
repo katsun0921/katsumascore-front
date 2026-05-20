@@ -4,7 +4,6 @@ import { t } from '@/i18n/t';
 import { PostCardGrid } from '@/components/ui-section/PostCard';
 import type { PostDetailFranchiseItem } from '@/components/templates/PostDetail/PostDetail.types';
 import { messages } from './i18n';
-import './PostDetailFranchises.scss';
 
 type Props = {
   franchises: PostDetailFranchiseItem[]
