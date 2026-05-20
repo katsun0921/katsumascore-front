@@ -19,9 +19,9 @@ export const FranchiseCTA = ({
 }: FranchiseCTAProps) => (
   <section className={styles.franchiseCta}>
     <div className={styles.franchiseCta__buttons}>
-      <span className={styles.franchiseCta__btn}>{watchLabel}</span>
-      <span className={styles.franchiseCta__btn}>{reviewLabel}</span>
-      <span className={styles.franchiseCta__btn}>{streamLabel}</span>
+      <a href='#franchise-posts' className={styles.franchiseCta__btn}>{watchLabel}</a>
+      <a href='#franchise-posts' className={styles.franchiseCta__btn}>{reviewLabel}</a>
+      <a href='#franchise-posts' className={styles.franchiseCta__btn}>{streamLabel}</a>
     </div>
 
     {relatedLinks.length > 0 && (

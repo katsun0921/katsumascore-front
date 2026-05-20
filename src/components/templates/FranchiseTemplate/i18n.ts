@@ -18,4 +18,9 @@ export const messages = {
     review: { ja: 'レビューを読む', en: 'Read Reviews' },
     stream: { ja: '配信を見る', en: 'Find Streaming' },
   },
+  postType: {
+    movie: { ja: '映画', en: 'Movie' },
+    anime: { ja: 'アニメ', en: 'Anime' },
+    drama: { ja: 'ドラマ', en: 'Drama' },
+  },
 } as const;

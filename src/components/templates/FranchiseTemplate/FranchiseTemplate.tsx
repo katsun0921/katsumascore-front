@@ -72,12 +72,19 @@ export const FranchiseTemplate = ({ franchise, breadcrumbs }: FranchiseTemplateP
           />
         )}
 
-        <FranchisePostList
-          posts={franchise.posts}
-          heading={t(messages, ['section', 'posts'], locale)}
-          showScore={franchise.showScore}
-          scoreHeading={t(messages, ['section', 'scoreRanking'], locale)}
-        />
+        <div id='franchise-posts'>
+          <FranchisePostList
+            posts={franchise.posts}
+            heading={t(messages, ['section', 'posts'], locale)}
+            showScore={franchise.showScore}
+            scoreHeading={t(messages, ['section', 'scoreRanking'], locale)}
+            typeLabels={{
+              movie: t(messages, ['postType', 'movie'], locale),
+              anime: t(messages, ['postType', 'anime'], locale),
+              drama: t(messages, ['postType', 'drama'], locale),
+            }}
+          />
+        </div>
 
         <FranchiseCTA
           relatedLinks={franchise.relatedLinks}
