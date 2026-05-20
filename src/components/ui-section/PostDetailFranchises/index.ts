@@ -1,0 +1,1 @@
+export { PostDetailFranchises } from './PostDetailFranchises';

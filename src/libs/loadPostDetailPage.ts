@@ -9,6 +9,8 @@ import {
   getRelatedPosts,
   parseWPPostUnknown,
   mapWPPostToPost,
+  getPostsByFranchiseTermId,
+  extractFranchiseTermsFromParsedWp,
 } from '@/libs/api/wordpress';
 import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
@@ -25,6 +27,7 @@ import type { PostDetailProps } from '@/components/templates/PostDetail/PostDeta
 import type { Post } from '@/types/post';
 import type { TRelationPostItem } from '@/components/features/RelationPost';
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup';
+import type { PostDetailFranchiseItem } from '@/components/templates/PostDetail/PostDetail.types';
 
 /** キャスト名 → termId / taxType のシリアライズ可能なマップエントリ */
 export type ActorTermEntry = {
@@ -121,6 +124,29 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     const vodTermId = extractVodIntroductionRelatedPostsTermId(wpPost);
 
+    // フランチャイズ関連記事を取得する（最大3件ランダム、自記事除外）
+    const parsedForFranchise = parseWPPostUnknown(wpPost);
+    const franchiseTerms = parsedForFranchise ? extractFranchiseTermsFromParsedWp(parsedForFranchise) : [];
+    const franchises: PostDetailFranchiseItem[] = [];
+    for (const term of franchiseTerms) {
+      const rawPosts = await getPostsByFranchiseTermId(term.id, 100);
+      const termPosts: Post[] = rawPosts
+        .map((p) => {
+          const m = mapWPPostToPost(p);
+          if (!m) return null;
+          const { content: _c, ...rest } = m;
+          void _c;
+          return rest as Post;
+        })
+        .filter((p): p is Post => p !== null && p.slug !== slug);
+      // Fisher-Yates シャッフルで最大3件をランダム選択
+      for (let i = termPosts.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [termPosts[i], termPosts[j]] = [termPosts[j], termPosts[i]];
+      }
+      franchises.push({ id: term.id, title: term.name, slug: term.slug, posts: termPosts.slice(0, 3) });
+    }
+
     const detail = buildPostDetailFromWp({
       wp: wpPost,
       locale: loc,
@@ -156,7 +182,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     return {
       props: {
-        post: { ...detail, toc, profile },
+        post: { ...detail, toc, profile, ...(franchises.length > 0 ? { franchises } : {}) },
         locale: loc,
         genres,
         actorTermEntries,

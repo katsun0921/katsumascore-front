@@ -66,8 +66,9 @@ export {
   extractDirectorLinksFromParsedWp,
   extractActorLinksFromParsedWp,
   extractPersonLinksFromParsedWp,
+  extractFranchiseTermsFromParsedWp,
 } from "./transform";
-export type { NormalizedPageContent, PostTaxonomyLink, Person, Company } from "./transform";
+export type { NormalizedPageContent, PostTaxonomyLink, FranchiseTerm, Person, Company } from "./transform";
 export { transformPerson, transformCompany } from "./transform";
 
 export type { ParsedWPPost } from "./schema";
