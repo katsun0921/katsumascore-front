@@ -12,13 +12,17 @@ type ResponseData = PickUpPost[] | { error: string };
  * acf.review_score が undefined になる。getPosts（生HTTP）を使い mapWPPostToPost 後の
  * score で判定することで正しくフィルタできる。
  */
-const handler = async (_req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
+  const lang = req.query['lang'];
+  const locale = lang === 'en' ? 'en' : 'ja';
+
   const all = await getPosts({ per_page: 100 });
 
   const posts = pickRandom(
     all
       .map((p) => mapWPPostToPost(p))
       .filter((m): m is NonNullable<typeof m> => m !== null)
+      .filter((m) => m.lang === locale)
       .filter((m) => (m.score ?? 0) >= 4)
       .map((m) => ({
         slug: m.slug,
