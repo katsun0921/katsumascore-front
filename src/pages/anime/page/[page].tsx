@@ -1,4 +1,4 @@
-// ISR: revalidate 600s — アニメ一覧 2 ページ目以降。allPosts は CSR（/api/category-filter-posts）で取得。
+// ISR: revalidate 600s — アニメ一覧 2 ページ目以降。ISR の posts を初期表示に使い、フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -15,14 +15,12 @@ import type { Locale } from '@/i18n/t';
 import { WP_ANIME_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { ANIME_LIST_PER_PAGE } from '@/libs/listFilters';
 import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
-import { useCategoryFilterPosts } from '@/libs/useCategoryFilterPosts';
+import { useCategoryPagedPosts } from '@/libs/useCategoryPagedPosts';
 import {
-  filterPostsByListFilters,
   getActiveListFilterValuesFromUrlParams,
   getSortFilterFromUrlParams,
   getTaxonomyFilterFromUrlParams,
   getUrlParamsFromListFilter,
-  paginatePosts,
 } from '@/libs/listFilters';
 import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
@@ -37,25 +35,28 @@ type AnimePagedProps = {
 
 const AnimePagedPage = ({
   categoryName,
-  posts,
+  posts: initialPosts,
   currentPage,
-  totalPages,
+  totalPages: initialTotalPages,
   locale,
 }: AnimePagedProps) => {
   const router = useRouter();
   const loc = normalizeRouteLocale(locale) as Locale;
-  const { allPosts, isLoading } = useCategoryFilterPosts(WP_ANIME_CATEGORY_SLUG, loc, ANIME_LIST_PER_PAGE);
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
-  const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
-  const filteredIds = paginatePosts(filteredAll, currentPage, ANIME_LIST_PER_PAGE).map((p) => p.id);
-  const pagedPosts = isLoading
-    ? posts
-    : filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = isLoading
-    ? totalPages
-    : Math.max(1, Math.ceil(filteredAll.length / ANIME_LIST_PER_PAGE));
+
+  const { posts, filterPosts, totalPages, isLoading } = useCategoryPagedPosts({
+    slug: WP_ANIME_CATEGORY_SLUG,
+    locale: loc,
+    page: currentPage,
+    sortFilter,
+    taxonomyFilter,
+    perPage: ANIME_LIST_PER_PAGE,
+    initialPosts,
+    initialTotalPages,
+  });
+
   const canonicalUrl = `${SITE_URL}${getPostTypeArchiveUrl({ type: 'anime', lang: loc, page: currentPage })}`;
 
   const getArchiveUrl = (page: number, filter?: string) => {
@@ -91,12 +92,12 @@ const AnimePagedPage = ({
       <ListTemplate
         categoryName={categoryName}
         categoryDescription={formatListPageCategoryDescription(categoryName, loc)}
-        posts={pagedPosts}
-        filterOptionPosts={allPosts}
+        posts={posts}
+        filterOptionPosts={filterPosts.length > 0 ? filterPosts : initialPosts}
         getFilterHref={(value) => getArchiveUrl(1, value)}
         activeFilter={activeListFilters}
         currentPage={currentPage}
-        totalPages={filteredTotalPages}
+        totalPages={totalPages}
         onPageChange={handlePageChange}
         isLoading={isLoading}
       />
