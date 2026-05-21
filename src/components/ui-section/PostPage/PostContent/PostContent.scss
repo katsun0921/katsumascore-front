@@ -28,6 +28,7 @@
 // ─────────────────────────────────────────────
 
 .p-content {
+  overflow-x: hidden;
   color: var(--color-text-primary);
   font-size: 1rem;
   line-height: 1.8;
@@ -915,9 +916,9 @@
   // 10. Defensive CSS
   // ─────────────────────────────────────────────
 
-  // はみ出し防止（全要素）
+  // はみ出し防止（全要素） — インラインstyleを上書きするため !important
   * {
-    max-width: 100%;
+    max-width: 100% !important;
     box-sizing: border-box;
   }
 
