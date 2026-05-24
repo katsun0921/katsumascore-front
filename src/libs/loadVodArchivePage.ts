@@ -114,7 +114,7 @@ export const loadVodArchivePage = async (
   return {
     categoryName,
     pathSlug: trimmed,
-    posts: toSerializableValue(normalizedPosts.slice(start, start + VOD_ARCHIVE_LIST_PER_PAGE)),
+    posts: toSerializableValue(normalizedPosts),
     allPosts: toSerializableValue(allPosts),
     currentPage: safePage,
     totalPages,
