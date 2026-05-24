@@ -4,7 +4,11 @@ import { VOD_LABEL } from "@/libs/vod";
 /**
  * フロントの VOD 一覧 URL スラッグ（`/vod/amazon` の `amazon`）から、
  * WordPress `vod` タクソノミーのターム `slug`（REST 検索用）への対応表。
- * WP 側の登録とずれる場合はここを合わせる。
+ *
+ * WP 側のターム統一後スラッグに合わせて管理する。
+ * マージ前は `-jp` / `-com` / `-ja` 接尾辞付きで登録されているが、
+ * `normalizeVodSlugKeyForMatch` / `vodWpSlugLookupCandidates` が接尾辞を吸収するため
+ * この表はマージ後の統一スラッグを記載すればよい。
  */
 export const VOD_PATH_SLUG_TO_WP_SLUG: Record<VodService, string> = {
   netflix: "netflix",
@@ -78,4 +82,19 @@ export const normalizeVodSlugKeyForMatch = (s: string): string => {
 export const vodArchiveDisplayName = (pathSlug: string, wpTermName: string): string => {
   if (isVodPathSlug(pathSlug)) return VOD_LABEL[pathSlug];
   return wpTermName;
+};
+
+/**
+ * WP の `vod` ターム slug（例: `amazon-prime-video`）からフロントの `VodService` キー（例: `amazon`）に逆引きする。
+ * `normalizeVodSlugKeyForMatch` で正規化してから突き合わせるため、接尾辞や区切り文字の差を吸収する。
+ * 一致しない場合は `null`。
+ */
+export const wpVodSlugToVodService = (wpSlug: string): VodService | null => {
+  const normalized = normalizeVodSlugKeyForMatch(wpSlug);
+  for (const [pathSlug, registeredWpSlug] of Object.entries(VOD_PATH_SLUG_TO_WP_SLUG)) {
+    if (normalizeVodSlugKeyForMatch(registeredWpSlug) === normalized) {
+      return pathSlug as VodService;
+    }
+  }
+  return null;
 };

@@ -7,18 +7,21 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { t } from '@/i18n/t';
-import { buildVodFinderItemsFromConfig } from '@/libs/buildVodFinderItems';
+import { buildVodFinderItemsFromConfig, buildVodFinderItemsFromTerms } from '@/libs/buildVodFinderItems';
 import { normalizeRouteLocale } from '@/libs/route';
 import { VOD_COLOR_VAR, VOD_INITIAL, VOD_LABEL, type VodService } from '@/libs/vod';
 import { messages } from '@/i18n/vodPageMessages';
+import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
+import { getVodTerms } from '@/libs/api/wordpress/endpoints/vodTaxonomy';
 
 type VodHubProps = {
   locale: string;
+  vodItems: VodFinderItem[];
 };
 
-const VodHubPage = ({ locale }: VodHubProps) => {
+const VodHubPage = ({ locale, vodItems }: VodHubProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
-  const items = buildVodFinderItemsFromConfig();
+  const items = vodItems;
 
   return (
     <I18nProvider locale={loc}>
@@ -79,9 +82,17 @@ const VodHubLink = ({ vod, href }: { vod: VodService; href: string }) => (
 
 export default VodHubPage;
 
-export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) => ({
-  props: {
-    locale: normalizeRouteLocale(locale),
-  },
-  revalidate: 600,
-});
+export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) => {
+  const terms = await getVodTerms();
+  const vodItems = terms
+    ? buildVodFinderItemsFromTerms(terms)
+    : buildVodFinderItemsFromConfig();
+
+  return {
+    props: {
+      locale: normalizeRouteLocale(locale),
+      vodItems,
+    },
+    revalidate: 600,
+  };
+};
