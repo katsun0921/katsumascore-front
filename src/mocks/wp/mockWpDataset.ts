@@ -54,7 +54,7 @@ type BuildPostOpts = {
   excerpt?: string;
   contentHtml?: string;
   extraTermGroups?: Term[][];
-  vodFlags?: { netflix?: boolean; amazon?: boolean; unext?: boolean };
+  vodFlags?: { amazon?: boolean; netflix?: boolean; hulu?: boolean; unext?: boolean };
 };
 
 const buildPost = (o: BuildPostOpts): MockWPPost => {
@@ -62,9 +62,10 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
   const acf: Record<string, unknown> = {
     lang: o.lang,
     review_score: o.score,
-    ...(o.vodFlags?.netflix ? { streaming_vod_netflix: true } : {}),
-    ...(o.vodFlags?.amazon ? { streaming_vod_amazon: true } : {}),
-    ...(o.vodFlags?.unext ? { streaming_vod_unext: true } : {}),
+    ...(o.vodFlags?.amazon ? { amazon_prime_video: { status: "streaming" } } : {}),
+    ...(o.vodFlags?.netflix ? { netflix: { status: "streaming" } } : {}),
+    ...(o.vodFlags?.hulu ? { hulu: { status: "streaming" } } : {}),
+    ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
   };
 
   return {

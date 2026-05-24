@@ -210,9 +210,10 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
 
   const acf = wp.acf;
   const vodList: import("@/libs/vod").VodService[] = [];
-  if (acf?.streaming_vod_netflix) vodList.push("netflix");
-  if (acf?.streaming_vod_amazon) vodList.push("amazon");
-  if (acf?.streaming_vod_unext) vodList.push("unext");
+  if ((acf?.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") vodList.push("amazon");
+  if ((acf?.netflix as { status?: unknown } | undefined)?.status === "streaming") vodList.push("netflix");
+  if ((acf?.hulu as { status?: unknown } | undefined)?.status === "streaming") vodList.push("hulu");
+  if ((acf?.unext as { status?: unknown } | undefined)?.status === "streaming") vodList.push("unext");
   const vods = vodList.length > 0 ? vodList : undefined;
 
   const releaseYear = wp.acf?.release_date

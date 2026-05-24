@@ -7,13 +7,16 @@ export const buildStreamingVods = (wp: ParsedWPPost): TStreamingVodEntry[] | und
   const acf = wp.acf;
   if (!acf) return undefined;
   const out: TStreamingVodEntry[] = [];
-  if (acf.streaming_vod_netflix) {
-    out.push({ service: "netflix", url: "https://www.netflix.com" });
-  }
-  if (acf.streaming_vod_amazon) {
+  if ((acf.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") {
     out.push({ service: "amazon", url: "https://www.amazon.co.jp/gp/video/storefront" });
   }
-  if (acf.streaming_vod_unext) {
+  if ((acf.netflix as { status?: unknown } | undefined)?.status === "streaming") {
+    out.push({ service: "netflix", url: "https://www.netflix.com" });
+  }
+  if ((acf.hulu as { status?: unknown } | undefined)?.status === "streaming") {
+    out.push({ service: "hulu", url: "https://www.hulu.jp" });
+  }
+  if ((acf.unext as { status?: unknown } | undefined)?.status === "streaming") {
     out.push({ service: "unext", url: "https://video.unext.jp" });
   }
   return out.length > 0 ? out : undefined;
