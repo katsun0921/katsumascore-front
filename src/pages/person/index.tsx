@@ -46,7 +46,7 @@ const PersonListPage = ({ persons, locale }: PersonListPageProps) => {
         <div className='mx-auto max-w-screen-lg px-4 py-6'>
           <Breadcrumb
             items={[
-              { label: 'Home', href: '/' },
+              { label: t(messages, ['breadcrumb', 'home'], loc), href: '/' },
               { label: heading },
             ]}
           />
