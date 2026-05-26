@@ -138,7 +138,7 @@
 | `Header` | `components/ui-layout/Header` | ヘッダー（多言語対応） |
 | `Sidebar` | `components/ui-layout/Sidebar` | サイドバー |
 
-### 3.3 ui-home（ホームページ専用・6 コンポーネント）
+### 3.3 ui-home（ホームページ専用・7 コンポーネント）
 
 HomeTemplate からのみ参照。ロジック禁止。
 
@@ -150,6 +150,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeRanking` | `components/ui-home/HomeRanking` | ランキング表示 |
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
+| `HomeVodLegend` | `components/ui-home/HomeVodLegend` | VOD バッジ凡例（頭文字の意味を説明） |
 
 ### 3.4 ui-section（意味のある UI・23 コンポーネント）
 
