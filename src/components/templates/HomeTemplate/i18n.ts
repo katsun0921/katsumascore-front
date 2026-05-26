@@ -1,7 +1,4 @@
 export const messages = {
-  vodLegend: {
-    title: { ja: 'バッジの見方', en: 'Badge guide' },
-  },
   ranking: {
     title: { ja: 'TOP 10 ランキング', en: 'TOP 10 Ranking' },
   },

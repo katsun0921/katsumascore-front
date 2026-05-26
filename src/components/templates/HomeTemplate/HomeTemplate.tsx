@@ -3,8 +3,8 @@ import { AdBanner } from '@/components/ui-section/AdBanner';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
-import { HomeVodLegend } from '@/components/ui-home/HomeVodLegend';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
+import { VodLegend } from '@/components/ui-section/VodLegend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { useLocale } from '@/i18n/provider';
@@ -44,10 +44,7 @@ export const HomeTemplate = ({
 
       <div className='homeTemplate__body max-w-full min-w-0'>
         <section className='homeTemplate__section'>
-          <HomeVodLegend
-            title={t(messages, ['vodLegend', 'title'], locale)}
-            services={vodFinderItems.map((item) => item.vod)}
-          />
+          <VodLegend services={vodFinderItems.map((item) => item.vod)} />
         </section>
 
         <section className='homeTemplate__section'>

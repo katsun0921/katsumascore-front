@@ -3,12 +3,14 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { Sidebar as SidebarComponent } from '@/components/ui-layout/Sidebar';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
+import { VodLegend } from '@/components/ui-section/VodLegend';
 import { ListFilterBar } from '@/components/features/Post/ListFilterBar';
 import { Pagination } from '@/components/features/Pagination';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { getPostTaxonomyFilterOptionRows } from '@/libs/listFilters';
 import { getVodHubPath } from '@/libs/route';
+import type { VodService } from '@/libs/vod';
 import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
 
@@ -75,6 +77,11 @@ export const ListTemplate = ({
   const leadPost = posts[0];
   const gridPosts = posts.slice(1);
 
+  /** 一覧に登場する VOD サービスのみを凡例として表示する。 */
+  const legendServices: VodService[] = Array.from(
+    new Set(posts.flatMap((post) => post.vods ?? [])),
+  );
+
   return (
     <PageLayout>
       {/* Hero — ダーク背景でカテゴリ名を表示 */}
@@ -111,6 +118,8 @@ export const ListTemplate = ({
       <div className='grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start px-4 py-8 pb-12'>
         {/* Main column */}
         <div className='space-y-8'>
+          <VodLegend services={legendServices} />
+
           {posts.length > 0 && !isLoading && (
             <div className='flex flex-col gap-3 lg:gap-4'>
               {leadPost && <PostCardImgLeft post={leadPost} priority />}

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import type { VodService } from '@/libs/vod';
-import { HomeVodLegend } from './HomeVodLegend';
+import { VodLegend } from './VodLegend';
 
 const allServices: VodService[] = [
   'netflix',
@@ -15,12 +15,9 @@ const allServices: VodService[] = [
   'youtube',
 ];
 
-const meta: Meta<typeof HomeVodLegend> = {
-  title: 'UI-Home/HomeVodLegend',
-  component: HomeVodLegend,
-  args: {
-    title: 'バッジの見方',
-  },
+const meta: Meta<typeof VodLegend> = {
+  title: 'UI-Section/VodLegend',
+  component: VodLegend,
   parameters: { layout: 'padded' },
   decorators: [
     (Story) => (
@@ -49,7 +46,6 @@ export const AllServices: Story = {
 export const English: Story = {
   globals: { locale: 'en' },
   args: {
-    title: 'Badge guide',
     services: ['netflix', 'amazon', 'unext', 'hulu', 'disney'],
   },
 };

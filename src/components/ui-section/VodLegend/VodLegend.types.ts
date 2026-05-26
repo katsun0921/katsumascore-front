@@ -1,6 +1,6 @@
 import type { VodService } from '@/libs/vod';
 
-export type HomeVodLegendProps = {
-  title: string;
+export type VodLegendProps = {
   services: VodService[];
+  className?: string;
 };
