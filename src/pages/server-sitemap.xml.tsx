@@ -26,13 +26,11 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   ]);
 
   const staticPaths: SitemapItem[] = [
-    { loc: `${SITE_URL}/`, changefreq: 'daily', priority: 1 },
+    { loc: `${SITE_URL}/ja`, changefreq: 'daily', priority: 1 },
     { loc: `${SITE_URL}/en`, changefreq: 'daily', priority: 1 },
-    { loc: `${SITE_URL}/top`, changefreq: 'weekly', priority: 0.6 },
-    { loc: `${SITE_URL}/en/top`, changefreq: 'weekly', priority: 0.6 },
-    { loc: `${SITE_URL}/featured`, changefreq: 'weekly', priority: 0.7 },
+    { loc: `${SITE_URL}/ja/featured`, changefreq: 'weekly', priority: 0.7 },
     { loc: `${SITE_URL}/en/featured`, changefreq: 'weekly', priority: 0.7 },
-    { loc: `${SITE_URL}/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
+    { loc: `${SITE_URL}/ja/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
     { loc: `${SITE_URL}/en/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
   ];
 

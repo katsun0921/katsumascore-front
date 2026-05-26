@@ -16,7 +16,7 @@ test.describe('URL Leak Detection', () => {
     const leaks: { url: string; matches: string[] }[] = []
 
     for (const url of urls) {
-      await page.goto(url, { waitUntil: 'networkidle' })
+      await page.goto(url, { waitUntil: 'domcontentloaded' })
       const html = await page.content()
 
       // srcset / JSON-LD を含む全域を対象にする

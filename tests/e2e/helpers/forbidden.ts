@@ -7,5 +7,5 @@ export const FORBIDDEN_PATTERNS: RegExp[] = [
   /https?:\/\/wp\.katsumascore\.blog/i,
   /https?:\/\/[^/]*\.wp\.katsumascore\.blog/i,
   /https?:\/\/[a-z0-9-]+\.conoha\.io/i,
-  /\/wp-content\/uploads\/(?!.*katsumascore\.blog)/i,
+  /(?<!katsumascore\.blog)\/wp-content\/uploads\//i,
 ]
