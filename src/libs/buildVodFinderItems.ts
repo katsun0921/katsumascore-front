@@ -17,17 +17,18 @@ export const buildVodFinderItemsFromConfig = (): VodFinderItem[] => {
  * WP `vod` タクソノミーのターム一覧から VOD ハブページ用リンクアイテムを生成する。
  * WP に登録されているサービスのみを表示対象とする。
  * フロントの `VodService` に対応しないタームはスキップする。
- * WP 側に `-jp` / `-com` など接尾辞違いの重複タームが存在する場合も、同一サービスは1件のみ出力する。
+ * WP 側に `-jp` / `-com` など接尾辞違いの重複タームが存在する場合、同一サービスの件数を合算して1件出力する。
  */
 export const buildVodFinderItemsFromTerms = (terms: WPVodTerm[]): VodFinderItem[] => {
-  const seen = new Set<VodService>();
-  const items: VodFinderItem[] = [];
+  const countMap = new Map<VodService, number>();
   for (const term of terms) {
     const vod = wpVodSlugToVodService(term.slug);
     if (!vod) continue;
-    if (seen.has(vod)) continue;
-    seen.add(vod);
-    items.push({ vod, href: `/vod/${vod}` });
+    countMap.set(vod, (countMap.get(vod) ?? 0) + term.count);
   }
-  return items;
+  return Array.from(countMap.entries()).map(([vod, count]) => ({
+    vod,
+    count,
+    href: `/vod/${vod}`,
+  }));
 };
