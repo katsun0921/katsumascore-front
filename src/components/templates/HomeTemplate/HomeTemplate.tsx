@@ -4,6 +4,7 @@ import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
+import { VodLegend } from '@/components/ui-section/VodLegend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { useLocale } from '@/i18n/provider';
@@ -14,7 +15,7 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
  *
  * 表示順:
- *   Hero → 広告バナー（ja） → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend
+ *   Hero → 広告バナー（ja） → VOD バッジ凡例 → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend
  *   → 特集 → VOD
  */
 export const HomeTemplate = ({
@@ -42,6 +43,10 @@ export const HomeTemplate = ({
       )}
 
       <div className='homeTemplate__body max-w-full min-w-0'>
+        <section className='homeTemplate__section'>
+          <VodLegend services={vodFinderItems.map((item) => item.vod)} />
+        </section>
+
         <section className='homeTemplate__section'>
           <HomeRanking
             title={t(messages, ['ranking', 'title'], locale)}

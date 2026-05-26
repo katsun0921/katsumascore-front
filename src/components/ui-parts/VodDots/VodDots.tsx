@@ -9,9 +9,12 @@ export const VodDots = ({ vods, max = 3, className }: VodDotsProps) => {
       {shown.map((vod) => (
         <span
           key={vod}
-          className='block w-2 h-2 rounded-full'
+          className='flex w-4 h-4 items-center justify-center rounded text-caption font-bold leading-none text-[var(--color-text-inverse)]'
           style={{ background: VOD_COLOR_VAR[vod] }}
-        />
+          aria-label={vod}
+        >
+          {vod[0].toUpperCase()}
+        </span>
       ))}
     </div>
   );

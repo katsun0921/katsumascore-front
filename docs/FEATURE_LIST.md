@@ -151,7 +151,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 
-### 3.4 ui-section（意味のある UI・23 コンポーネント）
+### 3.4 ui-section（意味のある UI・24 コンポーネント）
 
 props でデータを受け取る。読み取り専用 hooks（`useLocale` など）のみ許可。
 
@@ -177,6 +177,7 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `StreamingVod` | `components/ui-section/StreamingVod` | ストリーミング配信情報 |
 | `VodIntroduction` | `components/ui-section/VodIntroduction` | VOD 紹介 |
 | `VodItem` | `components/ui-section/VodItem` | VOD アイテム |
+| `VodLegend` | `components/ui-section/VodLegend` | VOD バッジ凡例（頭文字の意味を説明） |
 | `VodPanel` | `components/ui-section/VodPanel` | VOD パネル |
 
 ### 3.5 features（ロジック・18 コンポーネント）

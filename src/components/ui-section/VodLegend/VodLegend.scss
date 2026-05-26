@@ -1,0 +1,44 @@
+.vodLegend {
+  &__title {
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    list-style: none;
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__badge {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    color: var(--color-text-inverse);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  &__name {
+    color: var(--color-text-inverse);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    opacity: 0.85;
+  }
+}
