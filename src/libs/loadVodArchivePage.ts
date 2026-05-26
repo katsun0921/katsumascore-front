@@ -96,7 +96,6 @@ export const loadVodArchivePage = async (
   );
   const totalPages = normalizedTotalPages;
   if (safePage > totalPages) return { notFound: true };
-  const start = (safePage - 1) * VOD_ARCHIVE_LIST_PER_PAGE;
 
   const allPosts: FilterPost[] = normalizedPosts.map(({ id, slug, score, publishedAt, vods, genres, tags }) => ({
     id,

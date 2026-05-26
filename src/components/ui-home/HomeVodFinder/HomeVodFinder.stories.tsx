@@ -30,7 +30,7 @@ export const Default: Story = {
 
 export const NoCount: Story = {
   args: {
-    items: mockVodFinderItems.map(({ count: _count, ...rest }) => rest),
+    items: mockVodFinderItems.map(({ ...rest }) => rest),
   },
 };
 
