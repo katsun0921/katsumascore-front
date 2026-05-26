@@ -16,20 +16,6 @@ export type VodService =
   | 'rakuten'
   | 'youtube';
 
-/** アイコン / バッジ用のイニシャル */
-export const VOD_INITIAL: Record<VodService, string> = {
-  netflix: 'N',
-  amazon: 'P',
-  unext: 'U',
-  hulu: 'H',
-  disney: 'D',
-  dmmtv: 'D',
-  abema: 'A',
-  appletv: 'A',
-  rakuten: 'R',
-  youtube: 'Y',
-};
-
 /** CSS変数（背景色） */
 export const VOD_COLOR_VAR: Record<VodService, string> = {
   netflix: 'var(--color-netflix)',

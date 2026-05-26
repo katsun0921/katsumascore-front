@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { type VodService, VOD_INITIAL, VOD_COLOR_VAR } from '@/libs/vod';
+import { type VodService, VOD_COLOR_VAR } from '@/libs/vod';
 export type VodFinderItem = {
   vod: VodService;
   label: string;
@@ -26,7 +26,7 @@ export const HomeVodFinder = ({ title, workCountSuffix, items }: HomeVodFinderPr
                 style={{ background: VOD_COLOR_VAR[vod] }}
                 aria-hidden='true'
               >
-                {VOD_INITIAL[vod]}
+                {label[0].toUpperCase()}
               </span>
               <span className='homeVodItem__info'>
                 <span className='homeVodItem__name'>{label}</span>

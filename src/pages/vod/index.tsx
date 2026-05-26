@@ -9,7 +9,7 @@ import type { Locale } from '@/i18n/t';
 import { t } from '@/i18n/t';
 import { buildVodFinderItemsFromTerms } from '@/libs/vodPathToWpSlug';
 import { normalizeRouteLocale } from '@/libs/route';
-import { VOD_COLOR_VAR, VOD_INITIAL, type VodService } from '@/libs/vod';
+import { VOD_COLOR_VAR, type VodService } from '@/libs/vod';
 import { messages } from '@/i18n/vodPageMessages';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import { getVodTerms } from '@/libs/api/wordpress/endpoints/vodTaxonomy';
@@ -74,7 +74,7 @@ const VodHubLink = ({ vod, label, href }: { vod: VodService; label: string; href
       style={{ background: VOD_COLOR_VAR[vod] }}
       aria-hidden='true'
     >
-      {VOD_INITIAL[vod]}
+      {label[0].toUpperCase()}
     </span>
     <span className='font-ui text-sm font-medium text-color-primary'>{label}</span>
   </Link>
