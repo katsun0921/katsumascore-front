@@ -9,7 +9,7 @@
  */
 
 /** @type {import('eslint').Rule.RuleModule} */
-export default {
+const noHardcodedI18n = {
   meta: {
     type: 'suggestion',
     docs: {
@@ -44,3 +44,5 @@ export default {
     }
   },
 }
+
+export default noHardcodedI18n

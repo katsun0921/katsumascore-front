@@ -94,8 +94,7 @@ export const getVodTermBySlug = async (
       const u = new URL(`${wpApiBaseUrl}/${vodRestCollectionPath()}`);
       u.searchParams.set("slug", trimmed);
       u.searchParams.set("per_page", "1");
-      u.searchParams.set("_embed", "1");
-      u.searchParams.set("acf_format", "standard");
+      u.searchParams.set("_fields", "id,slug,name,count");
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
@@ -139,8 +138,7 @@ export const getVodTerms = async (
       const u = new URL(`${wpApiBaseUrl}/${vodRestCollectionPath()}`);
       u.searchParams.set("page", "1");
       u.searchParams.set("per_page", "100");
-      u.searchParams.set("_embed", "1");
-      u.searchParams.set("acf_format", "standard");
+      u.searchParams.set("_fields", "id,slug,name,count");
       const res = await fetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
