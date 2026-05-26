@@ -38,10 +38,10 @@ export const AllServices: Story = {
   args: {
     items: [
       ...mockVodFinderItems,
-      { vod: 'disney' as const, count: 3, href: '/vod/disney' },
-      { vod: 'abema' as const, count: 2, href: '/vod/abema' },
-      { vod: 'dmmtv' as const, count: 1, href: '/vod/dmmtv' },
-      { vod: 'appletv' as const, count: 5, href: '/vod/appletv' },
+      { vod: 'disney' as const, label: 'Disney+', count: 3, href: '/vod/disney' },
+      { vod: 'abema' as const, label: 'ABEMA', count: 2, href: '/vod/abema' },
+      { vod: 'dmmtv' as const, label: 'DMM TV', count: 1, href: '/vod/dmmtv' },
+      { vod: 'appletv' as const, label: 'Apple TV+', count: 5, href: '/vod/appletv' },
     ],
   },
 };
