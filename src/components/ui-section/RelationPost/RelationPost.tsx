@@ -2,7 +2,7 @@ import type { PostCardKind } from '@/components/ui-section/PostCard';
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import type { RelationPostProps } from './RelationPost.types';
 
-export const RelationPost = ({ heading, posts, kind }: RelationPostProps) => {
+export const RelationPost = ({ heading, posts }: RelationPostProps) => {
   const postKind: PostCardKind = 'imgOver';
   return (
     <section>

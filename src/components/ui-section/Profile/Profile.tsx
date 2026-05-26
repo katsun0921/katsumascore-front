@@ -15,7 +15,6 @@ export type ProfileProps = {
 
 export const Profile = ({
   excerpt,
-  comment,
 }: ProfileProps) => {
   const locale = useLocale();
   const description = t(messages, ['description'], locale);

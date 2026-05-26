@@ -1,6 +1,6 @@
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
-import { VOD_COLOR_VAR, VOD_INITIAL, VOD_LABEL } from '@/libs/vod';
+import { VOD_COLOR_VAR } from '@/libs/vod';
 import { messages } from './i18n';
 import type { VodLegendProps } from './VodLegend.types';
 
@@ -22,9 +22,9 @@ export const VodLegend = ({ services, className }: VodLegendProps) => {
               style={{ background: VOD_COLOR_VAR[vod] }}
               aria-hidden='true'
             >
-              {VOD_INITIAL[vod]}
+              {vod[0].toUpperCase()}
             </span>
-            <span className='vodLegend__name'>{VOD_LABEL[vod]}</span>
+            <span className='vodLegend__name'>{vod}</span>
           </li>
         ))}
       </ul>
