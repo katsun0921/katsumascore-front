@@ -7,10 +7,12 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { Pagination } from '@/components/features/Pagination';
 import { I18nProvider } from '@/i18n/provider';
+import { t } from '@/i18n/t';
 import type { Locale } from '@/i18n/t';
 import { getPersonsByRole, transformPerson } from '@/libs/api/wordpress';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
+import { messages } from './i18n';
 
 const PER_PAGE = 20;
 
@@ -23,8 +25,8 @@ const PersonListPage = ({ persons, locale }: PersonListPageProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
   const [currentPage, setCurrentPage] = useState(1);
 
-  const heading = loc === 'en' ? 'Person' : '人物';
-  const description = loc === 'en' ? 'Actors and directors' : '俳優・監督一覧';
+  const heading = t(messages, ['page', 'heading'], loc);
+  const description = t(messages, ['page', 'description'], loc);
 
   const totalPages = Math.ceil(persons.length / PER_PAGE);
   const pagedPersons = persons.slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
