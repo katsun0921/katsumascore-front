@@ -7,7 +7,7 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { t } from '@/i18n/t';
-import { buildVodFinderItemsFromTerms } from '@/libs/buildVodFinderItems';
+import { buildVodFinderItemsFromTerms } from '@/libs/vodPathToWpSlug';
 import { normalizeRouteLocale } from '@/libs/route';
 import { VOD_COLOR_VAR, VOD_INITIAL, VOD_LABEL, type VodService } from '@/libs/vod';
 import { messages } from '@/i18n/vodPageMessages';

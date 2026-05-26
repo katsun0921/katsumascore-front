@@ -1,5 +1,7 @@
 import type { VodService } from "@/libs/vod";
 import { VOD_LABEL } from "@/libs/vod";
+import type { VodFinderItem } from "@/components/ui-home/HomeVodFinder";
+import type { WPVodTerm } from "@/libs/api/wordpress/endpoints/vodTaxonomy";
 
 /**
  * フロントの VOD 一覧 URL スラッグ（`/vod/amazon` の `amazon`）から、
@@ -97,4 +99,23 @@ export const wpVodSlugToVodService = (wpSlug: string): VodService | null => {
     }
   }
   return null;
+};
+
+/**
+ * WP `vod` タクソノミーのターム一覧から VOD ハブページ用リンクアイテムを生成する。
+ * フロントの `VodService` に対応しないタームはスキップする。
+ * 重複ターム（`-jp` / `-com` 接尾辞違い等）は同一サービスの件数を合算して1件出力する。
+ */
+export const buildVodFinderItemsFromTerms = (terms: WPVodTerm[]): VodFinderItem[] => {
+  const countMap = new Map<VodService, number>();
+  for (const term of terms) {
+    const vod = wpVodSlugToVodService(term.slug);
+    if (!vod) continue;
+    countMap.set(vod, (countMap.get(vod) ?? 0) + term.count);
+  }
+  return Array.from(countMap.entries()).map(([vod, count]) => ({
+    vod,
+    count,
+    href: `/vod/${vod}`,
+  }));
 };

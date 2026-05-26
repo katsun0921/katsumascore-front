@@ -19,7 +19,7 @@ import {
   getVodTerms,
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
-import { buildVodFinderItemsFromTerms } from "@/libs/buildVodFinderItems";
+import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { getPostTypeArchivePath } from "@/libs/route";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
