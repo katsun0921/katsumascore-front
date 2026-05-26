@@ -29,6 +29,7 @@ export const ListTemplate = ({
   isLoading = false,
   sidebar,
   vodHubBreadcrumb = false,
+  singleVodService = false,
 }: ListTemplateProps) => {
   const locale = useLocale();
 
@@ -77,10 +78,10 @@ export const ListTemplate = ({
   const leadPost = posts[0];
   const gridPosts = posts.slice(1);
 
-  /** 一覧に登場する VOD サービスのみを凡例として表示する。 */
-  const legendServices: VodService[] = Array.from(
-    new Set(posts.flatMap((post) => post.vods ?? [])),
-  );
+  /** 一覧に登場する VOD サービスのみを凡例として表示する。単一サービスの一覧では凡例自体を出さない。 */
+  const legendServices: VodService[] = singleVodService
+    ? []
+    : Array.from(new Set(posts.flatMap((post) => post.vods ?? [])));
 
   return (
     <PageLayout>

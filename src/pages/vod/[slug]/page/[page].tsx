@@ -97,6 +97,7 @@ const VodSlugPagedPage = ({
         totalPages={filteredTotalPages}
         onPageChange={handlePageChange}
         vodHubBreadcrumb
+        singleVodService
       />
     </I18nProvider>
   );
