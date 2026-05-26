@@ -1,3 +1,5 @@
+// WordPress ACF + Gutenberg ブロックとして PHP 側から挿入されるコンポーネント。
+// Next.js アプリからは import されないが、表示確認用に TSX で実装しているため削除禁止。
 import Image from 'next/image';
 import Link from 'next/link';
 import { publicAssetUrl } from '@/libs/publicAssetUrl';
