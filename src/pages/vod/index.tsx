@@ -9,7 +9,7 @@ import type { Locale } from '@/i18n/t';
 import { t } from '@/i18n/t';
 import { buildVodFinderItemsFromTerms } from '@/libs/vodPathToWpSlug';
 import { normalizeRouteLocale } from '@/libs/route';
-import { VOD_COLOR_VAR, VOD_INITIAL, VOD_LABEL, type VodService } from '@/libs/vod';
+import { VOD_COLOR_VAR, VOD_INITIAL, type VodService } from '@/libs/vod';
 import { messages } from '@/i18n/vodPageMessages';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import { getVodTerms } from '@/libs/api/wordpress/endpoints/vodTaxonomy';
@@ -52,9 +52,9 @@ const VodHubPage = ({ locale, vodItems }: VodHubProps) => {
 
         <div className='px-4 py-8 pb-12'>
           <ul className='m-0 grid list-none grid-cols-2 gap-3 p-0 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4'>
-            {items.map(({ vod, href }) => (
+            {items.map(({ vod, label, href }) => (
               <li key={vod}>
-                <VodHubLink vod={vod} href={href} />
+                <VodHubLink vod={vod} label={label} href={href} />
               </li>
             ))}
           </ul>
@@ -64,7 +64,7 @@ const VodHubPage = ({ locale, vodItems }: VodHubProps) => {
   );
 };
 
-const VodHubLink = ({ vod, href }: { vod: VodService; href: string }) => (
+const VodHubLink = ({ vod, label, href }: { vod: VodService; label: string; href: string }) => (
   <Link
     href={href}
     className='flex items-center gap-3 rounded-lg border border-color-border bg-color-bg p-4 no-underline transition-opacity hover:opacity-90'
@@ -76,7 +76,7 @@ const VodHubLink = ({ vod, href }: { vod: VodService; href: string }) => (
     >
       {VOD_INITIAL[vod]}
     </span>
-    <span className='font-ui text-sm font-medium text-color-primary'>{VOD_LABEL[vod]}</span>
+    <span className='font-ui text-sm font-medium text-color-primary'>{label}</span>
   </Link>
 );
 

@@ -16,20 +16,6 @@ export type VodService =
   | 'rakuten'
   | 'youtube';
 
-/** 各サービスの表示名 */
-export const VOD_LABEL: Record<VodService, string> = {
-  netflix: 'Netflix',
-  amazon: 'Prime Video',
-  unext: 'U-NEXT',
-  hulu: 'Hulu',
-  disney: 'Disney+',
-  dmmtv: 'DMM TV',
-  abema: 'ABEMA',
-  appletv: 'Apple TV+',
-  rakuten: '楽天TV',
-  youtube: 'YouTube',
-};
-
 /** アイコン / バッジ用のイニシャル */
 export const VOD_INITIAL: Record<VodService, string> = {
   netflix: 'N',

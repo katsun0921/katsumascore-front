@@ -13,7 +13,6 @@ import type { FilterPost, Post } from "@/types/post";
 import type { WPPost } from "@/types/wordpress";
 import {
   normalizeVodSlugKeyForMatch,
-  vodArchiveDisplayName,
   vodWpSlugLookupCandidates,
 } from "@/libs/vodPathToWpSlug";
 
@@ -109,7 +108,7 @@ export const loadVodArchivePage = async (
     tags: tags ?? null,
   }));
 
-  const categoryName = vodArchiveDisplayName(trimmed, term.name);
+  const categoryName = term.name;
 
   return {
     categoryName,

@@ -1,7 +1,8 @@
 import Link from 'next/link';
-import { type VodService, VOD_LABEL, VOD_INITIAL, VOD_COLOR_VAR } from '@/libs/vod';
+import { type VodService, VOD_INITIAL, VOD_COLOR_VAR } from '@/libs/vod';
 export type VodFinderItem = {
   vod: VodService;
+  label: string;
   count?: number;
   href: string;
 };
@@ -17,7 +18,7 @@ export const HomeVodFinder = ({ title, workCountSuffix, items }: HomeVodFinderPr
     <section className='homeVodFinder'>
       <h2 className='homeVodFinder__title'>{title}</h2>
       <ul className='homeVodFinder__grid'>
-        {items.map(({ vod, count, href }) => (
+        {items.map(({ vod, label, count, href }) => (
           <li key={vod}>
             <Link href={href} className='homeVodItem'>
               <span
@@ -28,7 +29,7 @@ export const HomeVodFinder = ({ title, workCountSuffix, items }: HomeVodFinderPr
                 {VOD_INITIAL[vod]}
               </span>
               <span className='homeVodItem__info'>
-                <span className='homeVodItem__name'>{VOD_LABEL[vod]}</span>
+                <span className='homeVodItem__name'>{label}</span>
                 {count !== undefined && (
                   <span className='homeVodItem__count'>
                     {count}
