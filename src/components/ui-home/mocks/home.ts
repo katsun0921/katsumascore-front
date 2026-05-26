@@ -292,10 +292,10 @@ export const mockRecommendBlocks: RecommendBlock[] = [
 ];
 
 export const mockVodFinderItems: VodFinderItem[] = [
-  { vod: 'netflix', count: 12, href: '/vod/netflix' },
-  { vod: 'amazon', count: 8, href: '/vod/amazon' },
-  { vod: 'unext', count: 6, href: '/vod/unext' },
-  { vod: 'hulu', count: 4, href: '/vod/hulu' },
+  { vod: 'netflix', label: 'Netflix', count: 12, href: '/vod/netflix' },
+  { vod: 'amazon', label: 'Amazon Prime', count: 8, href: '/vod/amazon' },
+  { vod: 'unext', label: 'U-NEXT', count: 6, href: '/vod/unext' },
+  { vod: 'hulu', label: 'Hulu', count: 4, href: '/vod/hulu' },
 ];
 
 export const mockFeaturedItems: FeaturedItem[] = [
