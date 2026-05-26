@@ -12,9 +12,18 @@ import type { Locale } from '@/i18n/t';
 import { getPersonsByRole, transformPerson } from '@/libs/api/wordpress';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
-import { messages } from './i18n';
 
 const PER_PAGE = 20;
+
+const messages = {
+  page: {
+    heading: { ja: '人物', en: 'Person' },
+    description: { ja: '俳優・監督一覧', en: 'Actors and directors' },
+  },
+  breadcrumb: {
+    home: { ja: 'ホーム', en: 'Home' },
+  },
+} as const;
 
 type PersonListPageProps = {
   persons: Person[];
