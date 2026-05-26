@@ -16,9 +16,10 @@ import {
   getPostsByTagId,
   getCategoryBySlug,
   getFeaturedPages,
+  getVodTerms,
 } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
-import { buildVodFinderItemsFromConfig } from "@/libs/buildVodFinderItems";
+import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { getPostTypeArchivePath } from "@/libs/route";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
@@ -165,10 +166,11 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags] = await Promise.all([
+  const [categories, poolRaw, randomTags, vodTerms] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
     pickRandomTags(3),
+    getVodTerms(),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -233,7 +235,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     animePosts,
     highScorePosts,
     recommendBlocks,
-    vodFinderItems: buildVodFinderItemsFromConfig(),
+    vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),
     featuredItems,
   };
 };

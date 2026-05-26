@@ -1,5 +1,6 @@
 import type { VodService } from "@/libs/vod";
-import { VOD_LABEL } from "@/libs/vod";
+import type { VodFinderItem } from "@/components/ui-home/HomeVodFinder";
+import type { WPVodTerm } from "@/libs/api/wordpress/endpoints/vodTaxonomy";
 
 /**
  * フロントの VOD 一覧 URL スラッグ（`/vod/amazon` の `amazon`）から、
@@ -78,12 +79,6 @@ export const normalizeVodSlugKeyForMatch = (s: string): string => {
   return x.replace(/_/g, "-");
 };
 
-/** 一覧の見出し用。既知サービスは `VOD_LABEL`、それ以外は WP の表示名をそのまま使う。 */
-export const vodArchiveDisplayName = (pathSlug: string, wpTermName: string): string => {
-  if (isVodPathSlug(pathSlug)) return VOD_LABEL[pathSlug];
-  return wpTermName;
-};
-
 /**
  * WP の `vod` ターム slug（例: `amazon-prime-video`）からフロントの `VodService` キー（例: `amazon`）に逆引きする。
  * `normalizeVodSlugKeyForMatch` で正規化してから突き合わせるため、接尾辞や区切り文字の差を吸収する。
@@ -97,4 +92,30 @@ export const wpVodSlugToVodService = (wpSlug: string): VodService | null => {
     }
   }
   return null;
+};
+
+/**
+ * WP `vod` タクソノミーのターム一覧から VOD ハブページ用リンクアイテムを生成する。
+ * フロントの `VodService` に対応しないタームはスキップする。
+ * 重複ターム（`-jp` / `-com` 接尾辞違い等）は同一サービスの件数を合算して1件出力する。
+ */
+export const buildVodFinderItemsFromTerms = (terms: WPVodTerm[]): VodFinderItem[] => {
+  const countMap = new Map<VodService, number>();
+  for (const term of terms) {
+    const vod = wpVodSlugToVodService(term.slug);
+    if (!vod) continue;
+    countMap.set(vod, (countMap.get(vod) ?? 0) + term.count);
+  }
+  const termNames = new Map<VodService, string>();
+  for (const term of terms) {
+    const vod = wpVodSlugToVodService(term.slug);
+    if (!vod || termNames.has(vod)) continue;
+    termNames.set(vod, term.name);
+  }
+  return Array.from(countMap.entries()).map(([vod, count]) => ({
+    vod,
+    label: termNames.get(vod) ?? vod,
+    count,
+    href: `/vod/${vod}`,
+  }));
 };
