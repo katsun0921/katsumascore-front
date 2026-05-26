@@ -13,5 +13,6 @@ const useRouter = () => ({
   isFallback: false,
 });
 
-export default { useRouter };
+const nextRouterMock = { useRouter };
+export default nextRouterMock;
 export { useRouter };

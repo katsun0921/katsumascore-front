@@ -23,9 +23,7 @@ const PersonListPage = ({ persons, locale }: PersonListPageProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
   const [currentPage, setCurrentPage] = useState(1);
 
-  // eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n
   const heading = loc === 'en' ? 'Person' : '人物';
-  // eslint-disable-next-line katsumascore-ui/no-hardcoded-i18n
   const description = loc === 'en' ? 'Actors and directors' : '俳優・監督一覧';
 
   const totalPages = Math.ceil(persons.length / PER_PAGE);
