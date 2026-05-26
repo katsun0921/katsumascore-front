@@ -1,17 +1,7 @@
 import type { VodFinderItem } from "@/components/ui-home/HomeVodFinder";
 import type { VodService } from "@/libs/vod";
-import { VOD_LABEL } from "@/libs/vod";
 import type { WPVodTerm } from "@/libs/api/wordpress/endpoints/vodTaxonomy";
 import { wpVodSlugToVodService } from "@/libs/vodPathToWpSlug";
-
-/** VOD 一覧リンク（件数は API 未連携のため省略）。全定義から生成するフォールバック用。 */
-export const buildVodFinderItemsFromConfig = (): VodFinderItem[] => {
-  const services = Object.keys(VOD_LABEL) as VodService[];
-  return services.map((vod) => ({
-    vod,
-    href: `/vod/${vod}`,
-  }));
-};
 
 /**
  * WP `vod` タクソノミーのターム一覧から VOD ハブページ用リンクアイテムを生成する。
