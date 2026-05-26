@@ -18,4 +18,6 @@ export type ListTemplateProps = {
   sidebar?: SidebarProps;
   /** `true` のときパンくずを `ホーム / VOD / （サービス名）` とする（VOD 別一覧向け）。 */
   vodHubBreadcrumb?: boolean;
+  /** `true` のとき VOD 凡例と各記事の VOD バッジを非表示にする（VOD 別一覧は単一サービスのため）。 */
+  singleVodService?: boolean;
 };
