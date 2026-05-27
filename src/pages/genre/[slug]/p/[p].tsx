@@ -1,4 +1,4 @@
-// ISR: revalidate REVALIDATE_DAILY — genre アーカイブのページネーション（/genre/[slug]/p/[p] — `page` セグメントは OpenNext 等と衝突しうるため `p` を使用）
+// ISR blocking: revalidate REVALIDATE_DAILY — genre アーカイブのページネーション（/genre/[slug]/p/[p] — `page` セグメントは OpenNext 等と衝突しうるため `p` を使用）
 import Head from 'next/head';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 

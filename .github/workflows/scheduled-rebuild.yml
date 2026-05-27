@@ -1,0 +1,51 @@
+# 日次の SSG 再ビルド & Cloudflare Workers 再デプロイ。
+# カテゴリー一覧・VOD 一覧は SSG 化しており、WordPress 側で記事が増減しても
+# このワークフローによる再デプロイまで一覧へは反映されない。
+#
+# 実行タイミング: 毎日 JST 03:00（UTC 18:00）。手動実行も可能。
+#
+# 必要な Secrets は deploy-cloudflare-workers.yml と同じ:
+#   CLOUDFLARE_API_TOKEN / WP_API_URL / NEXT_PUBLIC_WP_BASE_URL /
+#   NEXT_PUBLIC_SITE_URL / NEXT_PUBLIC_SITE_NAME
+#   （任意）CLOUDFLARE_ACCOUNT_ID
+
+name: Scheduled Rebuild
+
+on:
+  schedule:
+    # 毎日 UTC 18:00 = JST 03:00
+    - cron: '0 18 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloudflare-workers-deploy
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: package.json
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          WP_API_URL: ${{ secrets.WP_API_URL }}
+          NEXT_PUBLIC_WP_BASE_URL: ${{ secrets.NEXT_PUBLIC_WP_BASE_URL }}
+          NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
+          NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME }}
+        run: npm run deploy
