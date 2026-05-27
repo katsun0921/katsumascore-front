@@ -1,6 +1,6 @@
 # Cloudflare Workers デプロイ手順（初回〜本番）— アーカイブ
 
-> **正規の要点:** 運用・CI の要約は [`../ARCHITECTURE.md`](../ARCHITECTURE.md) の **§3.4 デプロイ** に集約した。  
+> **正規の要点:** 運用・CI の要約は [`../features/ARCHITECTURE.md`](../features/ARCHITECTURE.md) の **§3.4 デプロイ** に集約した。  
 > 本ファイルは **手順の詳細・コマンド例・トラブルシュート全文** の退避用として `docs/features/` から移した。
 
 > 対象: `katsumascore-front`（Next.js + OpenNext + Cloudflare Workers）  
@@ -263,7 +263,7 @@ curl -s -o /dev/null -w "%{http_code}" "https://katsumascore.blog/wp-json/wp/v2/
 
 ## 関連ドキュメント
 
-- [wordpress_production_api_verification.md](../features/wordpress_production_api_verification.md)
-- [wordpress_production_api_verification_checklist.md](../features/wordpress_production_api_verification_checklist.md)
-- [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md)
+- [wordpress_production_api_verification.md](./wordpress_production_api_verification.md)
+- [wordpress_production_api_verification_checklist.md](./wordpress_production_api_verification_checklist.md)
+- [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md)
 - [README.md](../../README.md)

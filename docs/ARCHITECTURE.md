@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド刷新 アーキテクチャ設計書
 
-> **v1.7** ― §3.4 に Cloudflare Workers デプロイ（CI・Secrets・ローカル手順の要点）を追記。詳細手順の旧稿は [`archive/cloudflare_workers_deploy.md`](./archive/cloudflare_workers_deploy.md)。  
+> **v1.7** ― §3.4 に Cloudflare Workers デプロイ（CI・Secrets・ローカル手順の要点）を追記。詳細手順の旧稿は [`archive/cloudflare_workers_deploy.md`](../archive/cloudflare_workers_deploy.md)。  
 > katsumascore.blog ｜ 2026年5月4日
 
 ---
@@ -60,7 +60,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 
 ## 3. 最終アーキテクチャ
 
-> **本番ドメイン分離（公開 `katsumascore.blog` → Workers、CMS 専用ドメインで WordPress）**の詳細は [archive/production_domain_split.md](./archive/production_domain_split.md) を参照。以下の図は移行完了前の参照構成を示す。
+> **本番ドメイン分離（公開 `katsumascore.blog` → Workers、CMS 専用ドメインで WordPress）**の詳細は [archive/production_domain_split.md](../archive/production_domain_split.md) を参照。以下の図は移行完了前の参照構成を示す。
 
 ### 3.1 全体構成
 
@@ -123,7 +123,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 
 **トラブル:** 初回デプロイ前に `wrangler secret list` だけ叩くと Worker 未作成エラーになりうる → 先に `npm run deploy`。ConoHa 等で **`curl` User-Agent が 403** でも、Workers からの fetch は別 UA のため本番は通ることがある。
 
-詳細なステップ・コマンド全文・関連チェックリストへのリンクは **アーカイブ** [`archive/cloudflare_workers_deploy.md`](./archive/cloudflare_workers_deploy.md) を参照。
+詳細なステップ・コマンド全文・関連チェックリストへのリンクは **アーカイブ** [`archive/cloudflare_workers_deploy.md`](../archive/cloudflare_workers_deploy.md) を参照。
 
 ---
 

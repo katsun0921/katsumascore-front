@@ -1,6 +1,6 @@
 # （アーカイブ）KatsumaScore ACF フィールド設計まとめ
 
-> **正規の集約先:** [`../ARCHITECTURE.md`](../ARCHITECTURE.md) の **§5 WordPress ACF・CMSデータモデル** および **§6 WordPress Taxonomy**。以下は移行前のスナップショットとして保持する。  
+> **正規の集約先:** [`../features/ARCHITECTURE.md`](../features/ARCHITECTURE.md) の **§5 WordPress ACF・CMSデータモデル** および **§6 WordPress Taxonomy**。以下は移行前のスナップショットとして保持する。  
 > WordPress リニューアル対応 ｜ katsumascore.blog ｜ 2026年4月
 
 ---

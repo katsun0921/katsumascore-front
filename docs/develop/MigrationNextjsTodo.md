@@ -155,7 +155,7 @@
 - [x] `ui-section/PostListRow` コンポーネントの実装（新設）
 
 ### 本番対応（フェーズ 4）
-- [x] WordPress 本番 API との接続確認（[手順・参照](wordpress_production_api_verification.md) / [TODO チェックリスト](wordpress_production_api_verification_checklist.md)）
+- [x] WordPress 本番 API との接続確認（[手順・参照](../archive/wordpress_production_api_verification.md) / [TODO チェックリスト](../archive/wordpress_production_api_verification_checklist.md)）
 - [x] Cloudflare Workers デプロイの本番検証（https://katsumascore.sato-katsumasa.workers.dev）
 - [x] 広告コード（A8.net / admax）を `next/script` で管理（GA / AdSense は `_app.tsx` で `next/script` 済み。Admax は iframe 隔離、A8 画像バナーは Geo/Tsutaya の静的マークアップ）
 - [x] Facebook ページ埋め込みの CSS クラス管理（`HomeFacebook` の iframe は `className` + SCSS。`style` prop 未使用）
@@ -186,4 +186,4 @@
 
 ### 🔴 最優先: Entity統合（person / company）CPT 移行
 
-> 詳細な設計・実装Todoは [entity_design_complete.md](../top-priority/entity_design_complete.md) を参照。
+> 詳細な設計・実装Todoは [entity_design_complete.md](../features/entity_design_complete.md) を参照。

@@ -61,7 +61,7 @@ https://<WP_CMS_ORIGIN>/wp-json/wp/v2/...
 | `NEXT_PUBLIC_SITE_URL` | `https://katsumascore.blog` | canonical・OG・サイトマップ等の **公開正規 URL**。 |
 | `NEXT_PUBLIC_SITE_NAME` | 従来どおり | 表示名。 |
 
-詳細は [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md) および [ARCHITECTURE.md](../ARCHITECTURE.md) の **§3.4 デプロイ** を参照。手順の全文は [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md)（アーカイブ）。本ドキュメント確定後、それらの例示 URL を **`WP_CMS_ORIGIN` / `katsumascore.blog` の組み合わせ**に更新する。
+詳細は [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md) および [ARCHITECTURE.md](../features/ARCHITECTURE.md) の **§3.4 デプロイ** を参照。手順の全文は [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md)（アーカイブ）。本ドキュメント確定後、それらの例示 URL を **`WP_CMS_ORIGIN` / `katsumascore.blog` の組み合わせ**に更新する。
 
 ### 4.1 `NEXT_PUBLIC_WP_BASE_URL` と「ユーザーから隠す」の両立
 
@@ -94,7 +94,7 @@ https://<WP_CMS_ORIGIN>/wp-json/wp/v2/...
 
 - [ ] `katsumascore.blog`（および `www` が使う場合はそちらも）が **Workers カスタムドメイン**にバインドされている。
 - [ ] `WP_CMS_ORIGIN` 用ゾーンで **ConoHa / オリジン** へのプロキシ設定が正しい。
-- [ ] Cache Rules: **管理画面**は Bypass、`/wp-json/*` は Bypass 等、既存 [ARCHITECTURE.md](../ARCHITECTURE.md) の方針を **`WP_CMS_ORIGIN` ホストに複製**する。
+- [ ] Cache Rules: **管理画面**は Bypass、`/wp-json/*` は Bypass 等、既存 [ARCHITECTURE.md](../features/ARCHITECTURE.md) の方針を **`WP_CMS_ORIGIN` ホストに複製**する。
 - [ ] `workers.dev` は **本番リンクには使わない**（社内・CI のみ）。
 
 ---
@@ -115,10 +115,10 @@ https://<WP_CMS_ORIGIN>/wp-json/wp/v2/...
 
 | ドキュメント | 内容 |
 |--------------|------|
-| [../ARCHITECTURE.md](../ARCHITECTURE.md) | 全体アーキテクチャ（§3 の図を本設計に合わせて更新予定） |
-| [ARCHITECTURE.md](../ARCHITECTURE.md) §3.4 / [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md) | Wrangler・`NEXT_PUBLIC_SITE_URL`・CI |
-| [wordpress_production_env_secrets.md](../features/wordpress_production_env_secrets.md) | シークレット一覧 |
-| [wordpress_production_api_verification.md](../features/wordpress_production_api_verification.md) | API 検証手順 |
+| [../features/ARCHITECTURE.md](../features/ARCHITECTURE.md) | 全体アーキテクチャ（§3 の図を本設計に合わせて更新予定） |
+| [ARCHITECTURE.md](../features/ARCHITECTURE.md) §3.4 / [cloudflare_workers_deploy.md](./cloudflare_workers_deploy.md) | Wrangler・`NEXT_PUBLIC_SITE_URL`・CI |
+| [wordpress_production_env_secrets.md](./wordpress_production_env_secrets.md) | シークレット一覧 |
+| [wordpress_production_api_verification.md](./wordpress_production_api_verification.md) | API 検証手順 |
 
 ---
 
