@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
+// ISR: revalidate 86400s（1日）— WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -104,6 +104,6 @@ export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: 86400,
   };
 };

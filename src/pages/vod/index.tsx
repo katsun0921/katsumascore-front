@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — VOD ハブ（/ja/vod 等）
+// ISR: revalidate 86400s（1日）— VOD ハブ（/ja/vod 等）
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
@@ -91,6 +91,6 @@ export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) =>
       locale: normalizeRouteLocale(locale),
       vodItems,
     },
-    revalidate: 600,
+    revalidate: 86400,
   };
 };

@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
+// ISR: revalidate 86400s（1日）— VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -145,6 +145,6 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: 86400,
   };
 };

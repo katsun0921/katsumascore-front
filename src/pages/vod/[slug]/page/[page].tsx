@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
+// ISR: revalidate 86400s（1日）— VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -133,6 +133,6 @@ export const getStaticProps: GetStaticProps<VodSlugPagedProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: 86400,
   };
 };
