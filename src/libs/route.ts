@@ -91,6 +91,32 @@ export const getVodArchiveUrl = (pathSlug: string, lang = DEFAULT_LOCALE, page =
   return `${base}?${new URLSearchParams({ page: String(page) }).toString()}`;
 };
 
+/**
+ * VOD 別記事一覧の Next.js 内部ルーティングパス。
+ * クライアントサイドナビゲーション時に `router.push` の `href` として使い、
+ * `as` に `getVodArchiveUrl` を渡すことでブラウザ URL を `?page=N` 形式に保つ。
+ */
+export const getVodArchiveNextPath = (pathSlug: string, lang = DEFAULT_LOCALE, page = 1): string => {
+  const base = getVodArchivePath(pathSlug, lang);
+  if (page <= 1) return base;
+  return `${base}/page/${page}`;
+};
+
+/**
+ * 記事一覧の Next.js 内部ルーティングパス。
+ * クライアントサイドナビゲーション時に `router.push` の `href` として使い、
+ * `as` に `getPostTypeArchiveUrl` を渡すことでブラウザ URL を `?page=N` 形式に保つ。
+ */
+export const getPostTypeArchiveNextPath = ({
+  type,
+  lang = DEFAULT_LOCALE,
+  page = 1,
+}: PostTypeArchivePathParams & { page?: number }): string => {
+  const base = getPostTypeArchivePath({ type, lang });
+  if (page <= 1) return base;
+  return `${base}/page/${page}`;
+};
+
 /** WP カテゴリスラッグから PostType を解決する。未マッピングは `movie`。 */
 export const resolvePostType = (categorySlug: string | undefined): PostType =>
   (categorySlug !== undefined ? WP_CATEGORY_TO_POST_TYPE[categorySlug] : undefined) ?? 'movie';

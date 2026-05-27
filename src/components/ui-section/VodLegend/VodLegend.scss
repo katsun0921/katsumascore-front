@@ -28,11 +28,18 @@
     width: 18px;
     height: 18px;
     border-radius: 4px;
-    color: var(--color-text-inverse);
     font-family: var(--font-ui);
     font-size: 10px;
     font-weight: 700;
     line-height: 1;
+  }
+
+  &--badge-light &__badge {
+    color: var(--color-text-inverse);
+  }
+
+  &--badge-dark &__badge {
+    color: var(--color-black);
   }
 
   &__name {

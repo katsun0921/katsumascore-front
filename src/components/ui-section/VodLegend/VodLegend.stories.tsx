@@ -34,12 +34,22 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {
     services: ['netflix', 'amazon', 'unext', 'hulu', 'disney'],
+    badgeColor: 'dark',
+  },
+};
+
+export const BadgeLight: Story = {
+  name: 'BadgeColor: light（TOPページ用）',
+  args: {
+    services: allServices,
+    badgeColor: 'light',
   },
 };
 
 export const AllServices: Story = {
   args: {
     services: allServices,
+    badgeColor: 'dark',
   },
 };
 
@@ -47,5 +57,6 @@ export const English: Story = {
   globals: { locale: 'en' },
   args: {
     services: ['netflix', 'amazon', 'unext', 'hulu', 'disney'],
+    badgeColor: 'dark',
   },
 };

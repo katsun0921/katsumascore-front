@@ -4,13 +4,13 @@ import { VOD_COLOR_VAR } from '@/libs/vod';
 import { messages } from './i18n';
 import type { VodLegendProps } from './VodLegend.types';
 
-export const VodLegend = ({ services, className }: VodLegendProps) => {
+export const VodLegend = ({ services, className, badgeColor = 'dark' }: VodLegendProps) => {
   const locale = useLocale();
   if (services.length === 0) return null;
   const title = t(messages, ['title'], locale);
   return (
     <section
-      className={['vodLegend', className].filter(Boolean).join(' ')}
+      className={['vodLegend', `vodLegend--badge-${badgeColor}`, className].filter(Boolean).join(' ')}
       aria-label={title}
     >
       <h2 className='vodLegend__title'>{title}</h2>
