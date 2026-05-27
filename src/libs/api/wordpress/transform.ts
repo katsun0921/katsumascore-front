@@ -51,6 +51,40 @@ const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLo
 
 const GENRE_TAXONOMIES = new Set(["genre", "genres"]);
 const POST_TAG_TAXONOMIES = new Set(["post_tag", "tag"]);
+
+/**
+ * WP `vod` タクソノミー slug を VodService キーに変換する。
+ * `_embedded["wp:term"]` の vod ターム slug から全サービスを抽出するために使用する。
+ * `vodPathToWpSlug` への依存を避けるため、逆引きマップをインラインで定義する。
+ */
+const VOD_TERM_SLUG_TO_SERVICE: Record<string, import("@/libs/vod").VodService> = {
+  "netflix": "netflix",
+  "amazon-prime-video": "amazon",
+  "u-next": "unext",
+  "hulu": "hulu",
+  "disneyplus": "disney",
+  "dmmtv": "dmmtv",
+  "abema-tv": "abema",
+  "abema": "abema",
+  "apple-tv": "appletv",
+  "apple-tv-plus": "appletv",
+  "rakuten-tv": "rakuten",
+  "youtube": "youtube",
+};
+
+/** WP vod ターム slug → VodService 変換（`_` を `-` に統一、地域接尾辞を除去）。 */
+const resolveVodServiceFromTermSlug = (slug: string): import("@/libs/vod").VodService | null => {
+  if (!slug) return null;
+  let s = slug.trim().toLowerCase().replace(/_/g, "-");
+  const suffixes = ["-cojp", "-com", "-jp", "-ja"] as const;
+  for (const suf of suffixes) {
+    if (s.endsWith(suf)) {
+      s = s.slice(0, -suf.length);
+      break;
+    }
+  }
+  return VOD_TERM_SLUG_TO_SERVICE[s] ?? null;
+};
 const FILM_STUDIO_TAXONOMIES = new Set(["film_studio"]);
 const PRODUCTION_STUDIO_TAXONOMIES = new Set(["production_studio"]);
 const DIRECTOR_TAXONOMIES = new Set(["director", "directors"]);
@@ -210,10 +244,25 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
 
   const acf = wp.acf;
   const vodList: import("@/libs/vod").VodService[] = [];
+  // 旧 ACF フラグ（amazon / netflix / hulu / unext）
   if ((acf?.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") vodList.push("amazon");
   if ((acf?.netflix as { status?: unknown } | undefined)?.status === "streaming") vodList.push("netflix");
   if ((acf?.hulu as { status?: unknown } | undefined)?.status === "streaming") vodList.push("hulu");
   if ((acf?.unext as { status?: unknown } | undefined)?.status === "streaming") vodList.push("unext");
+  // _embedded["wp:term"] の vod タクソノミーから全サービスを補完する（appletv 等 ACF フラグ未定義サービス対応）
+  if (Array.isArray(terms)) {
+    for (const group of terms) {
+      if (!Array.isArray(group)) continue;
+      for (const term of group) {
+        const t = term as Record<string, unknown>;
+        const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy : "";
+        if (taxRaw.replace(/^wp_/i, "").toLowerCase() !== "vod") continue;
+        const termSlug = typeof t.slug === "string" ? t.slug.trim() : "";
+        const service = resolveVodServiceFromTermSlug(termSlug);
+        if (service && !vodList.includes(service)) vodList.push(service);
+      }
+    }
+  }
   const vods = vodList.length > 0 ? vodList : undefined;
 
   const releaseYear = wp.acf?.release_date
