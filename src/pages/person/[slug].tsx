@@ -1,6 +1,7 @@
-// ISR: revalidate 86400s (24h) — person CPT 詳細ページ
+// ISR: revalidate REVALIDATE_DAILY — person CPT 詳細ページ
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { I18nProvider } from '@/i18n/provider';
 import {
   getPersonBySlug,
@@ -108,6 +109,6 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
       posts: mergedPosts,
       locale: currentLocale,
     },
-    revalidate: 60 * 60 * 24,
+    revalidate: REVALIDATE_DAILY,
   };
 };

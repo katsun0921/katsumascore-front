@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
+// ISR: revalidate REVALIDATE_DAILY — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
 import Head from 'next/head';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
@@ -11,6 +11,7 @@ import type { Locale } from '@/i18n/t';
 import { loadStaticGenres } from '@/libs/getStaticGenres';
 import { loadGenreListPage } from '@/libs/loadGenreListPage';
 import { getTaxonomyUrl, normalizeRouteLocale } from '@/libs/route';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import type { Post } from '@/types/post';
 
 const FILTER_OPTIONS = [
@@ -104,6 +105,6 @@ export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_DAILY,
   };
 };

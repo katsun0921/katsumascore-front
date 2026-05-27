@@ -1,7 +1,8 @@
-// ISR: revalidate 60s — 特集カテゴリ一覧
+// ISR: revalidate REVALIDATE_NORMAL — 特集カテゴリ一覧
 import Head from 'next/head';
 import { useState } from 'react';
 import type { GetStaticProps } from 'next';
+import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 import { ListTemplate } from '@/components/templates/ListTemplate';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
@@ -77,6 +78,6 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
       posts: normalizePosts(fetched.items, currentLocale),
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_NORMAL,
   };
 };

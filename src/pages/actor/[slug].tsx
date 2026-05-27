@@ -1,6 +1,7 @@
-// ISR: revalidate 60s — 現状運用: WP category として管理 (将来 /person/{slug} に統合予定)
+// ISR: revalidate REVALIDATE_HIGH — 現状運用: WP category として管理 (将来 /person/{slug} に統合予定)
 import Head from 'next/head';
 import { useState } from 'react';
+import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { useRouter } from 'next/router';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { ListTemplate } from '@/components/templates/ListTemplate';
@@ -93,6 +94,6 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 300,
+    revalidate: REVALIDATE_HIGH,
   };
 };

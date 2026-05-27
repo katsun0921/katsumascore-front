@@ -1,4 +1,4 @@
-// ISR: revalidate 60s — VOD ハブ（/ja/vod 等）
+// ISR: revalidate REVALIDATE_DAILY — VOD ハブ（/ja/vod 等）
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
@@ -13,6 +13,7 @@ import { VOD_COLOR_VAR, type VodService } from '@/libs/vod';
 import { messages } from '@/i18n/vodPageMessages';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import { getVodTerms } from '@/libs/api/wordpress/endpoints/vodTaxonomy';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
 type VodHubProps = {
   locale: string;
@@ -91,6 +92,6 @@ export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) =>
       locale: normalizeRouteLocale(locale),
       vodItems,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_DAILY,
   };
 };

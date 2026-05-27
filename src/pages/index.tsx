@@ -1,6 +1,7 @@
-// ISR: revalidate 60s — TOPページ
+// ISR: revalidate REVALIDATE_HIGH — TOPページ
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
+import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { HomeTemplate } from '@/components/templates/HomeTemplate';
 import type { HomeTemplateProps } from '@/components/templates/HomeTemplate/HomeTemplate.types';
 import { I18nProvider } from '@/i18n/provider';
@@ -41,6 +42,6 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const templateProps = await loadHomeTemplateProps(locale);
   return {
     props: toSerializableValue({ ...templateProps, locale }),
-    revalidate: 300,
+    revalidate: REVALIDATE_HIGH,
   };
 };

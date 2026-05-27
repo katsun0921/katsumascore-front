@@ -1,6 +1,7 @@
-// ISR: revalidate 300s — WP固定ページ（特集ページ等）の動的ルート
+// ISR: revalidate REVALIDATE_HIGH — WP固定ページ（特集ページ等）の動的ルート
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
@@ -57,6 +58,6 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: 300,
+    revalidate: REVALIDATE_HIGH,
   };
 };
