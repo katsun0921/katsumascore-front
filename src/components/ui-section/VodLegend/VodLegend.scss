@@ -32,20 +32,19 @@
     font-size: 10px;
     font-weight: 700;
     line-height: 1;
-  }
-
-  &--badge-light &__badge {
     color: var(--color-text-inverse);
-  }
-
-  &--badge-dark &__badge {
-    color: var(--color-black);
   }
 
   &__name {
-    color: var(--color-text-inverse);
     font-family: var(--font-ui);
     font-size: 12px;
     opacity: 0.85;
+  }
+  &--badge-light &__name {
+    color: var(--color-text-inverse);
+  }
+
+  &--badge-dark &__name {
+    color: var(--color-black);
   }
 }
