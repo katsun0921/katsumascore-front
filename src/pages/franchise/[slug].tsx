@@ -1,6 +1,7 @@
-// ISR: revalidate 3600s (1h) — franchise（シリーズ）特集ページ
+// ISR: revalidate REVALIDATE_LOW — franchise（シリーズ）特集ページ
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import { REVALIDATE_LOW } from '@/config/revalidate.config';
 import { I18nProvider } from '@/i18n/provider';
 import {
   getAllFranchiseSlugs,
@@ -96,6 +97,6 @@ export const getStaticProps: GetStaticProps<FranchisePageProps> = async ({ param
       franchise: transformFranchise(term, posts),
       locale: currentLocale,
     },
-    revalidate: 60 * 60,
+    revalidate: REVALIDATE_LOW,
   };
 };

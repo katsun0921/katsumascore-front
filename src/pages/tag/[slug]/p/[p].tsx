@@ -1,5 +1,6 @@
-// ISR: revalidate 600s — タグアーカイブのページネーション（/tag/[slug]/p/[p]）
+// ISR: revalidate REVALIDATE_NORMAL — タグアーカイブのページネーション（/tag/[slug]/p/[p]）
 import Head from 'next/head';
+import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useState } from 'react';
@@ -108,6 +109,6 @@ export const getStaticProps: GetStaticProps<TagPagedProps> = async ({ params, lo
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_NORMAL,
   };
 };

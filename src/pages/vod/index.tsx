@@ -1,7 +1,8 @@
-// ISR: revalidate 60s — VOD ハブ（/ja/vod 等）
+// ISR: revalidate REVALIDATE_DAILY — VOD ハブ（/ja/vod 等）
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { I18nProvider } from '@/i18n/provider';
@@ -91,6 +92,6 @@ export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) =>
       locale: normalizeRouteLocale(locale),
       vodItems,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_DAILY,
   };
 };

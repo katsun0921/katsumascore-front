@@ -1,5 +1,6 @@
-// ISR: revalidate 600s — WP タグタクソノミーアーカイブ
+// ISR: revalidate REVALIDATE_NORMAL — WP タグタクソノミーアーカイブ
 import Head from 'next/head';
+import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useState } from 'react';
@@ -104,6 +105,6 @@ export const getStaticProps: GetStaticProps<TagPageProps> = async ({ params, loc
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_NORMAL,
   };
 };

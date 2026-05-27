@@ -1,5 +1,6 @@
-// ISR: revalidate 60s — genre アーカイブのページネーション（/genre/[slug]/p/[p] — `page` セグメントは OpenNext 等と衝突しうるため `p` を使用）
+// ISR: revalidate REVALIDATE_DAILY — genre アーカイブのページネーション（/genre/[slug]/p/[p] — `page` セグメントは OpenNext 等と衝突しうるため `p` を使用）
 import Head from 'next/head';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useState } from 'react';
@@ -108,6 +109,6 @@ export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_DAILY,
   };
 };

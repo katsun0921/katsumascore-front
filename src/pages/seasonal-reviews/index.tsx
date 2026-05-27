@@ -1,6 +1,7 @@
-// ISR: revalidate 60s — 季節レビュー一覧
+// ISR: revalidate REVALIDATE_NORMAL — 季節レビュー一覧
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
+import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { I18nProvider } from '@/i18n/provider';
@@ -95,6 +96,6 @@ export const buildSeasonalIndexProps = async (
 export const getStaticProps: GetStaticProps<SeasonalIndexProps> = async ({ locale }) => {
   return {
     props: await buildSeasonalIndexProps(locale),
-    revalidate: 600,
+    revalidate: REVALIDATE_NORMAL,
   };
 };

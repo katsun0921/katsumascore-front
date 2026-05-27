@@ -1,6 +1,7 @@
-// ISR: revalidate 60s — 季節レビュー固定ページ
+// ISR: revalidate REVALIDATE_HIGH — 季節レビュー固定ページ
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
@@ -60,6 +61,6 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: 300,
+    revalidate: REVALIDATE_HIGH,
   };
 };

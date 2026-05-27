@@ -1,5 +1,6 @@
-// ISR: revalidate 600s — 映画カテゴリ記事一覧（/movie, /en/movie）。1ページ目は ISR、ページ変更・フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
+// ISR: revalidate REVALIDATE_DAILY — 映画カテゴリ記事一覧（/movie, /en/movie）。1ページ目は ISR、ページ変更・フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
+import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -111,7 +112,7 @@ export default MovieIndexPage;
 export const getStaticProps: GetStaticProps<MovieIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_MOVIE_CATEGORY_SLUG, currentLocale, 1);
-  if ('notFound' in data) return { notFound: true, revalidate: 60 };
+  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {
@@ -121,6 +122,6 @@ export const getStaticProps: GetStaticProps<MovieIndexProps> = async ({ locale }
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_DAILY,
   };
 };

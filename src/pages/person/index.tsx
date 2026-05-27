@@ -1,6 +1,7 @@
-// ISR: revalidate 86400s (24h) — person 一覧ページ
+// ISR: revalidate REVALIDATE_DAILY — person 一覧ページ
 import Head from 'next/head';
 import Link from 'next/link';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { useState } from 'react';
 import type { GetStaticProps } from 'next';
 import { PageLayout } from '@/components/templates/PageLayout';
@@ -114,6 +115,6 @@ export const getStaticProps: GetStaticProps<PersonListPageProps> = async ({ loca
       persons,
       locale: currentLocale,
     },
-    revalidate: 60 * 60 * 24,
+    revalidate: REVALIDATE_DAILY,
   };
 };
