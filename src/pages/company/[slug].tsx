@@ -1,6 +1,7 @@
-// ISR: revalidate 86400s (24h) — company CPT 詳細ページ
+// ISR: revalidate REVALIDATE_DAILY — company CPT 詳細ページ
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { I18nProvider } from '@/i18n/provider';
 import { getCompanyBySlug } from '@/libs/api/wordpress';
 import { transformCompany } from '@/libs/api/wordpress';
@@ -76,6 +77,6 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
       company: transformCompany(wp),
       locale: currentLocale,
     },
-    revalidate: 60 * 60 * 24,
+    revalidate: REVALIDATE_DAILY,
   };
 };

@@ -1,5 +1,6 @@
-// ISR: revalidate 600s — アニメカテゴリ記事一覧（/anime, /en/anime）。1ページ目は ISR、ページ変更・フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
+// ISR: revalidate REVALIDATE_NORMAL — アニメカテゴリ記事一覧（/anime, /en/anime）。1ページ目は ISR、ページ変更・フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
+import { REVALIDATE_NORMAL, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -111,7 +112,7 @@ export default AnimeIndexPage;
 export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, 1, ANIME_LIST_PER_PAGE);
-  if ('notFound' in data) return { notFound: true, revalidate: 60 };
+  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {
@@ -121,6 +122,6 @@ export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: 600,
+    revalidate: REVALIDATE_NORMAL,
   };
 };
