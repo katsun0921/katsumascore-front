@@ -1,6 +1,6 @@
 # KatsumaScore Taxonomy 整理まとめ
 
-> **アーカイブ（2026年5月1日）** — 要約は `docs/ARCHITECTURE.md` の「5. WordPress Taxonomy（コンテンツ分類）」を参照。本ファイルは Post Tag 全60件の slug 一覧などフルリスト用。
+> **アーカイブ（2026年5月1日）** — 要約は `docs/features/ARCHITECTURE.md` の「5. WordPress Taxonomy（コンテンツ分類）」を参照。本ファイルは Post Tag 全60件の slug 一覧などフルリスト用。
 
 > WordPress リニューアル対応  
 > katsumascore.blog ｜ 2026年4月

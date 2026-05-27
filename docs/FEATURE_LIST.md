@@ -432,7 +432,7 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 
 | ドキュメント | 場所 | 内容 |
 |------------|------|------|
-| アーキテクチャ設計書 | `docs/ARCHITECTURE.md` | フレームワーク選定・技術スタック・WordPress 統合 |
+| アーキテクチャ設計書 | `docs/features/ARCHITECTURE.md` | フレームワーク選定・技術スタック・WordPress 統合 |
 | コンポーネント設計 | `.claude/rules/src/components.md` | レイヤー定義・index.ts ルール |
 | スタイリング | `.claude/rules/styling.md` | Tailwind / SCSS 使い分け |
 | libs 仕様 | `.claude/rules/src/libs.md` | ライブラリ関数仕様 |

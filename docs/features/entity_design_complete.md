@@ -177,24 +177,16 @@ entityは価値を生むためのもの
 - [x] `/ja/actor/{slug}` / `/ja/director/{slug}` をtaxonomyとして運用中
 
 ## Phase 2 — CPT 導入（WordPress + フロントエンド）
-- [ ] WordPress側: `person` CPT + ACFフィールド設定（name / slug / roles / bio / image）
-- [ ] WordPress側: `company` CPT + ACFフィールド設定（name / slug / roles / description / logo）
-- [ ] WordPress側: Postに `cast` / `director` / `production_companies` / `distributors` のrelationshipフィールド追加
-- [ ] `lib/api/wordpress/generated/wp-schema.d.ts` を再生成（person / companyエンドポイント追加）
-- [ ] `lib/api/wordpress/endpoints/persons.ts` 新設（`getPerson` / `getPersonBySlug` / `getPersonsByRole`）
-- [ ] `lib/api/wordpress/endpoints/companies.ts` 新設（`getCompany` / `getCompanyBySlug`）
-- [ ] `lib/api/wordpress/transform.ts`にperson / companyの正規化処理を追加
-- [ ] `src/lib/route.ts` に `getEntityUrl(type, slug, lang)` を追加
-- [ ] `pages/person/[slug].tsx` 新設（ISR）— プロフィール / 出演作品 / 監督作品 / 平均スコア
-- [ ] `pages/company/[slug].tsx` 新設（ISR）— 概要 / 制作作品 / 配給作品
-- [ ] PersonTemplate / CompanyTemplateの実装
-- [ ] Breadcrumb対応（Home > Person > Name / Home > Company > Name）
-- [ ] SEO: entityページをindex対象・内部リンクのハブ化・canonical統一
-
-## Phase 3 — 完全移行（リダイレクト）
-- [ ] `next.config.ts`に301リダイレクト追加
-  - `/actor/:slug` → `/person/:slug`
-  - `/director/:slug` → `/person/:slug`
-  - `/production/:slug` → `/company/:slug`
-  - `/distributor/:slug` → `/company/:slug`
-- [ ] slug固定・重複禁止の確認（移行後に変更禁止）
+- [x] WordPress側: `person` CPT + ACFフィールド設定（name_ja / name_en / slug / roles / bio / image）
+- [x] WordPress側: `company` CPT + ACFフィールド設定（name_ja / name_en / slug / roles / description / logo）
+- [x] WordPress側: Postに `director` / `production_studio` / `film_studio` のrelationshipフィールド追加
+- [x] `lib/api/wordpress/generated/wp-schema.d.ts` に `WPPerson` / `WPCompany` スキーマ追加
+- [x] `lib/api/wordpress/endpoints/persons.ts` 新設（`getPerson` / `getPersonBySlug` / `getPersonsByRole` / `getPersons`）
+- [x] `lib/api/wordpress/endpoints/companies.ts` 新設（`getCompany` / `getCompanyBySlug`）
+- [x] `lib/api/wordpress/transform.ts`に `transformPerson` / `transformCompany` 追加
+- [x] `src/libs/route.ts` に `getEntityUrl(type, slug, lang)` を追加
+- [x] `pages/person/[slug].tsx` 新設（ISR revalidate 86400s）— プロフィール / 出演作品 / 監督作品
+- [x] `pages/company/[slug].tsx` 新設（ISR revalidate 86400s）— 概要 / 制作・配給作品
+- [x] PersonTemplate / CompanyTemplateの実装
+- [x] Breadcrumb対応（Home > Person > Name / Home > Company > Name）
+- [x] SEO: canonical / JSON-LD（schema.org Person / Organization）/ meta description

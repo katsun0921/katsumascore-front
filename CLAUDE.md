@@ -80,6 +80,9 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 | lib 関数・hooks 追加 / 削除 | §4 ライブラリ関数 / §5 Hooks |
 | 型定義追加 / 削除 | §6 型定義 |
 | 翻訳ファイル追加 / 削除 | §7 i18n |
+| `docs/develop/` → `docs/features/` へ昇格（仕様公開） | §10 関連ドキュメント |
+
+> **docs/ ディレクトリ構成:** `features/`（使用中）/ `develop/`（開発中）/ `idea/`（未着手）/ `archive/`（完了・見送り）。詳細は [`docs/README.md`](docs/README.md) を参照。
 
 ---
 
