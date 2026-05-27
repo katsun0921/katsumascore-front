@@ -25,7 +25,7 @@ import {
   paginatePosts,
 } from '@/libs/listFilters';
 import { VOD_ARCHIVE_PATH_SLUGS } from '@/libs/vodPathToWpSlug';
-import { getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
+import { getVodArchiveNextPath, getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
 
 type VodSlugIndexProps = {
@@ -82,10 +82,11 @@ const VodSlugIndexPage = ({
   };
 
   const handlePageChange = (page: number) => {
-    void router.push(getArchiveUrl(page), undefined, {
-      scroll: true,
-      locale: false,
-    });
+    void router.push(
+      getVodArchiveNextPath(pathSlug, loc, page),
+      getArchiveUrl(page),
+      { scroll: true, locale: false },
+    );
   };
 
   return (

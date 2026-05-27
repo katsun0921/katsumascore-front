@@ -44,7 +44,7 @@ export const HomeTemplate = ({
 
       <div className='homeTemplate__body max-w-full min-w-0'>
         <section className='homeTemplate__section'>
-          <VodLegend services={vodFinderItems.map((item) => item.vod)} />
+          <VodLegend services={vodFinderItems.map((item) => item.vod)} badgeColor='light' />
         </section>
 
         <section className='homeTemplate__section'>

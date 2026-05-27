@@ -24,7 +24,7 @@ import {
   getUrlParamsFromListFilter,
   paginatePosts,
 } from '@/libs/listFilters';
-import { getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
+import { getVodArchiveNextPath, getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
 
 type VodSlugPagedProps = {
@@ -73,10 +73,11 @@ const VodSlugPagedPage = ({
   };
 
   const handlePageChange = (page: number) => {
-    void router.push(getArchiveUrl(page), undefined, {
-      scroll: true,
-      locale: false,
-    });
+    void router.push(
+      getVodArchiveNextPath(pathSlug, loc, page),
+      getArchiveUrl(page),
+      { scroll: true, locale: false },
+    );
   };
 
   return (

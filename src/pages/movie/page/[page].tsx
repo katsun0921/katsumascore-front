@@ -22,7 +22,7 @@ import {
   getTaxonomyFilterFromUrlParams,
   getUrlParamsFromListFilter,
 } from '@/libs/listFilters';
-import { getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
+import { getPostTypeArchiveNextPath, getPostTypeArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
 type MoviePagedProps = {
@@ -76,10 +76,11 @@ const MoviePagedPage = ({
   };
 
   const handlePageChange = (page: number) => {
-    void router.push(getArchiveUrl(page), undefined, {
-      scroll: true,
-      locale: false,
-    });
+    void router.push(
+      getPostTypeArchiveNextPath({ type: 'movie', lang: loc, page }),
+      getArchiveUrl(page),
+      { scroll: true, locale: false },
+    );
   };
 
   return (
