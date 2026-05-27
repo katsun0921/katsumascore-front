@@ -8,14 +8,14 @@
 /** トップページ・記事詳細・actor など更新頻度が高めのページ（5分） */
 export const REVALIDATE_HIGH = 300;
 
-/** 一般一覧系（featured / movie / anime / drama / genre / tag / seasonal 等）（10分） */
+/** 一般一覧系（featured / tag / seasonal 等）（10分） */
 export const REVALIDATE_NORMAL = 600;
 
 /** franchise など中程度の更新頻度（1時間） */
 export const REVALIDATE_LOW = 60 * 60;
 
 /**
- * VOD 一覧・カテゴリー一覧・person / company など更新頻度が低いページ（1日）。
+ * movie / anime / drama / VOD 一覧・カテゴリー（genre）・person / company など更新頻度が低いページ（1日）。
  * Cloudflare Workers のサブリクエスト数超過（エラー 1102）対策として
  * 再生成頻度を抑制するために使用する。
  */

@@ -1,6 +1,6 @@
-// ISR: revalidate REVALIDATE_NORMAL — ドラマ一覧 2 ページ目以降。ISR の posts を初期表示に使い、フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
+// ISR: revalidate REVALIDATE_DAILY — ドラマ一覧 2 ページ目以降。ISR の posts を初期表示に使い、フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
 import Head from 'next/head';
-import { REVALIDATE_NORMAL, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
+import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -132,6 +132,6 @@ export const getStaticProps: GetStaticProps<DramaPagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_NORMAL,
+    revalidate: REVALIDATE_DAILY,
   };
 };
