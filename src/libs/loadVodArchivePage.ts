@@ -12,33 +12,16 @@ import {
 } from "@/libs/api/wordpress";
 import { toSerializableValue } from "@/utils/toSerializableValue";
 import type { FilterPost, Post, VodService } from "@/types/post";
-import {
-  normalizeVodSlugKeyForMatch,
-  vodWpSlugLookupCandidates,
-} from "@/libs/vodPathToWpSlug";
+import { resolveVodWpSlug, wpVodSlugToVodService } from "@/libs/vodPathToWpSlug";
 
 export const VOD_ARCHIVE_LIST_PER_PAGE = 13;
 
-/** `slug` 直指定が全部空でも、一覧の正規化 slug が候補のいずれかと一致すればそのタームを返す。 */
-const pickVodTermFromList = (terms: WPVodTerm[], candidates: string[]): WPVodTerm | null => {
-  for (let ti = 0; ti < terms.length; ti += 1) {
-    const t = terms[ti];
-    const tn = normalizeVodSlugKeyForMatch(t.slug);
-    for (let ci = 0; ci < candidates.length; ci += 1) {
-      if (tn === normalizeVodSlugKeyForMatch(candidates[ci])) return t;
-    }
-  }
-  return null;
-};
-
-const VOD_SERVICE_SET = new Set<string>([
-  'netflix', 'amazon', 'unext', 'hulu', 'disney',
-  'dmmtv', 'abema', 'appletv', 'rakuten', 'youtube',
-]);
-
-/** VOD タームスラッグを VodService 型にフィルタする。 */
+/** WP の VOD タームスラッグ（例: `amazon-prime-video`）を VodService キー（例: `amazon`）に変換する。 */
 const toVodServices = (terms: VodListItem['vods']): VodService[] =>
-  terms.map((v) => v.slug).filter((s): s is VodService => VOD_SERVICE_SET.has(s));
+  terms.flatMap((v) => {
+    const service = wpVodSlugToVodService(v.slug);
+    return service ? [service] : [];
+  });
 
 /** `VodListItem` を一覧表示用 `Post` にマッピングする。 */
 const vodListItemToPost = (item: VodListItem): Post => ({
@@ -94,18 +77,11 @@ export const loadVodArchivePage = async (
   const trimmed = pathSlug.trim();
   if (!trimmed) return { notFound: true };
 
-  const candidates = vodWpSlugLookupCandidates(trimmed);
-  let term: WPVodTerm | null = null;
-  for (let i = 0; i < candidates.length; i += 1) {
-    const resolved = await getVodTermBySlug(candidates[i]);
-    if (resolved) {
-      term = resolved;
-      break;
-    }
-  }
+  const wpSlug = resolveVodWpSlug(trimmed);
+  let term: WPVodTerm | null = await getVodTermBySlug(wpSlug);
   if (!term) {
     const list = await getVodTerms();
-    if (list) term = pickVodTermFromList(list, candidates);
+    term = list?.find((t) => t.slug === wpSlug) ?? null;
   }
   if (!term) return { notFound: true };
 

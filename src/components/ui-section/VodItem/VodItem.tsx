@@ -12,7 +12,6 @@ const DISPLAY_NAME: Record<VodService, string> = {
   dmmtv: 'DMM TV',
   abema: 'ABEMA',
   appletv: 'Apple TV+',
-  rakuten: '楽天TV',
   youtube: 'YouTube',
 };
 
