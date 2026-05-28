@@ -8,7 +8,7 @@ export const buildStreamingVods = (wp: ParsedWPPost): TStreamingVodEntry[] | und
   if (!acf) return undefined;
   const out: TStreamingVodEntry[] = [];
   if ((acf.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "amazon", url: "https://www.amazon.co.jp/gp/video/storefront" });
+    out.push({ service: "prime-video", url: "https://www.amazon.co.jp/gp/video/storefront" });
   }
   if ((acf.netflix as { status?: unknown } | undefined)?.status === "streaming") {
     out.push({ service: "netflix", url: "https://www.netflix.com" });

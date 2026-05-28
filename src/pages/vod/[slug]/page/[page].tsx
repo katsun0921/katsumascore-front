@@ -43,6 +43,7 @@ const VodSlugPagedPage = ({
   posts,
   allPosts,
   currentPage,
+  totalPages,
   locale,
 }: VodSlugPagedProps) => {
   const router = useRouter();
