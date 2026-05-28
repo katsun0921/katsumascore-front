@@ -1,5 +1,6 @@
-// SSG — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）。日次 scheduled rebuild で更新
+// ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -145,5 +146,6 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
+    revalidate: REVALIDATE_DAILY,
   };
 };
