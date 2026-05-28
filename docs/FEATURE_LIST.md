@@ -253,7 +253,8 @@ hooks / state 使用可。データ取得・整形を担当。
 | `companies.ts` | `getCompanies`, `getCompanyBySlug` | 企業取得 |
 | `persons.ts` | `getPersons`, `getPersonBySlug` | 人物取得 |
 | `franchise.ts` | `getFranchises`, `getFranchiseBySlug` | フランチャイズ取得 |
-| `vodTaxonomy.ts` | `getVodTaxonomy` | VOD 分類取得 |
+| `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
+| `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 
 **共通仕様:**
 - ベース URL: `process.env.WP_API_URL`

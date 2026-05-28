@@ -11,7 +11,6 @@ const allServices: VodService[] = [
   'dmmtv',
   'abema',
   'appletv',
-  'rakuten',
   'youtube',
 ];
 

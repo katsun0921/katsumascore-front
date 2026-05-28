@@ -13,7 +13,6 @@ export type VodService =
   | 'dmmtv'
   | 'abema'
   | 'appletv'
-  | 'rakuten'
   | 'youtube';
 
 /** CSS変数（背景色） */
@@ -26,7 +25,6 @@ export const VOD_COLOR_VAR: Record<VodService, string> = {
   dmmtv: 'var(--color-dmmtv)',
   abema: 'var(--color-abema)',
   appletv: 'var(--color-appletv)',
-  rakuten: 'var(--color-rakuten)',
   youtube: 'var(--color-youtube)',
 };
 
@@ -40,6 +38,5 @@ export const VOD_BORDER_CLASS: Record<VodService, string> = {
   dmmtv: '[border-top:3px_solid_var(--color-dmmtv)]',
   abema: '[border-top:3px_solid_var(--color-abema)]',
   appletv: '[border-top:3px_solid_var(--color-appletv)]',
-  rakuten: '[border-top:3px_solid_var(--color-rakuten)]',
   youtube: '[border-top:3px_solid_var(--color-youtube)]',
 };

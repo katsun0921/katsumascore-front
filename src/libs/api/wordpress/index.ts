@@ -37,6 +37,17 @@ export type { WPGenreTerm } from "./endpoints/genre";
 export { getVodTermBySlug, getVodTerms } from "./endpoints/vodTaxonomy";
 export type { WPVodTerm } from "./endpoints/vodTaxonomy";
 
+export { getVodList } from "./endpoints/vodList";
+export type {
+  VodListTerm,
+  VodListFeaturedImage,
+  VodListItem,
+  VodListMeta,
+  VodListResponse,
+  VodListFilter,
+  VodListParams,
+} from "./endpoints/vodList";
+
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
 export { getPerson, getPersonBySlug, getPersons, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
