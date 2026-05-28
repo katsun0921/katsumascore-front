@@ -44,6 +44,7 @@ const VodSlugIndexPage = ({
   posts,
   allPosts,
   currentPage,
+  totalPages,
   locale,
 }: VodSlugIndexProps) => {
   const router = useRouter();
