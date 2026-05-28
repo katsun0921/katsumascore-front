@@ -114,7 +114,7 @@ const basePost: PostDetailData = {
   },
   streamingVods: [
     { service: 'netflix', url: 'https://netflix.com', isPaid: true },
-    { service: 'amazon', url: 'https://amazon.co.jp/prime-video' },
+    { service: 'prime-video', url: 'https://amazon.co.jp/prime-video' },
   ],
   rentalServices: [
     { service: 'tsutaya', url: 'https://tsutaya.com' },

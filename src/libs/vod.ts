@@ -1,45 +1,20 @@
 /**
- * VODサービスの共通定義
- * サービスキー・表示名・カラー変数・イニシャルをここで一元管理する。
- * コンポーネント内でのローカル定義は禁止。
+ * VOD サービスの共通定義。
+ * マスターデータは `@/config/vod.config` で一元管理している。
+ * このファイルは後方互換エクスポートと派生マップのみを提供する。
  */
+export type { VodService } from '@/config/vod.config';
+export { VOD_CONFIG } from '@/config/vod.config';
 
-export type VodService =
-  | 'netflix'
-  | 'amazon'
-  | 'unext'
-  | 'hulu'
-  | 'disney'
-  | 'dmmtv'
-  | 'abema'
-  | 'appletv'
-  | 'rakuten'
-  | 'youtube';
+import { VOD_CONFIG } from '@/config/vod.config';
+import type { VodService } from '@/config/vod.config';
 
-/** CSS変数（背景色） */
-export const VOD_COLOR_VAR: Record<VodService, string> = {
-  netflix: 'var(--color-netflix)',
-  amazon: 'var(--color-amazon-shopping)',
-  unext: 'var(--color-amazon)',
-  hulu: 'var(--color-hulu)',
-  disney: 'var(--color-disney)',
-  dmmtv: 'var(--color-dmmtv)',
-  abema: 'var(--color-abema)',
-  appletv: 'var(--color-appletv)',
-  rakuten: 'var(--color-rakuten)',
-  youtube: 'var(--color-youtube)',
-};
+/** CSS変数（背景色）。 `VOD_CONFIG[service].colorVar` の派生マップ。 */
+export const VOD_COLOR_VAR: Record<VodService, string> = Object.fromEntries(
+  (Object.keys(VOD_CONFIG) as VodService[]).map((k) => [k, VOD_CONFIG[k].colorVar]),
+) as Record<VodService, string>;
 
-/** Tailwind border-top クラス（VodItem 用） */
-export const VOD_BORDER_CLASS: Record<VodService, string> = {
-  netflix: '[border-top:3px_solid_var(--color-netflix)]',
-  amazon: '[border-top:3px_solid_var(--color-amazon)]',
-  unext: '[border-top:3px_solid_var(--color-unext)]',
-  hulu: '[border-top:3px_solid_var(--color-hulu)]',
-  disney: '[border-top:3px_solid_var(--color-disney)]',
-  dmmtv: '[border-top:3px_solid_var(--color-dmmtv)]',
-  abema: '[border-top:3px_solid_var(--color-abema)]',
-  appletv: '[border-top:3px_solid_var(--color-appletv)]',
-  rakuten: '[border-top:3px_solid_var(--color-rakuten)]',
-  youtube: '[border-top:3px_solid_var(--color-youtube)]',
-};
+/** Tailwind border-top クラス（VodItem 用）。 `VOD_CONFIG[service].borderClass` の派生マップ。 */
+export const VOD_BORDER_CLASS: Record<VodService, string> = Object.fromEntries(
+  (Object.keys(VOD_CONFIG) as VodService[]).map((k) => [k, VOD_CONFIG[k].borderClass]),
+) as Record<VodService, string>;

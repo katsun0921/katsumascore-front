@@ -35,7 +35,7 @@ export const Unavailable: Story = {
 export const LongLabel: Story = {
   args: {
     item: {
-      service: 'amazon',
+      service: 'prime-video',
       label: 'Amazon Prime Video（プライム会員限定）',
       status: true,
       href: 'https://amazon.co.jp/prime-video',

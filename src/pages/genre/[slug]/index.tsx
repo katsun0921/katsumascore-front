@@ -1,5 +1,6 @@
-// SSG — WP genre taxonomy アーカイブ 1 ページ目。日次 scheduled rebuild で更新（ページネーションは p/[p] で ISR blocking）
+// ISR: revalidate REVALIDATE_DAILY — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
 import Head from 'next/head';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useState } from 'react';
@@ -104,5 +105,6 @@ export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
+    revalidate: REVALIDATE_DAILY,
   };
 };

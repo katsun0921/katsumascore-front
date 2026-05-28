@@ -1,5 +1,6 @@
-// SSG — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）。日次 scheduled rebuild で更新
+// ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
+import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -22,7 +23,6 @@ import {
   getSortFilterFromUrlParams,
   getTaxonomyFilterFromUrlParams,
   getUrlParamsFromListFilter,
-  paginatePosts,
 } from '@/libs/listFilters';
 import { VOD_ARCHIVE_PATH_SLUGS } from '@/libs/vodPathToWpSlug';
 import { getVodArchiveNextPath, getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
@@ -44,24 +44,21 @@ const VodSlugIndexPage = ({
   posts,
   allPosts,
   currentPage,
+  totalPages,
   locale,
 }: VodSlugIndexProps) => {
   const router = useRouter();
   const sortFilter = getSortFilterFromUrlParams(router.query);
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
-  const filteredIds = paginatePosts(
-    filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }),
-    currentPage,
-    VOD_ARCHIVE_LIST_PER_PAGE,
-  ).map((p) => p.id);
-  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = Math.max(
-    1,
-    Math.ceil(
-      filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter }).length / VOD_ARCHIVE_LIST_PER_PAGE,
-    ),
-  );
+  const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
+  const pagedPosts = filteredAll
+    .map((fp) => posts.find((p) => p.id === fp.id))
+    .filter((p): p is Post => p !== undefined);
+  // タクソノミーフィルタ適用時は現在ページ内での件数、未適用時はサーバーの totalPages を使用
+  const filteredTotalPages = taxonomyFilter
+    ? Math.max(1, Math.ceil(filteredAll.length / VOD_ARCHIVE_LIST_PER_PAGE))
+    : totalPages;
   const loc = normalizeRouteLocale(locale) as Locale;
   const canonicalUrl = `${SITE_URL}${getVodArchiveUrl(pathSlug, loc, 1)}`;
 
@@ -145,5 +142,6 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
+    revalidate: REVALIDATE_DAILY,
   };
 };
