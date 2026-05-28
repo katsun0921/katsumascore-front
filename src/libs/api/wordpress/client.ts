@@ -14,6 +14,9 @@ const normalizeWpApiBaseUrl = (raw: string | undefined): string | undefined => {
 /** OpenAPI クライアントと生 fetch の共通ベース（通常 `.../wp-json/wp/v2`） */
 export const wpApiBaseUrl = normalizeWpApiBaseUrl(process.env.WP_API_URL);
 
+/** `/wp-json` ルート URL（カスタムネームスペース用）。`wpApiBaseUrl` から `/wp/v2` を除いた値。 */
+export const wpRestBaseUrl = wpApiBaseUrl?.replace(/\/wp\/v2$/, '');
+
 /** `_embed` / `acf_format` を既定値として付与するミドルウェア */
 const defaultParamsMiddleware: Parameters<
   ReturnType<typeof createClient<paths>>["use"]
