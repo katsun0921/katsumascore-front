@@ -1,4 +1,4 @@
-// ISR blocking: revalidate REVALIDATE_DAILY — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
+// ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
 import Head from 'next/head';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
