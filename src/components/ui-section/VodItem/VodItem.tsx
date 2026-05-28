@@ -1,19 +1,8 @@
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { type VodService, VOD_BORDER_CLASS } from '@/libs/vod';
+import { VOD_CONFIG } from '@/config/vod.config';
 import { messages } from './i18n';
-
-const DISPLAY_NAME: Record<VodService, string> = {
-  netflix: 'Netflix',
-  'prime-video': 'Prime Video',
-  unext: 'U-NEXT',
-  hulu: 'Hulu',
-  disney: 'Disney+',
-  dmmtv: 'DMM TV',
-  abema: 'ABEMA',
-  appletv: 'Apple TV+',
-  youtube: 'YouTube',
-};
 
 /** @deprecated VodService を使用してください */
 export type TVodService = VodService
@@ -36,7 +25,7 @@ export const VodItem = ({
   isPaid = false,
 }: TVodItemProps) => {
   const locale = useLocale();
-  const label = DISPLAY_NAME[service];
+  const label = VOD_CONFIG[service].label;
   const defaultStreamingText = streamingText || t(messages, ['streaming', 'text'], locale);
   const defaultUnregisteredText = unregisteredText || t(messages, ['signup', 'text'], locale);
 

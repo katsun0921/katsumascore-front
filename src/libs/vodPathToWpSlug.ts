@@ -1,22 +1,15 @@
-import type { VodService } from "@/libs/vod";
+import { VOD_CONFIG, type VodService } from "@/config/vod.config";
 import type { VodFinderItem } from "@/components/ui-home/HomeVodFinder";
 import type { WPVodTerm } from "@/libs/api/wordpress/endpoints/vodTaxonomy";
 
 /**
- * フロントの VOD 一覧 URL スラッグ（`/vod/amazon` の `amazon`）から、
+ * フロントの VOD 一覧 URL スラッグ（`/vod/prime-video` の `prime-video`）から、
  * WordPress `vod` タクソノミーのターム `slug`（REST 検索用）への対応表。
+ * `VOD_CONFIG[service].wpSlug` の派生マップ。
  */
-export const VOD_PATH_SLUG_TO_WP_SLUG: Record<VodService, string> = {
-  netflix: "netflix",
-  'prime-video': "amazon-prime-video",
-  unext: "u-next",
-  hulu: "hulu",
-  disney: "disneyplus",
-  dmmtv: "dmmtv",
-  abema: "abema_tv",
-  appletv: "apple-tv",
-  youtube: "youtube",
-};
+export const VOD_PATH_SLUG_TO_WP_SLUG: Record<VodService, string> = Object.fromEntries(
+  (Object.keys(VOD_CONFIG) as VodService[]).map((k) => [k, VOD_CONFIG[k].wpSlug]),
+) as Record<VodService, string>;
 
 /** `getStaticPaths` 用。フロントの VOD 一覧 URL スラッグ一覧。 */
 export const VOD_ARCHIVE_PATH_SLUGS = Object.keys(VOD_PATH_SLUG_TO_WP_SLUG) as VodService[];
