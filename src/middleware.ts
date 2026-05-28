@@ -79,8 +79,21 @@ export const middleware = (request: NextRequest) => {
 
   const vodUnprefixed = matchUnprefixedVodSlug(pathname);
   if (vodUnprefixed) {
-    /** `pathname` が `/vod/slug` で来ても、解決済みロケールが ja/en ならリダイレクトしない（上記と同様のループ防止）。 */
-    if (resolveNextLocale(request.nextUrl.locale) !== undefined) {
+    /**
+     * i18n 有効時、`/ja/vod/netflix` でも middleware には `pathname=/vod/netflix`・`locale=ja` で届く。
+     * 解決済みロケールが ja/en ならリダイレクトはせず、`?page=N` を `/[locale]/vod/[slug]/page/N` へ rewrite する
+     * （これを行わないと直接アクセス時に `?page` が無視され、常に 1 ページ目が表示される）。
+     */
+    const resolvedLocale = resolveNextLocale(request.nextUrl.locale);
+    if (resolvedLocale !== undefined) {
+      const pageRaw = request.nextUrl.searchParams.get('page');
+      const pageNum = pageRaw ? Number.parseInt(pageRaw, 10) : NaN;
+      if (Number.isFinite(pageNum) && pageNum >= 2) {
+        const url = request.nextUrl.clone();
+        url.pathname = `/${resolvedLocale}/vod/${vodUnprefixed.slug}/page/${pageNum}`;
+        url.searchParams.delete('page');
+        return NextResponse.rewrite(url);
+      }
       return NextResponse.next();
     }
     const url = request.nextUrl.clone();
