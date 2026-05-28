@@ -6,7 +6,7 @@
 
 export type VodService =
   | 'netflix'
-  | 'amazon'
+  | 'prime-video'
   | 'unext'
   | 'hulu'
   | 'disney'
@@ -18,7 +18,7 @@ export type VodService =
 /** CSS変数（背景色） */
 export const VOD_COLOR_VAR: Record<VodService, string> = {
   netflix: 'var(--color-netflix)',
-  amazon: 'var(--color-amazon-shopping)',
+  'prime-video': 'var(--color-amazon-shopping)',
   unext: 'var(--color-amazon)',
   hulu: 'var(--color-hulu)',
   disney: 'var(--color-disney)',
@@ -31,7 +31,7 @@ export const VOD_COLOR_VAR: Record<VodService, string> = {
 /** Tailwind border-top クラス（VodItem 用） */
 export const VOD_BORDER_CLASS: Record<VodService, string> = {
   netflix: '[border-top:3px_solid_var(--color-netflix)]',
-  amazon: '[border-top:3px_solid_var(--color-amazon)]',
+  'prime-video': '[border-top:3px_solid_var(--color-amazon)]',
   unext: '[border-top:3px_solid_var(--color-unext)]',
   hulu: '[border-top:3px_solid_var(--color-hulu)]',
   disney: '[border-top:3px_solid_var(--color-disney)]',

@@ -20,7 +20,7 @@ const mockRelationPosts = [
 
 const mockStreamingVods = [
   { service: 'netflix' as const, url: 'https://netflix.com', isPaid: true },
-  { service: 'amazon' as const, url: 'https://amazon.co.jp/prime-video' },
+  { service: 'prime-video' as const, url: 'https://amazon.co.jp/prime-video' },
 ];
 
 const mockPostsGroups = [

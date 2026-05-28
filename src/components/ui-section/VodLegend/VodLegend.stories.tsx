@@ -4,7 +4,7 @@ import { VodLegend } from './VodLegend';
 
 const allServices: VodService[] = [
   'netflix',
-  'amazon',
+  'prime-video',
   'unext',
   'hulu',
   'disney',
@@ -32,7 +32,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    services: ['netflix', 'amazon', 'unext', 'hulu', 'disney'],
+    services: ['netflix', 'prime-video', 'unext', 'hulu', 'disney'],
     badgeColor: 'dark',
   },
 };
@@ -55,7 +55,7 @@ export const AllServices: Story = {
 export const English: Story = {
   globals: { locale: 'en' },
   args: {
-    services: ['netflix', 'amazon', 'unext', 'hulu', 'disney'],
+    services: ['netflix', 'prime-video', 'unext', 'hulu', 'disney'],
     badgeColor: 'dark',
   },
 };

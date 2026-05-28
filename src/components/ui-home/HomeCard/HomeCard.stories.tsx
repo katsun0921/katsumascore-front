@@ -11,7 +11,7 @@ const basePost: Post = {
   publishedAt: '2025-01-10',
   category: 'アニメ',
   score: 4.2,
-  vods: ['netflix', 'amazon'],
+  vods: ['netflix', 'prime-video'],
 };
 
 const meta: Meta<typeof HomeCard> = {

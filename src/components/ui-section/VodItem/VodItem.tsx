@@ -5,7 +5,7 @@ import { messages } from './i18n';
 
 const DISPLAY_NAME: Record<VodService, string> = {
   netflix: 'Netflix',
-  amazon: 'Prime Video',
+  'prime-video': 'Prime Video',
   unext: 'U-NEXT',
   hulu: 'Hulu',
   disney: 'Disney+',

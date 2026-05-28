@@ -23,7 +23,6 @@ import {
   getSortFilterFromUrlParams,
   getTaxonomyFilterFromUrlParams,
   getUrlParamsFromListFilter,
-  paginatePosts,
 } from '@/libs/listFilters';
 import { getVodArchiveNextPath, getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
@@ -51,9 +50,13 @@ const VodSlugPagedPage = ({
   const taxonomyFilter = getTaxonomyFilterFromUrlParams(router.query);
   const activeListFilters = getActiveListFilterValuesFromUrlParams(router.query);
   const filteredAll = filterPostsByListFilters(allPosts, { sortFilter, taxonomyFilter });
-  const filteredIds = paginatePosts(filteredAll, currentPage, VOD_ARCHIVE_LIST_PER_PAGE).map((p) => p.id);
-  const pagedPosts = filteredIds.map((id) => posts.find((p) => p.id === id)).filter((p): p is Post => p !== undefined);
-  const filteredTotalPages = Math.max(1, Math.ceil(filteredAll.length / VOD_ARCHIVE_LIST_PER_PAGE));
+  const pagedPosts = filteredAll
+    .map((fp) => posts.find((p) => p.id === fp.id))
+    .filter((p): p is Post => p !== undefined);
+  // タクソノミーフィルタ適用時は現在ページ内での件数、未適用時はサーバーの totalPages を使用
+  const filteredTotalPages = taxonomyFilter
+    ? Math.max(1, Math.ceil(filteredAll.length / VOD_ARCHIVE_LIST_PER_PAGE))
+    : totalPages;
   const loc = normalizeRouteLocale(locale) as Locale;
   const canonicalUrl = `${SITE_URL}${getVodArchiveUrl(pathSlug, loc, currentPage)}`;
 
