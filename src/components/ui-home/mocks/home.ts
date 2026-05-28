@@ -141,7 +141,7 @@ export const mockLatestPosts: Post[] = [
     publishedAt: '2024-11-05',
     category: '映画',
     score: 3.3,
-    vods: ['netflix', 'amazon'],
+    vods: ['netflix', 'prime-video'],
   },
   {
     id: '11',
@@ -152,7 +152,7 @@ export const mockLatestPosts: Post[] = [
     publishedAt: '2025-04-01',
     category: '映画',
     score: 3.3,
-    vods: ['amazon'],
+    vods: ['prime-video'],
   },
   {
     id: '12',
@@ -173,7 +173,7 @@ export const mockLatestPosts: Post[] = [
     publishedAt: '2025-03-10',
     category: '映画',
     score: 3.5,
-    vods: ['netflix', 'amazon'],
+    vods: ['netflix', 'prime-video'],
   },
   {
     id: '14',
@@ -242,7 +242,7 @@ export const mockHighScorePosts: Post[] = [
     publishedAt: '2025-02-14',
     category: 'アニメ',
     score: 3.8,
-    vods: ['amazon', 'unext'],
+    vods: ['prime-video', 'unext'],
   },
   {
     id: '32',
@@ -253,7 +253,7 @@ export const mockHighScorePosts: Post[] = [
     publishedAt: '2025-03-15',
     category: '映画',
     score: 3.5,
-    vods: ['netflix', 'amazon'],
+    vods: ['netflix', 'prime-video'],
   },
   {
     id: '33',
@@ -274,7 +274,7 @@ export const mockRecommendBlocks: RecommendBlock[] = [
     seeAllHref: '/genre/sci-fi',
     posts: [
       { id: '40', slug: '/posts/voyager', title: 'ヴォイジャー', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2021-05-01', category: '映画', score: 2.5 },
-      { id: '41', slug: '/posts/companion', title: 'コンパニオン', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2025-01-01', category: '映画', score: 3.3, vods: ['amazon'] },
+      { id: '41', slug: '/posts/companion', title: 'コンパニオン', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2025-01-01', category: '映画', score: 3.3, vods: ['prime-video'] },
       { id: '42', slug: '/posts/warmachine', title: 'ウォー・マシーン', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2017-05-26', category: '映画', score: 3.0, vods: ['netflix'] },
       { id: '43', slug: '/posts/avatar', title: 'アバター', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2009-12-18', category: '映画', score: 3.0 },
     ],
@@ -284,7 +284,7 @@ export const mockRecommendBlocks: RecommendBlock[] = [
     seeAllHref: '/genre/horror',
     posts: [
       { id: '50', slug: '/posts/rec', title: 'REC レック (2007)', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2007-11-23', category: '映画', score: 3.5 },
-      { id: '51', slug: '/posts/m3gan', title: 'M3GAN／ミーガン 2.0', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2025-04-01', category: '映画', score: 3.3, vods: ['amazon'] },
+      { id: '51', slug: '/posts/m3gan', title: 'M3GAN／ミーガン 2.0', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2025-04-01', category: '映画', score: 3.3, vods: ['prime-video'] },
       { id: '52', slug: '/posts/rec2', title: 'レック2 (2009)', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2009-10-09', category: '映画', score: 3.0 },
       { id: '53', slug: '/posts/grave-encounters', title: 'グレイヴ・エンカウンターズ', excerpt: '', image: '/images/mock-image.webp', publishedAt: '2011-09-09', category: '映画', score: 2.5 },
     ],
@@ -293,7 +293,7 @@ export const mockRecommendBlocks: RecommendBlock[] = [
 
 export const mockVodFinderItems: VodFinderItem[] = [
   { vod: 'netflix', label: 'Netflix', count: 12, href: '/vod/netflix' },
-  { vod: 'amazon', label: 'Amazon Prime', count: 8, href: '/vod/amazon' },
+  { vod: 'prime-video', label: 'Amazon Prime', count: 8, href: '/vod/amazon' },
   { vod: 'unext', label: 'U-NEXT', count: 6, href: '/vod/unext' },
   { vod: 'hulu', label: 'Hulu', count: 4, href: '/vod/hulu' },
 ];

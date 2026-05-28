@@ -16,9 +16,9 @@ export default meta;
 type Story = StoryObj<typeof VodItem>
 
 export const Netflix: Story = { args: { service: 'netflix' } };
-export const Amazon: Story = { args: { service: 'amazon' } };
+export const Amazon: Story = { args: { service: 'prime-video' } };
 export const Unext: Story = { args: { service: 'unext' } };
 export const Disney: Story = { args: { service: 'disney' } };
 export const Paid: Story = { args: { service: 'netflix', isPaid: true } };
-export const English: Story = { args: { service: 'amazon' }, globals: { locale: 'en' } };
+export const English: Story = { args: { service: 'prime-video' }, globals: { locale: 'en' } };
 export const NoSignup: Story = { args: { service: 'youtube', signupUrl: undefined } };

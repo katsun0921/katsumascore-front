@@ -8,7 +8,7 @@ import type { WPVodTerm } from "@/libs/api/wordpress/endpoints/vodTaxonomy";
  */
 export const VOD_PATH_SLUG_TO_WP_SLUG: Record<VodService, string> = {
   netflix: "netflix",
-  amazon: "amazon-prime-video",
+  'prime-video': "amazon-prime-video",
   unext: "u-next",
   hulu: "hulu",
   disney: "disneyplus",

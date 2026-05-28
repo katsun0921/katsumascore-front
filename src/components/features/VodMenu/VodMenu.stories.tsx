@@ -5,7 +5,7 @@ import type { TVodMenuService } from './VodMenu.types';
 
 const mockServices: TVodMenuService[] = [
   { service: 'netflix', label: 'Netflix', status: true, href: '/vod/netflix' },
-  { service: 'amazon', label: 'Amazon Prime', status: true, href: '/vod/amazon' },
+  { service: 'prime-video', label: 'Amazon Prime', status: true, href: '/vod/prime-video' },
   { service: 'unext', label: 'U-NEXT', status: false, href: '/vod/unext' },
 ];
 

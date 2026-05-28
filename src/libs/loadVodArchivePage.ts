@@ -14,7 +14,7 @@ import { toSerializableValue } from "@/utils/toSerializableValue";
 import type { FilterPost, Post, VodService } from "@/types/post";
 import { resolveVodWpSlug, wpVodSlugToVodService } from "@/libs/vodPathToWpSlug";
 
-export const VOD_ARCHIVE_LIST_PER_PAGE = 13;
+export const VOD_ARCHIVE_LIST_PER_PAGE = 20;
 
 /** WP の VOD タームスラッグ（例: `amazon-prime-video`）を VodService キー（例: `amazon`）に変換する。 */
 const toVodServices = (terms: VodListItem['vods']): VodService[] =>
@@ -87,24 +87,23 @@ export const loadVodArchivePage = async (
 
   const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
 
-  // カスタムエンドポイントから最大 100 件取得（言語フィルタはサーバー側）
+  // 指定ページのみ取得（ページネーションはサーバー側で完結）
   const vodResponse = await getVodList({
     vod: term.slug,
     lang: currentLocale,
-    per_page: 100,
+    page: safePage,
+    per_page: VOD_ARCHIVE_LIST_PER_PAGE,
   });
   if (!vodResponse) return { notFound: true };
 
-  const { items: allItems, meta } = vodResponse;
-  const totalPages = Math.max(1, Math.ceil(meta.total / VOD_ARCHIVE_LIST_PER_PAGE));
+  const { items, meta } = vodResponse;
+  // meta.totalPages は per_page=VOD_ARCHIVE_LIST_PER_PAGE で計算されているためそのまま使用
+  const totalPages = Math.max(1, meta.totalPages);
   if (safePage > totalPages) return { notFound: true };
+  if (items.length === 0 && safePage > 1) return { notFound: true };
 
-  const allPosts: FilterPost[] = allItems.map(vodListItemToFilterPost);
-  const pageItems = allItems.slice(
-    (safePage - 1) * VOD_ARCHIVE_LIST_PER_PAGE,
-    safePage * VOD_ARCHIVE_LIST_PER_PAGE,
-  );
-  const posts: Post[] = pageItems.map(vodListItemToPost);
+  const allPosts: FilterPost[] = items.map(vodListItemToFilterPost);
+  const posts: Post[] = items.map(vodListItemToPost);
 
   return {
     categoryName: term.name,
