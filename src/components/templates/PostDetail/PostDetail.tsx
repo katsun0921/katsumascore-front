@@ -159,6 +159,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
             isCinemaShowing={post.isCinemaShowing}
             title={workTitle}
             streamingVods={post.streamingVods}
+            rentalServices={post.rentalServices}
             postsGroups={post.postsGroups}
             genres={genres}
           />
