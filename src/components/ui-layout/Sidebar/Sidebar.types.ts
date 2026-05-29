@@ -1,5 +1,6 @@
 import type { TRelationPostItem } from '@/components/features/RelationPost';
 import type { TStreamingVodEntry } from '@/components/features/StreamingVod/StreamingVod';
+import type { TRentalService } from '@/components/features/AdRental/AdRental';
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup/PostsGroup';
 import type { ProfileProps } from '@/components/ui-section/Profile';
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
@@ -27,6 +28,7 @@ export type SidebarProps = {
   isCinemaShowing?: boolean
   title?: string
   streamingVods?: TStreamingVodEntry[]
+  rentalServices?: TRentalService[]
 
   // 関連投稿グループ（PostsGroup 相当）
   postsGroups?: TPostsGroupItem[]

@@ -23,6 +23,7 @@ export const Sidebar = ({
   isCinemaShowing,
   title,
   streamingVods,
+  rentalServices,
   postsGroups,
 }: SidebarProps) => {
   const locale = useLocale();
@@ -41,8 +42,8 @@ export const Sidebar = ({
         />
       )}
 
-      {/* レンタル広告（固定アフィリエイト。劇場公開中・ja以外は非表示） */}
-      {!isCinemaShowing && locale === 'ja' && (
+      {/* レンタル広告（固定アフィリエイト。劇場公開中・ja以外・レンタルサービス未設定は非表示） */}
+      {!isCinemaShowing && locale === 'ja' && rentalServices && rentalServices.length > 0 && (
         <AdRental
           title={title ?? ''}
         />
