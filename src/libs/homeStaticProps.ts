@@ -200,7 +200,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
         return {
           tag: tag.name,
           posts: toMappedPostsForRoute(raw, lang),
-          seeAllHref: `/search?q=${encodeURIComponent(tag.name)}`,
+          seeAllHref: `/tag/${tag.slug}`,
         } satisfies RecommendBlock;
       }),
     ),
