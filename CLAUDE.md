@@ -143,7 +143,7 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 | 固定ページ / LP | SSG | `getStaticProps` |
 | 記事 | ISR | `revalidate` を設定する |
 | TOP | ISR + client fetch | パーソナライズは client-side fetch |
-| VOD | SSR | VODページのみ。他への拡大禁止 |
+| VOD | ISR | `getVodList`（カスタムエンドポイント）で1リクエスト化。`revalidate` は `REVALIDATE_DAILY` |
 
 - ページファイルには必ずレンダリング方式をコメントで明記する
 
