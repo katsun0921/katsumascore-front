@@ -1,8 +1,9 @@
 import Head from 'next/head';
 import { useLocale } from '@/i18n/provider';
 import type { Post } from '@/types/post';
+import { getPostTypeArchivePath } from '@/libs/route';
 
-type SeoData = Pick<Post, 'title' | 'excerpt' | 'image' | 'publishedAt' | 'slug' | 'score' | 'category'>;
+type SeoData = Pick<Post, 'title' | 'excerpt' | 'image' | 'publishedAt' | 'slug' | 'score' | 'category' | 'type'>;
 
 export type SeoHeadProps =
   | { post: SeoData }
@@ -38,9 +39,13 @@ export const SeoHead = (props: SeoHeadProps) => {
   const jaUrl = `${SITE_URL.replace(/\/$/, '')}${path}`;
   const enUrl = `${SITE_URL.replace(/\/$/, '')}/en${path}`;
 
+  const categoryUrl = post.type
+    ? `${SITE_URL.replace(/\/$/, '')}${getPostTypeArchivePath({ type: post.type, lang: locale })}`
+    : undefined;
+
   const breadcrumbItems = [
     { '@type': 'ListItem', position: 1, name: 'HOME', item: SITE_URL },
-    ...(post.category ? [{ '@type': 'ListItem', position: 2, name: post.category }] : []),
+    ...(post.category && categoryUrl ? [{ '@type': 'ListItem', position: 2, name: post.category, item: categoryUrl }] : []),
     { '@type': 'ListItem', position: post.category ? 3 : 2, name: post.title, item: canonicalUrl },
   ];
 
