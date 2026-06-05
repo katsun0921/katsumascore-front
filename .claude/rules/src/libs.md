@@ -18,7 +18,7 @@ paths:
 | `wordpress.ts` | WP REST API クライアント |
 | `ranking.ts` | スコアランク変換関数（1〜5 → SS/S/A/B/C） |
 | `i18n.ts` | 多言語ヘルパー関数 |
-| `vod.ts` | Cloudflare KV アクセス |
+| `vod.ts` | VOD サービス定義（`VOD_CONFIG`）の後方互換エクスポートと派生マップ（`VOD_COLOR_VAR` / `VOD_BORDER_CLASS`）。マスターは `@/config/vod.config` |
 | `seasonalReviewParent.ts` | 季節レビュー親固定ページをスラッグから ID に解決 |
 
 ## wordpress.ts の関数一覧
