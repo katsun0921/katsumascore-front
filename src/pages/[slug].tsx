@@ -6,7 +6,8 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getPageBySlug, normalizePageContent, getFeaturedPages } from '@/libs/api/wordpress';
+import { getPageBySlug, normalizePageContent, getFeaturedPages, getPostBySlug, parseWPPostUnknown } from '@/libs/api/wordpress';
+import { resolvePostType, getPostUrl } from '@/libs/route';
 
 type WPPageProps = {
   title: string;
@@ -49,7 +50,26 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
   if (typeof slug !== 'string') return { notFound: true };
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
   const page = await getPageBySlug(slug);
-  if (!page) return { notFound: true };
+  if (!page) {
+    const rawPost = await getPostBySlug(slug);
+    if (rawPost) {
+      const post = parseWPPostUnknown(rawPost);
+      if (post) {
+        const terms = post._embedded?.['wp:term'];
+        const categories = Array.isArray(terms) ? terms[0] : undefined;
+        const categorySlug = categories?.[0]?.slug;
+        const type = resolvePostType(categorySlug);
+        const lang = post.acf?.lang ?? 'ja';
+        return {
+          redirect: {
+            destination: getPostUrl(type, slug, lang),
+            permanent: true,
+          },
+        };
+      }
+    }
+    return { notFound: true };
+  }
   const normalized = normalizePageContent(page);
 
   return {
