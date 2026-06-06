@@ -73,44 +73,49 @@ export const loadVodArchivePage = async (
   locale: string,
   page: number,
 ): Promise<VodArchivePageResult> => {
-  const currentLocale = locale === "en" ? "en" : "ja";
-  const trimmed = pathSlug.trim();
-  if (!trimmed) return { notFound: true };
+  try {
+    const currentLocale = locale === "en" ? "en" : "ja";
+    const trimmed = pathSlug.trim();
+    if (!trimmed) return { notFound: true };
 
-  const wpSlug = resolveVodWpSlug(trimmed);
-  let term: WPVodTerm | null = await getVodTermBySlug(wpSlug);
-  if (!term) {
-    const list = await getVodTerms();
-    term = list?.find((t) => t.slug === wpSlug) ?? null;
+    const wpSlug = resolveVodWpSlug(trimmed);
+    let term: WPVodTerm | null = await getVodTermBySlug(wpSlug);
+    if (!term) {
+      const list = await getVodTerms();
+      term = list?.find((t) => t.slug === wpSlug) ?? null;
+    }
+    if (!term) return { notFound: true };
+
+    const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+
+    // 指定ページのみ取得（ページネーションはサーバー側で完結）
+    const vodResponse = await getVodList({
+      vod: term.slug,
+      lang: currentLocale,
+      page: safePage,
+      per_page: VOD_ARCHIVE_LIST_PER_PAGE,
+    });
+    if (!vodResponse) return { notFound: true };
+
+    const { items, meta } = vodResponse;
+    // meta.totalPages は per_page=VOD_ARCHIVE_LIST_PER_PAGE で計算されているためそのまま使用
+    const totalPages = Math.max(1, meta.totalPages);
+    if (safePage > totalPages) return { notFound: true };
+    if (items.length === 0 && safePage > 1) return { notFound: true };
+
+    const allPosts: FilterPost[] = items.map(vodListItemToFilterPost);
+    const posts: Post[] = items.map(vodListItemToPost);
+
+    return {
+      categoryName: term.name,
+      pathSlug: trimmed,
+      posts: toSerializableValue(posts),
+      allPosts: toSerializableValue(allPosts),
+      currentPage: safePage,
+      totalPages,
+    };
+  } catch {
+    // 未登録 slug や API 例外時は呼び出し側で 404 を返せるよう notFound に倒す
+    return { notFound: true };
   }
-  if (!term) return { notFound: true };
-
-  const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
-
-  // 指定ページのみ取得（ページネーションはサーバー側で完結）
-  const vodResponse = await getVodList({
-    vod: term.slug,
-    lang: currentLocale,
-    page: safePage,
-    per_page: VOD_ARCHIVE_LIST_PER_PAGE,
-  });
-  if (!vodResponse) return { notFound: true };
-
-  const { items, meta } = vodResponse;
-  // meta.totalPages は per_page=VOD_ARCHIVE_LIST_PER_PAGE で計算されているためそのまま使用
-  const totalPages = Math.max(1, meta.totalPages);
-  if (safePage > totalPages) return { notFound: true };
-  if (items.length === 0 && safePage > 1) return { notFound: true };
-
-  const allPosts: FilterPost[] = items.map(vodListItemToFilterPost);
-  const posts: Post[] = items.map(vodListItemToPost);
-
-  return {
-    categoryName: term.name,
-    pathSlug: trimmed,
-    posts: toSerializableValue(posts),
-    allPosts: toSerializableValue(allPosts),
-    currentPage: safePage,
-    totalPages,
-  };
 };
