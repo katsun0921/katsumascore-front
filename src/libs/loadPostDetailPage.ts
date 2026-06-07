@@ -114,6 +114,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
             if (!raw) return null;
             const m = mapWPPostToPost(raw);
             if (!m) return null;
+            if (m.lang !== loc) return null;
             const { content: _c, ...rest } = m;
             void _c;
             return rest as Post;
@@ -134,6 +135,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
         .map((p) => {
           const m = mapWPPostToPost(p);
           if (!m) return null;
+          if (m.lang !== loc) return null;
           const { content: _c, ...rest } = m;
           void _c;
           return rest as Post;
