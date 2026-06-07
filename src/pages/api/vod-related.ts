@@ -7,7 +7,7 @@ type ResponseData = Post[] | { error: string };
 
 /** VOD ターム ID に紐づく関連記事をランダム3件返す。ISR の Worker CPU 超過を避けるため CSR 専用エンドポイントとして分離。 */
 const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) => {
-  const { termId, excludeId } = req.query;
+  const { termId, excludeId, lang } = req.query;
 
   if (typeof termId !== 'string' || !/^\d+$/.test(termId)) {
     res.status(400).json({ error: 'invalid termId' });
@@ -16,13 +16,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
 
   const vodTermId = Number(termId);
   const excludePostId = typeof excludeId === 'string' ? Number(excludeId) : undefined;
+  const locale = typeof lang === 'string' ? lang : 'ja';
 
   const raw = await getPosts({ per_page: 12, vod: vodTermId });
 
   const mapped = raw
     .filter((p) => p.id !== excludePostId)
     .map((p) => mapWPPostToPost(p))
-    .filter((m): m is NonNullable<typeof m> => m !== null)
+    .filter((m): m is NonNullable<typeof m> => m !== null && m.lang === locale)
     .map(({ content: _c, ...rest }) => {
       void _c;
       return rest as Post;
