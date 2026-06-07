@@ -26,7 +26,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
     locale === 'en' ? (post.originalTitle ?? post.title) : post.title;
 
   const { posts: highScorePosts, loading: highScoreLoading } = useHighScorePosts(locale);
-  const { posts: vodRelatedPosts, loading: vodRelatedLoading } = useVodRelatedPosts(vodTermId, postId ?? 0);
+  const { posts: vodRelatedPosts, loading: vodRelatedLoading } = useVodRelatedPosts(vodTermId, postId ?? 0, locale);
 
   let vodIntroductionSection: ReactNode = null;
   if (post.vodIntroduction) {

@@ -13,7 +13,7 @@ export type VodRelatedPostsState = {
   loading: boolean;
 };
 
-export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number): VodRelatedPostsState => {
+export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number, locale: string = 'ja'): VodRelatedPostsState => {
   const [posts, setPosts] = useState<Post[]>([]);
   // SSR/CSR ハイドレーション不一致（React #418）を防ぐため初期値は false。
   // マウント後の useEffect でフェッチ開始時に true にセットする。
@@ -25,7 +25,7 @@ export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`/api/vod-related?termId=${vodTermId}&excludeId=${postId}`);
+        const res = await fetch(`/api/vod-related?termId=${vodTermId}&excludeId=${postId}&lang=${locale}`);
         if (!res.ok) return;
         const data: Post[] = await res.json();
         setPosts(data);
@@ -36,7 +36,7 @@ export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number
       }
     };
     void fetchPosts();
-  }, [vodTermId, postId]);
+  }, [vodTermId, postId, locale]);
 
   return { posts, loading };
 };
