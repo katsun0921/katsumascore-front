@@ -1,3 +1,5 @@
+@use '@/styles/scss/global/mixin/layout.scss' as *;
+
 .sidebar-ad {
   &--banner {
     display: flex;
@@ -15,12 +17,14 @@
   }
 
   &--bannerInline {
-    display: flex;
-    flex-flow: row wrap;
-    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: var(--space-6);
-    justify-content: center;
     overflow: hidden;
+
+    @include layout-md {
+      grid-template-columns: repeat(4, 1fr);
+    }
 
     img {
       display: block;
@@ -36,9 +40,15 @@
   }
 
   &--bannerInline &__item {
-    flex: 1 1 0;
     min-width: 0;
-    width: auto;
-    max-width: 100%;
+  }
+
+  // SP のみ Admax を全幅（2列分）表示して 300px 以上を確保
+  &--bannerInline &__item--full {
+    grid-column: 1 / -1;
+
+    @include layout-md {
+      grid-column: auto;
+    }
   }
 }
