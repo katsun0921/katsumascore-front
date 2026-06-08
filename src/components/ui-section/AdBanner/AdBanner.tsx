@@ -1,5 +1,5 @@
 import dynamic from 'next/dynamic';
-import { WowowSquareBanner } from '@/components/ui-parts/Affiliate/Wowow';
+import { WowowSquareBanner, HuluBanner } from '@/components/ui-parts/Affiliate/Accesstrade';
 
 const Admax = dynamic(() => import('@/components/ui-parts/Affiliate/Admax').then((m) => m.Admax), { ssr: false });
 
@@ -15,6 +15,9 @@ export const AdBanner = ({ inline = false }: AdBannerProps) => {
     <div className={`sidebar-ad ${mod}`}>
       <div className='sidebar-ad__item'>
         <Admax />
+      </div>
+      <div className='sidebar-ad__item'>
+        <HuluBanner />
       </div>
       <div className='sidebar-ad__item'>
         <WowowSquareBanner />
