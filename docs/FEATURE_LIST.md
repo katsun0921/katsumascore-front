@@ -125,7 +125,7 @@
 | `VodDots` | `components/ui-parts/VodDots` | VOD 配信状態インジケータ |
 | `VodLink` | `components/ui-parts/VodLink` | VOD 配信リンク |
 | `VodMenuItem` | `components/ui-parts/VodMenuItem` | VOD メニューアイテム |
-| `Affiliate` | `components/ui-parts/Affiliate` | アフィリエイト広告（Admax / Geo / Tsutaya / Wowow） |
+| `Affiliate` | `components/ui-parts/Affiliate` | アフィリエイト広告（Admax / Geo / Tsutaya / Accesstrade[Hulu・Wowow]） |
 
 ### 3.2 ui-layout（構造・4 コンポーネント）
 
