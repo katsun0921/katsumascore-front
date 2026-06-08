@@ -1,1 +1,1 @@
-export { HuluBanner, WowowRectangleBanner, WowowSquareBanner } from './AccesstradeAd';
+export * from './AccesstradeAd';
