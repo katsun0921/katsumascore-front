@@ -51,6 +51,7 @@
 | `/[slug]` | `pages/[slug].tsx` | ISR | 記事詳細（キャッチオール） |
 | `/actor/[slug]` | `pages/actor/[slug].tsx` | ISR | 配役詳細 |
 | `/company/[slug]` | `pages/company/[slug].tsx` | ISR | 企業詳細 |
+| `/character/[slug]` | `pages/character/[slug].tsx` | ISR | キャラクター詳細（登場作品一覧） |
 | `/franchise/[slug]` | `pages/franchise/[slug].tsx` | ISR | フランチャイズ詳細 |
 | `/person/[slug]` | `pages/person/[slug].tsx` | ISR | 人物詳細 |
 
@@ -219,6 +220,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `HomeTemplate` | `components/templates/HomeTemplate` | ホームページ |
 | `ListTemplate` | `components/templates/ListTemplate` | 映画 / アニメ / ドラマ一覧 |
 | `PostDetail` | `components/templates/PostDetail` | 記事詳細 |
+| `CharacterTemplate` | `components/templates/CharacterTemplate` | キャラクター詳細（登場作品一覧） |
 | `FranchiseTemplate` | `components/templates/FranchiseTemplate` | フランチャイズ詳細（Hero / CTA / Highlights / PostList / Timeline） |
 | `PersonTemplate` | `components/templates/PersonTemplate` | 人物詳細 |
 | `AboutTemplate` | `components/templates/AboutTemplate` | About ページ |
@@ -252,6 +254,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `genre.ts` | `getGenres`, `getPostsByGenre` | ジャンル取得 |
 | `companies.ts` | `getCompanies`, `getCompanyBySlug` | 企業取得 |
 | `persons.ts` | `getPersons`, `getPersonBySlug` | 人物取得 |
+| `character.ts` | `getAllCharacterTerms`, `getAllCharacterSlugs`, `getCharacterBySlug`, `getCharacterSlugById` | character taxonomy 取得 |
 | `franchise.ts` | `getFranchises`, `getFranchiseBySlug` | フランチャイズ取得 |
 | `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
@@ -340,6 +343,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | ファイル | 主要型 |
 |---------|-------|
 | `post.ts` | `Post`, `PostTaxonomy`, `FilterPost`, `PostContentData` |
+| `character.ts` | `Character`（character taxonomy ターム型） |
 | `wordpress.ts` | WordPress REST API・ACF フィールド型 |
 | `franchise.ts` | `Franchise` 関連型 |
 | `search.ts` | `SearchResult`, `SearchDimension` |

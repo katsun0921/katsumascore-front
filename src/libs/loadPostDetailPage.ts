@@ -12,6 +12,7 @@ import {
   getPostsByFranchiseTermId,
   extractFranchiseTermsFromParsedWp,
 } from '@/libs/api/wordpress';
+import { getCharacterSlugById } from '@/libs/api/wordpress/endpoints/character';
 import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
 import {
@@ -155,6 +156,29 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     });
     if (!detail) return { notFound: true, revalidate: 60 };
 
+    // linkToCharacter フラグが立っている actor の characterTermId → characterTerm に解決する
+    let resolvedActors = detail.actors;
+    if (detail.actors) {
+      const termIds = [
+        ...new Set(
+          detail.actors
+            .filter((a) => a.linkToCharacter && a.characterTermId != null)
+            .map((a) => a.characterTermId as number),
+        ),
+      ];
+      if (termIds.length > 0) {
+        const resolved = await Promise.all(termIds.map((id) => getCharacterSlugById(id)));
+        const termMap = new Map(resolved.filter(Boolean).map((t) => [t!.id, t!]));
+        resolvedActors = detail.actors.map((actor) => {
+          if (!actor.linkToCharacter || actor.characterTermId == null) return actor;
+          const term = termMap.get(actor.characterTermId);
+          const { characterTermId: _id, ...rest } = actor;
+          void _id;
+          return term ? { ...rest, characterTerm: term } : rest;
+        });
+      }
+    }
+
     // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
     const actorTermIdMap = parsedForActors ? buildActorTermIdMap(parsedForActors) : new Map();
@@ -182,7 +206,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     return {
       props: {
-        post: { ...detail, toc, profile, ...(franchises.length > 0 ? { franchises } : {}) },
+        post: { ...detail, toc, profile, ...(resolvedActors !== detail.actors ? { actors: resolvedActors } : {}), ...(franchises.length > 0 ? { franchises } : {}) },
         locale: loc,
         genres,
         actorTermEntries,

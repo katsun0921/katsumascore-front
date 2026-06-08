@@ -225,12 +225,19 @@ export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
     const descStr =
       typeof ext.description === "string" && ext.description.trim() ? ext.description.trim() : undefined;
     const displayCharacter = roleStr ?? charStr;
+    const linkToCharacter = Boolean(Number(ext.link_to_character));
+    const characterTermId =
+      ext.character_term != null && ext.character_term !== ""
+        ? Number(ext.character_term) || null
+        : null;
     if (!displayCharacter && !nameStr && !descStr) continue;
     out.push({
       ...(displayCharacter ? { character: displayCharacter } : {}),
       ...(nameStr ? { actorName: nameStr } : {}),
       ...(actorUrl ? { actorUrl } : {}),
       ...(descStr ? { description: descStr } : {}),
+      ...(linkToCharacter ? { linkToCharacter } : {}),
+      ...(linkToCharacter && characterTermId != null ? { characterTermId } : {}),
     });
   }
 

@@ -27,6 +27,10 @@ export type TActor = {
   actorName?: string
   actorUrl?: string
   description?: string
+  linkToCharacter?: boolean
+  /** ACF から読んだ character term_id。loadPostDetailPage で characterTerm に変換される */
+  characterTermId?: number | null
+  characterTerm?: { id: number; slug: string; name: string } | null
 }
 
 /** ACF 公式SNS1件（リンク / X・TikTok 等の埋め込みHTML） */
@@ -126,7 +130,13 @@ export const TitleMeta = ({
               <div key={`actor-${i}`} className='border-l-2 border-accent pl-4'>
                 {actor.character && (
                   <div className='font-ui mb-1 flex gap-[0.3em] text-ui font-bold tracking-[0.1em] text-color-secondary uppercase'>
-                    <span>{actor.character}</span>
+                    {actor.characterTerm ? (
+                      <Link href={`/character/${actor.characterTerm.slug}`} className='text-inherit no-underline hover:underline'>
+                        {actor.character}
+                      </Link>
+                    ) : (
+                      <span>{actor.character}</span>
+                    )}
                     <span>{t(messages, ['actor', 'labelRole'], locale)}</span>
                   </div>
                 )}

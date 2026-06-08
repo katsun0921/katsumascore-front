@@ -1,0 +1,1 @@
+export { CharacterTemplate } from './CharacterTemplate';

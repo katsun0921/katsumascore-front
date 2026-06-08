@@ -16,6 +16,7 @@ export {
   getPostsByDirectorTermId,
   getPostsByPersonTermId,
   getPostsByFranchiseTermId,
+  getPostsByCharacterTermId,
 } from "./endpoints/posts";
 
 export {
@@ -61,6 +62,13 @@ export {
   transformFranchise,
 } from "./endpoints/franchise";
 export type { WPFranchiseTerm, WPFranchiseAcf } from "./endpoints/franchise";
+
+export {
+  getAllCharacterTerms,
+  getAllCharacterSlugs,
+  getCharacterBySlug,
+  getCharacterSlugById,
+} from "./endpoints/character";
 
 export {
   stripHtml,
