@@ -37,7 +37,7 @@ export const HomeTemplate = ({
       <HomeHero {...hero} />
 
       {locale === 'ja' && (
-        <div className='w-full px-4 pt-10 pb-6 md:px-8'>
+        <div className='relative z-10 w-full px-4 pt-10 pb-6 md:px-8'>
           <AdBanner inline />
         </div>
       )}
