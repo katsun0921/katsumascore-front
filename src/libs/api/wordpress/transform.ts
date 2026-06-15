@@ -287,7 +287,7 @@ export const transformPerson = (wp: WPPerson): Person => {
   const titleFallback = stripHtml(wp.title?.rendered ?? "");
   return {
     id: wp.id,
-    slug: acf.slug ?? wp.slug,
+    slug: wp.slug,
     nameJa: acf.name_ja || titleFallback,
     nameEn: acf.name_en || titleFallback,
     roles: acf.roles ?? [],
@@ -308,7 +308,7 @@ export const transformCompany = (wp: WPCompany): Company => {
   const acf = wp.acf;
   return {
     id: wp.id,
-    slug: acf.slug ?? wp.slug,
+    slug: wp.slug,
     nameJa: acf.name_ja ?? "",
     nameEn: acf.name_en ?? "",
     roles: acf.roles ?? [],
