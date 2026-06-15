@@ -170,7 +170,6 @@ export interface components {
             acf: {
                 name_ja: string;
                 name_en: string;
-                slug?: string;
                 roles: ("actor" | "director")[];
                 bio?: string;
                 image?: components["schemas"]["WPImage"];
@@ -183,7 +182,6 @@ export interface components {
             acf: {
                 name_ja: string;
                 name_en: string;
-                slug?: string;
                 roles: ("production" | "distributor")[];
                 description?: string;
                 logo?: components["schemas"]["WPImage"];
