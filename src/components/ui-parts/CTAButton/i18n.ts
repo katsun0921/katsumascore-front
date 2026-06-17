@@ -1,8 +1,8 @@
 export const messages = {
   button: {
     label: {
-      ja: '配信中',
-      en: 'Streaming',
+      ja: 'VOD一覧',
+      en: 'VOD List',
     },
   },
 } as const;
