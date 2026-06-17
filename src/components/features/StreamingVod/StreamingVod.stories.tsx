@@ -2,8 +2,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StreamingVod } from './StreamingVod';
 
 const mockServices = [
-  { service: 'netflix' as const, url: 'https://netflix.com/watch/123', signupUrl: 'https://netflix.com/signup' },
-  { service: 'prime-video' as const, url: 'https://amazon.co.jp/watch/123', signupUrl: 'https://amazon.co.jp/prime' },
+  { service: 'netflix' as const, url: 'https://netflix.com/watch/123' },
+  { service: 'prime-video' as const, url: 'https://amazon.co.jp/watch/123' },
   { service: 'unext' as const, url: 'https://unext.jp/watch/123', isPaid: true },
 ];
 
