@@ -7,7 +7,6 @@ import type { VodService as TVodService } from '@/libs/vod';
 export type TStreamingVodEntry = {
   service: TVodService
   url: string
-  signupUrl?: string
   isPaid?: boolean
 }
 
@@ -27,8 +26,6 @@ export const StreamingVod = ({ title, services }: TStreamingVodProps) => {
     <VodItem
       key={`${entry.service}-${index}`}
       service={entry.service}
-      streamingUrl={entry.url}
-      signupUrl={entry.signupUrl}
       isPaid={entry.isPaid}
     />
   ));
