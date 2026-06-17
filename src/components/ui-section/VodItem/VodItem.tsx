@@ -9,11 +9,13 @@ export type TVodService = VodService
 
 export type TVodItemProps = {
   service: VodService
+  streamingUrl: string
   isPaid?: boolean
 }
 
 export const VodItem = ({
   service,
+  streamingUrl,
   isPaid = false,
 }: TVodItemProps) => {
   const locale = useLocale();
@@ -28,9 +30,14 @@ export const VodItem = ({
           {t(messages, ['paid', 'notice'], locale)}
         </em>
       )}
-      <div className='flex items-center gap-2'>
-        <span className='font-bold [font-size:var(--font-size-body-sm)]'>{label}</span>
-      </div>
+      <a
+        className='font-bold [font-size:var(--font-size-body-sm)] hover:underline'
+        href={streamingUrl}
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        {label}
+      </a>
     </div>
   );
 };

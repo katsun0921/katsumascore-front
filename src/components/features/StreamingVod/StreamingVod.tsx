@@ -26,6 +26,7 @@ export const StreamingVod = ({ title, services }: TStreamingVodProps) => {
     <VodItem
       key={`${entry.service}-${index}`}
       service={entry.service}
+      streamingUrl={entry.url}
       isPaid={entry.isPaid}
     />
   ));

@@ -5,6 +5,9 @@ const meta: Meta<typeof VodItem> = {
   title: 'UI-Section/VodItem',
   component: VodItem,
   tags: ['autodocs'],
+  args: {
+    streamingUrl: 'https://example.com/watch',
+  },
 };
 
 export default meta;
