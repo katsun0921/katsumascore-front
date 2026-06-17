@@ -182,4 +182,32 @@
     height: 100%;
     background-color: rgba(var(--color-text-primary-rgb), 0.12);
   }
+
+  &__vod-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    list-style: none;
+    margin: var(--space-0);
+    padding: var(--space-0);
+  }
+
+  &__vod-item {
+    margin: var(--space-0);
+  }
+
+  &__vod-badge {
+    display: inline-block;
+    padding: 2px var(--space-8);
+    border-radius: 4px;
+    font-size: var(--font-size-caption-lg);
+    font-weight: var(--font-weight-bold);
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
 }
