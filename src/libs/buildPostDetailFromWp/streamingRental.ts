@@ -1,23 +1,35 @@
 import type { ParsedWPPost } from "@/libs/api/wordpress";
 import type { TStreamingVodEntry } from "@/components/features/StreamingVod";
 import type { TRentalService } from "@/components/features/AdRental";
+import { HTTP_URL_RE } from "./constants";
 
-/** ACF の配信フラグから、対応サービスの固定リンク一覧を作る。 */
+/** ACF passthrough オブジェクトの `url` フィールドを取り出す。なければ fallback を返す。 */
+const pickVodUrl = (acfEntry: unknown, fallback: string): string => {
+  if (acfEntry && typeof acfEntry === "object" && !Array.isArray(acfEntry)) {
+    const raw = (acfEntry as Record<string, unknown>).url;
+    if (typeof raw === "string" && HTTP_URL_RE.test(raw.trim())) {
+      return raw.trim();
+    }
+  }
+  return fallback;
+};
+
+/** ACF の配信フラグから、対応サービスのリンク一覧を作る。ACF に url フィールドがあればそれを使用する。 */
 export const buildStreamingVods = (wp: ParsedWPPost): TStreamingVodEntry[] | undefined => {
   const acf = wp.acf;
   if (!acf) return undefined;
   const out: TStreamingVodEntry[] = [];
   if ((acf.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "prime-video", url: "https://www.amazon.co.jp/gp/video/storefront" });
+    out.push({ service: "prime-video", url: pickVodUrl(acf.amazon_prime_video, "https://www.amazon.co.jp/gp/video/storefront") });
   }
   if ((acf.netflix as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "netflix", url: "https://www.netflix.com" });
+    out.push({ service: "netflix", url: pickVodUrl(acf.netflix, "https://www.netflix.com") });
   }
   if ((acf.hulu as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "hulu", url: "https://www.hulu.jp" });
+    out.push({ service: "hulu", url: pickVodUrl(acf.hulu, "https://www.hulu.jp") });
   }
   if ((acf.unext as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "unext", url: "https://video.unext.jp" });
+    out.push({ service: "unext", url: pickVodUrl(acf.unext, "https://video.unext.jp") });
   }
   return out.length > 0 ? out : undefined;
 };

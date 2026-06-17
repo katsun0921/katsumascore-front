@@ -6,4 +6,7 @@ export const messages = {
   tag: {
     label: { ja: 'タグ', en: 'Tags' },
   },
+  vod: {
+    label: { ja: '配信中', en: 'Streaming' },
+  },
 } as const;

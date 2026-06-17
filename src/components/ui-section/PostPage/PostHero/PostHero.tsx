@@ -2,6 +2,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { VideoEmbed } from '@/components/ui-parts/VideoEmbed';
 import type { PostTaxonomyLink } from '@/libs/api/wordpress';
+import type { TStreamingVodEntry } from '@/components/features/StreamingVod';
+import { VOD_CONFIG } from '@/config/vod.config';
 import { t } from '@/i18n/t';
 import { useLocale } from '@/i18n/provider';
 import { messages } from './i18n';
@@ -17,6 +19,7 @@ export type PostHeroProps = {
   refLabel?: string
   genres?: PostTaxonomyLink[]
   tags?: PostTaxonomyLink[]
+  streamingVods?: TStreamingVodEntry[]
 }
 
 export const PostHero = (props: PostHeroProps) => {
@@ -28,7 +31,8 @@ export const PostHero = (props: PostHeroProps) => {
 
   const hasGenres = Boolean(props.genres && props.genres.length > 0);
   const hasTags = Boolean(props.tags && props.tags.length > 0);
-  const hasTaxonomies = hasGenres || hasTags;
+  const hasVods = Boolean(props.streamingVods && props.streamingVods.length > 0);
+  const hasTaxonomies = hasGenres || hasTags || hasVods;
 
   return (
     <section className={prefixClassName}>
@@ -70,6 +74,28 @@ export const PostHero = (props: PostHeroProps) => {
                       <Link href={`/tag/${tag.slug}`} className={`${prefixClassName}__taxonomy-link`}>
                         {tag.name}
                       </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {hasVods && (
+              <div className={`${prefixClassName}__taxonomy`}>
+                <span className={`${prefixClassName}__taxonomy-label`}>
+                  {t(messages, ['vod', 'label'], locale)}
+                </span>
+                <ul className={`${prefixClassName}__vod-list`}>
+                  {props.streamingVods?.map((vod) => (
+                    <li key={vod.service} className={`${prefixClassName}__vod-item`}>
+                      <a
+                        href={vod.url}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className={`${prefixClassName}__vod-badge`}
+                        style={{ background: VOD_CONFIG[vod.service].colorVar }}
+                      >
+                        {VOD_CONFIG[vod.service].label}
+                      </a>
                     </li>
                   ))}
                 </ul>

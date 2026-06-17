@@ -73,6 +73,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
           refLabel={post.summary?.refLabel}
           genres={post.heroGenres}
           tags={post.heroTags}
+          streamingVods={post.streamingVods}
         />
       </div>
       {/* body: 最大幅・中央・flex（md以上） */}
