@@ -7,15 +7,19 @@ import { messages } from './i18n';
 /** @deprecated VodService を使用してください */
 export type TVodService = VodService
 
+export type TViewingType = 'subscription' | 'rental'
+
 export type TVodItemProps = {
   service: VodService
   streamingUrl: string
+  viewingType?: TViewingType
   isPaid?: boolean
 }
 
 export const VodItem = ({
   service,
   streamingUrl,
+  viewingType,
   isPaid = false,
 }: TVodItemProps) => {
   const locale = useLocale();
@@ -38,6 +42,11 @@ export const VodItem = ({
       >
         {label}
       </a>
+      {viewingType && (
+        <span className='text-color-secondary [font-size:var(--font-size-caption-lg)]'>
+          {t(messages, ['viewingType', viewingType], locale)}
+        </span>
+      )}
     </div>
   );
 };

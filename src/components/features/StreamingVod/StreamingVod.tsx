@@ -1,12 +1,13 @@
 import { StreamingVod as StreamingVodSection } from '@/components/ui-section/StreamingVod';
 import { streamingVodConfig } from '@/components/ui-section/StreamingVod/StreamingVod.config';
-import { VodItem } from '@/components/ui-section/VodItem';
+import { VodItem, type TViewingType } from '@/components/ui-section/VodItem';
 import { useLocale } from '@/i18n/provider';
 import type { VodService as TVodService } from '@/libs/vod';
 
 export type TStreamingVodEntry = {
   service: TVodService
   url: string
+  viewingType?: TViewingType
   isPaid?: boolean
 }
 
@@ -27,6 +28,7 @@ export const StreamingVod = ({ title, services }: TStreamingVodProps) => {
       key={`${entry.service}-${index}`}
       service={entry.service}
       streamingUrl={entry.url}
+      viewingType={entry.viewingType}
       isPaid={entry.isPaid}
     />
   ));
