@@ -3,10 +3,10 @@ import type { TStreamingVodEntry } from "@/components/features/StreamingVod";
 import type { TRentalService } from "@/components/features/AdRental";
 import { HTTP_URL_RE } from "./constants";
 
-/** ACF passthrough オブジェクトの `url` フィールドを取り出す。なければ fallback を返す。 */
+/** ACF passthrough オブジェクトの `scraping_url` フィールドを取り出す。なければ fallback を返す。 */
 const pickVodUrl = (acfEntry: unknown, fallback: string): string => {
   if (acfEntry && typeof acfEntry === "object" && !Array.isArray(acfEntry)) {
-    const raw = (acfEntry as Record<string, unknown>).url;
+    const raw = (acfEntry as Record<string, unknown>).scraping_url;
     if (typeof raw === "string" && HTTP_URL_RE.test(raw.trim())) {
       return raw.trim();
     }
