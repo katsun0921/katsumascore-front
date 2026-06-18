@@ -20,16 +20,16 @@ export const buildStreamingVods = (wp: ParsedWPPost): TStreamingVodEntry[] | und
   if (!acf) return undefined;
   const out: TStreamingVodEntry[] = [];
   if ((acf.amazon_prime_video as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "prime-video", url: pickVodUrl(acf.amazon_prime_video, "https://www.amazon.co.jp/gp/video/storefront") });
+    out.push({ service: "prime-video", url: pickVodUrl(acf.amazon_prime_video, "https://www.amazon.co.jp/gp/video/storefront"), viewingType: "subscription" });
   }
   if ((acf.netflix as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "netflix", url: pickVodUrl(acf.netflix, "https://www.netflix.com") });
+    out.push({ service: "netflix", url: pickVodUrl(acf.netflix, "https://www.netflix.com"), viewingType: "subscription" });
   }
   if ((acf.hulu as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "hulu", url: pickVodUrl(acf.hulu, "https://www.hulu.jp") });
+    out.push({ service: "hulu", url: pickVodUrl(acf.hulu, "https://www.hulu.jp"), viewingType: "subscription" });
   }
   if ((acf.unext as { status?: unknown } | undefined)?.status === "streaming") {
-    out.push({ service: "unext", url: pickVodUrl(acf.unext, "https://video.unext.jp") });
+    out.push({ service: "unext", url: pickVodUrl(acf.unext, "https://video.unext.jp"), viewingType: "subscription" });
   }
   return out.length > 0 ? out : undefined;
 };

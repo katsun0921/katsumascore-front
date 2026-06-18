@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { StreamingVod } from './StreamingVod';
 
 const mockServices = [
-  { service: 'netflix' as const, url: 'https://netflix.com/watch/123' },
-  { service: 'prime-video' as const, url: 'https://amazon.co.jp/watch/123' },
-  { service: 'unext' as const, url: 'https://unext.jp/watch/123', isPaid: true },
+  { service: 'netflix' as const, url: 'https://netflix.com/watch/123', viewingType: 'subscription' as const },
+  { service: 'prime-video' as const, url: 'https://amazon.co.jp/watch/123', viewingType: 'subscription' as const },
+  { service: 'unext' as const, url: 'https://unext.jp/watch/123', viewingType: 'rental' as const, isPaid: true },
 ];
 
 const meta: Meta<typeof StreamingVod> = {
