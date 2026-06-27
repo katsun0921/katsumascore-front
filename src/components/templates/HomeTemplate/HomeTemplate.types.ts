@@ -8,6 +8,7 @@ export type HomeTemplateProps = {
   hero: HomeHeroProps;
   rankingPosts: Post[];
   latestPosts: Post[];
+  latestSeeAllHref: string;
   animeArchiveHref: string;
   animePosts: Post[];
   highScorePosts: Post[];

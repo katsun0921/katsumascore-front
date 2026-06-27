@@ -231,6 +231,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     hero: buildHeroFromPosts(pool),
     rankingPosts,
     latestPosts,
+    latestSeeAllHref: getPostTypeArchivePath({ type: "movie", lang }),
     animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,

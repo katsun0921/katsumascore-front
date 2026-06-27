@@ -22,6 +22,7 @@ export const HomeTemplate = ({
   hero,
   rankingPosts,
   latestPosts,
+  latestSeeAllHref,
   animeArchiveHref,
   animePosts,
   highScorePosts,
@@ -59,7 +60,7 @@ export const HomeTemplate = ({
           <HomeCardScrollList
             title={t(messages, ['cardScrollList', 'latest'], locale)}
             posts={latestPosts}
-            seeAllHref='/posts'
+            seeAllHref={latestSeeAllHref}
           />
         </section>
 
