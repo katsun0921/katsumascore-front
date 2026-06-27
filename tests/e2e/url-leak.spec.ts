@@ -5,11 +5,25 @@ import { findUrlsInJsonLd, extractSrcsetUrls } from './helpers/jsonld'
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog'
 
+/** サイトマップの URL のオリジンをテスト対象の SITE_URL に書き換える */
+const rewriteOrigin = (url: string): string => {
+  try {
+    const parsed = new URL(url)
+    const base = new URL(SITE_URL)
+    parsed.protocol = base.protocol
+    parsed.host = base.host
+    return parsed.toString()
+  } catch {
+    return url
+  }
+}
+
 test.describe('URL Leak Detection', () => {
   let urls: string[] = []
 
   test.beforeAll(async () => {
-    urls = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`)
+    const raw = await fetchSitemapUrls(`${SITE_URL}/sitemap.xml`)
+    urls = raw.map(rewriteOrigin)
   })
 
   test('レンダリング済み HTML に CMS オリジンが含まれていない', async ({ page }) => {
