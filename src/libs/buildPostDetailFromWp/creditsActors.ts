@@ -6,6 +6,16 @@ import {
   extractPersonLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
+/**
+ * "日本語名 / English Name" 形式の結合文字列から locale に応じた部分を抽出する。
+ * " / " 区切りがない場合はそのまま返す。EN ページでは右側（英語）、JA ページでは左側（日本語）を返す。
+ */
+const extractLocaleNameFromCombined = (name: string, locale?: string): string => {
+  if (!name.includes(" / ")) return name;
+  const parts = name.split(" / ");
+  return locale === "en" ? parts[parts.length - 1].trim() : parts[0].trim();
+};
+
 /** WPPerson オブジェクト（REST API 形式 / WP_Post 形式）から name と slug を抽出する。locale に応じて name_ja / name_en の優先順位を切り替える。 */
 const extractPersonInfoFromObject = (o: Record<string, unknown>, locale?: string): { name: string; slug: string } | undefined => {
   const acfFields =
@@ -40,7 +50,7 @@ const collectDirectorEntriesFromAcf = (raw: unknown, locale?: string): { name: s
   if (typeof raw === "string") {
     return raw
       .split(/[,、\n|]/)
-      .map((s) => ({ name: stripHtml(s).trim(), slug: "" }))
+      .map((s) => ({ name: extractLocaleNameFromCombined(stripHtml(s).trim(), locale), slug: "" }))
       .filter((e) => e.name.length > 0);
   }
   // 単一オブジェクト（person CPT post_object フィールド）
@@ -122,7 +132,7 @@ const pickTermLocaleName = (t: Record<string, unknown>, locale?: string): string
   const nameJa = acf && typeof acf.name_ja === "string" ? acf.name_ja.trim() : "";
   const nameEn = acf && typeof acf.name_en === "string" ? acf.name_en.trim() : "";
   const localeName = locale === "en" ? nameEn || nameJa : nameJa || nameEn;
-  return localeName || primaryName;
+  return localeName || extractLocaleNameFromCombined(primaryName, locale);
 };
 
 /** `_embedded['wp:term']` の actor/actors/person/persons ターム ID → {name, url} のマップを構築。locale に応じて acf.name_ja / acf.name_en を優先する。 */
@@ -229,7 +239,7 @@ export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefin
     }
     // ターム解決できなかった場合のフォールバック（プレーンテキスト name → actor フィールド）
     if (!nameStr && typeof ext.name === "string" && ext.name.trim()) {
-      nameStr = ext.name.trim();
+      nameStr = extractLocaleNameFromCombined(ext.name.trim(), locale);
     }
     if (!nameStr) {
       nameStr = pickActorDisplayNameFromUnknown(ext.actor, locale);
@@ -243,7 +253,7 @@ export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefin
       }
     }
     if (!nameStr && typeof ext.actor_name === "string" && ext.actor_name.trim()) {
-      nameStr = ext.actor_name.trim();
+      nameStr = extractLocaleNameFromCombined(ext.actor_name.trim(), locale);
     }
     if (!actorUrl && nameStr) {
       actorUrl = nameToActorUrl.get(nameStr.toLowerCase());
