@@ -52,7 +52,6 @@ export const HomeTemplate = ({
           <HomeRanking
             title={t(messages, ['ranking', 'title'], locale)}
             posts={rankingPosts}
-            seeAllHref='/ranking'
           />
         </section>
 

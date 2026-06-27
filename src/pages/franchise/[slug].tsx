@@ -28,7 +28,7 @@ const FranchisePage = ({ franchise, locale }: FranchisePageProps) => {
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
-    { label: loc === 'en' ? 'Franchise' : 'シリーズ', href: '/franchise' },
+    { label: loc === 'en' ? 'Franchise' : 'シリーズ', href: '/' },
     { label: franchise.title, href: `/franchise/${franchise.slug}` },
   ];
 

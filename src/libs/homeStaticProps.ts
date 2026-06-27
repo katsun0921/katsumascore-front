@@ -114,7 +114,7 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
           copy: "",
           score: 3,
           rank: "A",
-          href: "/posts",
+          href: "/",
           image: "/images/mock-image.webp",
         },
       ],

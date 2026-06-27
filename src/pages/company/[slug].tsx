@@ -25,7 +25,7 @@ const CompanyPage = ({ company, locale }: CompanyPageProps) => {
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
-    { label: loc === 'en' ? 'Company' : '企業', href: '/company' },
+    { label: loc === 'en' ? 'Company' : '企業', href: '/' },
     { label: displayName, href: getEntityUrl('company', company.slug, loc) },
   ];
 
