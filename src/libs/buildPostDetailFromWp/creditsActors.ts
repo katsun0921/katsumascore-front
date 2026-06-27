@@ -115,8 +115,18 @@ const pickActorsRowsFromAcf = (acf: Record<string, unknown> | undefined): unknow
   return [];
 };
 
-/** `_embedded['wp:term']` の actor/actors/person/persons ターム ID → {name, url} のマップを構築 */
-const buildTermIdToActorInfoMap = (wp: ParsedWPPost): Map<number, { name: string; url: string }> => {
+/** タクソノミータームオブジェクトから ACF name_ja / name_en を取得し locale に応じた表示名を返す。フォールバックは WP プライマリ name。 */
+const pickTermLocaleName = (t: Record<string, unknown>, locale?: string): string => {
+  const primaryName = typeof t.name === "string" ? t.name.trim() : "";
+  const acf = typeof t.acf === "object" && t.acf !== null ? (t.acf as Record<string, unknown>) : undefined;
+  const nameJa = acf && typeof acf.name_ja === "string" ? acf.name_ja.trim() : "";
+  const nameEn = acf && typeof acf.name_en === "string" ? acf.name_en.trim() : "";
+  const localeName = locale === "en" ? nameEn || nameJa : nameJa || nameEn;
+  return localeName || primaryName;
+};
+
+/** `_embedded['wp:term']` の actor/actors/person/persons ターム ID → {name, url} のマップを構築。locale に応じて acf.name_ja / acf.name_en を優先する。 */
+const buildTermIdToActorInfoMap = (wp: ParsedWPPost, locale?: string): Map<number, { name: string; url: string }> => {
   const map = new Map<number, { name: string; url: string }>();
   const groups = wp._embedded?.["wp:term"];
   if (!Array.isArray(groups)) return map;
@@ -127,9 +137,10 @@ const buildTermIdToActorInfoMap = (wp: ParsedWPPost): Map<number, { name: string
       const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
       const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
       const id = typeof t.id === "number" ? t.id : undefined;
-      const name = typeof t.name === "string" ? t.name.trim() : "";
       const slug = typeof t.slug === "string" ? t.slug.trim() : "";
-      if (id === undefined || !name || !slug) continue;
+      if (id === undefined || !slug) continue;
+      const name = pickTermLocaleName(t, locale);
+      if (!name) continue;
       if (tax === "actor" || tax === "actors") {
         map.set(id, { name, url: `/actor/${slug}` });
       } else if (tax === "person" || tax === "persons") {
@@ -143,6 +154,7 @@ const buildTermIdToActorInfoMap = (wp: ParsedWPPost): Map<number, { name: string
 /**
  * `_embedded['wp:term']` から actor / person タクソノミーの `{ termId, taxType }` を
  * キャスト名をキーにして返す。フィルモグラフィー取得時のターム ID 解決に使用する。
+ * name_ja・name_en・プライマリ name をすべてキーとして登録し、どのロケール名でも解決できるようにする。
  */
 export const buildActorTermIdMap = (
   wp: ParsedWPPost,
@@ -157,12 +169,20 @@ export const buildActorTermIdMap = (
       const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
       const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
       const id = typeof t.id === "number" ? t.id : undefined;
-      const name = typeof t.name === "string" ? t.name.trim() : "";
-      if (id === undefined || !name) continue;
-      if (tax === "actor" || tax === "actors") {
-        map.set(name.toLowerCase(), { termId: id, taxType: "actor" });
-      } else if (tax === "person" || tax === "persons") {
-        map.set(name.toLowerCase(), { termId: id, taxType: "person" });
+      if (id === undefined) continue;
+
+      let taxType: "actor" | "person" | undefined;
+      if (tax === "actor" || tax === "actors") taxType = "actor";
+      else if (tax === "person" || tax === "persons") taxType = "person";
+      else continue;
+
+      const primaryName = typeof t.name === "string" ? t.name.trim() : "";
+      const acf = typeof t.acf === "object" && t.acf !== null ? (t.acf as Record<string, unknown>) : undefined;
+      const nameJa = acf && typeof acf.name_ja === "string" ? acf.name_ja.trim() : "";
+      const nameEn = acf && typeof acf.name_en === "string" ? acf.name_en.trim() : "";
+      // ja・en・プライマリ名のすべてを登録してどのロケール名でも termId を解決できるようにする
+      for (const candidate of [primaryName, nameJa, nameEn]) {
+        if (candidate) map.set(candidate.toLowerCase(), { termId: id, taxType });
       }
     }
   }
@@ -173,7 +193,7 @@ export const buildActorTermIdMap = (
 export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
   const rows = pickActorsRowsFromAcf(acf);
-  const termIdToInfo = buildTermIdToActorInfoMap(wp);
+  const termIdToInfo = buildTermIdToActorInfoMap(wp, locale);
   const actorLinks = extractActorLinksFromParsedWp(wp);
   const personLinks = extractPersonLinksFromParsedWp(wp);
   // person タクソノミーが actor タクソノミーより優先（後から上書き）

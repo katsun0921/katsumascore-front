@@ -168,8 +168,8 @@ export const buildPostDetailFromWp = ({
     trailerVideo.trailerYoutubeId = trailerYoutubeId;
   }
 
-  const heroGenres = extractGenreLinksFromParsedWp(parsed);
-  const heroTags = extractPostTagLinksFromParsedWp(parsed);
+  const heroGenres = extractGenreLinksFromParsedWp(parsed, locale);
+  const heroTags = extractPostTagLinksFromParsedWp(parsed, locale);
 
   const isCinemaShowing = resolveIsCinemaShowing(parsed.acf, acf);
   const cinemaListUrl = cinemaUrlFromCinemaInfoFiled(acf);
