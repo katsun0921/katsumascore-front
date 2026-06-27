@@ -6,15 +6,15 @@ import {
   extractPersonLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
-/** WPPerson オブジェクト（REST API 形式 / WP_Post 形式）から name と slug を抽出する。 */
-const extractPersonInfoFromObject = (o: Record<string, unknown>): { name: string; slug: string } | undefined => {
+/** WPPerson オブジェクト（REST API 形式 / WP_Post 形式）から name と slug を抽出する。locale に応じて name_ja / name_en の優先順位を切り替える。 */
+const extractPersonInfoFromObject = (o: Record<string, unknown>, locale?: string): { name: string; slug: string } | undefined => {
   const acfFields =
     typeof o.acf === "object" && o.acf !== null ? (o.acf as Record<string, unknown>) : undefined;
 
-  // name: acf.name_ja → acf.name_en → title.rendered → post_title
-  let name =
-    (acfFields && typeof acfFields.name_ja === "string" ? acfFields.name_ja.trim() : "") ||
-    (acfFields && typeof acfFields.name_en === "string" ? acfFields.name_en.trim() : "");
+  const nameJa = acfFields && typeof acfFields.name_ja === "string" ? acfFields.name_ja.trim() : "";
+  const nameEn = acfFields && typeof acfFields.name_en === "string" ? acfFields.name_en.trim() : "";
+  // locale === 'en' のとき name_en を優先、それ以外は name_ja を優先
+  let name = locale === "en" ? nameEn || nameJa : nameJa || nameEn;
   if (!name && typeof o.name === "string") name = stripHtml(o.name).trim();
   if (!name && typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
     name = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
@@ -35,7 +35,7 @@ const extractPersonInfoFromObject = (o: Record<string, unknown>): { name: string
  * ACF `director` の表記ゆれ（文字列 / 配列 / person CPT オブジェクト）を
  * name + slug エントリの配列へ正規化する。
  */
-const collectDirectorEntriesFromAcf = (raw: unknown): { name: string; slug: string }[] => {
+const collectDirectorEntriesFromAcf = (raw: unknown, locale?: string): { name: string; slug: string }[] => {
   if (raw == null) return [];
   if (typeof raw === "string") {
     return raw
@@ -45,7 +45,7 @@ const collectDirectorEntriesFromAcf = (raw: unknown): { name: string; slug: stri
   }
   // 単一オブジェクト（person CPT post_object フィールド）
   if (!Array.isArray(raw) && typeof raw === "object" && raw !== null) {
-    const info = extractPersonInfoFromObject(raw as Record<string, unknown>);
+    const info = extractPersonInfoFromObject(raw as Record<string, unknown>, locale);
     return info ? [info] : [];
   }
   if (Array.isArray(raw)) {
@@ -57,7 +57,7 @@ const collectDirectorEntriesFromAcf = (raw: unknown): { name: string; slug: stri
         continue;
       }
       if (item && typeof item === "object") {
-        const info = extractPersonInfoFromObject(item as Record<string, unknown>);
+        const info = extractPersonInfoFromObject(item as Record<string, unknown>, locale);
         if (info) out.push(info);
       }
     }
@@ -69,7 +69,7 @@ const collectDirectorEntriesFromAcf = (raw: unknown): { name: string; slug: stri
 /** 監督名を ACF フィールドから集め、重複除去してクレジット行を返す。person CPT の場合は /person/{slug} を href に設定する。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
-  const entries = collectDirectorEntriesFromAcf(acf?.director);
+  const entries = collectDirectorEntriesFromAcf(acf?.director, locale);
   if (entries.length === 0) return undefined;
   const seen = new Set<string>();
   const names: TCreditEntry["names"] = [];
@@ -87,9 +87,9 @@ export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCredi
 /**
  * ACF リピータ1行の `actor`（リレーション）から表示名を取る。
  * 純粋な数値 ID のみは解決不能のため `undefined`。
- * person CPT オブジェクトの場合は acf.name_ja / acf.name_en を優先する。
+ * person CPT オブジェクトの場合は locale に応じて acf.name_ja / acf.name_en を優先する。
  */
-const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
+const pickActorDisplayNameFromUnknown = (raw: unknown, locale?: string): string | undefined => {
   if (raw == null) return undefined;
   if (typeof raw === "string") {
     const t = stripHtml(raw).trim();
@@ -99,7 +99,7 @@ const pickActorDisplayNameFromUnknown = (raw: unknown): string | undefined => {
   }
   if (typeof raw === "number" && Number.isFinite(raw)) return undefined;
   if (typeof raw === "object") {
-    const info = extractPersonInfoFromObject(raw as Record<string, unknown>);
+    const info = extractPersonInfoFromObject(raw as Record<string, unknown>, locale);
     return info?.name || undefined;
   }
   return undefined;
@@ -169,8 +169,8 @@ export const buildActorTermIdMap = (
   return map;
 };
 
-/** ACF 出演者行から `TActor[]` を構築する。actor/person タームへのリンクは埋め込みタームから解決する。 */
-export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
+/** ACF 出演者行から `TActor[]` を構築する。actor/person タームへのリンクは埋め込みタームから解決する。locale に応じて name_ja / name_en を切り替える。 */
+export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
   const rows = pickActorsRowsFromAcf(acf);
   const termIdToInfo = buildTermIdToActorInfoMap(wp);
@@ -195,7 +195,7 @@ export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
       nameStr = ext.name.trim();
     }
     if (!nameStr) {
-      nameStr = pickActorDisplayNameFromUnknown(ext.actor);
+      nameStr = pickActorDisplayNameFromUnknown(ext.actor, locale);
     }
     // actor が数値 term ID の場合、_embedded の actor/person タームから名前・URL を解決する
     if (typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
@@ -207,7 +207,7 @@ export const mapActors = (wp: ParsedWPPost): TActor[] | undefined => {
     }
     // actor が person CPT オブジェクトの場合、slug から /person/{slug} URL を解決する
     if (!actorUrl && typeof ext.actor === "object" && ext.actor !== null && !Array.isArray(ext.actor)) {
-      const personInfo = extractPersonInfoFromObject(ext.actor as Record<string, unknown>);
+      const personInfo = extractPersonInfoFromObject(ext.actor as Record<string, unknown>, locale);
       if (personInfo) {
         if (!nameStr) nameStr = personInfo.name;
         if (personInfo.slug) actorUrl = `/person/${personInfo.slug}`;

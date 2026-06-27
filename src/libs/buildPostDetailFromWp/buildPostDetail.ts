@@ -157,7 +157,7 @@ export const buildPostDetailFromWp = ({
   });
   const goodPoints = splitGoodPoints(acf?.good_point_filed);
   const credits = mapCreditsFromParsedWp(parsed, locale);
-  const actors = mapActors(parsed);
+  const actors = mapActors(parsed, locale);
   const streamingVods = buildStreamingVods(parsed);
   const rentalServices = buildRentalServices(parsed);
 
