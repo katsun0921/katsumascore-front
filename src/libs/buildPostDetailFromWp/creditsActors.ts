@@ -25,12 +25,12 @@ const extractPersonInfoFromObject = (o: Record<string, unknown>, locale?: string
   const nameEn = acfFields && typeof acfFields.name_en === "string" ? acfFields.name_en.trim() : "";
   // locale === 'en' のとき name_en を優先、それ以外は name_ja を優先
   let name = locale === "en" ? nameEn || nameJa : nameJa || nameEn;
-  if (!name && typeof o.name === "string") name = stripHtml(o.name).trim();
+  if (!name && typeof o.name === "string") name = extractLocaleNameFromCombined(stripHtml(o.name).trim(), locale);
   if (!name && typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
-    name = stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim();
+    name = extractLocaleNameFromCombined(stripHtml(String((o.title as { rendered?: unknown }).rendered ?? "")).trim(), locale);
   }
-  if (!name && typeof o.title === "string") name = stripHtml(o.title).trim();
-  if (!name && typeof o.post_title === "string") name = stripHtml(o.post_title).trim();
+  if (!name && typeof o.title === "string") name = extractLocaleNameFromCombined(stripHtml(o.title).trim(), locale);
+  if (!name && typeof o.post_title === "string") name = extractLocaleNameFromCombined(stripHtml(o.post_title).trim(), locale);
 
   // slug: acf.slug → slug → post_name
   const slug =
