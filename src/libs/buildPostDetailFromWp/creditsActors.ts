@@ -196,13 +196,20 @@ export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefin
   const termIdToInfo = buildTermIdToActorInfoMap(wp, locale);
   const actorLinks = extractActorLinksFromParsedWp(wp);
   const personLinks = extractPersonLinksFromParsedWp(wp);
-  // person タクソノミーが actor タクソノミーより優先（後から上書き）
+  // person タクソノミーが actor タクソノミーより優先（後から上書き）。
+  // locale-aware 名と WP プライマリ名の両方をキーに登録し、どちらの名前でも URL を解決できるようにする。
   const nameToActorUrl = new Map<string, string>();
   for (const l of actorLinks) {
     nameToActorUrl.set(l.name.toLowerCase(), `/actor/${l.slug}`);
   }
   for (const l of personLinks) {
     nameToActorUrl.set(l.name.toLowerCase(), `/person/${l.slug}`);
+  }
+  // locale 名でも引けるよう termIdToInfo のエントリも登録する
+  for (const info of termIdToInfo.values()) {
+    if (!nameToActorUrl.has(info.name.toLowerCase())) {
+      nameToActorUrl.set(info.name.toLowerCase(), info.url);
+    }
   }
   const out: TActor[] = [];
 
@@ -211,19 +218,21 @@ export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefin
     const ext = row as Record<string, unknown>;
     let nameStr: string | undefined;
     let actorUrl: string | undefined;
-    if (typeof ext.name === "string" && ext.name.trim()) {
+    // actor が数値 term ID の場合、_embedded タームから locale-aware 名前・URL を最優先で解決する
+    // （ext.name は日本語プレーンテキストが入ることが多いためターム解決を先行させる）
+    if (typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
+      const info = termIdToInfo.get(ext.actor as number);
+      if (info) {
+        nameStr = info.name;
+        actorUrl = info.url;
+      }
+    }
+    // ターム解決できなかった場合のフォールバック（プレーンテキスト name → actor フィールド）
+    if (!nameStr && typeof ext.name === "string" && ext.name.trim()) {
       nameStr = ext.name.trim();
     }
     if (!nameStr) {
       nameStr = pickActorDisplayNameFromUnknown(ext.actor, locale);
-    }
-    // actor が数値 term ID の場合、_embedded の actor/person タームから名前・URL を解決する
-    if (typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
-      const info = termIdToInfo.get(ext.actor as number);
-      if (info) {
-        if (!nameStr) nameStr = info.name;
-        actorUrl = info.url;
-      }
     }
     // actor が person CPT オブジェクトの場合、slug から /person/{slug} URL を解決する
     if (!actorUrl && typeof ext.actor === "object" && ext.actor !== null && !Array.isArray(ext.actor)) {
