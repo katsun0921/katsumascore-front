@@ -34,7 +34,7 @@ const FALLBACK_SLIDES: HomeHeroSlide[] = [
     copy: '',
     score: 3,
     rank: 'A',
-    href: '/posts',
+    href: '/',
     image: '/images/mock-image.webp',
   },
 ];
