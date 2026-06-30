@@ -9,7 +9,7 @@ import {
   extractProductionStudioLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
-import { scalarToTrimmedString } from "./acfScalars";
+import { acfTruthy, scalarToTrimmedString } from "./acfScalars";
 import { cinemaUrlFromCinemaInfoFiled, resolveIsCinemaShowing } from "./cinema";
 import { SITE_URL } from "./constants";
 import { mapActors, mapCreditsFromParsedWp } from "./creditsActors";
@@ -172,13 +172,16 @@ export const buildPostDetailFromWp = ({
   const heroTags = extractPostTagLinksFromParsedWp(parsed, locale);
 
   const isCinemaShowing = resolveIsCinemaShowing(parsed.acf, acf);
+  const isCinemaWatched = acfTruthy(acf?.is_cinema_watched);
   const cinemaListUrl = cinemaUrlFromCinemaInfoFiled(acf);
   const cinemaIntroductionOfficial = parsed.acf?.official_url?.trim();
-  const cinemaIntroduction: NonNullable<PostDetailData["cinemaIntroduction"]> = {
-    publishedAt: base.publishedAt,
-    ...(cinemaListUrl ? { cinemaUrl: cinemaListUrl } : {}),
-    ...(cinemaIntroductionOfficial ? { officialUrl: cinemaIntroductionOfficial } : {}),
-  };
+  const cinemaIntroduction: NonNullable<PostDetailData["cinemaIntroduction"]> | undefined = isCinemaWatched
+    ? {
+        publishedAt: base.publishedAt,
+        ...(cinemaListUrl ? { cinemaUrl: cinemaListUrl } : {}),
+        ...(cinemaIntroductionOfficial ? { officialUrl: cinemaIntroductionOfficial } : {}),
+      }
+    : undefined;
 
   const vodIntroduction = buildVodIntroductionPayload(parsed, base, acf, vodRelatedPosts);
 
@@ -193,7 +196,7 @@ export const buildPostDetailFromWp = ({
     ...(credits ? { credits } : {}),
     ...(actors ? { actors } : {}),
     isCinemaShowing,
-    cinemaIntroduction,
+    ...(cinemaIntroduction ? { cinemaIntroduction } : {}),
     ...(streamingVods ? { streamingVods } : {}),
     ...(rentalServices ? { rentalServices } : {}),
     ...(relationPosts && relationPosts.length > 0 ? { relationPosts } : {}),
