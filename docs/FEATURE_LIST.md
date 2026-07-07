@@ -180,7 +180,7 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `VodLegend` | `components/ui-section/VodLegend` | VOD バッジ凡例（頭文字の意味を説明） |
 | `VodPanel` | `components/ui-section/VodPanel` | VOD パネル |
 
-### 3.5 features（ロジック・18 コンポーネント）
+### 3.5 features（ロジック・19 コンポーネント）
 
 hooks / state 使用可。データ取得・整形を担当。
 
@@ -191,6 +191,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `CinemaCheck` | `components/features/CinemaCheck` | 映画館チェック（ロジック） |
 | `GenreNav` | `components/features/GenreNav` | ジャンルナビゲーション（アイコン付き） |
 | `HomeHero` | `components/features/HomeHero` | ホームヒーローセクション |
+| `HomeShorts` | `components/features/HomeShorts` | 記事紹介ショート動画（クリックでモーダル再生） |
 | `OfficialSns` | `components/features/OfficialSns` | 公式 SNS 表示 |
 | `Pagination` | `components/features/Pagination` | ページネーション（多言語対応） |
 | `PickUpAndScore` | `components/features/PickUpAndScore` | 特選＋スコア表示 |

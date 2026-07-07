@@ -55,6 +55,8 @@ type BuildPostOpts = {
   contentHtml?: string;
   extraTermGroups?: Term[][];
   vodFlags?: { amazon?: boolean; netflix?: boolean; hulu?: boolean; unext?: boolean };
+  /** 記事紹介ショート動画（YouTube Shorts の URL または動画 ID） */
+  shortVideo?: string;
 };
 
 const buildPost = (o: BuildPostOpts): MockWPPost => {
@@ -66,6 +68,7 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
     ...(o.vodFlags?.netflix ? { netflix: { status: "streaming" } } : {}),
     ...(o.vodFlags?.hulu ? { hulu: { status: "streaming" } } : {}),
     ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
+    ...(o.shortVideo !== undefined ? { short_video: o.shortVideo } : {}),
   };
 
   return {
@@ -100,6 +103,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       excerpt: "モック環境用の長めのレビュー本文を含む映画記事。",
       extraTermGroups: [[TAG_SF], [GENRE_SCI_FI], [VOD_NETFLIX], [ACTOR_YAMADA], [DIR_SATO]],
       vodFlags: { netflix: true },
+      shortVideo: "https://www.youtube.com/shorts/M7lc1UVf-VE",
     },
     {
       id: 1002,
@@ -110,6 +114,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       score: 5,
       extraTermGroups: [[TAG_SF], [GENRE_SCI_FI], [VOD_AMAZON]],
       vodFlags: { amazon: true },
+      shortVideo: "ScMzIvxBSi4",
     },
     {
       id: 1003,

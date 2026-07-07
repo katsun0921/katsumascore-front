@@ -155,7 +155,7 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
  * TOP ページ（`HomeTemplate`）向けに、WordPress から必要データを並列取得して `HomeTemplateProps` を組み立てる。
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
- * アニメ枠・おすすめ（タグ）・特集・VOD ブロックを含む。
+ * アニメ枠・ショート動画枠・おすすめ（タグ）・特集・VOD ブロックを含む。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
@@ -187,6 +187,10 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const rankingPosts = [...pool].sort(sortByScoreDesc).slice(0, 10);
   const latestPosts = [...pool].sort(sortByDateDesc).slice(0, 8);
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
+  const shortVideoPosts = pool
+    .filter((p) => p.shortVideoId !== undefined)
+    .sort(sortByDateDesc)
+    .slice(0, 10);
 
   const animeCategoryId = resolveCategoryMeta(categories, WP_ANIME_CATEGORY_SLUG)?.id;
   const seasonalParentId = await resolveSeasonalReviewParentId();
@@ -235,6 +239,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,
+    shortVideoPosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),
     featuredItems,
