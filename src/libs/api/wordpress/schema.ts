@@ -106,10 +106,15 @@ const wpPostAcfObjectSchema = z
     is_cinema_showing: looseBool.optional(),
     trailer_youtube_id: z.string().optional(),
     trailer_youtube: z.string().optional(),
-    /** 記事紹介ショート動画・日本語（YouTube Shorts の URL または動画 ID） */
-    short_video_ja: z.string().optional(),
-    /** 記事紹介ショート動画・英語（YouTube Shorts の URL または動画 ID） */
-    short_video_en: z.string().optional(),
+    /** 記事紹介ショート動画（YouTube Shorts の URL または動画 ID）。記事は言語別のため動画も記事の言語に対応する。想定外の型で ACF 全体の parse が落ちないよう文字列以外は捨てる */
+    short_video: z.preprocess(
+      (v) => {
+        if (v == null || v === "") return undefined;
+        if (typeof v === "string") return v;
+        return undefined;
+      },
+      z.string().optional(),
+    ),
     rating: z.string().optional(),
     /** 本番で数値や空が混ざると string 解釈で ACF 全体の parse が落ちるため緩める */
     author_comment: z.preprocess(

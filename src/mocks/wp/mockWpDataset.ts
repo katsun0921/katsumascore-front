@@ -55,7 +55,7 @@ type BuildPostOpts = {
   contentHtml?: string;
   extraTermGroups?: Term[][];
   vodFlags?: { amazon?: boolean; netflix?: boolean; hulu?: boolean; unext?: boolean };
-  /** 記事紹介ショート動画（YouTube Shorts の URL または動画 ID）。`lang` に対応する ACF フィールドへ入る */
+  /** 記事紹介ショート動画（YouTube Shorts の URL または動画 ID）。記事の言語の動画を入れる */
   shortVideo?: string;
 };
 
@@ -68,7 +68,7 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
     ...(o.vodFlags?.netflix ? { netflix: { status: "streaming" } } : {}),
     ...(o.vodFlags?.hulu ? { hulu: { status: "streaming" } } : {}),
     ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
-    ...(o.shortVideo !== undefined ? { [`short_video_${o.lang}`]: o.shortVideo } : {}),
+    ...(o.shortVideo !== undefined ? { short_video: o.shortVideo } : {}),
   };
 
   return {
