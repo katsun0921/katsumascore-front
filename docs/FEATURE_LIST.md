@@ -440,4 +440,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | libs 仕様 | `.claude/rules/src/libs.md` | ライブラリ関数仕様 |
 | i18n 実装 | `.claude/rules/src/components/i18n-implementation.md` | i18n 設計・フェーズ構成 |
 | Entity 実装仕様 | `docs/ENTITY_IMPLEMENTATION_SPEC.md` | Entity 設計 |
-| TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_video` の抽出・モーダル再生仕様 |
+| TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_movie.youtube` の抽出・モーダル再生仕様 |

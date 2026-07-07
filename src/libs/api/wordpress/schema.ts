@@ -106,14 +106,19 @@ const wpPostAcfObjectSchema = z
     is_cinema_showing: looseBool.optional(),
     trailer_youtube_id: z.string().optional(),
     trailer_youtube: z.string().optional(),
-    /** 記事紹介ショート動画（YouTube Shorts の URL または動画 ID）。記事は言語別のため動画も記事の言語に対応する。想定外の型で ACF 全体の parse が落ちないよう文字列以外は捨てる */
-    short_video: z.preprocess(
+    /** 記事紹介用のショート動画（ACF グループ）。YouTube のみ TOP ページのモーダル再生対象。TikTok は現状未使用 */
+    short_movie: z.preprocess(
       (v) => {
-        if (v == null || v === "") return undefined;
-        if (typeof v === "string") return v;
-        return undefined;
+        if (v == null || Array.isArray(v) || typeof v !== "object") return undefined;
+        return v;
       },
-      z.string().optional(),
+      z
+        .object({
+          youtube: z.string().optional(),
+          tiktok: z.string().optional(),
+        })
+        .partial()
+        .optional(),
     ),
     rating: z.string().optional(),
     /** 本番で数値や空が混ざると string 解釈で ACF 全体の parse が落ちるため緩める */

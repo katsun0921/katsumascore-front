@@ -217,7 +217,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
   if ((acf?.unext as { status?: unknown } | undefined)?.status === "streaming") vodList.push("unext");
   const vods = vodList.length > 0 ? vodList : undefined;
 
-  const shortVideoId = extractYoutubeVideoId(acf?.short_video);
+  const shortVideoId = extractYoutubeVideoId(acf?.short_movie?.youtube);
 
   const releaseYear = wp.acf?.release_date
     ? Number.parseInt(wp.acf.release_date.slice(0, 4), 10)
