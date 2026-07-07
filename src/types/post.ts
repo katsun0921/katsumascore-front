@@ -27,7 +27,7 @@ export type Post = {
   genres?: PostTaxonomy[];
   tags?: PostTaxonomy[];
   year?: number;
-  /** 記事紹介ショート動画の YouTube 動画 ID（ACF `short_video` から抽出） */
+  /** 記事紹介ショート動画の YouTube 動画 ID（記事の言語に応じて ACF `short_video_ja` / `short_video_en` から抽出） */
   shortVideoId?: string;
 };
 
