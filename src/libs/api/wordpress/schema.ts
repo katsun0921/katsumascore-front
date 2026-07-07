@@ -106,6 +106,20 @@ const wpPostAcfObjectSchema = z
     is_cinema_showing: looseBool.optional(),
     trailer_youtube_id: z.string().optional(),
     trailer_youtube: z.string().optional(),
+    /** 記事紹介用のショート動画（ACF グループ）。YouTube のみ TOP ページのモーダル再生対象。TikTok は現状未使用 */
+    short_movie: z.preprocess(
+      (v) => {
+        if (v == null || Array.isArray(v) || typeof v !== "object") return undefined;
+        return v;
+      },
+      z
+        .object({
+          youtube: z.string().optional(),
+          tiktok: z.string().optional(),
+        })
+        .partial()
+        .optional(),
+    ),
     rating: z.string().optional(),
     /** 本番で数値や空が混ざると string 解釈で ACF 全体の parse が落ちるため緩める */
     author_comment: z.preprocess(

@@ -12,6 +12,8 @@ export type HomeTemplateProps = {
   animeArchiveHref: string;
   animePosts: Post[];
   highScorePosts: Post[];
+  /** 記事紹介ショート動画付きの投稿（`shortVideoId` を持つもののみ） */
+  shortVideoPosts: Post[];
   recommendBlocks: RecommendBlock[];
   vodFinderItems: VodFinderItem[];
   featuredItems: FeaturedItem[];

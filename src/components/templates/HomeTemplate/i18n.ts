@@ -7,6 +7,9 @@ export const messages = {
     anime: { ja: '注目のアニメ', en: 'Spotlight Anime' },
     highScore: { ja: '高評価作品', en: 'Top Rated' },
   },
+  shorts: {
+    title: { ja: 'ショート動画で紹介', en: 'Intro Shorts' },
+  },
   recommend: {
     title: { ja: 'こちらもおすすめ', en: 'More to Explore' },
     seeAll: { ja: 'すべて見る →', en: 'See all →' },

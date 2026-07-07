@@ -1,0 +1,138 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.homeShorts {
+  &__title {
+    margin-bottom: 12px;
+    color: var(--color-text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+  }
+
+  &__track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &__card {
+    display: block;
+    flex-shrink: 0;
+    width: 128px;
+    padding: 0;
+    border: none;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+
+    @include layout-md {
+      width: 160px;
+    }
+
+    &:hover .homeShorts__playBadge,
+    &:focus-visible .homeShorts__playBadge {
+      background: rgba(var(--color-black-rgb), 0.75);
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+  }
+
+  &__thumb {
+    position: relative;
+    display: block;
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--color-surface-dark);
+  }
+
+  &__thumbImg {
+    object-fit: cover;
+  }
+
+  &__playBadge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(var(--color-black-rgb), 0.55);
+    color: var(--color-text-inverse);
+    transform: translate(-50%, -50%);
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  &__cardTitle {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    margin-top: 8px;
+    color: var(--color-text-inverse);
+    font-family: var(--font-ui);
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  &__modal {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(var(--color-black-rgb), 0.8);
+  }
+
+  &__modalInner {
+    position: relative;
+    width: min(90vw, calc(85vh * 9 / 16));
+  }
+
+  &__modalClose {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(var(--color-white-rgb), 0.15);
+    color: var(--color-text-inverse);
+    cursor: pointer;
+    transition: background 0.2s;
+
+    &:hover,
+    &:focus-visible {
+      background: rgba(var(--color-white-rgb), 0.35);
+    }
+  }
+
+  &__player {
+    aspect-ratio: 9 / 16;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--color-black);
+  }
+
+  &__iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+}

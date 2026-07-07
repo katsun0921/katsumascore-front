@@ -1,4 +1,5 @@
 import { HomeHero } from '@/components/features/HomeHero';
+import { HomeShorts } from '@/components/features/HomeShorts';
 import { AdBanner } from '@/components/ui-section/AdBanner';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
@@ -15,8 +16,8 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
  *
  * 表示順:
- *   Hero → 広告バナー（ja） → VOD バッジ凡例 → Ranking → 最新レビュー → 注目のアニメ → 高評価 → Recommend
- *   → 特集 → VOD
+ *   Hero → 広告バナー（ja） → VOD バッジ凡例 → Ranking → 最新レビュー → ショート動画 → 注目のアニメ → 高評価
+ *   → Recommend → 特集 → VOD
  */
 export const HomeTemplate = ({
   hero,
@@ -26,6 +27,7 @@ export const HomeTemplate = ({
   animeArchiveHref,
   animePosts,
   highScorePosts,
+  shortVideoPosts,
   recommendBlocks,
   vodFinderItems,
   featuredItems,
@@ -62,6 +64,15 @@ export const HomeTemplate = ({
             seeAllHref={latestSeeAllHref}
           />
         </section>
+
+        {shortVideoPosts.length > 0 && (
+          <section className='homeTemplate__section'>
+            <HomeShorts
+              title={t(messages, ['shorts', 'title'], locale)}
+              posts={shortVideoPosts}
+            />
+          </section>
+        )}
 
         <section className='homeTemplate__section'>
           <HomeCardScrollList

@@ -27,6 +27,8 @@ export type Post = {
   genres?: PostTaxonomy[];
   tags?: PostTaxonomy[];
   year?: number;
+  /** 記事紹介ショート動画の YouTube 動画 ID（ACF `short_movie.youtube` から抽出。TikTok は現状未対応） */
+  shortVideoId?: string;
 };
 
 export type PostContentData = {

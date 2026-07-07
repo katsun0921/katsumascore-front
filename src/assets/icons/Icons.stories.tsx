@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { PlayIcon } from './PlayIcon';
 import { ChevronDownIcon } from './ChevronDownIcon';
+import { CloseIcon } from './CloseIcon';
 import { XIcon } from './XIcon';
 import { FacebookIcon } from './FacebookIcon';
 import { RssIcon } from './RssIcon';
@@ -21,6 +22,7 @@ const ICON_SIZES = [12, 14, 16, 18, 24, 32] as const;
 const iconList = [
   { name: 'PlayIcon', usage: 'CTAButton / VodLink / VodMenu', Icon: PlayIcon, fill: 'currentColor' },
   { name: 'ChevronDownIcon', usage: 'VodMenu', Icon: ChevronDownIcon, fill: 'currentColor' },
+  { name: 'CloseIcon', usage: 'HomeShorts', Icon: CloseIcon, fill: 'currentColor' },
   { name: 'XIcon', usage: 'Footer / Profile', Icon: XIcon, fill: 'currentColor' },
   { name: 'FacebookIcon', usage: 'Footer', Icon: FacebookIcon, fill: 'currentColor' },
   { name: 'RssIcon', usage: 'Footer', Icon: RssIcon, fill: 'currentColor' },
