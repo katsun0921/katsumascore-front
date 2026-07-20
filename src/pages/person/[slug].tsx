@@ -8,15 +8,15 @@ import {
   getPostsByPersonId,
   transformPerson,
 } from '@/libs/api/wordpress';
+import type { PersonRelatedPost } from '@/libs/api/wordpress';
 import { PersonTemplate } from '@/components/templates/PersonTemplate';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
-import type { Post } from '@/types/post';
 import type { Locale } from '@/i18n/t';
 
 type PersonPageProps = {
   person: Person;
-  posts: Post[];
+  posts: PersonRelatedPost[];
   locale: string;
 };
 

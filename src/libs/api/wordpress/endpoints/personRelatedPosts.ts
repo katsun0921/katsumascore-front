@@ -33,7 +33,11 @@ type PersonRelatedPostsItem = {
   featuredImage: PersonRelatedPostsFeaturedImage | null;
   score: number | null;
   categorySlug: string | null;
+  character: string | null;
 };
+
+/** Person の出演・監督作品一覧アイテム。`character` は出演時の役名（監督のみの場合や役名未設定時は `undefined`）。 */
+export type PersonRelatedPost = Post & { character?: string };
 
 export type PersonRelatedPostsParams = {
   personId: number;
@@ -78,6 +82,7 @@ const parseItem = (raw: unknown): PersonRelatedPostsItem | null => {
     featuredImage: parseFeaturedImage(o.featuredImage),
     score: typeof o.score === 'number' ? o.score : null,
     categorySlug: typeof o.categorySlug === 'string' ? o.categorySlug : null,
+    character: typeof o.character === 'string' ? o.character : null,
   };
 };
 
@@ -93,8 +98,8 @@ const parseItems = (raw: unknown): PersonRelatedPostsItem[] => {
   return out;
 };
 
-/** カスタムエンドポイントのアイテムをアプリの `Post` へ変換する。 */
-const mapItemToPost = (item: PersonRelatedPostsItem): Post => {
+/** カスタムエンドポイントのアイテムをアプリの `PersonRelatedPost` へ変換する。 */
+const mapItemToPost = (item: PersonRelatedPostsItem): PersonRelatedPost => {
   const type = resolvePostType(item.categorySlug ?? undefined);
   return {
     id: String(item.id),
@@ -106,6 +111,7 @@ const mapItemToPost = (item: PersonRelatedPostsItem): Post => {
     lang: item.lang,
     type,
     ...(item.score !== null ? { score: item.score } : {}),
+    ...(item.character !== null ? { character: item.character } : {}),
   };
 };
 
@@ -117,7 +123,7 @@ export const getPostsByPersonId = async (
   personId: number,
   params: Omit<PersonRelatedPostsParams, 'personId'> = {},
   options?: WpFetchOptions,
-): Promise<Post[]> => {
+): Promise<PersonRelatedPost[]> => {
   if (isWpMockMode()) return [];
   if (!POSTS_BY_PERSON_URL) return [];
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
