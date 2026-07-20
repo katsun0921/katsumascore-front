@@ -66,13 +66,14 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
             <ul className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
               {posts.map((post) => (
                 <li key={post.id}>
-                  <PostCardImgTop post={post} />
-                  {post.character && (
-                    <p className='mt-1 text-sm text-[var(--color-text-muted)]'>
-                      {t(messages, ['filmography', 'characterPrefix'], locale)}
-                      {post.character}
-                    </p>
-                  )}
+                  <PostCardImgTop
+                    post={post}
+                    caption={
+                      post.character
+                        ? `${t(messages, ['filmography', 'characterPrefix'], locale)}${post.character}`
+                        : undefined
+                    }
+                  />
                 </li>
               ))}
             </ul>

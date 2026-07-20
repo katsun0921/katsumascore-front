@@ -44,3 +44,12 @@ export const EmptyStrings: Story = {
     excerpt: '',
   },
 };
+
+export const WithCaption: Story = {
+  args: {
+    publishedAt: '2026-04-01',
+    title: 'サンプル記事タイトル',
+    excerpt: '記事の概要テキストがここに入ります。',
+    caption: '役: サンプルキャラクター',
+  },
+};
