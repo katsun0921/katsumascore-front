@@ -47,6 +47,38 @@ const actorsBlob = (wp: ParsedWPPost): string => {
   return chunks.join(" ");
 };
 
+/** ACF `director`（post_object。文字列 / 配列 / person CPT オブジェクトいずれもあり得る）から検索用の名前テキストを作る。 */
+const directorBlob = (wp: ParsedWPPost): string => {
+  const raw = (wp.acf as Record<string, unknown> | undefined)?.director;
+  if (raw == null) return "";
+
+  const nameFromPersonObject = (o: Record<string, unknown>): string => {
+    const acfFields = typeof o.acf === "object" && o.acf !== null ? (o.acf as Record<string, unknown>) : undefined;
+    const nameJa = acfFields && typeof acfFields.name_ja === "string" ? acfFields.name_ja : "";
+    const nameEn = acfFields && typeof acfFields.name_en === "string" ? acfFields.name_en : "";
+    if (nameJa || nameEn) return [nameJa, nameEn].filter(Boolean).join(" ");
+    if (typeof o.title === "object" && o.title !== null && "rendered" in o.title) {
+      return String((o.title as { rendered?: unknown }).rendered ?? "");
+    }
+    if (typeof o.title === "string") return o.title;
+    // WP_Post 生形式（REST 未整形の post_object 値）は `post_title` を持つ
+    if (typeof o.post_title === "string") return o.post_title;
+    return typeof o.name === "string" ? o.name : "";
+  };
+
+  const names: string[] = [];
+  const values = Array.isArray(raw) ? raw : [raw];
+  for (const v of values) {
+    if (typeof v === "string") {
+      if (v) names.push(v);
+    } else if (v && typeof v === "object") {
+      const n = nameFromPersonObject(v as Record<string, unknown>);
+      if (n) names.push(n);
+    }
+  }
+  return names.join(" ");
+};
+
 type TermLike = { name?: string; taxonomy?: string };
 
 /** `wp_*` プレフィックスを除き小文字化したタクソノミー名。 */
@@ -78,10 +110,11 @@ export const getSearchMatchKinds = (wp: ParsedWPPost, keyword: string): SearchMa
 
   if (includesKeyword(actorsBlob(wp), k)) pushKind(kinds, "actor");
 
+  if (includesKeyword(directorBlob(wp), k)) pushKind(kinds, "director");
+
   eachEmbeddedTerm(wp, (name, taxonomy) => {
     if (!includesKeyword(name, k)) return;
     if (taxonomy === "actor" || taxonomy === "actors") pushKind(kinds, "actor");
-    if (taxonomy === "director" || taxonomy === "directors") pushKind(kinds, "director");
     if (taxonomy === "genre" || taxonomy === "genres") pushKind(kinds, "genre");
   });
 
