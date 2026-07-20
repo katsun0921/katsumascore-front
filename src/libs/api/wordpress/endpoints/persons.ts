@@ -60,21 +60,6 @@ export const getPersonBySlug = async (
   return results?.[0] ?? null;
 };
 
-type TaxTerm = { id: number; slug: string; name: string; count: number };
-
-/** slug で actor / director タクソノミーのタームを取得する。存在しない場合は null。 */
-export const getPersonTaxTermBySlug = async (
-  taxonomy: "actor" | "director",
-  slug: string,
-  options?: WpFetchOptions,
-): Promise<TaxTerm | null> => {
-  const results = await fetchPersons<TaxTerm[]>(
-    `/${taxonomy}?slug=${encodeURIComponent(slug)}`,
-    options,
-  );
-  return results?.[0] ?? null;
-};
-
 /** 全 persons を取得する（サイトマップ生成などの用途）。 */
 export const getPersons = async (
   perPage = 100,
