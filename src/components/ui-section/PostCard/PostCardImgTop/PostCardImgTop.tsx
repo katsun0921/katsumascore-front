@@ -11,9 +11,11 @@ type Props = {
   rank?: number;
   className?: string;
   priority?: boolean;
+  /** タイトル直下に添える補足キャプション（例: Person詳細ページの出演役名） */
+  caption?: string;
 };
 
-export const PostCardImgTop = ({ post, rank, className, priority }: Props) => (
+export const PostCardImgTop = ({ post, rank, className, priority, caption }: Props) => (
   <PostCardContainer className={className}>
     <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='relative grid text-inherit'>
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
@@ -22,6 +24,7 @@ export const PostCardImgTop = ({ post, rank, className, priority }: Props) => (
         publishedAt={post.publishedAt}
         title={post.title}
         excerpt={post.excerpt}
+        caption={caption}
       />
     </Link>
   </PostCardContainer>
