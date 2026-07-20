@@ -6,6 +6,10 @@
     line-height: 1.2;
   }
 
+  &__titleGroup {
+    display: block;
+  }
+
   &__title {
     display: -webkit-box;
     overflow: hidden;

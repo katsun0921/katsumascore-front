@@ -39,7 +39,7 @@ export const PostCardBody = ({
           {publishedAt}
         </time>
       )}
-      <hgroup>
+      <hgroup className='postCard__titleGroup'>
         <h3 className='postCard__title'>{titleContent}</h3>
         {caption && <span className='postCard__character'>{caption}</span>}
       </hgroup>
