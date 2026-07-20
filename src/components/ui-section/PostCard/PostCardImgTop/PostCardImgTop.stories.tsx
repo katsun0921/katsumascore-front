@@ -24,3 +24,7 @@ export const LongTitle: Story = {
 export const NoImage: Story = {
   args: { post: mockPostNoImage },
 };
+
+export const WithCaption: Story = {
+  args: { post: mockPost, caption: '役: サンプルキャラクター' },
+};

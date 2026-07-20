@@ -17,6 +17,13 @@
     -webkit-line-clamp: 3;
   }
 
+  &__character {
+    display: block;
+    color: var(--color-text-secondary);
+    font-size: 0.8em;
+    line-height: 1.4;
+  }
+
   &__excerpt {
     display: -webkit-box;
     overflow: hidden;

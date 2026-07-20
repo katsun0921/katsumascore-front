@@ -22,6 +22,7 @@ export const PostCardBody = ({
   category,
   className,
   highlightKeyword,
+  caption,
 }: PostCardBodyProps) => {
   let titleContent: ReactNode = title;
   if (BR_TAG_PATTERN.test(title)) {
@@ -38,7 +39,10 @@ export const PostCardBody = ({
           {publishedAt}
         </time>
       )}
-      <h3 className='postCard__title'>{titleContent}</h3>
+      <hgroup>
+        <h3 className='postCard__title'>{titleContent}</h3>
+        {caption && <span className='postCard__character'>{caption}</span>}
+      </hgroup>
       {excerpt && <p className='postCard__excerpt'>{excerpt}</p>}
       {category && <p className='postCard__category'>{category}</p>}
     </div>
