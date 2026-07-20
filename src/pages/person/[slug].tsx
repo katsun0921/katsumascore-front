@@ -79,7 +79,7 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
   const wp = await getPersonBySlug(slug);
   if (!wp) return { notFound: true };
 
-  const posts = await getPostsByPersonId(wp.id, { per_page: 100 });
+  const posts = await getPostsByPersonId(wp.id, { lang: currentLocale, per_page: 100 });
 
   return {
     props: {
