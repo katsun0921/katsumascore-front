@@ -30,10 +30,10 @@ export const useActorWorks = (
 
     const fetchAll = async () => {
       const entries = await Promise.all(
-        actorTermEntries.map(async ({ actorName, termId, taxType }) => {
+        actorTermEntries.map(async ({ actorName, personId }) => {
           try {
             const res = await fetch(
-              `/api/actor-works?termId=${termId}&taxType=${taxType}&excludeId=${postId}`,
+              `/api/actor-works?personId=${personId}&excludeId=${postId}`,
             );
             if (!res.ok) return null;
             const works: OtherWork[] = await res.json();

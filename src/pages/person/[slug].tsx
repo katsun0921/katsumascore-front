@@ -3,19 +3,25 @@ import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { I18nProvider } from '@/i18n/provider';
-import {
-  getPersonBySlug,
-  getPersonTaxTermBySlug,
-  getPostsByActorTermId,
-  getPostsByDirectorTermId,
-  mapWPPostToPost,
-  transformPerson,
-} from '@/libs/api/wordpress';
+import { getPersonBySlug, getPostsByPersonId, transformPerson } from '@/libs/api/wordpress';
+import type { PersonRelatedPostItem } from '@/libs/api/wordpress';
 import { PersonTemplate } from '@/components/templates/PersonTemplate';
-import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
+import { getEntityUrl, getPostUrl, normalizeRouteLocale, resolvePostType } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
 import type { Post } from '@/types/post';
 import type { Locale } from '@/i18n/t';
+
+/** posts-by-person のレスポンス項目を PersonTemplate 表示用の `Post` へ変換する。 */
+const toPost = (item: PersonRelatedPostItem, locale: 'ja' | 'en'): Post => ({
+  id: String(item.id),
+  slug: getPostUrl(resolvePostType(item.categorySlug ?? undefined), item.slug, locale),
+  title: item.title,
+  excerpt: item.excerpt,
+  image: item.featuredImage?.url ?? null,
+  publishedAt: item.date,
+  lang: item.lang,
+  ...(item.score !== null ? { score: item.score } : {}),
+});
 
 type PersonPageProps = {
   person: Person;
@@ -82,31 +88,13 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
   const wp = await getPersonBySlug(slug);
   if (!wp) return { notFound: true };
 
-  const [actorTerm, directorTerm] = await Promise.all([
-    getPersonTaxTermBySlug('actor', slug),
-    getPersonTaxTermBySlug('director', slug),
-  ]);
-
-  const [actorPosts, directorPosts] = await Promise.all([
-    actorTerm ? getPostsByActorTermId(actorTerm.id, 100) : Promise.resolve([]),
-    directorTerm ? getPostsByDirectorTermId(directorTerm.id, 100) : Promise.resolve([]),
-  ]);
-
-  const seenIds = new Set<string>();
-  const mergedPosts: Post[] = [];
-  for (const wpPost of [...directorPosts, ...actorPosts]) {
-    const post = mapWPPostToPost(wpPost);
-    if (!post) continue;
-    if (!seenIds.has(post.id)) {
-      seenIds.add(post.id);
-      mergedPosts.push(post);
-    }
-  }
+  const related = await getPostsByPersonId({ personId: wp.id, lang: currentLocale, perPage: 100 });
+  const posts = (related?.items ?? []).map((item) => toPost(item, currentLocale));
 
   return {
     props: {
       person: transformPerson(wp),
-      posts: mergedPosts,
+      posts,
       locale: currentLocale,
     },
     revalidate: REVALIDATE_DAILY,

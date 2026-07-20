@@ -12,9 +12,6 @@ export {
   searchPosts,
   getPostsByCategory,
   getPostsByTagId,
-  getPostsByActorTermId,
-  getPostsByDirectorTermId,
-  getPostsByPersonTermId,
   getPostsByFranchiseTermId,
 } from "./endpoints/posts";
 
@@ -48,9 +45,18 @@ export type {
   VodListParams,
 } from "./endpoints/vodList";
 
+export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
+export type {
+  PersonRelatedPostFeaturedImage,
+  PersonRelatedPostItem,
+  PersonRelatedPostsMeta,
+  PersonRelatedPostsResponse,
+  PersonRelatedPostsParams,
+} from "./endpoints/personRelatedPosts";
+
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
-export { getPerson, getPersonBySlug, getPersons, getPersonsByRole, getPersonTaxTermBySlug } from "./endpoints/persons";
+export { getPerson, getPersonBySlug, getPersons, getPersonsByRole } from "./endpoints/persons";
 
 export { getCompany, getCompanyBySlug } from "./endpoints/companies";
 

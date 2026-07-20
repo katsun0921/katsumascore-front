@@ -27,12 +27,6 @@ type PostsQuery = {
   genre?: string;
   /** カスタム taxonomy `vod` のターム ID（OpenAPI 未定義のためクエリは生 URL で付与） */
   vod?: number;
-  /** カスタム taxonomy `actor` のターム ID（フィルモグラフィー取得用） */
-  actor?: number;
-  /** カスタム taxonomy `director` のターム ID（フィルモグラフィー取得用） */
-  director?: number;
-  /** カスタム taxonomy `person` のターム ID（フィルモグラフィー取得用） */
-  person?: number;
   /** カスタム taxonomy `franchise` のターム ID（シリーズ特集ページ用） */
   franchise?: number;
   slug?: string;
@@ -48,9 +42,6 @@ type PostsParams = {
   tags?: number;
   genre?: string;
   vod?: number;
-  actor?: number;
-  director?: number;
-  person?: number;
   franchise?: number;
 };
 
@@ -63,9 +54,6 @@ const buildPostsQuery = (params: PostsParams): PostsQuery => {
   if (params.tags) q.tags = params.tags;
   if (params.genre) q.genre = params.genre;
   if (params.vod !== undefined) q.vod = params.vod;
-  if (params.actor !== undefined) q.actor = params.actor;
-  if (params.director !== undefined) q.director = params.director;
-  if (params.person !== undefined) q.person = params.person;
   if (params.franchise !== undefined) q.franchise = params.franchise;
   return q;
 };
@@ -82,9 +70,6 @@ const postsQueryToSearchParams = (q: PostsQuery): URLSearchParams => {
   if (q.tags !== undefined) sp.set("tags", String(q.tags));
   if (q.genre) sp.set("genre", q.genre);
   if (q.vod !== undefined) sp.set("vod", String(q.vod));
-  if (q.actor !== undefined) sp.set("actor", String(q.actor));
-  if (q.director !== undefined) sp.set("director", String(q.director));
-  if (q.person !== undefined) sp.set("person", String(q.person));
   if (q.franchise !== undefined) sp.set("franchise", String(q.franchise));
   if (q.slug) sp.set("slug", q.slug);
   if (q.search) sp.set("search", q.search);
@@ -126,7 +111,7 @@ const fetchPostsWithMetaOverHttp = async (
   return null;
 };
 
-/** 投稿配列のみが欲しい場合。`genre` / `vod` / `actor` / `person` 指定時は常に HTTP 経由。 */
+/** 投稿配列のみが欲しい場合。`genre` / `vod` / `franchise` 指定時は常に HTTP 経由。 */
 const fetchPosts = async (
   query: PostsQuery,
   options?: WpFetchOptions,
@@ -134,7 +119,7 @@ const fetchPosts = async (
   if (isWpMockMode()) {
     return mockWpPostsList(query);
   }
-  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined || query.franchise !== undefined) {
+  if (query.genre || query.vod !== undefined || query.franchise !== undefined) {
     const paged = await fetchPostsWithMetaOverHttp(query, options);
     return paged?.items ?? null;
   }
@@ -175,7 +160,7 @@ const fetchPostsWithMeta = async (
   if (isWpMockMode()) {
     return mockWpPostsPaged(query);
   }
-  if (query.genre || query.vod !== undefined || query.actor !== undefined || query.director !== undefined || query.person !== undefined || query.franchise !== undefined) return fetchPostsWithMetaOverHttp(query, options);
+  if (query.genre || query.vod !== undefined || query.franchise !== undefined) return fetchPostsWithMetaOverHttp(query, options);
   if (!wpClient) return null;
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
@@ -299,27 +284,6 @@ export const getPostsByTagId = async (
     { tags: tagId, per_page: opts.per_page ?? 10, page: opts.page },
     options,
   );
-
-/** actor タクソノミーのターム ID で絞った投稿一覧（フィルモグラフィー用）。 */
-export const getPostsByActorTermId = async (
-  termId: number,
-  perPage = 6,
-  options?: WpFetchOptions,
-): Promise<WPPost[]> => getPosts({ actor: termId, per_page: perPage }, options);
-
-/** director タクソノミーのターム ID で絞った投稿一覧（フィルモグラフィー用）。 */
-export const getPostsByDirectorTermId = async (
-  termId: number,
-  perPage = 100,
-  options?: WpFetchOptions,
-): Promise<WPPost[]> => getPosts({ director: termId, per_page: perPage }, options);
-
-/** person タクソノミーのターム ID で絞った投稿一覧（フィルモグラフィー用）。 */
-export const getPostsByPersonTermId = async (
-  termId: number,
-  perPage = 6,
-  options?: WpFetchOptions,
-): Promise<WPPost[]> => getPosts({ person: termId, per_page: perPage }, options);
 
 /** franchise タクソノミーのターム ID で絞った投稿一覧（シリーズ特集ページ用）。 */
 export const getPostsByFranchiseTermId = async (
