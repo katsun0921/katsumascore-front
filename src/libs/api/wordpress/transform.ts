@@ -234,6 +234,7 @@ const mapParsedWPPostToPost = (wp: ParsedWPPost): Post & { content: string } => 
     content: wp.content.rendered,
     image: image ?? null,
     publishedAt: wp.date.slice(0, 10),
+    updatedAt: (wp.modified ?? wp.date).slice(0, 10),
     lang,
     type,
     ...(category !== undefined ? { category } : {}),
