@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getPostsByPersonId } from '@/libs/api/wordpress';
 import { normalizeRouteLocale } from '@/libs/route';
 
-type OtherWork = { title: string; href: string; score?: number };
+type OtherWork = { title: string; href: string; character?: string };
 
 type ResponseData = OtherWork[] | { error: string };
 
@@ -26,7 +26,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
     .map((post) => ({
       title: post.title,
       href: post.slug,
-      ...(post.score !== undefined ? { score: post.score } : {}),
+      ...(post.character !== undefined ? { character: post.character } : {}),
     }));
 
   res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');
