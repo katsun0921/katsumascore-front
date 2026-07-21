@@ -43,6 +43,14 @@ const sortByScoreDesc = (a: Post, b: Post) => (b.score ?? 0) - (a.score ?? 0);
 const sortByDateDesc = (a: Post, b: Post) => b.publishedAt.localeCompare(a.publishedAt);
 
 /**
+ * ショート動画枠用の比較関数。更新日（`updatedAt`）の新しい順に並べ替える。
+ * YouTube 側の投稿順を厳密には持たないため、記事の更新順を代替指標として使う。
+ * `updatedAt` 未設定時は `publishedAt` にフォールバックする。
+ */
+const sortByUpdatedAtDesc = (a: Post, b: Post) =>
+  (b.updatedAt ?? b.publishedAt).localeCompare(a.updatedAt ?? a.publishedAt);
+
+/**
  * WordPress REST の投稿配列（生 JSON）を正規化した `Post` 配列に変換する。
  * `mapWPPostToPost` でパースし、`content` は破棄する。`Post.lang`（`detectLang`）が
  * `routeLang` と異なる投稿は除外する（例: `/ja` では英語判定の投稿を載せない）。
@@ -189,7 +197,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const highScorePosts = pool.filter((p) => (p.score ?? 0) >= 4).slice(0, 8);
   const shortVideoPosts = pool
     .filter((p) => p.shortVideoId !== undefined)
-    .sort(sortByDateDesc)
+    .sort(sortByUpdatedAtDesc)
     .slice(0, 10);
 
   const animeCategoryId = resolveCategoryMeta(categories, WP_ANIME_CATEGORY_SLUG)?.id;

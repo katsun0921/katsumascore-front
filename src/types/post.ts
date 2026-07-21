@@ -18,6 +18,8 @@ export type Post = {
   excerpt: string;
   image: string | null;
   publishedAt: string;
+  /** WP `modified`（更新日時）。WP正規化以外の生成経路では未設定 */
+  updatedAt?: string;
   lang?: "ja" | "en";
   type?: PostType;
   category?: string;
