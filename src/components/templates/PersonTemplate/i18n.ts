@@ -5,5 +5,6 @@ export const messages = {
   },
   filmography: {
     heading: { ja: '出演・監督作品', en: 'Filmography' },
+    characterPrefix: { ja: '役: ', en: 'as ' },
   },
 } as const;

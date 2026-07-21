@@ -7,11 +7,11 @@ import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { Person } from '@/libs/api/wordpress/transform';
-import type { Post } from '@/types/post';
+import type { PersonRelatedPost } from '@/libs/api/wordpress';
 
 type PersonTemplateProps = {
   person: Person;
-  posts: Post[];
+  posts: PersonRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
 };
 
@@ -66,7 +66,14 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
             <ul className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
               {posts.map((post) => (
                 <li key={post.id}>
-                  <PostCardImgTop post={post} />
+                  <PostCardImgTop
+                    post={post}
+                    caption={
+                      post.character
+                        ? `${t(messages, ['filmography', 'characterPrefix'], locale)}${post.character}`
+                        : undefined
+                    }
+                  />
                 </li>
               ))}
             </ul>

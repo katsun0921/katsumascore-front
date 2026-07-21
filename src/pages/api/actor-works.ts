@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getPostsByPersonId } from '@/libs/api/wordpress';
-import { getPostUrl, normalizeRouteLocale, resolvePostType } from '@/libs/route';
+import { normalizeRouteLocale } from '@/libs/route';
 
 type OtherWork = { title: string; href: string; score?: number };
 
@@ -15,18 +15,18 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
   }
 
   const id = Number(personId);
-  const excludePostId = typeof excludeId === 'string' ? Number(excludeId) : undefined;
+  const excludePostId = typeof excludeId === 'string' ? excludeId : undefined;
   const loc = normalizeRouteLocale(typeof locale === 'string' ? locale : undefined);
 
-  const related = await getPostsByPersonId({ personId: id, lang: loc, perPage: 6 });
+  const related = await getPostsByPersonId(id, { lang: loc, per_page: 6 });
 
-  const works = (related?.items ?? [])
-    .filter((item) => item.id !== excludePostId)
+  const works = related
+    .filter((post) => post.id !== excludePostId)
     .slice(0, 5)
-    .map((item) => ({
-      title: item.title,
-      href: getPostUrl(resolvePostType(item.categorySlug ?? undefined), item.slug, loc),
-      ...(item.score !== null ? { score: item.score } : {}),
+    .map((post) => ({
+      title: post.title,
+      href: post.slug,
+      ...(post.score !== undefined ? { score: post.score } : {}),
     }));
 
   res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600');

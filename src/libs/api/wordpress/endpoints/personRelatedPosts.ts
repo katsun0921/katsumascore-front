@@ -1,7 +1,6 @@
 /**
  * Person 出演/監督作品一覧専用カスタムエンドポイント `/wp-json/v1/posts-by-person` のクライアント。
- * 記事の出演者・監督は ACF post_object（`director` / `actors_filed.actor`）で person CPT に
- * 直接リンクされており taxonomy ではないため、person の投稿 ID で逆引きする。
+ * Person CPT の post_object 参照（director / actors_filed.actor）から記事を逆引きする。
  */
 import {
   wpRestBaseUrl,
@@ -11,17 +10,19 @@ import {
 } from '../client';
 import type { WpFetchOptions } from '../client';
 import { isWpMockMode } from '@/libs/wpMockMode';
+import { getPostUrl, resolvePostType } from '@/libs/route';
+import type { Post } from '@/types/post';
 
 const POSTS_BY_PERSON_URL = wpRestBaseUrl ? `${wpRestBaseUrl}/v1/posts-by-person` : undefined;
 
-export type PersonRelatedPostFeaturedImage = {
+type PersonRelatedPostsFeaturedImage = {
   url: string;
   width: number;
   height: number;
   alt: string;
 };
 
-export type PersonRelatedPostItem = {
+type PersonRelatedPostsItem = {
   id: number;
   slug: string;
   lang: 'ja' | 'en';
@@ -29,30 +30,20 @@ export type PersonRelatedPostItem = {
   excerpt: string;
   date: string;
   modified: string;
-  featuredImage: PersonRelatedPostFeaturedImage | null;
+  featuredImage: PersonRelatedPostsFeaturedImage | null;
   score: number | null;
   categorySlug: string | null;
-  /** 対象 person が出演者として一致した行の役名。監督のみでの一致時は null。 */
   character: string | null;
 };
 
-export type PersonRelatedPostsMeta = {
-  page: number;
-  perPage: number;
-  total: number;
-  totalPages: number;
-};
-
-export type PersonRelatedPostsResponse = {
-  items: PersonRelatedPostItem[];
-  meta: PersonRelatedPostsMeta;
-};
+/** Person の出演・監督作品一覧アイテム。`character` は出演時の役名（監督のみの場合や役名未設定時は `undefined`）。 */
+export type PersonRelatedPost = Post & { character?: string };
 
 export type PersonRelatedPostsParams = {
   personId: number;
   lang?: 'ja' | 'en';
   page?: number;
-  perPage?: number;
+  per_page?: number;
 };
 
 const buildSearchParams = (params: PersonRelatedPostsParams): URLSearchParams => {
@@ -60,11 +51,11 @@ const buildSearchParams = (params: PersonRelatedPostsParams): URLSearchParams =>
   sp.set('person_id', String(params.personId));
   if (params.lang) sp.set('lang', params.lang);
   if (params.page !== undefined) sp.set('page', String(params.page));
-  if (params.perPage !== undefined) sp.set('per_page', String(params.perPage));
+  if (params.per_page !== undefined) sp.set('per_page', String(params.per_page));
   return sp;
 };
 
-const parseFeaturedImage = (raw: unknown): PersonRelatedPostFeaturedImage | null => {
+const parseFeaturedImage = (raw: unknown): PersonRelatedPostsFeaturedImage | null => {
   if (!raw || typeof raw !== 'object') return null;
   const o = raw as Record<string, unknown>;
   if (typeof o.url !== 'string') return null;
@@ -76,7 +67,7 @@ const parseFeaturedImage = (raw: unknown): PersonRelatedPostFeaturedImage | null
   };
 };
 
-const parseItem = (raw: unknown): PersonRelatedPostItem | null => {
+const parseItem = (raw: unknown): PersonRelatedPostsItem | null => {
   if (!raw || typeof raw !== 'object') return null;
   const o = raw as Record<string, unknown>;
   if (typeof o.id !== 'number' || typeof o.slug !== 'string') return null;
@@ -95,44 +86,48 @@ const parseItem = (raw: unknown): PersonRelatedPostItem | null => {
   };
 };
 
-const parseResponse = (raw: unknown): PersonRelatedPostsResponse | null => {
-  if (!raw || typeof raw !== 'object') return null;
+const parseItems = (raw: unknown): PersonRelatedPostsItem[] => {
+  if (!raw || typeof raw !== 'object') return [];
   const o = raw as Record<string, unknown>;
-  const items: PersonRelatedPostItem[] = [];
-  if (Array.isArray(o.items)) {
-    for (const item of o.items) {
-      const parsed = parseItem(item);
-      if (parsed) items.push(parsed);
-    }
+  if (!Array.isArray(o.items)) return [];
+  const out: PersonRelatedPostsItem[] = [];
+  for (const item of o.items) {
+    const parsed = parseItem(item);
+    if (parsed) out.push(parsed);
   }
-  const m = o.meta;
-  if (!m || typeof m !== 'object') return null;
-  const meta = m as Record<string, unknown>;
+  return out;
+};
+
+/** カスタムエンドポイントのアイテムをアプリの `PersonRelatedPost` へ変換する。 */
+const mapItemToPost = (item: PersonRelatedPostsItem): PersonRelatedPost => {
+  const type = resolvePostType(item.categorySlug ?? undefined);
   return {
-    items,
-    meta: {
-      page: typeof meta.page === 'number' ? meta.page : 1,
-      perPage: typeof meta.perPage === 'number' ? meta.perPage : 20,
-      total: typeof meta.total === 'number' ? meta.total : items.length,
-      totalPages: typeof meta.totalPages === 'number' ? meta.totalPages : 1,
-    },
+    id: String(item.id),
+    slug: getPostUrl(type, item.slug, item.lang),
+    title: item.title,
+    excerpt: item.excerpt,
+    image: item.featuredImage?.url ?? null,
+    publishedAt: item.date.slice(0, 10),
+    lang: item.lang,
+    type,
+    ...(item.score !== null ? { score: item.score } : {}),
+    ...(item.character !== null ? { character: item.character } : {}),
   };
 };
 
 /**
- * person の投稿 ID（`director` / `actors_filed.actor` が参照する person CPT の ID）から、
- * その person が出演・監督している記事一覧を取得する。エンドポイント未実装・失敗時は `null`。
+ * Person が出演/監督した記事一覧を取得する。`personId` は person CPT の投稿 ID。
+ * エンドポイント未実装・失敗時は空配列。
  */
 export const getPostsByPersonId = async (
-  params: PersonRelatedPostsParams,
+  personId: number,
+  params: Omit<PersonRelatedPostsParams, 'personId'> = {},
   options?: WpFetchOptions,
-): Promise<PersonRelatedPostsResponse | null> => {
-  if (isWpMockMode()) {
-    return { items: [], meta: { page: params.page ?? 1, perPage: params.perPage ?? 20, total: 0, totalPages: 1 } };
-  }
-  if (!POSTS_BY_PERSON_URL) return null;
+): Promise<PersonRelatedPost[]> => {
+  if (isWpMockMode()) return [];
+  if (!POSTS_BY_PERSON_URL) return [];
   const { timeoutMs, maxRetries, initialBackoffMs } = { ...defaultFetchOptions, ...options };
-  const url = `${POSTS_BY_PERSON_URL}?${buildSearchParams(params).toString()}`;
+  const url = `${POSTS_BY_PERSON_URL}?${buildSearchParams({ personId, ...params }).toString()}`;
   for (let attempt = 0; attempt <= maxRetries; attempt += 1) {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
@@ -140,17 +135,17 @@ export const getPostsByPersonId = async (
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
-        if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
+        if (!shouldRetryStatus(res.status) || attempt === maxRetries) return [];
         await sleep(initialBackoffMs * 2 ** attempt);
         continue;
       }
       const json: unknown = await res.json();
-      return parseResponse(json);
+      return parseItems(json).map(mapItemToPost);
     } catch {
       clearTimeout(timeoutId);
-      if (attempt === maxRetries) return null;
+      if (attempt === maxRetries) return [];
       await sleep(initialBackoffMs * 2 ** attempt);
     }
   }
-  return null;
+  return [];
 };

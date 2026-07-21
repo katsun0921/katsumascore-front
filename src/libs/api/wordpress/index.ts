@@ -46,13 +46,7 @@ export type {
 } from "./endpoints/vodList";
 
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
-export type {
-  PersonRelatedPostFeaturedImage,
-  PersonRelatedPostItem,
-  PersonRelatedPostsMeta,
-  PersonRelatedPostsResponse,
-  PersonRelatedPostsParams,
-} from "./endpoints/personRelatedPosts";
+export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 

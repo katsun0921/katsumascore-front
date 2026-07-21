@@ -39,7 +39,6 @@ const VOD_NETFLIX = term(201, "Netflix", "netflix", "vod");
 const VOD_AMAZON = term(202, "Amazon Prime Video", "amazon-prime-video", "vod");
 
 const ACTOR_YAMADA = term(501, "山田太郎", "yamada-taro", "actor");
-const DIR_SATO = term(601, "佐藤監督", "sato-director", "director");
 
 const mockLink = (lang: "ja" | "en", categorySlug: string, slug: string): string =>
   `https://mock.katsumascore.local/${lang}/${categorySlug}/${slug}`;
@@ -57,6 +56,8 @@ type BuildPostOpts = {
   vodFlags?: { amazon?: boolean; netflix?: boolean; hulu?: boolean; unext?: boolean };
   /** 記事紹介ショート動画（`short_movie.youtube` の URL または動画 ID）。記事の言語の動画を入れる */
   shortVideo?: string;
+  /** ACF `director`（post_object。実際の WP は監督名の文字列を格納する） */
+  director?: string;
 };
 
 const buildPost = (o: BuildPostOpts): MockWPPost => {
@@ -69,6 +70,7 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
     ...(o.vodFlags?.hulu ? { hulu: { status: "streaming" } } : {}),
     ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
     ...(o.shortVideo !== undefined ? { short_movie: { youtube: o.shortVideo } } : {}),
+    ...(o.director !== undefined ? { director: o.director } : {}),
   };
 
   return {
@@ -101,9 +103,10 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       score: 5,
       contentHtml: mockPostContentFull.content,
       excerpt: "モック環境用の長めのレビュー本文を含む映画記事。",
-      extraTermGroups: [[TAG_SF], [GENRE_SCI_FI], [VOD_NETFLIX], [ACTOR_YAMADA], [DIR_SATO]],
+      extraTermGroups: [[TAG_SF], [GENRE_SCI_FI], [VOD_NETFLIX], [ACTOR_YAMADA]],
       vodFlags: { netflix: true },
       shortVideo: "https://www.youtube.com/shorts/M7lc1UVf-VE",
+      director: "佐藤監督",
     },
     {
       id: 1002,

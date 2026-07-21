@@ -6,15 +6,27 @@
     line-height: 1.2;
   }
 
+  &__titleGroup {
+    display: block;
+    font-size: var(--font-size-h2);
+  }
+
   &__title {
     display: -webkit-box;
     overflow: hidden;
     color: var(--color-text-primary);
-    font-size: var(--font-size-h2);
     line-height: 1.5;
     word-break: break-word;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+  }
+
+  &__character {
+    display: block;
+    color: var(--color-text-secondary);
+    font-size: 0.8em;
+    font-weight: var(--font-weight-bold);
+    line-height: 1.4;
   }
 
   &__excerpt {
