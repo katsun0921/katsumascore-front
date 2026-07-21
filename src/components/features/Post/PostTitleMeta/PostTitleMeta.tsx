@@ -178,8 +178,8 @@ export const TitleMeta = ({
                           className='block basis-[120px] shrink-0 rounded-[12px] border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.04)] px-3 py-2 no-underline transition-[border-color,background] duration-200 ease-in-out hover:border-accent hover:bg-[rgba(var(--color-secondary-rgb),0.08)]'
                         >
                           <span className='block overflow-hidden text-ui font-bold leading-[1.3] text-color-primary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:2]'>{work.title}</span>
-                          {work.score !== undefined && (
-                            <span className='font-ui mt-1 block text-ui font-bold text-accent'>{work.score}</span>
+                          {work.character && (
+                            <span className='mt-1 block overflow-hidden text-caption text-color-secondary [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:1]'>{work.character}</span>
                           )}
                         </Link>
                       ))}

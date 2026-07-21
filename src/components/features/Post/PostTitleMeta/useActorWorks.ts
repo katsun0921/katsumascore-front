@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 
-type OtherWork = { title: string; href: string; score?: number };
+type OtherWork = { title: string; href: string; character?: string };
 
 /** キャスト名 → otherWorks の CSR フェッチ結果マップ */
 export type ActorWorksMap = Map<string, OtherWork[]>;
