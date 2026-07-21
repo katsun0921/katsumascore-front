@@ -162,38 +162,40 @@ const buildTermIdToActorInfoMap = (wp: ParsedWPPost, locale?: string): Map<numbe
 };
 
 /**
- * `_embedded['wp:term']` から actor / person タクソノミーの `{ termId, taxType }` を
- * キャスト名をキーにして返す。フィルモグラフィー取得時のターム ID 解決に使用する。
+ * ACF `actors_filed` リピーターの `actor`（person CPT への post_object リレーション）から
+ * キャスト名 → person CPT の投稿 ID をキーにして返す。フィルモグラフィー取得時の逆引きに使用する。
  * name_ja・name_en・プライマリ name をすべてキーとして登録し、どのロケール名でも解決できるようにする。
  */
-export const buildActorTermIdMap = (
+export const buildActorPersonIdMap = (
   wp: ParsedWPPost,
-): Map<string, { termId: number; taxType: "actor" | "person" }> => {
-  const map = new Map<string, { termId: number; taxType: "actor" | "person" }>();
-  const groups = wp._embedded?.["wp:term"];
-  if (!Array.isArray(groups)) return map;
-  for (const group of groups) {
-    if (!Array.isArray(group)) continue;
-    for (const term of group) {
-      const t = term as Record<string, unknown>;
-      const taxRaw = typeof t.taxonomy === "string" ? t.taxonomy.trim() : "";
-      const tax = taxRaw.replace(/^wp_/i, "").toLowerCase();
-      const id = typeof t.id === "number" ? t.id : undefined;
-      if (id === undefined) continue;
-
-      let taxType: "actor" | "person" | undefined;
-      if (tax === "actor" || tax === "actors") taxType = "actor";
-      else if (tax === "person" || tax === "persons") taxType = "person";
-      else continue;
-
-      const primaryName = typeof t.name === "string" ? t.name.trim() : "";
-      const acf = typeof t.acf === "object" && t.acf !== null ? (t.acf as Record<string, unknown>) : undefined;
-      const nameJa = acf && typeof acf.name_ja === "string" ? acf.name_ja.trim() : "";
-      const nameEn = acf && typeof acf.name_en === "string" ? acf.name_en.trim() : "";
-      // ja・en・プライマリ名のすべてを登録してどのロケール名でも termId を解決できるようにする
-      for (const candidate of [primaryName, nameJa, nameEn]) {
-        if (candidate) map.set(candidate.toLowerCase(), { termId: id, taxType });
-      }
+): Map<string, number> => {
+  const map = new Map<string, number>();
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  const rows = pickActorsRowsFromAcf(acf);
+  for (const row of rows) {
+    if (!row || typeof row !== "object") continue;
+    const ext = row as Record<string, unknown>;
+    const actor = ext.actor;
+    if (!actor || typeof actor !== "object" || Array.isArray(actor)) continue;
+    const actorObj = actor as Record<string, unknown>;
+    const id = typeof actorObj.ID === "number" ? actorObj.ID : undefined;
+    if (id === undefined) continue;
+    const info = extractPersonInfoFromObject(actorObj);
+    const nameJaRaw =
+      typeof actorObj.acf === "object" && actorObj.acf !== null
+        ? (actorObj.acf as Record<string, unknown>).name_ja
+        : undefined;
+    const nameEnRaw =
+      typeof actorObj.acf === "object" && actorObj.acf !== null
+        ? (actorObj.acf as Record<string, unknown>).name_en
+        : undefined;
+    const candidates = [
+      info?.name,
+      typeof nameJaRaw === "string" ? nameJaRaw.trim() : "",
+      typeof nameEnRaw === "string" ? nameEnRaw.trim() : "",
+    ];
+    for (const candidate of candidates) {
+      if (candidate) map.set(candidate.toLowerCase(), id);
     }
   }
   return map;

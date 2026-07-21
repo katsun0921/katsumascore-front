@@ -16,7 +16,7 @@ import { detectLang } from '@/libs/api/wordpress/lang';
 import { extractToc } from '@/libs/toc';
 import {
   buildPostDetailFromWp,
-  buildActorTermIdMap,
+  buildActorPersonIdMap,
   extractRelationPostIds,
   extractPostsGroupSpecsFromWp,
   extractVodIntroductionRelatedPostsTermId,
@@ -29,11 +29,10 @@ import type { TRelationPostItem } from '@/components/features/RelationPost';
 import type { TPostsGroupItem } from '@/components/features/Post/PostsGroup';
 import type { PostDetailFranchiseItem } from '@/components/templates/PostDetail/PostDetail.types';
 
-/** キャスト名 → termId / taxType のシリアライズ可能なマップエントリ */
+/** キャスト名 → person CPT の投稿 ID のシリアライズ可能なマップエントリ */
 export type ActorTermEntry = {
   actorName: string;
-  termId: number;
-  taxType: 'actor' | 'person';
+  personId: number;
 };
 
 export type PostDetailPageProps = {
@@ -157,16 +156,16 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     });
     if (!detail) return { notFound: true, revalidate: 60 };
 
-    // _embedded['wp:term'] からキャスト名 → ターム ID のマップを構築する（CSR用にシリアライズして渡す）
+    // ACF actors_filed.actor（person CPT リレーション）からキャスト名 → person ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
-    const actorTermIdMap = parsedForActors ? buildActorTermIdMap(parsedForActors) : new Map();
+    const actorPersonIdMap = parsedForActors ? buildActorPersonIdMap(parsedForActors) : new Map();
     const actorTermEntries: ActorTermEntry[] = detail.actors
       ? detail.actors
           .filter((actor) => actor.actorName !== undefined)
           .map((actor) => {
-            const termInfo = actorTermIdMap.get(actor.actorName!.toLowerCase());
-            if (!termInfo) return null;
-            return { actorName: actor.actorName!, termId: termInfo.termId, taxType: termInfo.taxType };
+            const personId = actorPersonIdMap.get(actor.actorName!.toLowerCase());
+            if (personId === undefined) return null;
+            return { actorName: actor.actorName!, personId };
           })
           .filter((e): e is ActorTermEntry => e !== null)
       : [];

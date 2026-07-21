@@ -45,7 +45,7 @@ export type TTitleMetaProps = {
   productionStudios?: TStudioEntry[]
   credits?: TCreditEntry[]
   actors?: TActor[]
-  /** CSR で otherWorks を取得するためのキャスト termId 情報 */
+  /** CSR で otherWorks を取得するためのキャスト personId 情報 */
   actorTermEntries?: ActorTermEntry[]
   /** otherWorks フェッチ時に自記事を除外するための記事 ID */
   postId?: number
