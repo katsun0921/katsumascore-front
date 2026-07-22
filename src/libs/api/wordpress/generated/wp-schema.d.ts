@@ -173,6 +173,27 @@ export interface components {
                 roles: ("actor" | "director")[];
                 bio?: string;
                 image?: components["schemas"]["WPImage"];
+                birth_date?: string;
+                death_date?: string;
+                birthplace?: string;
+                nationality?: string;
+                active_years?: string;
+                gender?: "male" | "female" | "other" | "";
+                official_url?: string;
+                /** ACF repeater は空のとき false を返す */
+                official_sns?: {
+                    platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
+                    url: string;
+                }[] | false;
+                ai_introduction?: string;
+                ai_career?: string;
+                ai_style?: string;
+                ai_notable_works_reason?: string;
+                /** ACF repeater は空のとき false を返す */
+                ai_faq?: {
+                    question: string;
+                    answer: string;
+                }[] | false;
             };
         };
         WPCompany: {

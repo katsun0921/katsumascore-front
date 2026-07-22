@@ -255,6 +255,16 @@ export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | nul
   return mapParsedWPPostToPost(parsed);
 };
 
+export interface PersonSnsLink {
+  platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
+  url: string;
+}
+
+export interface PersonFaqItem {
+  question: string;
+  answer: string;
+}
+
 export interface Person {
   id: number;
   slug: string;
@@ -268,6 +278,19 @@ export interface Person {
     width: number;
     height: number;
   } | null;
+  birthDate: string;
+  deathDate: string;
+  birthplace: string;
+  nationality: string;
+  activeYears: string;
+  gender: "male" | "female" | "other" | "";
+  officialUrl: string;
+  officialSns: PersonSnsLink[];
+  aiIntroduction: string;
+  aiCareer: string;
+  aiStyle: string;
+  aiNotableWorksReason: string;
+  faq: PersonFaqItem[];
 }
 
 export interface Company {
@@ -290,6 +313,13 @@ type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompan
 export const transformPerson = (wp: WPPerson): Person => {
   const acf = wp.acf;
   const titleFallback = stripHtml(wp.title?.rendered ?? "");
+  // ACF repeater は空のとき false を返すため配列判定してから使う
+  const officialSns = Array.isArray(acf.official_sns)
+    ? acf.official_sns.filter((sns) => !!sns.url)
+    : [];
+  const faq = Array.isArray(acf.ai_faq)
+    ? acf.ai_faq.filter((item) => !!item.question && !!item.answer)
+    : [];
   return {
     id: wp.id,
     slug: wp.slug,
@@ -305,6 +335,19 @@ export const transformPerson = (wp: WPPerson): Person => {
           height: acf.image.height ?? 0,
         }
       : null,
+    birthDate: acf.birth_date ?? "",
+    deathDate: acf.death_date ?? "",
+    birthplace: acf.birthplace ?? "",
+    nationality: acf.nationality ?? "",
+    activeYears: acf.active_years ?? "",
+    gender: acf.gender ?? "",
+    officialUrl: acf.official_url ?? "",
+    officialSns,
+    aiIntroduction: acf.ai_introduction ?? "",
+    aiCareer: acf.ai_career ?? "",
+    aiStyle: acf.ai_style ?? "",
+    aiNotableWorksReason: acf.ai_notable_works_reason ?? "",
+    faq,
   };
 };
 

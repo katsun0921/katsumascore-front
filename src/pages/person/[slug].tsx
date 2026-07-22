@@ -17,17 +17,26 @@ import type { Locale } from '@/i18n/t';
 type PersonPageProps = {
   person: Person;
   posts: PersonRelatedPost[];
+  notableWorks: PersonRelatedPost[];
   locale: string;
 };
 
-const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
+/** レビュースコア上位の記事を代表作品として抽出する。 */
+const pickNotableWorks = (posts: PersonRelatedPost[], limit = 3): PersonRelatedPost[] =>
+  posts
+    .filter((post) => typeof post.score === 'number')
+    .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
+    .slice(0, limit);
+
+const PersonPage = ({ person, posts, notableWorks, locale }: PersonPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
   const displayName = loc === 'en'
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
-  const description = person.bio
-    ? person.bio.slice(0, 120)
+  const descriptionSource = person.aiIntroduction || person.bio;
+  const description = descriptionSource
+    ? descriptionSource.slice(0, 120)
     : `${displayName}の出演作品・監督作品一覧`;
 
   const breadcrumbs = [
@@ -35,6 +44,38 @@ const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
     { label: loc === 'en' ? 'Person' : '人物', href: '/person' },
     { label: displayName, href: getEntityUrl('person', person.slug, loc) },
   ];
+
+  const sameAs = person.officialSns.map((sns) => sns.url);
+
+  const personJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: person.nameJa,
+    alternateName: person.nameEn,
+    image: person.image?.url,
+    description: person.aiIntroduction || person.bio || undefined,
+    ...(person.birthDate ? { birthDate: person.birthDate } : {}),
+    ...(person.deathDate ? { deathDate: person.deathDate } : {}),
+    ...(person.birthplace ? { birthPlace: person.birthplace } : {}),
+    ...(person.nationality ? { nationality: person.nationality } : {}),
+    ...(person.officialUrl ? { url: person.officialUrl } : {}),
+    ...(sameAs.length > 0 ? { sameAs } : {}),
+  };
+
+  const faqJsonLd = person.faq.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'FAQPage',
+        mainEntity: person.faq.map((item) => ({
+          '@type': 'Question',
+          name: item.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: item.answer,
+          },
+        })),
+      }
+    : null;
 
   return (
     <I18nProvider locale={loc}>
@@ -47,19 +88,21 @@ const PersonPage = ({ person, posts, locale }: PersonPageProps) => {
         />
         <script
           type='application/ld+json'
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'Person',
-              name: person.nameJa,
-              alternateName: person.nameEn,
-              image: person.image?.url,
-              description: person.bio,
-            }),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        {faqJsonLd && (
+          <script
+            type='application/ld+json'
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+          />
+        )}
       </Head>
-      <PersonTemplate person={person} posts={posts} breadcrumbs={breadcrumbs} />
+      <PersonTemplate
+        person={person}
+        posts={posts}
+        notableWorks={notableWorks}
+        breadcrumbs={breadcrumbs}
+      />
     </I18nProvider>
   );
 };
@@ -85,6 +128,7 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
     props: {
       person: transformPerson(wp),
       posts,
+      notableWorks: pickNotableWorks(posts),
       locale: currentLocale,
     },
     revalidate: REVALIDATE_DAILY,

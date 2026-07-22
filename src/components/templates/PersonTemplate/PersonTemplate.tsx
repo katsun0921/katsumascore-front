@@ -12,15 +12,37 @@ import type { PersonRelatedPost } from '@/libs/api/wordpress';
 type PersonTemplateProps = {
   person: Person;
   posts: PersonRelatedPost[];
+  notableWorks: PersonRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
 };
 
-export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplateProps) => {
+/** AI生成の長文セクション（人物紹介・キャリア・作風）。空文字なら描画しない。 */
+const AiTextSection = ({ heading, text }: { heading: string; text: string }) => {
+  if (!text) return null;
+  return (
+    <section className='mt-10'>
+      <h2 className='mb-4 text-xl font-bold'>{heading}</h2>
+      <p className='whitespace-pre-line leading-relaxed'>{text}</p>
+    </section>
+  );
+};
+
+export const PersonTemplate = ({ person, posts, notableWorks, breadcrumbs }: PersonTemplateProps) => {
   const locale = useLocale();
   const displayName = locale === 'en'
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
+
+  const infoRows = [
+    { key: 'birthDate', value: person.birthDate },
+    { key: 'deathDate', value: person.deathDate },
+    { key: 'birthplace', value: person.birthplace },
+    { key: 'nationality', value: person.nationality },
+    { key: 'activeYears', value: person.activeYears },
+    { key: 'gender', value: person.gender ? t(messages, ['gender', person.gender], locale) : '' },
+  ].filter((row) => row.value !== '');
+  const hasBasicInfo = infoRows.length > 0 || !!person.officialUrl || person.officialSns.length > 0;
 
   return (
     <PageLayout>
@@ -57,7 +79,97 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
               {person.bio && <p className='leading-relaxed'>{person.bio}</p>}
             </div>
           </div>
+
+          {hasBasicInfo && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['basicInfo', 'heading'], locale)}
+              </h2>
+              <dl className='grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-lg p-4 text-sm bg-[var(--color-surface-2)]'>
+                {infoRows.map((row) => (
+                  <div key={row.key} className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', row.key], locale)}</dt>
+                    <dd>{row.value}</dd>
+                  </div>
+                ))}
+                {person.officialUrl && (
+                  <div className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', 'officialUrl'], locale)}</dt>
+                    <dd>
+                      <a
+                        href={person.officialUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='underline text-[var(--color-primary)]'
+                      >
+                        {person.officialUrl}
+                      </a>
+                    </dd>
+                  </div>
+                )}
+                {person.officialSns.length > 0 && (
+                  <div className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', 'sns'], locale)}</dt>
+                    <dd className='flex flex-wrap gap-3'>
+                      {person.officialSns.map((sns) => (
+                        <a
+                          key={sns.url}
+                          href={sns.url}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='underline text-[var(--color-primary)]'
+                        >
+                          {t(messages, ['sns', sns.platform], locale)}
+                        </a>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          )}
+
+          <AiTextSection
+            heading={t(messages, ['introduction', 'heading'], locale)}
+            text={person.aiIntroduction}
+          />
+          <AiTextSection
+            heading={t(messages, ['career', 'heading'], locale)}
+            text={person.aiCareer}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'heading'], locale)}
+            text={person.aiStyle}
+          />
+
+          {notableWorks.length > 0 && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['notableWorks', 'heading'], locale)}
+              </h2>
+              <ul className='grid grid-cols-2 gap-3 lg:grid-cols-3'>
+                {notableWorks.map((post) => (
+                  <li key={post.id}>
+                    <PostCardImgTop
+                      post={post}
+                      caption={
+                        post.character
+                          ? `${t(messages, ['filmography', 'characterPrefix'], locale)}${post.character}`
+                          : undefined
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+              {person.aiNotableWorksReason && (
+                <p className='mt-4 whitespace-pre-line leading-relaxed'>
+                  {person.aiNotableWorksReason}
+                </p>
+              )}
+            </section>
+          )}
         </article>
+
         {posts.length > 0 && (
           <section className='mt-10'>
             <h2 className='mb-4 text-xl font-bold'>
@@ -77,6 +189,22 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {person.faq.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['faq', 'heading'], locale)}
+            </h2>
+            <dl className='flex flex-col gap-4'>
+              {person.faq.map((item) => (
+                <div key={item.question} className='rounded-lg p-4 bg-[var(--color-surface-2)]'>
+                  <dt className='mb-2 font-bold'>{item.question}</dt>
+                  <dd className='leading-relaxed'>{item.answer}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
         )}
       </div>
