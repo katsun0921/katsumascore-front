@@ -185,10 +185,13 @@ export interface components {
                     platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
                     url: string;
                 }[] | false;
-                ai_introduction?: string;
+                ai_summary?: string;
                 ai_career?: string;
+                ai_strength?: string;
                 ai_style?: string;
-                ai_notable_works_reason?: string;
+                ai_theme?: string;
+                ai_position?: string;
+                ai_notable_reason?: string;
                 /** ACF repeater は空のとき false を返す */
                 ai_faq?: {
                     question: string;

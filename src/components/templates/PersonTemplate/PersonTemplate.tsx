@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
+import { PostCardListHorizontal } from '@/components/ui-section/PostCard';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
@@ -13,10 +14,11 @@ type PersonTemplateProps = {
   person: Person;
   posts: PersonRelatedPost[];
   notableWorks: PersonRelatedPost[];
+  recommendedWorks: PersonRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
 };
 
-/** AI生成の長文セクション（人物紹介・キャリア・作風）。空文字なら描画しない。 */
+/** AI生成の長文セクション（編集部解説・人物の魅力・キャリア・作風等）。空文字なら描画しない。 */
 const AiTextSection = ({ heading, text }: { heading: string; text: string }) => {
   if (!text) return null;
   return (
@@ -27,7 +29,13 @@ const AiTextSection = ({ heading, text }: { heading: string; text: string }) => 
   );
 };
 
-export const PersonTemplate = ({ person, posts, notableWorks, breadcrumbs }: PersonTemplateProps) => {
+export const PersonTemplate = ({
+  person,
+  posts,
+  notableWorks,
+  recommendedWorks,
+  breadcrumbs,
+}: PersonTemplateProps) => {
   const locale = useLocale();
   const displayName = locale === 'en'
     ? (person.nameEn || person.nameJa)
@@ -129,9 +137,15 @@ export const PersonTemplate = ({ person, posts, notableWorks, breadcrumbs }: Per
             </section>
           )}
 
+          {/* 編集部解説: Wikipedia的な客観記述ではなく、編集部視点で人物の魅力を伝えるセクション */}
           <AiTextSection
-            heading={t(messages, ['introduction', 'heading'], locale)}
-            text={person.aiIntroduction}
+            heading={t(messages, ['summary', 'heading'], locale)}
+            text={person.aiSummary}
+          />
+          {/* 人物の魅力: Wikipediaでは得られない独自コンテンツ */}
+          <AiTextSection
+            heading={t(messages, ['strength', 'heading'], locale)}
+            text={person.aiStrength}
           />
           <AiTextSection
             heading={t(messages, ['career', 'heading'], locale)}
@@ -140,6 +154,14 @@ export const PersonTemplate = ({ person, posts, notableWorks, breadcrumbs }: Per
           <AiTextSection
             heading={t(messages, ['style', 'heading'], locale)}
             text={person.aiStyle}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'theme'], locale)}
+            text={person.aiTheme}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'position'], locale)}
+            text={person.aiPosition}
           />
 
           {notableWorks.length > 0 && (
@@ -161,11 +183,21 @@ export const PersonTemplate = ({ person, posts, notableWorks, breadcrumbs }: Per
                   </li>
                 ))}
               </ul>
-              {person.aiNotableWorksReason && (
+              {person.aiNotableReason && (
                 <p className='mt-4 whitespace-pre-line leading-relaxed'>
-                  {person.aiNotableWorksReason}
+                  {person.aiNotableReason}
                 </p>
               )}
+            </section>
+          )}
+
+          {/* おすすめ作品: 代表作品と同じレビュースコア上位データを、初見の読者向けにランキング形式で提示する */}
+          {recommendedWorks.length > 0 && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['recommendedWorks', 'heading'], locale)}
+              </h2>
+              <PostCardListHorizontal posts={recommendedWorks} postCardKind='imgLeft' rank={1} />
             </section>
           )}
         </article>

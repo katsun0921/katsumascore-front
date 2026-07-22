@@ -286,10 +286,13 @@ export interface Person {
   gender: "male" | "female" | "other" | "";
   officialUrl: string;
   officialSns: PersonSnsLink[];
-  aiIntroduction: string;
+  aiSummary: string;
   aiCareer: string;
+  aiStrength: string;
   aiStyle: string;
-  aiNotableWorksReason: string;
+  aiTheme: string;
+  aiPosition: string;
+  aiNotableReason: string;
   faq: PersonFaqItem[];
 }
 
@@ -343,10 +346,13 @@ export const transformPerson = (wp: WPPerson): Person => {
     gender: acf.gender ?? "",
     officialUrl: acf.official_url ?? "",
     officialSns,
-    aiIntroduction: acf.ai_introduction ?? "",
+    aiSummary: acf.ai_summary ?? "",
     aiCareer: acf.ai_career ?? "",
+    aiStrength: acf.ai_strength ?? "",
     aiStyle: acf.ai_style ?? "",
-    aiNotableWorksReason: acf.ai_notable_works_reason ?? "",
+    aiTheme: acf.ai_theme ?? "",
+    aiPosition: acf.ai_position ?? "",
+    aiNotableReason: acf.ai_notable_reason ?? "",
     faq,
   };
 };

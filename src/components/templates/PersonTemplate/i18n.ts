@@ -27,17 +27,25 @@ export const messages = {
     facebook: { ja: 'Facebook', en: 'Facebook' },
     other: { ja: 'その他', en: 'Other' },
   },
-  introduction: {
-    heading: { ja: '人物紹介', en: 'About' },
+  summary: {
+    heading: { ja: '編集部解説', en: 'Editorial Insight' },
+  },
+  strength: {
+    heading: { ja: '人物の魅力', en: 'Why We Love Them' },
   },
   career: {
     heading: { ja: 'キャリア・経歴', en: 'Career' },
   },
   style: {
-    heading: { ja: '作風・特徴', en: 'Style & Signature' },
+    heading: { ja: '作風・演技・演出', en: 'Style & Signature' },
+    theme: { ja: '得意ジャンル・テーマ', en: 'Signature Genres & Themes' },
+    position: { ja: '映画界での位置づけ', en: 'Standing in Film History' },
   },
   notableWorks: {
     heading: { ja: '代表作品', en: 'Notable Works' },
+  },
+  recommendedWorks: {
+    heading: { ja: '初めて観るなら', en: 'Start Here' },
   },
   filmography: {
     heading: { ja: '出演・監督作品', en: 'Filmography' },

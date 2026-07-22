@@ -221,7 +221,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `ListTemplate` | `components/templates/ListTemplate` | 映画 / アニメ / ドラマ一覧 |
 | `PostDetail` | `components/templates/PostDetail` | 記事詳細 |
 | `FranchiseTemplate` | `components/templates/FranchiseTemplate` | フランチャイズ詳細（Hero / CTA / Highlights / PostList / Timeline） |
-| `PersonTemplate` | `components/templates/PersonTemplate` | 人物詳細（人物辞典: 基本情報 / 人物紹介 / キャリア / 作風 / 代表作品 / 出演・監督作品 / FAQ） |
+| `PersonTemplate` | `components/templates/PersonTemplate` | 人物詳細（映画をもっと楽しむための人物ページ: 基本情報 / 編集部解説 / 人物の魅力 / キャリア / 作風・演技・演出（+得意ジャンル+映画界での位置づけ） / 代表作品 / おすすめ作品 / 出演・監督作品 / FAQ） |
 | `AboutTemplate` | `components/templates/AboutTemplate` | About ページ |
 | `CompanyTemplate` | `components/templates/CompanyTemplate` | 企業ページ |
 | `ContactTemplate` | `components/templates/ContactTemplate` | Contact フォーム |

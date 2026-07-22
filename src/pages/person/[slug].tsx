@@ -18,23 +18,24 @@ type PersonPageProps = {
   person: Person;
   posts: PersonRelatedPost[];
   notableWorks: PersonRelatedPost[];
+  recommendedWorks: PersonRelatedPost[];
   locale: string;
 };
 
-/** レビュースコア上位の記事を代表作品として抽出する。 */
-const pickNotableWorks = (posts: PersonRelatedPost[], limit = 3): PersonRelatedPost[] =>
+/** レビュースコア上位の記事をスコア降順で抽出する。 */
+const pickTopScored = (posts: PersonRelatedPost[], limit: number): PersonRelatedPost[] =>
   posts
     .filter((post) => typeof post.score === 'number')
     .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
     .slice(0, limit);
 
-const PersonPage = ({ person, posts, notableWorks, locale }: PersonPageProps) => {
+const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: PersonPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
   const displayName = loc === 'en'
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
-  const descriptionSource = person.aiIntroduction || person.bio;
+  const descriptionSource = person.aiSummary || person.bio;
   const description = descriptionSource
     ? descriptionSource.slice(0, 120)
     : `${displayName}の出演作品・監督作品一覧`;
@@ -53,7 +54,7 @@ const PersonPage = ({ person, posts, notableWorks, locale }: PersonPageProps) =>
     name: person.nameJa,
     alternateName: person.nameEn,
     image: person.image?.url,
-    description: person.aiIntroduction || person.bio || undefined,
+    description: person.aiSummary || person.bio || undefined,
     ...(person.birthDate ? { birthDate: person.birthDate } : {}),
     ...(person.deathDate ? { deathDate: person.deathDate } : {}),
     ...(person.birthplace ? { birthPlace: person.birthplace } : {}),
@@ -101,6 +102,7 @@ const PersonPage = ({ person, posts, notableWorks, locale }: PersonPageProps) =>
         person={person}
         posts={posts}
         notableWorks={notableWorks}
+        recommendedWorks={recommendedWorks}
         breadcrumbs={breadcrumbs}
       />
     </I18nProvider>
@@ -128,7 +130,8 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
     props: {
       person: transformPerson(wp),
       posts,
-      notableWorks: pickNotableWorks(posts),
+      notableWorks: pickTopScored(posts, 3),
+      recommendedWorks: pickTopScored(posts, 5),
       locale: currentLocale,
     },
     revalidate: REVALIDATE_DAILY,
