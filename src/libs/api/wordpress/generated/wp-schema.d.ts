@@ -167,6 +167,15 @@ export interface components {
             id: number;
             slug: string;
             title: components["schemas"]["RenderedBlock"];
+            /** `_embed` 指定時のみ含まれる。国籍は `country` タクソノミーのタームとして返る */
+            _embedded?: {
+                "wp:term"?: {
+                    id: number;
+                    name: string;
+                    slug: string;
+                    taxonomy: string;
+                }[][];
+            };
             acf: {
                 name_ja: string;
                 name_en: string;
@@ -174,7 +183,6 @@ export interface components {
                 birth_date?: string;
                 death_date?: string;
                 birthplace?: string;
-                nationality?: string;
                 active_years?: string;
                 gender?: "male" | "female" | "other" | "";
                 official_url?: string;

@@ -46,7 +46,7 @@ export const PersonTemplate = ({
     { key: 'birthDate', value: person.birthDate },
     { key: 'deathDate', value: person.deathDate },
     { key: 'birthplace', value: person.birthplace },
-    { key: 'nationality', value: person.nationality },
+    { key: 'nationality', value: person.nationality.join('、') },
     { key: 'activeYears', value: person.activeYears },
     { key: 'gender', value: person.gender ? t(messages, ['gender', person.gender], locale) : '' },
   ].filter((row) => row.value !== '');

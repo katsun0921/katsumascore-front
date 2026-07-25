@@ -274,7 +274,8 @@ export interface Person {
   birthDate: string;
   deathDate: string;
   birthplace: string;
-  nationality: string;
+  /** `country` タクソノミーのターム名（複数国籍を考慮し配列） */
+  nationality: string[];
   activeYears: string;
   gender: "male" | "female" | "other" | "";
   officialUrl: string;
@@ -305,6 +306,20 @@ export interface Company {
 type WPPerson = import("./generated/wp-schema").components["schemas"]["WPPerson"];
 type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompany"];
 
+/** WPPerson の `_embedded['wp:term']`（要 `_embed`）から国籍（`country` タクソノミー）のターム名を抽出する。 */
+const extractCountryNamesFromWPPerson = (wp: WPPerson): string[] => {
+  const groups = wp._embedded?.["wp:term"];
+  if (!Array.isArray(groups)) return [];
+  const out: string[] = [];
+  for (const group of groups) {
+    if (!Array.isArray(group)) continue;
+    for (const term of group) {
+      if (term.taxonomy === "country" && term.name) out.push(term.name);
+    }
+  }
+  return out;
+};
+
 /** WPPerson をアプリの `Person` 型へ変換する。 */
 export const transformPerson = (wp: WPPerson): Person => {
   const acf = wp.acf;
@@ -325,7 +340,7 @@ export const transformPerson = (wp: WPPerson): Person => {
     birthDate: acf.birth_date ?? "",
     deathDate: acf.death_date ?? "",
     birthplace: acf.birthplace ?? "",
-    nationality: acf.nationality ?? "",
+    nationality: extractCountryNamesFromWPPerson(wp),
     activeYears: acf.active_years ?? "",
     gender: acf.gender ?? "",
     officialUrl: acf.official_url ?? "",
