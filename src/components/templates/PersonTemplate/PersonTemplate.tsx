@@ -1,8 +1,9 @@
 // ISR: revalidate 86400s (24h)
-import Image from 'next/image';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
+import { PostCardListHorizontal } from '@/components/ui-section/PostCard';
+import { PersonAvatar } from '@/components/ui-parts/PersonAvatar';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
@@ -12,15 +13,45 @@ import type { PersonRelatedPost } from '@/libs/api/wordpress';
 type PersonTemplateProps = {
   person: Person;
   posts: PersonRelatedPost[];
+  notableWorks: PersonRelatedPost[];
+  recommendedWorks: PersonRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
 };
 
-export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplateProps) => {
+/** AI生成の長文セクション（編集部解説・人物の魅力・キャリア・作風等）。空文字なら描画しない。 */
+const AiTextSection = ({ heading, text }: { heading: string; text: string }) => {
+  if (!text) return null;
+  return (
+    <section className='mt-10'>
+      <h2 className='mb-4 text-xl font-bold'>{heading}</h2>
+      <p className='whitespace-pre-line leading-relaxed'>{text}</p>
+    </section>
+  );
+};
+
+export const PersonTemplate = ({
+  person,
+  posts,
+  notableWorks,
+  recommendedWorks,
+  breadcrumbs,
+}: PersonTemplateProps) => {
   const locale = useLocale();
   const displayName = locale === 'en'
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
+  /** en localeでは英語版（手動翻訳）を優先し、未入力なら日本語版へフォールバックする */
+  const pick = (ja: string, en: string) => (locale === 'en' ? (en || ja) : ja);
+
+  const infoRows = [
+    { key: 'birthDate', value: person.birthDate },
+    { key: 'deathDate', value: person.deathDate },
+    { key: 'nationality', value: person.nationality.join('、') },
+    { key: 'activeYears', value: person.activeYears },
+    { key: 'gender', value: person.gender ? t(messages, ['gender', person.gender], locale) : '' },
+  ].filter((row) => row.value !== '');
+  const hasBasicInfo = infoRows.length > 0 || !!person.officialUrl || person.officialSns.length > 0;
 
   return (
     <PageLayout>
@@ -28,17 +59,13 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
         <Breadcrumb items={breadcrumbs} />
         <article className='mt-6'>
           <div className='flex flex-col gap-6 lg:flex-row'>
-            {person.image && (
-              <div className='shrink-0'>
-                <Image
-                  src={person.image.url}
-                  alt={person.image.alt}
-                  width={person.image.width || 240}
-                  height={person.image.height || 320}
-                  className='rounded-lg object-cover'
-                />
-              </div>
-            )}
+            <div className='shrink-0'>
+              <PersonAvatar
+                roles={person.roles}
+                name={displayName}
+                className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
+              />
+            </div>
             <div className='flex flex-col gap-4'>
               <h1 className='text-2xl font-bold'>{displayName}</h1>
               {altName && <p className='text-sm text-[var(--color-text-muted)]'>{altName}</p>}
@@ -54,10 +81,123 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
                   ))}
                 </ul>
               )}
-              {person.bio && <p className='leading-relaxed'>{person.bio}</p>}
             </div>
           </div>
+
+          {hasBasicInfo && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['basicInfo', 'heading'], locale)}
+              </h2>
+              <dl className='grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-lg p-4 text-sm bg-[var(--color-surface-2)]'>
+                {infoRows.map((row) => (
+                  <div key={row.key} className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', row.key], locale)}</dt>
+                    <dd>{row.value}</dd>
+                  </div>
+                ))}
+                {person.officialUrl && (
+                  <div className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', 'officialUrl'], locale)}</dt>
+                    <dd>
+                      <a
+                        href={person.officialUrl}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        className='underline text-[var(--color-primary)]'
+                      >
+                        {person.officialUrl}
+                      </a>
+                    </dd>
+                  </div>
+                )}
+                {person.officialSns.length > 0 && (
+                  <div className='col-span-2 grid grid-cols-subgrid'>
+                    <dt className='font-bold'>{t(messages, ['basicInfo', 'sns'], locale)}</dt>
+                    <dd className='flex flex-wrap gap-3'>
+                      {person.officialSns.map((sns) => (
+                        <a
+                          key={sns.url}
+                          href={sns.url}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          className='underline text-[var(--color-primary)]'
+                        >
+                          {t(messages, ['sns', sns.platform], locale)}
+                        </a>
+                      ))}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+            </section>
+          )}
+
+          {/* 編集部解説: Wikipedia的な客観記述ではなく、編集部視点で人物の魅力を伝えるセクション */}
+          <AiTextSection
+            heading={t(messages, ['summary', 'heading'], locale)}
+            text={pick(person.aiSummary, person.aiSummaryEn)}
+          />
+          {/* 人物の魅力: Wikipediaでは得られない独自コンテンツ */}
+          <AiTextSection
+            heading={t(messages, ['strength', 'heading'], locale)}
+            text={pick(person.aiStrength, person.aiStrengthEn)}
+          />
+          <AiTextSection
+            heading={t(messages, ['career', 'heading'], locale)}
+            text={pick(person.aiCareer, person.aiCareerEn)}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'heading'], locale)}
+            text={pick(person.aiStyle, person.aiStyleEn)}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'theme'], locale)}
+            text={pick(person.aiTheme, person.aiThemeEn)}
+          />
+          <AiTextSection
+            heading={t(messages, ['style', 'position'], locale)}
+            text={pick(person.aiPosition, person.aiPositionEn)}
+          />
+
+          {notableWorks.length > 0 && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['notableWorks', 'heading'], locale)}
+              </h2>
+              <ul className='grid grid-cols-2 gap-3 lg:grid-cols-3'>
+                {notableWorks.map((post) => (
+                  <li key={post.id}>
+                    <PostCardImgTop
+                      post={post}
+                      caption={
+                        post.character
+                          ? `${t(messages, ['filmography', 'characterPrefix'], locale)}${post.character}`
+                          : undefined
+                      }
+                    />
+                  </li>
+                ))}
+              </ul>
+              {pick(person.aiNotableReason, person.aiNotableReasonEn) && (
+                <p className='mt-4 whitespace-pre-line leading-relaxed'>
+                  {pick(person.aiNotableReason, person.aiNotableReasonEn)}
+                </p>
+              )}
+            </section>
+          )}
+
+          {/* おすすめ作品: 代表作品と同じレビュースコア上位データを、初見の読者向けにランキング形式で提示する */}
+          {recommendedWorks.length > 0 && (
+            <section className='mt-10'>
+              <h2 className='mb-4 text-xl font-bold'>
+                {t(messages, ['recommendedWorks', 'heading'], locale)}
+              </h2>
+              <PostCardListHorizontal posts={recommendedWorks} postCardKind='imgLeft' rank={1} />
+            </section>
+          )}
         </article>
+
         {posts.length > 0 && (
           <section className='mt-10'>
             <h2 className='mb-4 text-xl font-bold'>
@@ -77,6 +217,53 @@ export const PersonTemplate = ({ person, posts, breadcrumbs }: PersonTemplatePro
                 </li>
               ))}
             </ul>
+          </section>
+        )}
+
+        {person.awards.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['awards', 'heading'], locale)}
+            </h2>
+            <ul className='flex flex-col gap-3'>
+              {person.awards.map((award) => {
+                const awardName = pick(award.awardName, award.awardNameEn);
+                const workTitle = pick(award.workTitle, award.workTitleEn);
+                return (
+                  <li
+                    key={`${award.year}-${award.awardName}-${award.workTitle}`}
+                    className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
+                  >
+                    {award.year && <span className='font-bold'>{award.year}</span>}
+                    <span>{awardName}</span>
+                    {workTitle && (
+                      <span className='text-[var(--color-text-muted)]'>{`『${workTitle}』`}</span>
+                    )}
+                    {award.result && (
+                      <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
+                        {t(messages, ['awards', award.result], locale)}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        )}
+
+        {person.faq.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['faq', 'heading'], locale)}
+            </h2>
+            <dl className='flex flex-col gap-4'>
+              {person.faq.map((item) => (
+                <div key={item.question} className='rounded-lg p-4 bg-[var(--color-surface-2)]'>
+                  <dt className='mb-2 font-bold'>{pick(item.question, item.questionEn)}</dt>
+                  <dd className='leading-relaxed'>{pick(item.answer, item.answerEn)}</dd>
+                </div>
+              ))}
+            </dl>
           </section>
         )}
       </div>

@@ -48,13 +48,13 @@ export const getPerson = async (
 ): Promise<WPPerson | null> =>
   fetchPersons<WPPerson>(`/persons/${id}?acf_format=standard`, options);
 
-/** slug で person を取得する。 */
+/** slug で person を取得する。`_embed` で国籍（`country` タクソノミー）のタームを取得する。 */
 export const getPersonBySlug = async (
   slug: string,
   options?: WpFetchOptions,
 ): Promise<WPPerson | null> => {
   const results = await fetchPersons<WPPerson[]>(
-    `/persons?slug=${encodeURIComponent(slug)}&acf_format=standard`,
+    `/persons?slug=${encodeURIComponent(slug)}&acf_format=standard&_embed=1`,
     options,
   );
   return results?.[0] ?? null;

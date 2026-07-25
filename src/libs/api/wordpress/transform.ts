@@ -255,19 +255,61 @@ export const mapWPPostToPost = (wp: unknown): (Post & { content: string }) | nul
   return mapParsedWPPostToPost(parsed);
 };
 
+export interface PersonSnsLink {
+  platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
+  url: string;
+}
+
+export interface PersonFaqItem {
+  question: string;
+  answer: string;
+  questionEn: string;
+  answerEn: string;
+}
+
+export interface PersonAward {
+  year: string;
+  awardName: string;
+  workTitle: string;
+  /** 英語版（手動翻訳・未入力の場合は空文字。表示側で日本語版へフォールバックする） */
+  awardNameEn: string;
+  workTitleEn: string;
+  result: "win" | "nomination" | "";
+}
+
 export interface Person {
   id: number;
   slug: string;
   nameJa: string;
   nameEn: string;
-  roles: ("actor" | "director")[];
-  bio: string;
-  image: {
-    url: string;
-    alt: string;
-    width: number;
-    height: number;
-  } | null;
+  roles: ("actor" | "actress" | "director" | "voice_actor")[];
+  birthDate: string;
+  deathDate: string;
+  /** `country` タクソノミーのターム名（複数国籍を考慮し配列） */
+  nationality: string[];
+  activeYears: string;
+  gender: "male" | "female" | "other" | "";
+  officialUrl: string;
+  officialSns: PersonSnsLink[];
+  aiSummary: string;
+  aiCareer: string;
+  aiStrength: string;
+  aiStyle: string;
+  aiTheme: string;
+  aiPosition: string;
+  aiNotableReason: string;
+  /** 英語版（手動翻訳・未入力の場合は空文字。表示側で日本語版へフォールバックする） */
+  aiSummaryEn: string;
+  aiCareerEn: string;
+  aiStrengthEn: string;
+  aiStyleEn: string;
+  aiThemeEn: string;
+  aiPositionEn: string;
+  aiNotableReasonEn: string;
+  faq: PersonFaqItem[];
+  awards: PersonAward[];
+  /** 編集部が手動選定した代表作品のPost ID（選定順） */
+  notablePostIds: number[];
 }
 
 export interface Company {
@@ -286,25 +328,80 @@ export interface Company {
 type WPPerson = import("./generated/wp-schema").components["schemas"]["WPPerson"];
 type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompany"];
 
+/** WPPerson の `_embedded['wp:term']`（要 `_embed`）から国籍（`country` タクソノミー）のターム名を抽出する。 */
+const extractCountryNamesFromWPPerson = (wp: WPPerson): string[] => {
+  const groups = wp._embedded?.["wp:term"];
+  if (!Array.isArray(groups)) return [];
+  const out: string[] = [];
+  for (const group of groups) {
+    if (!Array.isArray(group)) continue;
+    for (const term of group) {
+      if (term.taxonomy === "country" && term.name) out.push(term.name);
+    }
+  }
+  return out;
+};
+
 /** WPPerson をアプリの `Person` 型へ変換する。 */
 export const transformPerson = (wp: WPPerson): Person => {
   const acf = wp.acf;
   const titleFallback = stripHtml(wp.title?.rendered ?? "");
+  // ACF repeater は空のとき false を返すため配列判定してから使う
+  const officialSns = Array.isArray(acf.official_sns)
+    ? acf.official_sns.filter((sns) => !!sns.url)
+    : [];
+  const faq: PersonFaqItem[] = Array.isArray(acf.ai_faq)
+    ? acf.ai_faq
+        .filter((item) => !!item.question && !!item.answer)
+        .map((item) => ({
+          question: item.question,
+          answer: item.answer,
+          questionEn: item.question_en ?? "",
+          answerEn: item.answer_en ?? "",
+        }))
+    : [];
+  const awards: PersonAward[] = Array.isArray(acf.ai_awards)
+    ? acf.ai_awards
+        .filter((item) => !!item.award_name)
+        .map((item) => ({
+          year: item.year ?? "",
+          awardName: item.award_name ?? "",
+          workTitle: item.work_title ?? "",
+          awardNameEn: item.award_name_en ?? "",
+          workTitleEn: item.work_title_en ?? "",
+          result: item.result ?? "",
+        }))
+    : [];
   return {
     id: wp.id,
     slug: wp.slug,
     nameJa: acf.name_ja || titleFallback,
     nameEn: acf.name_en || titleFallback,
     roles: acf.roles ?? [],
-    bio: acf.bio ?? "",
-    image: acf.image
-      ? {
-          url: acf.image.url,
-          alt: acf.image.alt ?? acf.name_ja,
-          width: acf.image.width ?? 0,
-          height: acf.image.height ?? 0,
-        }
-      : null,
+    birthDate: acf.birth_date ?? "",
+    deathDate: acf.death_date ?? "",
+    nationality: extractCountryNamesFromWPPerson(wp),
+    activeYears: acf.active_years ?? "",
+    gender: acf.gender ?? "",
+    officialUrl: acf.official_url ?? "",
+    officialSns,
+    aiSummary: acf.ai_summary?.ai_summary_ja ?? "",
+    aiCareer: acf.ai_career?.ai_career_ja ?? "",
+    aiStrength: acf.ai_strength?.ai_strength_ja ?? "",
+    aiStyle: acf.ai_style?.ai_style_ja ?? "",
+    aiTheme: acf.ai_theme?.ai_theme_ja ?? "",
+    aiPosition: acf.ai_position?.ai_position_ja ?? "",
+    aiNotableReason: acf.ai_notable_reason?.ai_notable_reason_ja ?? "",
+    aiSummaryEn: acf.ai_summary?.ai_summary_en ?? "",
+    aiCareerEn: acf.ai_career?.ai_career_en ?? "",
+    aiStrengthEn: acf.ai_strength?.ai_strength_en ?? "",
+    aiStyleEn: acf.ai_style?.ai_style_en ?? "",
+    aiThemeEn: acf.ai_theme?.ai_theme_en ?? "",
+    aiPositionEn: acf.ai_position?.ai_position_en ?? "",
+    aiNotableReasonEn: acf.ai_notable_reason?.ai_notable_reason_en ?? "",
+    faq,
+    awards,
+    notablePostIds: Array.isArray(acf.notable_posts) ? acf.notable_posts : [],
   };
 };
 
