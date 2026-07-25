@@ -53,7 +53,6 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     '@type': 'Person',
     name: person.nameJa,
     alternateName: person.nameEn,
-    image: person.image?.url,
     description: person.aiSummary || person.bio || undefined,
     ...(person.birthDate ? { birthDate: person.birthDate } : {}),
     ...(person.deathDate ? { deathDate: person.deathDate } : {}),

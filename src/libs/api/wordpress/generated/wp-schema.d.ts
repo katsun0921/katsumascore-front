@@ -172,7 +172,6 @@ export interface components {
                 name_en: string;
                 roles: ("actor" | "actress" | "director" | "voice_actor")[];
                 bio?: string;
-                image?: components["schemas"]["WPImage"];
                 birth_date?: string;
                 death_date?: string;
                 birthplace?: string;

@@ -272,12 +272,6 @@ export interface Person {
   nameEn: string;
   roles: ("actor" | "actress" | "director" | "voice_actor")[];
   bio: string;
-  image: {
-    url: string;
-    alt: string;
-    width: number;
-    height: number;
-  } | null;
   birthDate: string;
   deathDate: string;
   birthplace: string;
@@ -330,14 +324,6 @@ export const transformPerson = (wp: WPPerson): Person => {
     nameEn: acf.name_en || titleFallback,
     roles: acf.roles ?? [],
     bio: acf.bio ?? "",
-    image: acf.image
-      ? {
-          url: acf.image.url,
-          alt: acf.image.alt ?? acf.name_ja,
-          width: acf.image.width ?? 0,
-          height: acf.image.height ?? 0,
-        }
-      : null,
     birthDate: acf.birth_date ?? "",
     deathDate: acf.death_date ?? "",
     birthplace: acf.birthplace ?? "",

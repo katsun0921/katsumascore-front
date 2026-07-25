@@ -1,5 +1,4 @@
 // ISR: revalidate 86400s (24h)
-import Image from 'next/image';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
@@ -60,21 +59,11 @@ export const PersonTemplate = ({
         <article className='mt-6'>
           <div className='flex flex-col gap-6 lg:flex-row'>
             <div className='shrink-0'>
-              {person.image ? (
-                <Image
-                  src={person.image.url}
-                  alt={person.image.alt}
-                  width={person.image.width || 240}
-                  height={person.image.height || 320}
-                  className='rounded-lg object-cover'
-                />
-              ) : (
-                <PersonAvatar
-                  roles={person.roles}
-                  name={displayName}
-                  className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
-                />
-              )}
+              <PersonAvatar
+                roles={person.roles}
+                name={displayName}
+                className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
+              />
             </div>
             <div className='flex flex-col gap-4'>
               <h1 className='text-2xl font-bold'>{displayName}</h1>
