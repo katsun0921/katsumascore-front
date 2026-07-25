@@ -46,6 +46,11 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
   ];
 
   const sameAs = person.officialSns.map((sns) => sns.url);
+  const awardTexts = person.awards.map((award) => (
+    [award.year, award.awardName, award.workTitle ? `『${award.workTitle}』` : '']
+      .filter(Boolean)
+      .join(' ')
+  ));
 
   const personJsonLd = {
     '@context': 'https://schema.org',
@@ -58,6 +63,7 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     ...(person.nationality.length > 0 ? { nationality: person.nationality.join('、') } : {}),
     ...(person.officialUrl ? { url: person.officialUrl } : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),
+    ...(awardTexts.length > 0 ? { award: awardTexts } : {}),
   };
 
   const faqJsonLd = person.faq.length > 0

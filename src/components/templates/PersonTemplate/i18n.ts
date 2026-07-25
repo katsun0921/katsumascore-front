@@ -55,4 +55,9 @@ export const messages = {
   faq: {
     heading: { ja: 'よくある質問', en: 'FAQ' },
   },
+  awards: {
+    heading: { ja: '受賞歴', en: 'Awards' },
+    win: { ja: '受賞', en: 'Won' },
+    nomination: { ja: 'ノミネート', en: 'Nominated' },
+  },
 } as const;

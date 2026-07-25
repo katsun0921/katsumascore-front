@@ -265,6 +265,13 @@ export interface PersonFaqItem {
   answer: string;
 }
 
+export interface PersonAward {
+  year: string;
+  awardName: string;
+  workTitle: string;
+  result: "win" | "nomination" | "";
+}
+
 export interface Person {
   id: number;
   slug: string;
@@ -287,6 +294,7 @@ export interface Person {
   aiPosition: string;
   aiNotableReason: string;
   faq: PersonFaqItem[];
+  awards: PersonAward[];
 }
 
 export interface Company {
@@ -330,6 +338,16 @@ export const transformPerson = (wp: WPPerson): Person => {
   const faq = Array.isArray(acf.ai_faq)
     ? acf.ai_faq.filter((item) => !!item.question && !!item.answer)
     : [];
+  const awards: PersonAward[] = Array.isArray(acf.ai_awards)
+    ? acf.ai_awards
+        .filter((item) => !!item.award_name)
+        .map((item) => ({
+          year: item.year ?? "",
+          awardName: item.award_name ?? "",
+          workTitle: item.work_title ?? "",
+          result: item.result ?? "",
+        }))
+    : [];
   return {
     id: wp.id,
     slug: wp.slug,
@@ -351,6 +369,7 @@ export const transformPerson = (wp: WPPerson): Person => {
     aiPosition: acf.ai_position ?? "",
     aiNotableReason: acf.ai_notable_reason ?? "",
     faq,
+    awards,
   };
 };
 

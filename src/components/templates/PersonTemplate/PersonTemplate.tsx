@@ -218,6 +218,33 @@ export const PersonTemplate = ({
           </section>
         )}
 
+        {person.awards.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['awards', 'heading'], locale)}
+            </h2>
+            <ul className='flex flex-col gap-3'>
+              {person.awards.map((award) => (
+                <li
+                  key={`${award.year}-${award.awardName}-${award.workTitle}`}
+                  className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
+                >
+                  {award.year && <span className='font-bold'>{award.year}</span>}
+                  <span>{award.awardName}</span>
+                  {award.workTitle && (
+                    <span className='text-[var(--color-text-muted)]'>{`『${award.workTitle}』`}</span>
+                  )}
+                  {award.result && (
+                    <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
+                      {t(messages, ['awards', award.result], locale)}
+                    </span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         {person.faq.length > 0 && (
           <section className='mt-10'>
             <h2 className='mb-4 text-xl font-bold'>

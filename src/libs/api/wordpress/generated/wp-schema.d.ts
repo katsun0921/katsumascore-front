@@ -202,6 +202,13 @@ export interface components {
                     question: string;
                     answer: string;
                 }[] | false;
+                /** ACF repeater は空のとき false を返す。事実確認できない場合は元々空配列で返る想定 */
+                ai_awards?: {
+                    year?: string;
+                    award_name?: string;
+                    work_title?: string;
+                    result?: "win" | "nomination" | "";
+                }[] | false;
             };
         };
         WPCompany: {
