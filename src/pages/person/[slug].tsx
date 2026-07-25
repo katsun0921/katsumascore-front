@@ -35,9 +35,8 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
-  const descriptionSource = person.aiSummary || person.bio;
-  const description = descriptionSource
-    ? descriptionSource.slice(0, 120)
+  const description = person.aiSummary
+    ? person.aiSummary.slice(0, 120)
     : `${displayName}の出演作品・監督作品一覧`;
 
   const breadcrumbs = [
@@ -53,7 +52,7 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     '@type': 'Person',
     name: person.nameJa,
     alternateName: person.nameEn,
-    description: person.aiSummary || person.bio || undefined,
+    description: person.aiSummary || undefined,
     ...(person.birthDate ? { birthDate: person.birthDate } : {}),
     ...(person.deathDate ? { deathDate: person.deathDate } : {}),
     ...(person.birthplace ? { birthPlace: person.birthplace } : {}),

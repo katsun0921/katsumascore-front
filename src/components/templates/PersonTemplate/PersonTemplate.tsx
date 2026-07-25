@@ -80,7 +80,6 @@ export const PersonTemplate = ({
                   ))}
                 </ul>
               )}
-              {person.bio && <p className='leading-relaxed'>{person.bio}</p>}
             </div>
           </div>
 

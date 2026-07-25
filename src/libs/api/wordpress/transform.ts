@@ -271,7 +271,6 @@ export interface Person {
   nameJa: string;
   nameEn: string;
   roles: ("actor" | "actress" | "director" | "voice_actor")[];
-  bio: string;
   birthDate: string;
   deathDate: string;
   birthplace: string;
@@ -323,7 +322,6 @@ export const transformPerson = (wp: WPPerson): Person => {
     nameJa: acf.name_ja || titleFallback,
     nameEn: acf.name_en || titleFallback,
     roles: acf.roles ?? [],
-    bio: acf.bio ?? "",
     birthDate: acf.birth_date ?? "",
     deathDate: acf.death_date ?? "",
     birthplace: acf.birthplace ?? "",

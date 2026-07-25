@@ -171,7 +171,6 @@ export interface components {
                 name_ja: string;
                 name_en: string;
                 roles: ("actor" | "actress" | "director" | "voice_actor")[];
-                bio?: string;
                 birth_date?: string;
                 death_date?: string;
                 birthplace?: string;
