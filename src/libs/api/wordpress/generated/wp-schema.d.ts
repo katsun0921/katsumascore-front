@@ -170,7 +170,7 @@ export interface components {
             acf: {
                 name_ja: string;
                 name_en: string;
-                roles: ("actor" | "director")[];
+                roles: ("actor" | "director" | "voice_actor")[];
                 bio?: string;
                 image?: components["schemas"]["WPImage"];
                 birth_date?: string;

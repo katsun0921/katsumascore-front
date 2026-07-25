@@ -4,6 +4,7 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { PostCardListHorizontal } from '@/components/ui-section/PostCard';
+import { PersonAvatar } from '@/components/ui-parts/PersonAvatar';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
@@ -58,8 +59,8 @@ export const PersonTemplate = ({
         <Breadcrumb items={breadcrumbs} />
         <article className='mt-6'>
           <div className='flex flex-col gap-6 lg:flex-row'>
-            {person.image && (
-              <div className='shrink-0'>
+            <div className='shrink-0'>
+              {person.image ? (
                 <Image
                   src={person.image.url}
                   alt={person.image.alt}
@@ -67,8 +68,15 @@ export const PersonTemplate = ({
                   height={person.image.height || 320}
                   className='rounded-lg object-cover'
                 />
-              </div>
-            )}
+              ) : (
+                <PersonAvatar
+                  roles={person.roles}
+                  gender={person.gender || undefined}
+                  name={displayName}
+                  className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
+                />
+              )}
+            </div>
             <div className='flex flex-col gap-4'>
               <h1 className='text-2xl font-bold'>{displayName}</h1>
               {altName && <p className='text-sm text-[var(--color-text-muted)]'>{altName}</p>}
