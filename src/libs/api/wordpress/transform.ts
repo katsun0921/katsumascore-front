@@ -271,6 +271,9 @@ export interface PersonAward {
   year: string;
   awardName: string;
   workTitle: string;
+  /** 英語版（手動翻訳・未入力の場合は空文字。表示側で日本語版へフォールバックする） */
+  awardNameEn: string;
+  workTitleEn: string;
   result: "win" | "nomination" | "";
 }
 
@@ -364,6 +367,8 @@ export const transformPerson = (wp: WPPerson): Person => {
           year: item.year ?? "",
           awardName: item.award_name ?? "",
           workTitle: item.work_title ?? "",
+          awardNameEn: item.award_name_en ?? "",
+          workTitleEn: item.work_title_en ?? "",
           result: item.result ?? "",
         }))
     : [];

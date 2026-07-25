@@ -211,11 +211,16 @@ export interface components {
                     question_en?: string;
                     answer_en?: string;
                 }[] | false;
-                /** ACF repeater は空のとき false を返す。事実確認できない場合は元々空配列で返る想定 */
+                /**
+                 * ACF repeater は空のとき false を返す。事実確認できない場合は元々空配列で返る想定。
+                 * award_name_en / work_title_en は翻訳をAIを使用せず手動入力（未入力の場合が多い）
+                 */
                 ai_awards?: {
                     year?: string;
                     award_name?: string;
+                    award_name_en?: string;
                     work_title?: string;
+                    work_title_en?: string;
                     result?: "win" | "nomination" | "";
                 }[] | false;
             };

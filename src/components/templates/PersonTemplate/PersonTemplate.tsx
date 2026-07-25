@@ -226,23 +226,27 @@ export const PersonTemplate = ({
               {t(messages, ['awards', 'heading'], locale)}
             </h2>
             <ul className='flex flex-col gap-3'>
-              {person.awards.map((award) => (
-                <li
-                  key={`${award.year}-${award.awardName}-${award.workTitle}`}
-                  className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
-                >
-                  {award.year && <span className='font-bold'>{award.year}</span>}
-                  <span>{award.awardName}</span>
-                  {award.workTitle && (
-                    <span className='text-[var(--color-text-muted)]'>{`『${award.workTitle}』`}</span>
-                  )}
-                  {award.result && (
-                    <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
-                      {t(messages, ['awards', award.result], locale)}
-                    </span>
-                  )}
-                </li>
-              ))}
+              {person.awards.map((award) => {
+                const awardName = pick(award.awardName, award.awardNameEn);
+                const workTitle = pick(award.workTitle, award.workTitleEn);
+                return (
+                  <li
+                    key={`${award.year}-${award.awardName}-${award.workTitle}`}
+                    className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
+                  >
+                    {award.year && <span className='font-bold'>{award.year}</span>}
+                    <span>{awardName}</span>
+                    {workTitle && (
+                      <span className='text-[var(--color-text-muted)]'>{`『${workTitle}』`}</span>
+                    )}
+                    {award.result && (
+                      <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
+                        {t(messages, ['awards', award.result], locale)}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </section>
         )}

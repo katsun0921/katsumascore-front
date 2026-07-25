@@ -63,11 +63,13 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
   const canonicalUrl = loc === 'en' ? enUrl : jaUrl;
 
   const sameAs = person.officialSns.map((sns) => sns.url);
-  const awardTexts = person.awards.map((award) => (
-    [award.year, award.awardName, award.workTitle ? `『${award.workTitle}』` : '']
+  const awardTexts = person.awards.map((award) => {
+    const awardName = pick(award.awardName, award.awardNameEn);
+    const workTitle = pick(award.workTitle, award.workTitleEn);
+    return [award.year, awardName, workTitle ? `『${workTitle}』` : '']
       .filter(Boolean)
-      .join(' ')
-  ));
+      .join(' ');
+  });
 
   const personJsonLd = {
     '@context': 'https://schema.org',
