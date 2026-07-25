@@ -55,7 +55,6 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     description: person.aiSummary || undefined,
     ...(person.birthDate ? { birthDate: person.birthDate } : {}),
     ...(person.deathDate ? { deathDate: person.deathDate } : {}),
-    ...(person.birthplace ? { birthPlace: person.birthplace } : {}),
     ...(person.nationality.length > 0 ? { nationality: person.nationality.join('、') } : {}),
     ...(person.officialUrl ? { url: person.officialUrl } : {}),
     ...(sameAs.length > 0 ? { sameAs } : {}),

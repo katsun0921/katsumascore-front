@@ -273,7 +273,6 @@ export interface Person {
   roles: ("actor" | "actress" | "director" | "voice_actor")[];
   birthDate: string;
   deathDate: string;
-  birthplace: string;
   /** `country` タクソノミーのターム名（複数国籍を考慮し配列） */
   nationality: string[];
   activeYears: string;
@@ -339,7 +338,6 @@ export const transformPerson = (wp: WPPerson): Person => {
     roles: acf.roles ?? [],
     birthDate: acf.birth_date ?? "",
     deathDate: acf.death_date ?? "",
-    birthplace: acf.birthplace ?? "",
     nationality: extractCountryNamesFromWPPerson(wp),
     activeYears: acf.active_years ?? "",
     gender: acf.gender ?? "",

@@ -182,7 +182,6 @@ export interface components {
                 roles: ("actor" | "actress" | "director" | "voice_actor")[];
                 birth_date?: string;
                 death_date?: string;
-                birthplace?: string;
                 active_years?: string;
                 gender?: "male" | "female" | "other" | "";
                 official_url?: string;

@@ -9,7 +9,6 @@ export const messages = {
     heading: { ja: '基本情報', en: 'Basic Information' },
     birthDate: { ja: '生年月日', en: 'Born' },
     deathDate: { ja: '没年月日', en: 'Died' },
-    birthplace: { ja: '出身地', en: 'Birthplace' },
     nationality: { ja: '国籍', en: 'Nationality' },
     activeYears: { ja: '活動期間', en: 'Years Active' },
     gender: { ja: '性別', en: 'Gender' },
