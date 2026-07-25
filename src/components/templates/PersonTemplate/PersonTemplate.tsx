@@ -71,7 +71,6 @@ export const PersonTemplate = ({
               ) : (
                 <PersonAvatar
                   roles={person.roles}
-                  gender={person.gender || undefined}
                   name={displayName}
                   className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
                 />

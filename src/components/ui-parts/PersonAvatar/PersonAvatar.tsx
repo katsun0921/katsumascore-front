@@ -1,8 +1,9 @@
 export type TPersonAvatarVariant = 'actor' | 'actress' | 'director' | 'voiceActor'
 
+export type TPersonRole = 'actor' | 'actress' | 'director' | 'voice_actor'
+
 export type TPersonAvatarProps = {
-  roles: ('actor' | 'actress' | 'director' | 'voice_actor')[]
-  gender?: 'male' | 'female' | 'other' | ''
+  roles: TPersonRole[]
   name: string
   className?: string
 }
@@ -14,19 +15,20 @@ const variantLabels: Record<TPersonAvatarVariant, string> = {
   voiceActor: '声優',
 };
 
-/**
- * roles・gender からプレースホルダーのバリアントを判定する。
- * 優先順は 声優 ＞ 監督 ＞ 女優（role） ＞ 俳優。`roles` に `actress` が未設定の
- * 既存データ（`actor` のみ + `gender: female`）は互換のため女優として扱う。
- */
-export const resolvePersonAvatarVariant = (
-  roles: ('actor' | 'actress' | 'director' | 'voice_actor')[],
-  gender?: 'male' | 'female' | 'other' | '',
-): TPersonAvatarVariant => {
-  if (roles.includes('voice_actor')) return 'voiceActor';
-  if (roles.includes('director')) return 'director';
-  if (roles.includes('actress')) return 'actress';
-  return gender === 'female' ? 'actress' : 'actor';
+/** WordPress側で登録された roles（俳優/女優/監督/声優）を表示バリアントへ直接紐づけるMap。 */
+const roleVariantMap = new Map<TPersonRole, TPersonAvatarVariant>([
+  ['voice_actor', 'voiceActor'],
+  ['director', 'director'],
+  ['actress', 'actress'],
+  ['actor', 'actor'],
+]);
+
+/** roles からプレースホルダーのバリアントを判定する。複数ロールを持つ場合はMapの登録順を優先度として先勝ちで決定する。 */
+export const resolvePersonAvatarVariant = (roles: TPersonRole[]): TPersonAvatarVariant => {
+  for (const [role, variant] of roleVariantMap) {
+    if (roles.includes(role)) return variant;
+  }
+  return 'actor';
 };
 
 const Silhouette = ({ withHair }: { withHair: boolean }) => (
@@ -67,8 +69,8 @@ const Badge = ({ variant }: { variant: TPersonAvatarVariant }) => {
 };
 
 /** サムネイル未登録時に職業（俳優/女優/監督/声優）別に出し分けるオリジナルプレースホルダー画像。 */
-export const PersonAvatar = ({ roles, gender, name, className }: TPersonAvatarProps) => {
-  const variant = resolvePersonAvatarVariant(roles, gender);
+export const PersonAvatar = ({ roles, name, className }: TPersonAvatarProps) => {
+  const variant = resolvePersonAvatarVariant(roles);
 
   return (
     <div
