@@ -84,6 +84,8 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 
 > **docs/ ディレクトリ構成:** `features/`（使用中）/ `develop/`（開発中）/ `idea/`（未着手）/ `archive/`（完了・見送り）。詳細は [`docs/README.md`](docs/README.md) を参照。
 
+> **Obsidian関連マップの更新（IMPORTANT）:** `docs/` にドキュメントを追加・削除・大幅リライトしたら、Obsidian Vault側の [`../obsidian/katsumascore-front/_関連マップ.md`](../obsidian/katsumascore-front/_関連マップ.md) も同じタイミングで更新する（新規ファイルの関連付け追加、削除ファイルの記載除去）。あわせてリポジトリ横断の関連がある場合は [`../obsidian/_横断マップ.md`](../obsidian/_横断マップ.md) も確認・更新する。これらのマップファイルは本リポジトリではなくObsidian Vault（`katsumscore/obsidian/`）側の管理物。
+
 ---
 
 ## ■ GitHub 運用ルール
