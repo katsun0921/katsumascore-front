@@ -41,6 +41,8 @@ export const PersonTemplate = ({
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
+  /** en localeでは英語版（手動翻訳）を優先し、未入力なら日本語版へフォールバックする */
+  const pick = (ja: string, en: string) => (locale === 'en' ? (en || ja) : ja);
 
   const infoRows = [
     { key: 'birthDate', value: person.birthDate },
@@ -134,28 +136,28 @@ export const PersonTemplate = ({
           {/* 編集部解説: Wikipedia的な客観記述ではなく、編集部視点で人物の魅力を伝えるセクション */}
           <AiTextSection
             heading={t(messages, ['summary', 'heading'], locale)}
-            text={person.aiSummary}
+            text={pick(person.aiSummary, person.aiSummaryEn)}
           />
           {/* 人物の魅力: Wikipediaでは得られない独自コンテンツ */}
           <AiTextSection
             heading={t(messages, ['strength', 'heading'], locale)}
-            text={person.aiStrength}
+            text={pick(person.aiStrength, person.aiStrengthEn)}
           />
           <AiTextSection
             heading={t(messages, ['career', 'heading'], locale)}
-            text={person.aiCareer}
+            text={pick(person.aiCareer, person.aiCareerEn)}
           />
           <AiTextSection
             heading={t(messages, ['style', 'heading'], locale)}
-            text={person.aiStyle}
+            text={pick(person.aiStyle, person.aiStyleEn)}
           />
           <AiTextSection
             heading={t(messages, ['style', 'theme'], locale)}
-            text={person.aiTheme}
+            text={pick(person.aiTheme, person.aiThemeEn)}
           />
           <AiTextSection
             heading={t(messages, ['style', 'position'], locale)}
-            text={person.aiPosition}
+            text={pick(person.aiPosition, person.aiPositionEn)}
           />
 
           {notableWorks.length > 0 && (
@@ -177,9 +179,9 @@ export const PersonTemplate = ({
                   </li>
                 ))}
               </ul>
-              {person.aiNotableReason && (
+              {pick(person.aiNotableReason, person.aiNotableReasonEn) && (
                 <p className='mt-4 whitespace-pre-line leading-relaxed'>
-                  {person.aiNotableReason}
+                  {pick(person.aiNotableReason, person.aiNotableReasonEn)}
                 </p>
               )}
             </section>
@@ -253,8 +255,8 @@ export const PersonTemplate = ({
             <dl className='flex flex-col gap-4'>
               {person.faq.map((item) => (
                 <div key={item.question} className='rounded-lg p-4 bg-[var(--color-surface-2)]'>
-                  <dt className='mb-2 font-bold'>{item.question}</dt>
-                  <dd className='leading-relaxed'>{item.answer}</dd>
+                  <dt className='mb-2 font-bold'>{pick(item.question, item.questionEn)}</dt>
+                  <dd className='leading-relaxed'>{pick(item.answer, item.answerEn)}</dd>
                 </div>
               ))}
             </dl>

@@ -263,6 +263,8 @@ export interface PersonSnsLink {
 export interface PersonFaqItem {
   question: string;
   answer: string;
+  questionEn: string;
+  answerEn: string;
 }
 
 export interface PersonAward {
@@ -293,6 +295,14 @@ export interface Person {
   aiTheme: string;
   aiPosition: string;
   aiNotableReason: string;
+  /** 英語版（手動翻訳・未入力の場合は空文字。表示側で日本語版へフォールバックする） */
+  aiSummaryEn: string;
+  aiCareerEn: string;
+  aiStrengthEn: string;
+  aiStyleEn: string;
+  aiThemeEn: string;
+  aiPositionEn: string;
+  aiNotableReasonEn: string;
   faq: PersonFaqItem[];
   awards: PersonAward[];
 }
@@ -335,8 +345,15 @@ export const transformPerson = (wp: WPPerson): Person => {
   const officialSns = Array.isArray(acf.official_sns)
     ? acf.official_sns.filter((sns) => !!sns.url)
     : [];
-  const faq = Array.isArray(acf.ai_faq)
-    ? acf.ai_faq.filter((item) => !!item.question && !!item.answer)
+  const faq: PersonFaqItem[] = Array.isArray(acf.ai_faq)
+    ? acf.ai_faq
+        .filter((item) => !!item.question && !!item.answer)
+        .map((item) => ({
+          question: item.question,
+          answer: item.answer,
+          questionEn: item.question_en ?? "",
+          answerEn: item.answer_en ?? "",
+        }))
     : [];
   const awards: PersonAward[] = Array.isArray(acf.ai_awards)
     ? acf.ai_awards
@@ -368,6 +385,13 @@ export const transformPerson = (wp: WPPerson): Person => {
     aiTheme: acf.ai_theme ?? "",
     aiPosition: acf.ai_position ?? "",
     aiNotableReason: acf.ai_notable_reason ?? "",
+    aiSummaryEn: acf.ai_summary_en ?? "",
+    aiCareerEn: acf.ai_career_en ?? "",
+    aiStrengthEn: acf.ai_strength_en ?? "",
+    aiStyleEn: acf.ai_style_en ?? "",
+    aiThemeEn: acf.ai_theme_en ?? "",
+    aiPositionEn: acf.ai_position_en ?? "",
+    aiNotableReasonEn: acf.ai_notable_reason_en ?? "",
     faq,
     awards,
   };

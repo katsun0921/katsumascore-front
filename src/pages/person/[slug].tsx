@@ -14,6 +14,8 @@ import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
 import type { Locale } from '@/i18n/t';
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
+
 type PersonPageProps = {
   person: Person;
   posts: PersonRelatedPost[];
@@ -35,8 +37,11 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
-  const description = person.aiSummary
-    ? person.aiSummary.slice(0, 120)
+  /** en localeでは英語版（手動翻訳）を優先し、未入力なら日本語版へフォールバックする */
+  const pick = (ja: string, en: string) => (loc === 'en' ? (en || ja) : ja);
+  const aiSummary = pick(person.aiSummary, person.aiSummaryEn);
+  const description = aiSummary
+    ? aiSummary.slice(0, 120)
     : `${displayName}の出演作品・監督作品一覧`;
 
   const breadcrumbs = [
@@ -44,6 +49,10 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     { label: loc === 'en' ? 'Person' : '人物', href: '/person' },
     { label: displayName, href: getEntityUrl('person', person.slug, loc) },
   ];
+
+  const jaUrl = `${SITE_URL}${getEntityUrl('person', person.slug, 'ja')}`;
+  const enUrl = `${SITE_URL}${getEntityUrl('person', person.slug, 'en')}`;
+  const canonicalUrl = loc === 'en' ? enUrl : jaUrl;
 
   const sameAs = person.officialSns.map((sns) => sns.url);
   const awardTexts = person.awards.map((award) => (
@@ -57,7 +66,7 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     '@type': 'Person',
     name: person.nameJa,
     alternateName: person.nameEn,
-    description: person.aiSummary || undefined,
+    description: aiSummary || undefined,
     ...(person.birthDate ? { birthDate: person.birthDate } : {}),
     ...(person.deathDate ? { deathDate: person.deathDate } : {}),
     ...(person.nationality.length > 0 ? { nationality: person.nationality.join('、') } : {}),
@@ -72,10 +81,10 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
         '@type': 'FAQPage',
         mainEntity: person.faq.map((item) => ({
           '@type': 'Question',
-          name: item.question,
+          name: pick(item.question, item.questionEn),
           acceptedAnswer: {
             '@type': 'Answer',
-            text: item.answer,
+            text: pick(item.answer, item.answerEn),
           },
         })),
       }
@@ -86,10 +95,10 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
       <Head>
         <title>{altName ? `${displayName}（${altName}）| KatsumaScore` : `${displayName} | KatsumaScore`}</title>
         <meta name='description' content={description} />
-        <link
-          rel='canonical'
-          href={`https://katsumascore.blog/person/${person.slug}`}
-        />
+        <link rel='canonical' href={canonicalUrl} />
+        <link rel='alternate' hrefLang='ja' href={jaUrl} />
+        <link rel='alternate' hrefLang='en' href={enUrl} />
+        <link rel='alternate' hrefLang='x-default' href={jaUrl} />
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}

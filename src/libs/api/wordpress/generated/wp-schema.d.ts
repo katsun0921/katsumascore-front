@@ -197,10 +197,20 @@ export interface components {
                 ai_theme?: string;
                 ai_position?: string;
                 ai_notable_reason?: string;
+                /** 英語版。翻訳はAIを使用せず手動入力（未入力の場合が多い） */
+                ai_summary_en?: string;
+                ai_career_en?: string;
+                ai_strength_en?: string;
+                ai_style_en?: string;
+                ai_theme_en?: string;
+                ai_position_en?: string;
+                ai_notable_reason_en?: string;
                 /** ACF repeater は空のとき false を返す */
                 ai_faq?: {
                     question: string;
                     answer: string;
+                    question_en?: string;
+                    answer_en?: string;
                 }[] | false;
                 /** ACF repeater は空のとき false を返す。事実確認できない場合は元々空配列で返る想定 */
                 ai_awards?: {
