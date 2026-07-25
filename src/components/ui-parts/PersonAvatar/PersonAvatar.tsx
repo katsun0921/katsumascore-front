@@ -1,7 +1,7 @@
 export type TPersonAvatarVariant = 'actor' | 'actress' | 'director' | 'voiceActor'
 
 export type TPersonAvatarProps = {
-  roles: ('actor' | 'director' | 'voice_actor')[]
+  roles: ('actor' | 'actress' | 'director' | 'voice_actor')[]
   gender?: 'male' | 'female' | 'other' | ''
   name: string
   className?: string
@@ -14,13 +14,18 @@ const variantLabels: Record<TPersonAvatarVariant, string> = {
   voiceActor: '声優',
 };
 
-/** roles・gender からプレースホルダーのバリアントを判定する。声優＞監督＞性別（女優/俳優）の優先順で1つに決定。 */
+/**
+ * roles・gender からプレースホルダーのバリアントを判定する。
+ * 優先順は 声優 ＞ 監督 ＞ 女優（role） ＞ 俳優。`roles` に `actress` が未設定の
+ * 既存データ（`actor` のみ + `gender: female`）は互換のため女優として扱う。
+ */
 export const resolvePersonAvatarVariant = (
-  roles: ('actor' | 'director' | 'voice_actor')[],
+  roles: ('actor' | 'actress' | 'director' | 'voice_actor')[],
   gender?: 'male' | 'female' | 'other' | '',
 ): TPersonAvatarVariant => {
   if (roles.includes('voice_actor')) return 'voiceActor';
   if (roles.includes('director')) return 'director';
+  if (roles.includes('actress')) return 'actress';
   return gender === 'female' ? 'actress' : 'actor';
 };
 

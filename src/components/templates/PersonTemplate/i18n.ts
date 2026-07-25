@@ -1,6 +1,7 @@
 export const messages = {
   role: {
     actor: { ja: '俳優', en: 'Actor' },
+    actress: { ja: '女優', en: 'Actress' },
     director: { ja: '監督', en: 'Director' },
     voice_actor: { ja: '声優', en: 'Voice Actor' },
   },

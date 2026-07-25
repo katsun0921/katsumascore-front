@@ -270,7 +270,7 @@ export interface Person {
   slug: string;
   nameJa: string;
   nameEn: string;
-  roles: ("actor" | "director" | "voice_actor")[];
+  roles: ("actor" | "actress" | "director" | "voice_actor")[];
   bio: string;
   image: {
     url: string;
