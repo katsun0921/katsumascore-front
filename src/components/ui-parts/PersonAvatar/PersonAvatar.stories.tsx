@@ -19,4 +19,5 @@ export const Actress: Story = { args: { roles: ['actress'] } };
 export const Director: Story = { args: { roles: ['director'] } };
 export const VoiceActor: Story = { args: { roles: ['voice_actor'] } };
 export const NoRoleData: Story = { args: { roles: [] } };
-export const MultipleRoles: Story = { args: { roles: ['actor', 'director'] } };
+/** 複数ロール保持時は優先度（監督＞俳優＞女優＞声優）に沿って俳優＋声優＝俳優が表示される。 */
+export const MultipleRoles: Story = { args: { roles: ['actor', 'voice_actor'] } };

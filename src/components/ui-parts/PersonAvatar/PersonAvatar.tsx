@@ -15,12 +15,15 @@ const variantLabels: Record<TPersonAvatarVariant, string> = {
   voiceActor: '声優',
 };
 
-/** WordPress側で登録された roles（俳優/女優/監督/声優）を表示バリアントへ直接紐づけるMap。 */
+/**
+ * WordPress側で登録された roles（俳優/女優/監督/声優）を表示バリアントへ直接紐づけるMap。
+ * 登録順が複数ロール保持時の優先度（監督＞俳優＞女優＞声優）になる。
+ */
 const roleVariantMap = new Map<TPersonRole, TPersonAvatarVariant>([
-  ['voice_actor', 'voiceActor'],
   ['director', 'director'],
-  ['actress', 'actress'],
   ['actor', 'actor'],
+  ['actress', 'actress'],
+  ['voice_actor', 'voiceActor'],
 ]);
 
 /** roles からプレースホルダーのバリアントを判定する。複数ロールを持つ場合はMapの登録順を優先度として先勝ちで決定する。 */
