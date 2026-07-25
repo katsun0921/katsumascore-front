@@ -190,21 +190,18 @@ export interface components {
                     platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
                     url: string;
                 }[] | false;
-                ai_summary?: string;
-                ai_career?: string;
-                ai_strength?: string;
-                ai_style?: string;
-                ai_theme?: string;
-                ai_position?: string;
-                ai_notable_reason?: string;
-                /** 英語版。翻訳はAIを使用せず手動入力（未入力の場合が多い） */
-                ai_summary_en?: string;
-                ai_career_en?: string;
-                ai_strength_en?: string;
-                ai_style_en?: string;
-                ai_theme_en?: string;
-                ai_position_en?: string;
-                ai_notable_reason_en?: string;
+                /**
+                 * ACF group フィールド。日本語/英語をタブで切り替える構成のため、
+                 * サブフィールドは `{フィールド名}_ja` / `{フィールド名}_en`
+                 * （英語は翻訳はAIを使用せず手動入力。未入力の場合が多い）
+                 */
+                ai_summary?: { ai_summary_ja?: string; ai_summary_en?: string };
+                ai_career?: { ai_career_ja?: string; ai_career_en?: string };
+                ai_strength?: { ai_strength_ja?: string; ai_strength_en?: string };
+                ai_style?: { ai_style_ja?: string; ai_style_en?: string };
+                ai_theme?: { ai_theme_ja?: string; ai_theme_en?: string };
+                ai_position?: { ai_position_ja?: string; ai_position_en?: string };
+                ai_notable_reason?: { ai_notable_reason_ja?: string; ai_notable_reason_en?: string };
                 /** ACF repeater は空のとき false を返す */
                 ai_faq?: {
                     question: string;
