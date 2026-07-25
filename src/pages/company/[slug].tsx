@@ -10,6 +10,8 @@ import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Company } from '@/libs/api/wordpress/transform';
 import type { Locale } from '@/i18n/t';
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
+
 type CompanyPageProps = {
   company: Company;
   locale: string;
@@ -29,15 +31,19 @@ const CompanyPage = ({ company, locale }: CompanyPageProps) => {
     { label: displayName, href: getEntityUrl('company', company.slug, loc) },
   ];
 
+  const jaUrl = `${SITE_URL}${getEntityUrl('company', company.slug, 'ja')}`;
+  const enUrl = `${SITE_URL}${getEntityUrl('company', company.slug, 'en')}`;
+  const canonicalUrl = loc === 'en' ? enUrl : jaUrl;
+
   return (
     <I18nProvider locale={loc}>
       <Head>
         <title>{`${displayName}（${altName}）| KatsumaScore`}</title>
         <meta name='description' content={description} />
-        <link
-          rel='canonical'
-          href={`https://katsumascore.blog/company/${company.slug}`}
-        />
+        <link rel='canonical' href={canonicalUrl} />
+        <link rel='alternate' hrefLang='ja' href={jaUrl} />
+        <link rel='alternate' hrefLang='en' href={enUrl} />
+        <link rel='alternate' hrefLang='x-default' href={jaUrl} />
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{

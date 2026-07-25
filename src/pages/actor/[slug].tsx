@@ -12,6 +12,8 @@ import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Post } from '@/types/post';
 
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
+
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
   { label: '新着', value: 'new' },
@@ -37,6 +39,7 @@ const ActorPage = ({ categoryName, slug, posts, currentPage, totalPages, locale 
   const [activeFilter, setActiveFilter] = useState('score');
   const sortedPosts = sortPosts(posts, activeFilter);
   const loc = (locale ?? 'ja') as Locale;
+  const canonicalUrl = `${SITE_URL}${getEntityUrl('actor', slug, loc)}`;
 
   const handlePageChange = (page: number) => {
     const base = getEntityUrl('actor', slug, loc);
@@ -48,6 +51,7 @@ const ActorPage = ({ categoryName, slug, posts, currentPage, totalPages, locale 
       <Head>
         <title>{categoryName} | KatsumaScore</title>
         <meta name='description' content={`${categoryName}出演作品一覧 — スコアで選ぶ`} />
+        <link rel='canonical' href={canonicalUrl} />
       </Head>
       <ListTemplate
         categoryName={categoryName}
