@@ -190,6 +190,8 @@ export interface components {
                     platform: "x" | "instagram" | "youtube" | "tiktok" | "facebook" | "other";
                     url: string;
                 }[] | false;
+                /** 編集部が手動選定した代表作品（post_object, multiple）。選定順が表示順。ACFは空のとき false を返す */
+                notable_posts?: number[] | false;
                 /**
                  * ACF group フィールド。日本語/英語をタブで切り替える構成のため、
                  * サブフィールドは `{フィールド名}_ja` / `{フィールド名}_en`

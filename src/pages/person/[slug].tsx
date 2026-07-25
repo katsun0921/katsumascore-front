@@ -31,6 +31,14 @@ const pickTopScored = (posts: PersonRelatedPost[], limit: number): PersonRelated
     .sort((a, b) => (b.score ?? 0) - (a.score ?? 0))
     .slice(0, limit);
 
+/** 編集部が手動選定した代表作品（notablePostIds）を、選定順で出演・監督作品一覧から抽出する。 */
+const pickNotableWorks = (posts: PersonRelatedPost[], notablePostIds: number[]): PersonRelatedPost[] => {
+  const byId = new Map(posts.map((post) => [post.id, post]));
+  return notablePostIds
+    .map((id) => byId.get(String(id)))
+    .filter((post): post is PersonRelatedPost => !!post);
+};
+
 const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: PersonPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
   const displayName = loc === 'en'
@@ -136,13 +144,14 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
   const wp = await getPersonBySlug(slug);
   if (!wp) return { notFound: true };
 
+  const person = transformPerson(wp);
   const posts = await getPostsByPersonId(wp.id, { lang: currentLocale, per_page: 100 });
 
   return {
     props: {
-      person: transformPerson(wp),
+      person,
       posts,
-      notableWorks: pickTopScored(posts, 3),
+      notableWorks: pickNotableWorks(posts, person.notablePostIds),
       recommendedWorks: pickTopScored(posts, 5),
       locale: currentLocale,
     },

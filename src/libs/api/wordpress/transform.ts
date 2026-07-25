@@ -305,6 +305,8 @@ export interface Person {
   aiNotableReasonEn: string;
   faq: PersonFaqItem[];
   awards: PersonAward[];
+  /** 編集部が手動選定した代表作品のPost ID（選定順） */
+  notablePostIds: number[];
 }
 
 export interface Company {
@@ -394,6 +396,7 @@ export const transformPerson = (wp: WPPerson): Person => {
     aiNotableReasonEn: acf.ai_notable_reason?.ai_notable_reason_en ?? "",
     faq,
     awards,
+    notablePostIds: Array.isArray(acf.notable_posts) ? acf.notable_posts : [],
   };
 };
 
