@@ -92,7 +92,7 @@ export const PersonTemplate = ({
             {altName && <p className='text-sm text-[var(--color-text-muted)]'>{altName}</p>}
           </div>
 
-          <div className={`mt-6 grid grid-cols-1 gap-6 ${hasBasicInfo ? 'lg:grid-cols-2' : ''}`}>
+          <div className={`mt-6 grid grid-cols-1 gap-6 ${hasBasicInfo ? 'lg:grid-cols-[max-content_1fr]' : ''}`}>
             <PersonAvatar
               roles={person.roles}
               name={displayName}
