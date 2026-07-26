@@ -60,4 +60,7 @@ export const messages = {
     win: { ja: '受賞', en: 'Won' },
     nomination: { ja: 'ノミネート', en: 'Nominated' },
   },
+  meta: {
+    fallbackDescription: { ja: 'の出演作品・監督作品一覧', en: ' — Filmography' },
+  },
 } as const;

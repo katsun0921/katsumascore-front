@@ -12,7 +12,8 @@ import type { PersonRelatedPost } from '@/libs/api/wordpress';
 import { PersonTemplate } from '@/components/templates/PersonTemplate';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Person } from '@/libs/api/wordpress/transform';
-import type { Locale } from '@/i18n/t';
+import { t, type Locale } from '@/i18n/t';
+import { messages } from '@/components/templates/PersonTemplate/i18n';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 
@@ -45,12 +46,12 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = loc === 'en' ? person.nameJa : person.nameEn;
-  /** en localeでは英語版（手動翻訳）を優先し、未入力なら日本語版へフォールバックする */
-  const pick = (ja: string, en: string) => (loc === 'en' ? (en || ja) : ja);
+  /** ロケールに応じた版を選ぶ。手動翻訳が未入力の場合は空文字を返す（日本語へのフォールバックはしない） */
+  const pick = (ja: string, en: string) => (loc === 'en' ? en : ja);
   const aiSummary = pick(person.aiSummary, person.aiSummaryEn);
   const description = aiSummary
     ? aiSummary.slice(0, 120)
-    : `${displayName}の出演作品・監督作品一覧`;
+    : `${displayName}${t(messages, ['meta', 'fallbackDescription'], loc)}`;
 
   const breadcrumbs = [
     { label: 'Home', href: '/' },
@@ -63,13 +64,17 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
   const canonicalUrl = loc === 'en' ? enUrl : jaUrl;
 
   const sameAs = person.officialSns.map((sns) => sns.url);
-  const awardTexts = person.awards.map((award) => {
-    const awardName = pick(award.awardName, award.awardNameEn);
-    const workTitle = pick(award.workTitle, award.workTitleEn);
-    return [award.year, awardName, workTitle ? `『${workTitle}』` : '']
-      .filter(Boolean)
-      .join(' ');
-  });
+  /** 手動翻訳が未入力の賞（awardName が空）はJSON-LDから除外する */
+  const awardTexts = person.awards
+    .map((award) => {
+      const awardName = pick(award.awardName, award.awardNameEn);
+      if (!awardName) return null;
+      const workTitle = pick(award.workTitle, award.workTitleEn);
+      return [award.year, awardName, workTitle ? `『${workTitle}』` : '']
+        .filter(Boolean)
+        .join(' ');
+    })
+    .filter((text): text is string => !!text);
 
   const personJsonLd = {
     '@context': 'https://schema.org',
@@ -85,16 +90,24 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
     ...(awardTexts.length > 0 ? { award: awardTexts } : {}),
   };
 
-  const faqJsonLd = person.faq.length > 0
+  /** 手動翻訳が未入力のFAQ（question/answerが空）はJSON-LDから除外する */
+  const faqEntries = person.faq
+    .map((item) => ({
+      name: pick(item.question, item.questionEn),
+      text: pick(item.answer, item.answerEn),
+    }))
+    .filter((entry) => !!entry.name && !!entry.text);
+
+  const faqJsonLd = faqEntries.length > 0
     ? {
         '@context': 'https://schema.org',
         '@type': 'FAQPage',
-        mainEntity: person.faq.map((item) => ({
+        mainEntity: faqEntries.map((entry) => ({
           '@type': 'Question',
-          name: pick(item.question, item.questionEn),
+          name: entry.name,
           acceptedAnswer: {
             '@type': 'Answer',
-            text: pick(item.answer, item.answerEn),
+            text: entry.text,
           },
         })),
       }

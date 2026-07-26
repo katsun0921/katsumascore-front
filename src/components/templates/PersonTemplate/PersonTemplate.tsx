@@ -41,8 +41,23 @@ export const PersonTemplate = ({
     ? (person.nameEn || person.nameJa)
     : (person.nameJa || person.nameEn);
   const altName = locale === 'en' ? person.nameJa : person.nameEn;
-  /** en localeでは英語版（手動翻訳）を優先し、未入力なら日本語版へフォールバックする */
-  const pick = (ja: string, en: string) => (locale === 'en' ? (en || ja) : ja);
+  /** ロケールに応じた版を選ぶ。手動翻訳が未入力の場合は空文字を返す（日本語へのフォールバックはしない） */
+  const pick = (ja: string, en: string) => (locale === 'en' ? en : ja);
+  /** 手動翻訳が未入力の賞（awardName が空）は表示しない */
+  const displayAwards = person.awards
+    .map((award) => ({
+      ...award,
+      displayName: pick(award.awardName, award.awardNameEn),
+      displayWorkTitle: pick(award.workTitle, award.workTitleEn),
+    }))
+    .filter((award) => !!award.displayName);
+  /** 手動翻訳が未入力のFAQ（question/answerが空）は表示しない */
+  const displayFaq = person.faq
+    .map((item) => ({
+      displayQuestion: pick(item.question, item.questionEn),
+      displayAnswer: pick(item.answer, item.answerEn),
+    }))
+    .filter((item) => !!item.displayQuestion && !!item.displayAnswer);
 
   const infoRows = [
     { key: 'birthDate', value: person.birthDate },
@@ -220,47 +235,43 @@ export const PersonTemplate = ({
           </section>
         )}
 
-        {person.awards.length > 0 && (
+        {displayAwards.length > 0 && (
           <section className='mt-10'>
             <h2 className='mb-4 text-xl font-bold'>
               {t(messages, ['awards', 'heading'], locale)}
             </h2>
             <ul className='flex flex-col gap-3'>
-              {person.awards.map((award) => {
-                const awardName = pick(award.awardName, award.awardNameEn);
-                const workTitle = pick(award.workTitle, award.workTitleEn);
-                return (
-                  <li
-                    key={`${award.year}-${award.awardName}-${award.workTitle}`}
-                    className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
-                  >
-                    {award.year && <span className='font-bold'>{award.year}</span>}
-                    <span>{awardName}</span>
-                    {workTitle && (
-                      <span className='text-[var(--color-text-muted)]'>{`『${workTitle}』`}</span>
-                    )}
-                    {award.result && (
-                      <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
-                        {t(messages, ['awards', award.result], locale)}
-                      </span>
-                    )}
-                  </li>
-                );
-              })}
+              {displayAwards.map((award) => (
+                <li
+                  key={`${award.year}-${award.awardName}-${award.workTitle}`}
+                  className='flex flex-wrap items-baseline gap-2 rounded-lg p-4 bg-[var(--color-surface-2)]'
+                >
+                  {award.year && <span className='font-bold'>{award.year}</span>}
+                  <span>{award.displayName}</span>
+                  {award.displayWorkTitle && (
+                    <span className='text-[var(--color-text-muted)]'>{`『${award.displayWorkTitle}』`}</span>
+                  )}
+                  {award.result && (
+                    <span className='rounded px-2 py-0.5 text-xs bg-[var(--color-primary)] text-[var(--color-text-inverse)]'>
+                      {t(messages, ['awards', award.result], locale)}
+                    </span>
+                  )}
+                </li>
+              ))}
             </ul>
           </section>
         )}
 
-        {person.faq.length > 0 && (
+        {displayFaq.length > 0 && (
           <section className='mt-10'>
             <h2 className='mb-4 text-xl font-bold'>
               {t(messages, ['faq', 'heading'], locale)}
             </h2>
             <dl className='flex flex-col gap-4'>
-              {person.faq.map((item) => (
-                <div key={item.question} className='rounded-lg p-4 bg-[var(--color-surface-2)]'>
-                  <dt className='mb-2 font-bold'>{pick(item.question, item.questionEn)}</dt>
-                  <dd className='leading-relaxed'>{pick(item.answer, item.answerEn)}</dd>
+              {displayFaq.map((item) => (
+                <div key={item.displayQuestion} className='rounded-lg p-4 bg-[var(--color-surface-2)]'>
+                  <dt className='mb-2 font-bold'>{item.displayQuestion}</dt>
+                  <dd className='leading-relaxed'>{item.displayAnswer}</dd>
                 </div>
               ))}
             </dl>
