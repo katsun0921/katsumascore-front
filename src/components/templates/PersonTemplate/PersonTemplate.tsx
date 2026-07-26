@@ -3,7 +3,8 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { PostCardListHorizontal } from '@/components/ui-section/PostCard';
-import { PersonAvatar } from '@/components/ui-parts/PersonAvatar';
+import { PersonAvatar, resolvePersonAvatarVariant } from '@/components/ui-parts/PersonAvatar';
+import type { TPersonAvatarVariant } from '@/components/ui-parts/PersonAvatar';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
@@ -16,6 +17,14 @@ type PersonTemplateProps = {
   notableWorks: PersonRelatedPost[];
   recommendedWorks: PersonRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
+};
+
+/** PersonAvatarの画像バリアント優先度と表示ロールラベルを一致させるためのMap（俳優と女優は"俳優"に統一）。 */
+const avatarVariantToRoleKey: Record<TPersonAvatarVariant, 'actor' | 'director' | 'voice_actor'> = {
+  actor: 'actor',
+  actress: 'actor',
+  director: 'director',
+  voiceActor: 'voice_actor',
 };
 
 /** AI生成の長文セクション（編集部解説・人物の魅力・キャリア・作風等）。空文字なら描画しない。 */
@@ -67,86 +76,78 @@ export const PersonTemplate = ({
     { key: 'gender', value: person.gender ? t(messages, ['gender', person.gender], locale) : '' },
   ].filter((row) => row.value !== '');
   const hasBasicInfo = infoRows.length > 0 || !!person.officialUrl || person.officialSns.length > 0;
+  const avatarVariant = resolvePersonAvatarVariant(person.roles);
+  const roleLabel = t(messages, ['role', avatarVariantToRoleKey[avatarVariant]], locale);
 
   return (
     <PageLayout>
       <div className='mx-auto max-w-screen-lg px-4 py-6'>
         <Breadcrumb items={breadcrumbs} />
         <article className='mt-6'>
-          <div className='flex flex-col gap-6 lg:flex-row'>
-            <div className='shrink-0'>
-              <PersonAvatar
-                roles={person.roles}
-                name={displayName}
-                className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
-              />
-            </div>
-            <div className='flex flex-col gap-4'>
-              <h1 className='text-2xl font-bold'>{displayName}</h1>
-              {altName && <p className='text-sm text-[var(--color-text-muted)]'>{altName}</p>}
-              {person.roles.length > 0 && (
-                <ul className='flex gap-2'>
-                  {person.roles.map((role) => (
-                    <li
-                      key={role}
-                      className='rounded px-2 py-1 text-xs bg-[var(--color-surface-2)]'
-                    >
-                      {t(messages, ['role', role], locale)}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
+          <div className='flex flex-col gap-1'>
+            {person.roles.length > 0 && (
+              <p className='text-xs text-[var(--color-text-muted)]'>{roleLabel}</p>
+            )}
+            <h1 className='text-2xl font-bold'>{displayName}</h1>
+            {altName && <p className='text-sm text-[var(--color-text-muted)]'>{altName}</p>}
           </div>
 
-          {hasBasicInfo && (
-            <section className='mt-10'>
-              <h2 className='mb-4 text-xl font-bold'>
-                {t(messages, ['basicInfo', 'heading'], locale)}
-              </h2>
-              <dl className='grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-lg p-4 text-sm bg-[var(--color-surface-2)]'>
-                {infoRows.map((row) => (
-                  <div key={row.key} className='col-span-2 grid grid-cols-subgrid'>
-                    <dt className='font-bold'>{t(messages, ['basicInfo', row.key], locale)}</dt>
-                    <dd>{row.value}</dd>
-                  </div>
-                ))}
-                {person.officialUrl && (
-                  <div className='col-span-2 grid grid-cols-subgrid'>
-                    <dt className='font-bold'>{t(messages, ['basicInfo', 'officialUrl'], locale)}</dt>
-                    <dd>
-                      <a
-                        href={person.officialUrl}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        className='underline text-[var(--color-primary)]'
-                      >
-                        {person.officialUrl}
-                      </a>
-                    </dd>
-                  </div>
-                )}
-                {person.officialSns.length > 0 && (
-                  <div className='col-span-2 grid grid-cols-subgrid'>
-                    <dt className='font-bold'>{t(messages, ['basicInfo', 'sns'], locale)}</dt>
-                    <dd className='flex flex-wrap gap-3'>
-                      {person.officialSns.map((sns) => (
+          <div className={`mt-6 grid grid-cols-1 gap-6 ${hasBasicInfo ? 'lg:grid-cols-2' : ''}`}>
+            <PersonAvatar
+              roles={person.roles}
+              name={displayName}
+              className='h-[320px] w-[240px] rounded-lg bg-[var(--color-surface-2)] p-8'
+            />
+
+            {hasBasicInfo && (
+              <section>
+                <h2 className='mb-4 text-xl font-bold'>
+                  {t(messages, ['basicInfo', 'heading'], locale)}
+                </h2>
+                <dl className='grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 rounded-lg p-4 text-sm bg-[var(--color-surface-2)]'>
+                  {infoRows.map((row) => (
+                    <div key={row.key} className='col-span-2 grid grid-cols-subgrid'>
+                      <dt className='font-bold'>{t(messages, ['basicInfo', row.key], locale)}</dt>
+                      <dd>{row.value}</dd>
+                    </div>
+                  ))}
+                  {person.officialUrl && (
+                    <div className='col-span-2 grid grid-cols-subgrid'>
+                      <dt className='font-bold'>{t(messages, ['basicInfo', 'officialUrl'], locale)}</dt>
+                      <dd>
                         <a
-                          key={sns.url}
-                          href={sns.url}
+                          href={person.officialUrl}
                           target='_blank'
                           rel='noopener noreferrer'
                           className='underline text-[var(--color-primary)]'
                         >
-                          {t(messages, ['sns', sns.platform], locale)}
+                          {person.officialUrl}
                         </a>
-                      ))}
-                    </dd>
-                  </div>
-                )}
-              </dl>
-            </section>
-          )}
+                      </dd>
+                    </div>
+                  )}
+                  {person.officialSns.length > 0 && (
+                    <div className='col-span-2 grid grid-cols-subgrid'>
+                      <dt className='font-bold'>{t(messages, ['basicInfo', 'sns'], locale)}</dt>
+                      <dd className='flex flex-wrap gap-3'>
+                        {person.officialSns.map((sns) => (
+                          <a
+                            key={sns.url}
+                            href={sns.url}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                            className='underline text-[var(--color-primary)]'
+                          >
+                            {t(messages, ['sns', sns.platform], locale)}
+                          </a>
+                        ))}
+                      </dd>
+                    </div>
+                  )}
+                </dl>
+              </section>
+            )}
+          </div>
 
           {/* 編集部解説: Wikipedia的な客観記述ではなく、編集部視点で人物の魅力を伝えるセクション */}
           <AiTextSection
