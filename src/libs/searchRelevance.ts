@@ -47,9 +47,22 @@ const actorsBlob = (wp: ParsedWPPost): string => {
   return chunks.join(" ");
 };
 
-/** ACF `director`（post_object。文字列 / 配列 / person CPT オブジェクトいずれもあり得る）から検索用の名前テキストを作る。 */
+/** ACF `director`（post_object。文字列 / 配列 / person CPT オブジェクトいずれもあり得る）から検索用の名前テキストを作る。`director_text_fileds.is_director_name_text` が true の場合は `director_text` を優先する。 */
 const directorBlob = (wp: ParsedWPPost): string => {
-  const raw = (wp.acf as Record<string, unknown> | undefined)?.director;
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  const textGroup = acf?.director_text_fileds;
+  if (textGroup && typeof textGroup === "object" && !Array.isArray(textGroup)) {
+    const group = textGroup as Record<string, unknown>;
+    const isTextMode =
+      group.is_director_name_text === true ||
+      group.is_director_name_text === "1" ||
+      group.is_director_name_text === 1;
+    if (isTextMode && typeof group.director_text === "string" && group.director_text) {
+      return group.director_text;
+    }
+  }
+
+  const raw = acf?.director;
   if (raw == null) return "";
 
   const nameFromPersonObject = (o: Record<string, unknown>): string => {
