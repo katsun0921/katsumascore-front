@@ -76,10 +76,27 @@ const collectDirectorEntriesFromAcf = (raw: unknown, locale?: string): { name: s
   return [];
 };
 
+/**
+ * ACF `director_text_fileds`（監督を person CPT として登録せずテキストで入力するグループ）から
+ * `is_director_name_text` が true の場合のみ `director_text` を取り出す。
+ */
+const collectDirectorEntriesFromTextField = (raw: unknown, locale?: string): { name: string; slug: string }[] => {
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return [];
+  const group = raw as Record<string, unknown>;
+  const isTextMode =
+    group.is_director_name_text === true ||
+    group.is_director_name_text === "1" ||
+    group.is_director_name_text === 1;
+  if (!isTextMode) return [];
+  const text = typeof group.director_text === "string" ? group.director_text : "";
+  return collectDirectorEntriesFromAcf(text, locale);
+};
+
 /** 監督名を ACF フィールドから集め、重複除去してクレジット行を返す。person CPT の場合は /person/{slug} を href に設定する。 */
 export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCreditEntry[] | undefined => {
   const acf = wp.acf as Record<string, unknown> | undefined;
-  const entries = collectDirectorEntriesFromAcf(acf?.director, locale);
+  const textEntries = collectDirectorEntriesFromTextField(acf?.director_text_fileds, locale);
+  const entries = textEntries.length > 0 ? textEntries : collectDirectorEntriesFromAcf(acf?.director, locale);
   if (entries.length === 0) return undefined;
   const seen = new Set<string>();
   const names: TCreditEntry["names"] = [];
