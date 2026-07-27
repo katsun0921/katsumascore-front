@@ -230,9 +230,15 @@ export const mapActors = (wp: ParsedWPPost, locale?: string): TActor[] | undefin
     const ext = row as Record<string, unknown>;
     let nameStr: string | undefined;
     let actorUrl: string | undefined;
+    // 「役者名をテキストで表示」フラグが有効な場合、actor_text（person CPT と name 重複を避けた独立フィールド）を最優先で使う
+    const isActorText =
+      ext.is_actor_text === true || ext.is_actor_text === "1" || ext.is_actor_text === 1;
+    if (isActorText && typeof ext.actor_text === "string" && ext.actor_text.trim()) {
+      nameStr = extractLocaleNameFromCombined(ext.actor_text.trim(), locale);
+    }
     // actor が数値 term ID の場合、_embedded タームから locale-aware 名前・URL を最優先で解決する
     // （ext.name は日本語プレーンテキストが入ることが多いためターム解決を先行させる）
-    if (typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
+    if (!nameStr && typeof ext.actor === "number" && Number.isFinite(ext.actor)) {
       const info = termIdToInfo.get(ext.actor as number);
       if (info) {
         nameStr = info.name;
