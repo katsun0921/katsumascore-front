@@ -36,7 +36,7 @@ export const HomeTemplate = ({
 
   return (
     <PageLayout>
-    <div className='homeTemplate max-w-full min-w-0 overflow-x-hidden'>
+    <div data-component='HomeTemplate' className='homeTemplate max-w-full min-w-0 overflow-x-hidden'>
       <HomeHero {...hero} />
 
       {locale === 'ja' && (

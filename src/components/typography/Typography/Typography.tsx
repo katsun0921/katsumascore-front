@@ -237,7 +237,7 @@ const fontSizeRules = [
 ];
 
 const Page = ({ children }: { children: ReactNode }) => (
-  <div className='sb-typography-page'>
+  <div data-component='Page' className='sb-typography-page'>
     <div className='sb-typography-shell'>{children}</div>
   </div>
 );
@@ -310,7 +310,7 @@ const ColorSection = ({
   description: string;
   colors: Swatch[];
 }) => (
-  <section className='sb-typography-stack'>
+  <section data-component='ColorSection' className='sb-typography-stack'>
     <div>
       <h3>{title}</h3>
       <p className='sb-typography-muted'>{description}</p>

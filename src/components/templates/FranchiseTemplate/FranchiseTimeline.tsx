@@ -9,7 +9,7 @@ type FranchiseTimelineProps = {
 export const FranchiseTimeline = ({ timeline, heading }: FranchiseTimelineProps) => {
   if (timeline.length === 0) return null;
   return (
-    <section className={styles.franchiseTimeline}>
+    <section data-component='FranchiseTimeline' className={styles.franchiseTimeline}>
       <h2 className={styles.franchiseTimeline__heading}>{heading}</h2>
       <ol className={styles.franchiseTimeline__list}>
         {timeline.map((entry, i) => (

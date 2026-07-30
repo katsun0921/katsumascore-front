@@ -23,7 +23,7 @@ export const SearchResultTemplate = ({
 
   return (
     <PageLayout>
-      <div>
+      <div data-component='SearchResultTemplate'>
         <div className='bg-secondary'>
           <div className='px-4 pt-3 pb-0'>
             <Breadcrumb items={breadcrumbItems} />

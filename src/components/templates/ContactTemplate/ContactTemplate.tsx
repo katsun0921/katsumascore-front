@@ -16,7 +16,7 @@ export const ContactTemplate = () => {
 
   return (
     <PageLayout>
-      <div className='bg-secondary'>
+      <div data-component='ContactTemplate' className='bg-secondary'>
         <div className='px-4 pt-3 pb-0'>
           <Breadcrumb items={breadcrumbItems} />
         </div>
@@ -30,7 +30,7 @@ export const ContactTemplate = () => {
         </section>
       </div>
 
-      <div className='bg-color-bg px-4 py-8 pb-12'>
+      <div data-component='ContactTemplate' className='bg-color-bg px-4 py-8 pb-12'>
         <Container className='space-y-6'>
           <p className='text-sm text-color-secondary leading-relaxed'>
             {t(messages, ['body', 'lead'], locale)}

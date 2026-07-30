@@ -9,7 +9,7 @@ type FranchiseHeroProps = {
 };
 
 export const FranchiseHero = ({ title, catchCopy, heroImage }: FranchiseHeroProps) => (
-  <div className={styles.franchiseHero}>
+  <div data-component='FranchiseHero' className={styles.franchiseHero}>
     {heroImage && (
       <div className={styles.franchiseHero__image}>
         <Image

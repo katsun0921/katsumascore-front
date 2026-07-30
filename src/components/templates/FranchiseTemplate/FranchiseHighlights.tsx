@@ -9,7 +9,7 @@ type FranchiseHighlightsProps = {
 export const FranchiseHighlights = ({ highlights, heading }: FranchiseHighlightsProps) => {
   if (highlights.length === 0) return null;
   return (
-    <section className={styles.franchiseHighlights}>
+    <section data-component='FranchiseHighlights' className={styles.franchiseHighlights}>
       <h2 className={styles.franchiseHighlights__heading}>{heading}</h2>
       <ul className={styles.franchiseHighlights__list}>
         {highlights.map((h, i) => (
