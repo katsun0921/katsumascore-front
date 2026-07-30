@@ -17,7 +17,7 @@ export const FranchiseCTA = ({
   streamLabel,
   relatedLinksHeading,
 }: FranchiseCTAProps) => (
-  <section className={styles.franchiseCta}>
+  <section data-component='FranchiseCTA' className={styles.franchiseCta}>
     <div className={styles.franchiseCta__buttons}>
       <a href='#franchise-posts' className={styles.franchiseCta__btn}>{watchLabel}</a>
       <a href='#franchise-posts' className={styles.franchiseCta__btn}>{reviewLabel}</a>

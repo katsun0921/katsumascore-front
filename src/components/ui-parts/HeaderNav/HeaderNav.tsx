@@ -12,7 +12,7 @@ export const HeaderNav = () => {
   const path0 = asPath.split('?')[0] ?? '';
 
   return (
-    <nav className='headerNav' aria-label={t(messages, ['root', 'aria'], loc)}>
+    <nav data-component='HeaderNav' className='headerNav' aria-label={t(messages, ['root', 'aria'], loc)}>
       <ul className='headerNav__list'>
         {POST_TYPE_ARCHIVE_NAV_ITEMS.map((item) => {
           const archiveBase = getPostTypeArchivePath({ type: item.postType, lang: loc });

@@ -17,7 +17,7 @@ export const CTAButton = ({ href, fullWidth = false }: Props) => {
     : 'inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 font-medium tracking-[0.04em] whitespace-nowrap text-color-inverse hover:opacity-[0.85]';
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} data-component='CTAButton' className={className}>
       <PlayIcon className='block shrink-0' width='16' height='16' aria-hidden='true' />
       <span className='block'>{t(messages, ['button', 'label'], locale)}</span>
     </Link>

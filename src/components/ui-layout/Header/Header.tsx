@@ -13,7 +13,7 @@ export const Header = () => {
   const prefixClassName = 'header';
 
   return (
-    <header className='w-full bg-header' role='banner'>
+    <header data-component='Header' className='w-full bg-header' role='banner'>
       <div className={prefixClassName}>
         <Link href='/' className={`${prefixClassName}__logo hover:opacity-80 transition-opacity duration-200`}>
           <Image

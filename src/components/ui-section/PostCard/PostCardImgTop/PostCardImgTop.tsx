@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const PostCardImgTop = ({ post, rank, className, priority, caption }: Props) => (
-  <PostCardContainer className={className}>
+  <PostCardContainer className={className} dataComponent='PostCardImgTop'>
     <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='relative grid text-inherit'>
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
       <PostCardMedia image={post.image} title={post.title} className='aspect-video w-full' priority={priority} />

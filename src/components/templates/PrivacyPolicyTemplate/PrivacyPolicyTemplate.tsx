@@ -20,7 +20,7 @@ export const PrivacyPolicyTemplate = () => {
 
   return (
     <PageLayout>
-      <div className='bg-secondary'>
+      <div data-component='PrivacyPolicyTemplate' className='bg-secondary'>
         <div className='px-4 pt-3 pb-0'>
           <Breadcrumb items={breadcrumbItems} />
         </div>
@@ -34,7 +34,7 @@ export const PrivacyPolicyTemplate = () => {
         </section>
       </div>
 
-      <div className='bg-color-bg px-4 py-8 pb-12'>
+      <div data-component='PrivacyPolicyTemplate' className='bg-color-bg px-4 py-8 pb-12'>
         <Container className='max-w-3xl space-y-10'>
           <nav aria-label={t(messages, ['toc', 'title'], locale)} className='rounded-sm border border-color-border bg-color-bg p-4'>
             <p className='text-sm font-semibold text-color-primary'>{t(messages, ['toc', 'title'], locale)}</p>

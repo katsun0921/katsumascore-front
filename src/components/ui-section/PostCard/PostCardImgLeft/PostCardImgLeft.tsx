@@ -15,7 +15,7 @@ type Props = {
 };
 
 export const PostCardImgLeft = ({ post, rank, className, highlightKeyword, priority }: Props) => (
-  <PostCardContainer className={className}>
+  <PostCardContainer className={className} dataComponent='PostCardImgLeft'>
     <Link
       href={post.slug}
       locale={linkLocaleForHref(post.slug)}

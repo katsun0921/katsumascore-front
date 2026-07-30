@@ -31,7 +31,7 @@ const avatarVariantToRoleKey: Record<TPersonAvatarVariant, 'actor' | 'director' 
 const AiTextSection = ({ heading, text }: { heading: string; text: string }) => {
   if (!text) return null;
   return (
-    <section className='mt-10'>
+    <section data-component='AiTextSection' className='mt-10'>
       <h2 className='mb-4 text-xl font-bold'>{heading}</h2>
       <p className='whitespace-pre-line leading-relaxed'>{text}</p>
     </section>
@@ -81,7 +81,7 @@ export const PersonTemplate = ({
 
   return (
     <PageLayout>
-      <div className='mx-auto max-w-screen-lg px-4 py-6'>
+      <div data-component='PersonTemplate' className='mx-auto max-w-screen-lg px-4 py-6'>
         <Breadcrumb items={breadcrumbs} />
         <article className='mt-6'>
           <div className='flex flex-col gap-1'>

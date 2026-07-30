@@ -46,7 +46,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
 
   return (
     <PageLayout>
-      <div className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-primary-dark))] px-4 pb-4'>
+      <div data-component='PostDetail' className='bg-[linear-gradient(to_bottom,var(--color-secondary),var(--color-primary-dark))] px-4 pb-4'>
 
         {/* PostHeader：記事タイトル/公式タイトル/スタジオなど主要なヘッダー情報を表示 */}
         <PostHeader
@@ -77,7 +77,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
         />
       </div>
       {/* body: 最大幅・中央・flex（md以上） */}
-      <div className='md:flex relative mx-auto mt-8 pb-8'>
+      <div data-component='PostDetail' className='md:flex relative mx-auto mt-8 pb-8'>
 
         {/* main: メインカラム */}
         <div className='w-full min-w-0 px-4'>

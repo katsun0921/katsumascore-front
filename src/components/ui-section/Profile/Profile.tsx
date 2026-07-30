@@ -20,7 +20,7 @@ export const Profile = ({
   const description = t(messages, ['description'], locale);
 
   return (
-    <div className='p-5 bg-color-bg border border-color-border rounded-lg flex flex-col gap-5'>
+    <div data-component='Profile' className='p-5 bg-color-bg border border-color-border rounded-lg flex flex-col gap-5'>
       <div className='flex items-center gap-3'>
         <Image
           src={ProfileImg}

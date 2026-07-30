@@ -80,7 +80,7 @@ export const ReviewSiteScores = ({
   const formattedDate = datedAt ? formatDate(datedAt, locale).display : null;
 
   return (
-    <section className='p-review-scores'>
+    <section data-component='ReviewSiteScores' className='p-review-scores'>
       <h2 className='p-review-scores__heading'>
         {locale === 'en' ? 'Review Site Scores' : '各サイトのレビュースコア'}
       </h2>

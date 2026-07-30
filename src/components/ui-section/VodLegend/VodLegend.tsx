@@ -10,6 +10,7 @@ export const VodLegend = ({ services, className, badgeColor = 'dark' }: VodLegen
   const title = t(messages, ['title'], locale);
   return (
     <section
+      data-component='VodLegend'
       className={['vodLegend', `vodLegend--badge-${badgeColor}`, className].filter(Boolean).join(' ')}
       aria-label={title}
     >

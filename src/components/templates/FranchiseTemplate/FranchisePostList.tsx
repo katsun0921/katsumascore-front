@@ -39,7 +39,7 @@ export const FranchisePostList = ({
 
   return (
     <>
-      <section className={styles.franchisePostList}>
+      <section data-component='FranchisePostList' className={styles.franchisePostList}>
         <h2 className={styles.franchisePostList__heading}>{heading}</h2>
         {groups.map((group) => (
           <div key={group.type} className={styles.franchisePostList__group}>
@@ -55,7 +55,7 @@ export const FranchisePostList = ({
       </section>
 
       {showScore && scoredPosts.length > 0 && (
-        <section className={styles.franchiseScoreRanking}>
+        <section data-component='FranchisePostList' className={styles.franchiseScoreRanking}>
           <h2 className={styles.franchiseScoreRanking__heading}>{scoreHeading}</h2>
           <ol className={styles.franchiseScoreRanking__list}>
             {scoredPosts.map((post, i) => (

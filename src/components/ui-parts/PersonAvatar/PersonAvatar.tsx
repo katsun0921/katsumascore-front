@@ -49,6 +49,7 @@ export const PersonAvatar = ({ roles, name, className }: TPersonAvatarProps) => 
 
   return (
     <div
+      data-component='PersonAvatar'
       role='img'
       aria-label={`${name}（${variantLabels[variant]}）のプレースホルダー画像`}
       className={`relative overflow-hidden ${className ?? ''}`}

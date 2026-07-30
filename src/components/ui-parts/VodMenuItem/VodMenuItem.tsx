@@ -6,7 +6,7 @@ type TVodMenuItemProps = {
 
 export const VodMenuItem = ({ item }: TVodMenuItemProps) => {
   return (
-    <li>
+    <li data-component='VodMenuItem'>
       <a
         href={item.href}
         className='flex items-center justify-between px-4 py-2 text-ui text-color-primary transition-[background-color] duration-150 ease-[ease] hover:bg-color-bg-muted hover:opacity-100'

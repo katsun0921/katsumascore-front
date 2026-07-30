@@ -34,7 +34,7 @@ export const ProjectOverview = () => {
   ];
 
   return (
-    <div className='sb-project-overview'>
+    <div data-component='ProjectOverview' className='sb-project-overview'>
       <section className='sb-project-overview__hero'>
         <p className='sb-project-overview__eyebrow'>{t(messages, ['hero', 'eyebrow'], locale)}</p>
         <h1>{t(messages, ['hero', 'title'], locale)}</h1>

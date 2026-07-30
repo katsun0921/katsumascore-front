@@ -55,6 +55,7 @@ export const ProductBlock = ({
 
   return (
     <div
+      data-component='ProductBlock'
       className={`my-10 border border-color-border-muted border-l-4 ${borderColor[type]} bg-color-bg rounded-md`}
     >
       <div className='flex flex-col gap-4 p-4 md:flex-row'>

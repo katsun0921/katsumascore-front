@@ -15,7 +15,7 @@ export type HomeRecommendProps = {
 
 export const HomeRecommend = ({ title, seeAllLabel, blocks }: HomeRecommendProps) => {
   return (
-    <section className='homeRecommend'>
+    <section data-component='HomeRecommend' className='homeRecommend'>
       <h2 className='homeRecommend__title'>{title}</h2>
       <div className='homeRecommend__blocks'>
         {blocks.map(({ tag, posts, seeAllHref }) => (

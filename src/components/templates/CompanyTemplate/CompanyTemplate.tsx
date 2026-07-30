@@ -19,7 +19,7 @@ export const CompanyTemplate = ({ company, breadcrumbs }: CompanyTemplateProps) 
 
   return (
     <PageLayout>
-      <div className='mx-auto max-w-screen-lg px-4 py-6'>
+      <div data-component='CompanyTemplate' className='mx-auto max-w-screen-lg px-4 py-6'>
         <Breadcrumb items={breadcrumbs} />
         <article className='mt-6'>
           <div className='flex flex-col gap-6 lg:flex-row'>

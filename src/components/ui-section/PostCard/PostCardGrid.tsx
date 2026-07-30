@@ -43,6 +43,7 @@ export const PostCardGrid = ({ post, posts, postCardKind = 'imgLeft', columnNum 
 
     return (
       <ul
+        data-component='PostCardGrid'
         className='m-0 grid list-none gap-4 p-0 [grid-template-columns:repeat(1,minmax(0,1fr))] [grid-template-rows:var(--post-card-grid-rows)] min-[480px]:[grid-template-columns:repeat(var(--post-card-grid-column-num),minmax(0,1fr))]'
         style={gridStyle}
       >

@@ -24,6 +24,7 @@ export const PostContent = ({ content }: PostContentData) => {
   const html = injectHeadingIds(rewritePublicImageSrc(content));
   return (
     <div
+      data-component='PostContent'
       id='js-content'
       className='p-content'
       dangerouslySetInnerHTML={{ __html: html }}

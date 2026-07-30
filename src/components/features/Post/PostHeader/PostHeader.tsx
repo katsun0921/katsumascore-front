@@ -39,7 +39,7 @@ export const PostHeader = ({
   const metaParts = [distributors, productions, year].filter(Boolean);
   const prefix = 'post-header';
   return (
-    <div className={prefix}>
+    <div data-component='PostHeader' className={prefix}>
       <hgroup className={`${prefix}__hgroup`}>
         {comment && <p className={`${prefix}__tagline`}>{comment}</p>}
         <h1 className={`${prefix}__title-main`}>{titleOfficial}</h1>

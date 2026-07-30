@@ -18,7 +18,7 @@ export const SearchBox = () => {
   };
 
   return (
-    <div className='sidebar-search-box'>
+    <div data-component='SearchBox' className='sidebar-search-box'>
       <p className='sidebar-search-box__heading'>
         {t(messages, ['heading', 'label'], locale)}
       </p>

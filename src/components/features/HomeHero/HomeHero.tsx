@@ -165,6 +165,7 @@ export const HomeHero = ({ slides }: HomeHeroProps) => {
 
   return (
     <section
+      data-component='HomeHero'
       className={clsx(prefixClassName, motionFallback && `${prefixClassName}--noGsap`)}
       aria-label={t(messages, ['section', 'ariaLabel'], locale)}
     >

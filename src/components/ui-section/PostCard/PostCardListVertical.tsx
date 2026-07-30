@@ -38,7 +38,7 @@ export const PostCardListVertical = ({
     const ListTag = listType;
 
     return (
-      <ListTag className={['m-0 flex list-none flex-col gap-3 p-0', className].filter(Boolean).join(' ')}>
+      <ListTag data-component='PostCardListVertical' className={['m-0 flex list-none flex-col gap-3 p-0', className].filter(Boolean).join(' ')}>
         {posts.map((item, index) => {
           const kindForItem =
             leadingPostCardKind !== undefined && index === 0 ? leadingPostCardKind : postCardKind;

@@ -9,7 +9,7 @@ export type HomeRankingProps = {
 
 export const HomeRanking = ({ title, posts, seeAllHref }: HomeRankingProps) => {
   return (
-    <section className='homeRanking'>
+    <section data-component='HomeRanking' className='homeRanking'>
       <div className='homeRanking__header'>
         <div>
           <p className='homeRanking__badge'>KATSUMASCORE</p>

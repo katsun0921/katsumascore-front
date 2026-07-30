@@ -15,7 +15,7 @@ export type HomeVodFinderProps = {
 
 export const HomeVodFinder = ({ title, workCountSuffix, items }: HomeVodFinderProps) => {
   return (
-    <section className='homeVodFinder'>
+    <section data-component='HomeVodFinder' className='homeVodFinder'>
       <h2 className='homeVodFinder__title'>{title}</h2>
       <ul className='homeVodFinder__grid'>
         {items.map(({ vod, label, count, href }) => (

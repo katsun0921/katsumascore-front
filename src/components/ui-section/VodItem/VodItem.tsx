@@ -27,6 +27,7 @@ export const VodItem = ({
 
   return (
     <div
+      data-component='VodItem'
       className={`flex flex-col gap-2 rounded-lg border border-color-border-muted bg-color-bg p-4 ${VOD_BORDER_CLASS[service]}`}
     >
       {isPaid && (

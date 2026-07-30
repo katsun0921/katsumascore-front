@@ -5,7 +5,7 @@ import type { RelationPostProps } from './RelationPost.types';
 export const RelationPost = ({ heading, posts }: RelationPostProps) => {
   const postKind: PostCardKind = 'imgOver';
   return (
-    <section>
+    <section data-component='RelationPost'>
       <h2 className='mb-4 text-[var(--font-size-h3-lg)] font-[var(--font-weight-bold)] text-color-primary'>
         {heading}
       </h2>

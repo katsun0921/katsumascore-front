@@ -5,7 +5,7 @@ export const VodDots = ({ vods, max = 3, className }: VodDotsProps) => {
   if (vods.length === 0) return null;
   const shown = vods.slice(0, max);
   return (
-    <div className={['flex gap-1', className].filter(Boolean).join(' ')} aria-hidden='true'>
+    <div data-component='VodDots' className={['flex gap-1', className].filter(Boolean).join(' ')} aria-hidden='true'>
       {shown.map((vod) => (
         <span
           key={vod}

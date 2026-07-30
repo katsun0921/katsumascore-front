@@ -111,13 +111,13 @@ const tokenCards: TokenCard[] = [
 ];
 
 const Page = ({ children }: { children: ReactNode }) => (
-  <div className='sb-design-rules-page'>
+  <div data-component='Page' className='sb-design-rules-page'>
     <div className='sb-design-rules-shell'>{children}</div>
   </div>
 );
 
 const RuleSection = ({ title, description, items }: RuleGroup) => (
-  <article className='sb-design-rules-card sb-design-rules-stack'>
+  <article data-component='RuleSection' className='sb-design-rules-card sb-design-rules-stack'>
     <div>
       <h2>{title}</h2>
       <p className='sb-design-rules-muted'>{description}</p>

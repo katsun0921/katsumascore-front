@@ -14,7 +14,7 @@ export type HomeFeaturedProps = {
 
 export const HomeFeatured = ({ title, items }: HomeFeaturedProps) => {
   return (
-    <section className='homeFeatured'>
+    <section data-component='HomeFeatured' className='homeFeatured'>
       <h2 className='homeFeatured__title'>{title}</h2>
       <ul className='homeFeatured__grid'>
         {items.map(({ label, title, description, href, isPrimary }) => (

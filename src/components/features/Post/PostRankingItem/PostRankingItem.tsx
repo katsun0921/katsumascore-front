@@ -9,7 +9,7 @@ const COL_CLASS: Record<number, string> = {
 };
 
 export const PostRankingItem = ({ post, rank, columns = 3, className }: PostRankingItemProps) => (
-  <li className={[COL_CLASS[columns] ?? COL_CLASS[3], className].filter(Boolean).join(' ')}>
+  <li data-component='PostRankingItem' className={[COL_CLASS[columns] ?? COL_CLASS[3], className].filter(Boolean).join(' ')}>
     <PostCardImgOverlay post={post} rank={rank} />
   </li>
 );

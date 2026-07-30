@@ -86,7 +86,7 @@ export const ListTemplate = ({
   return (
     <PageLayout>
       {/* Hero — ダーク背景でカテゴリ名を表示 */}
-      <div className='bg-secondary'>
+      <div data-component='ListTemplate' className='bg-secondary'>
         <div className='px-4 pt-3 pb-0'>
           <Breadcrumb items={breadcrumbItems} />
         </div>
@@ -106,7 +106,7 @@ export const ListTemplate = ({
       </div>
 
       {/* Filter */}
-      <div className='py-4 px-4 bg-color-bg border-b border-color-border'>
+      <div data-component='ListTemplate' className='py-4 px-4 bg-color-bg border-b border-color-border'>
         <ListFilterBar
           options={resolvedFilterOptions}
           optionRows={resolvedFilterOptionRows}
@@ -116,7 +116,7 @@ export const ListTemplate = ({
       </div>
 
       {/* Main layout — SPファーストDOM順: メイン→サイドバー */}
-      <div className='grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start px-4 py-8 pb-12'>
+      <div data-component='ListTemplate' className='grid gap-8 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start px-4 py-8 pb-12'>
         {/* Main column */}
         <div className='space-y-8'>
           <VodLegend services={legendServices} />

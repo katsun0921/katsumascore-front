@@ -89,7 +89,7 @@ export const TitleMeta = ({
   const hasOfficialInfo = officialUrl || hasEmbeddableOfficialSns || parsedDate;
 
   return (
-    <div className='flex flex-col gap-6'>
+    <div data-component='TitleMeta' className='flex flex-col gap-6'>
       {(hasCredits || hasActors) && (
         <div className='rounded-lg border border-color-border-muted bg-[rgba(var(--color-secondary-rgb),0.05)] p-6'>
           <div className='mb-6 flex items-center gap-2'>

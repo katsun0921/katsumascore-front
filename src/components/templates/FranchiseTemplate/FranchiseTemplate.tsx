@@ -27,7 +27,7 @@ export const FranchiseTemplate = ({ franchise, breadcrumbs }: FranchiseTemplateP
         heroImage={franchise.heroImage}
       />
 
-      <div className={styles.franchiseTemplate__inner}>
+      <div data-component='FranchiseTemplate' className={styles.franchiseTemplate__inner}>
         <Breadcrumb items={breadcrumbs} />
 
         {(franchise.startYear || franchise.originalAuthor || franchise.productionCompany) && (

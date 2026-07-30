@@ -13,7 +13,7 @@ export const AdBanner = ({ inline = false }: AdBannerProps) => {
   const mod = inline ? 'sidebar-ad--bannerInline' : 'sidebar-ad--banner';
 
   return (
-    <div className={`sidebar-ad ${mod}`}>
+    <div data-component='AdBanner' className={`sidebar-ad ${mod}`}>
       <div className='sidebar-ad__item sidebar-ad__item--full'>
         <Admax />
       </div>

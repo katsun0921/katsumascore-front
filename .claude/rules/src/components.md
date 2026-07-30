@@ -134,6 +134,31 @@ Home ページ固有の意味あるUIのまとまり（`HomeCard` / `HomeCardScr
 
 ---
 
+# ■ data-component属性ルール（必須）
+
+## ■ 目的
+ブラウザDevToolsで問題箇所がどのコンポーネントか即座に特定できるようにする。
+
+## ■ ルール
+- 全てのコンポーネントは、返却するJSXのルート要素に `data-component="ComponentName"` を付与する
+- 値はコンポーネントの関数名（PascalCase）。ディレクトリ名ではなくexport名に合わせる
+- スタイリング用の className / BEM とは責務を分離する。data-component はデバッグ専用でCSSセレクタとして使用しない
+- ルート要素が Fragment（`<>...</>`）で、DOM構造を変えずに付与できない場合は無理に追加しない
+- 新規コンポーネント作成時も同様に必須とする
+
+```tsx
+// ✅ 正しい
+export const Badge = ({ label }: TBadgeProps) => {
+  return (
+    <span data-component='Badge' className='...'>
+      {label}
+    </span>
+  );
+};
+```
+
+---
+
 # ■ index.ts ルール（厳守）
 
 ## ■ 原則

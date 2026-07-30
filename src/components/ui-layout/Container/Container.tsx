@@ -16,7 +16,7 @@ const sizeClasses: Record<TContainerSize, string> = {
 
 export const Container = ({ children, size = 'lg', className = '' }: TContainerProps) => {
   return (
-    <div className={`w-full mx-auto px-4 sm:px-6 md:px-8 ${sizeClasses[size]} ${className}`.trim()}>
+    <div data-component='Container' className={`w-full mx-auto px-4 sm:px-6 md:px-8 ${sizeClasses[size]} ${className}`.trim()}>
       {children}
     </div>
   );

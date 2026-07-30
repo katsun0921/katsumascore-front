@@ -400,7 +400,7 @@ export const OfficialSns = ({
   const showSkeleton = forceLoading || isLoading;
 
   return (
-    <div className='official-sns' ref={containerRef}>
+    <div data-component='OfficialSns' className='official-sns' ref={containerRef}>
       {/* タブリスト */}
       {availableTabs.length > 1 && (
         <div className='official-sns__tablist' role='tablist' aria-label={t(messages, ['tabs', 'label'], locale)}>
