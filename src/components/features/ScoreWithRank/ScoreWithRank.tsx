@@ -121,6 +121,7 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
   if (imageOnly) {
     return rank ? (
       <Image
+        data-component='ScoreWithRankInner'
         src={rank.src}
         alt={`rank ${rank.label}`}
         width={96}

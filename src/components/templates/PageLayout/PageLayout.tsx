@@ -9,7 +9,7 @@ type PageLayoutProps = {
 export const PageLayout = ({ children }: PageLayoutProps) => (
   <>
     <Header />
-    <main className='relative mx-auto'>
+    <main data-component='PageLayout' className='relative mx-auto'>
       {children}
     </main>
     <Footer />

@@ -129,7 +129,7 @@ export const TableOfContents = ({ items }: TableOfContentsProps) => {
 
   return (
     <>
-      <div ref={placeholderRef} className='toc__placeholder'>
+      <div ref={placeholderRef} data-component='TableOfContents' className='toc__placeholder'>
       <nav
         ref={navRef}
         className={['toc', isFixed ? 'toc--fixed' : ''].join(' ')}
