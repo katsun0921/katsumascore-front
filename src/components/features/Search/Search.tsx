@@ -70,7 +70,7 @@ export const Search = ({ onNavigate, className }: Props) => {
   const showDropdown = isOpen && results.length > 0;
 
   return (
-    <div className={`relative${className ? ` ${className}` : ''}`} ref={containerRef}>
+    <div data-component='Search' className={`relative${className ? ` ${className}` : ''}`} ref={containerRef}>
       <form className='search__form' onSubmit={handleSubmit} role='search'>
         <input
           ref={inputRef}

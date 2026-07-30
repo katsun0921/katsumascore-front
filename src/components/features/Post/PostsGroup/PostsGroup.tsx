@@ -13,7 +13,7 @@ export type TPostsGroupProps = {
 }
 
 const PostThumb = ({ post }: { post: Post }) => (
-  <li className='p-posts-group__item'>
+  <li data-component='PostThumb' className='p-posts-group__item'>
     <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='p-posts-group__link'>
       <div className='p-posts-group__thumb'>
         {post.image ? (

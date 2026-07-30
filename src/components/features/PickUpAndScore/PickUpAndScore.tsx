@@ -31,7 +31,7 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
   const altText = t(messages, ['thumbnail', 'alt'], locale);
 
   return (
-    <li className='sidebar-picks__item'>
+    <li data-component='PostRow' className='sidebar-picks__item'>
       <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='sidebar-picks__link'>
         {/* サムネイル */}
         <div className='sidebar-picks__thumb'>
@@ -69,7 +69,7 @@ const PostRow = ({ post }: { post: PickUpPost }) => {
 const SKELETON_COUNT = 5;
 
 const PickUpAndScoreSkeleton = () => (
-  <div className='sidebar-picks'>
+  <div data-component='PickUpAndScoreSkeleton' className='sidebar-picks'>
     <div className='sidebar-picks__skeleton-tab' aria-hidden='true' />
     <ul className='sidebar-picks__skeleton-list'>
       {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
@@ -107,7 +107,7 @@ export const PickUpAndScore = ({
   const currentPosts     = activeTab === 'pickup' ? pickupPosts : highScorePosts;
 
   return (
-    <div className='sidebar-picks'>
+    <div data-component='PickUpAndScore' className='sidebar-picks'>
       {/* タブ */}
       <div className='sidebar-picks__tabs' role='tablist'>
         {showPickupTab && (

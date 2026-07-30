@@ -6,7 +6,7 @@ export const ListFilterBar = ({ options, optionRows, activeValue, onSelect, clas
   const activeValues = Array.isArray(activeValue) ? activeValue : [activeValue];
 
   return (
-    <div className={['listFilterBar', className].filter(Boolean).join(' ')} role='group' aria-label='絞り込み'>
+    <div data-component='ListFilterBar' className={['listFilterBar', className].filter(Boolean).join(' ')} role='group' aria-label='絞り込み'>
       {rows.map((row, rowIndex) => (
         <div className='listFilterBar__row' role='toolbar' aria-label='絞り込み' key={`row-${rowIndex}`}>
           {row.map((option) => {

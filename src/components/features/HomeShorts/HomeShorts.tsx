@@ -43,7 +43,7 @@ export const HomeShorts = ({ title, posts }: HomeShortsProps) => {
   if (items.length === 0) return null;
 
   return (
-    <section className='homeShorts'>
+    <section data-component='HomeShorts' className='homeShorts'>
       <h2 className='homeShorts__title'>{title}</h2>
 
       <div className='homeShorts__track'>

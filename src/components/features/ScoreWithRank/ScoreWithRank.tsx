@@ -131,7 +131,7 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
   }
 
   return (
-    <div ref={rootRef} className={`${prefixClassName}__inner`}>
+    <div data-component='ScoreWithRankInner' ref={rootRef} className={`${prefixClassName}__inner`}>
       {rank ? (
         <div ref={badgeRef} className={`${prefixClassName}__badge`}>
           <Image
@@ -164,6 +164,7 @@ const ScoreWithRankInner = ({ value, max, imageOnly = false }: ScoreWithRankProp
 export const ScoreWithRank = (props: ScoreWithRankProps) => {
   return (
     <div
+      data-component='ScoreWithRank'
       className={`${prefixClassName} notranslate`}
       data-score-with-rank-root
     >

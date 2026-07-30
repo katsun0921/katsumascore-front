@@ -21,7 +21,7 @@ export const GenreNav = ({ tags, activeSlug }: GenreNavProps) => {
   if (tags.length === 0) return null;
 
   return (
-    <div className='sidebar-genre-nav'>
+    <div data-component='GenreNav' className='sidebar-genre-nav'>
       <p className='sidebar-genre-nav__heading'>
         {t(messages, ['heading', 'label'], locale)}
       </p>

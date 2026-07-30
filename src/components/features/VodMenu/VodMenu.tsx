@@ -23,7 +23,7 @@ export const VodMenu = ({ services, defaultOpen = false }: TVodMenuProps) => {
   }, []);
 
   return (
-    <div className='relative' ref={ref}>
+    <div data-component='VodMenu' className='relative' ref={ref}>
       <button
         type='button'
         className='inline-flex items-center gap-2 rounded border border-color-inverse px-3 py-2 text-ui font-medium whitespace-nowrap text-color-inverse transition-[background-color,color] duration-200 ease-[ease] hover:bg-color-inverse hover:text-header'
