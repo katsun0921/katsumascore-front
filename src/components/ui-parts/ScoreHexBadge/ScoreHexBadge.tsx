@@ -9,6 +9,7 @@ export const ScoreHexBadge = ({ score, className }: ScoreHexBadgeProps) => {
       : 'var(--color-score-rank-high)';
   return (
     <svg
+      data-component='ScoreHexBadge'
       width='24'
       height='26'
       viewBox='0 0 24 26'

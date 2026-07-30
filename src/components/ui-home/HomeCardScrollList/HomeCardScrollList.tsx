@@ -10,7 +10,7 @@ export const HomeCardScrollList = ({
   icon,
 }: HomeCardScrollListProps) => {
   return (
-    <section className='homeCardScrollList'>
+    <section data-component='HomeCardScrollList' className='homeCardScrollList'>
       {(title || seeAllHref) && (
         <div className='homeCardScrollList__header'>
           {title && (

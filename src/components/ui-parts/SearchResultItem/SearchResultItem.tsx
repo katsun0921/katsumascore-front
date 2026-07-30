@@ -11,6 +11,7 @@ type Props = {
 export const SearchResultItem = ({ result, isActive, id, onClick }: Props) => {
   return (
     <li
+      data-component='SearchResultItem'
       id={id}
       role='option'
       aria-selected={isActive}

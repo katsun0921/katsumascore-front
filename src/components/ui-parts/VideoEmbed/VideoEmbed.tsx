@@ -8,7 +8,7 @@ export const VideoEmbed = ({ videoUrl, embedCode, title }: VideoEmbedProps) => {
   if (!videoUrl && !embedCode) return null;
 
   return (
-    <div className='w-full'>
+    <div data-component='VideoEmbed' className='w-full'>
       {videoUrl ? (
         <div className='relative aspect-video w-full overflow-hidden'>
           <iframe

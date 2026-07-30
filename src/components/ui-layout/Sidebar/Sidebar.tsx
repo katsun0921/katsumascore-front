@@ -29,7 +29,7 @@ export const Sidebar = ({
   const locale = useLocale();
 
   return (
-    <aside className='flex flex-col gap-8 w-full px-4'>
+    <aside data-component='Sidebar' className='flex flex-col gap-8 w-full px-4'>
 
       {/* プロフィールカード */}
       {profile && <Profile {...profile} />}

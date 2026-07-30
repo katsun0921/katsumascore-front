@@ -13,7 +13,7 @@ export const ShareButtons = ({ url, title }: TShareButtonsProps) => {
   const encodedTitle = encodeURIComponent(title);
 
   return (
-    <div className='flex flex-wrap items-center gap-3'>
+    <div data-component='ShareButtons' className='flex flex-wrap items-center gap-3'>
       <p className='m-0 font-bold'>
         {t(messages, ['label', 'share'], locale)}
       </p>
