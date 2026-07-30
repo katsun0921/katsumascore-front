@@ -21,6 +21,7 @@ const admaxHtml = `
 
 export const Admax = () => (
   <iframe
+    data-component='Admax'
     title="Admax"
     srcDoc={admaxHtml}
     width="300"

@@ -13,7 +13,7 @@ export const GoodPoint = ({ points, score }: TGoodPointProps) => {
   if (!points.length) return null;
 
   return (
-    <section className='good-point'>
+    <section data-component='GoodPoint' className='good-point'>
       <h2 className='good-point__heading'>
         {locale === 'en' ? 'I highly recommend this!' : 'ここがおすすめ！'}
       </h2>

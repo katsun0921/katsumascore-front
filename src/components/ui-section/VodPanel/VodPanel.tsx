@@ -3,7 +3,7 @@ import type { VodPanelProps } from './VodPanel.types';
 export const VodPanel = (props: VodPanelProps) => {
   if (props.variant === 'cinema') {
     return (
-      <div className='mt-8 flex items-center gap-3 rounded-[6px] border-l-[4px] border-l-category bg-color-bg-muted px-4 py-3'>
+      <div data-component='VodPanel' className='mt-8 flex items-center gap-3 rounded-[6px] border-l-[4px] border-l-category bg-color-bg-muted px-4 py-3'>
         <span className='shrink-0 rounded-[4px] bg-category px-3 py-1 text-[var(--font-size-caption-lg)] font-[var(--font-weight-bold)] text-color-inverse'>
           {props.badgeLabel}
         </span>
@@ -13,7 +13,7 @@ export const VodPanel = (props: VodPanelProps) => {
   }
 
   return (
-    <div className='mt-8'>
+    <div data-component='VodPanel' className='mt-8'>
       {props.heading && (
         <h2 className='mb-4 text-[var(--font-size-h3-sm)] font-[var(--font-weight-bold)] text-color-primary'>
           {props.heading}

@@ -33,7 +33,7 @@ export const PostCardBody = ({
   }
 
   return (
-    <div className={['postCard__body grid gap-3 px-4 pb-5 pt-4 md:p-5', className].filter(Boolean).join(' ')}>
+    <div data-component='PostCardBody' className={['postCard__body grid gap-3 px-4 pb-5 pt-4 md:p-5', className].filter(Boolean).join(' ')}>
       {publishedAt && (
         <time className='postCard__date' dateTime={publishedAt}>
           {publishedAt}

@@ -1,7 +1,7 @@
 import type { StreamingVodProps } from './StreamingVod.types';
 
 export const StreamingVod = ({ heading, items }: StreamingVodProps) => (
-  <section className='mt-8'>
+  <section data-component='StreamingVod' className='mt-8'>
     <h2 className='mb-4 text-[var(--font-size-h3-sm)] font-[var(--font-weight-bold)] leading-[1.5] text-color-primary'>
       {heading}
     </h2>

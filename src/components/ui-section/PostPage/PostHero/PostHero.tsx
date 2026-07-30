@@ -35,7 +35,7 @@ export const PostHero = (props: PostHeroProps) => {
   const hasTaxonomies = hasGenres || hasTags || hasVods;
 
   return (
-    <section className={prefixClassName}>
+    <section data-component='PostHero' className={prefixClassName}>
       {(videoUrl || props.trailerEmbedCode) && (
         <div className={`${prefixClassName}__trailer`}>
           <VideoEmbed

@@ -11,7 +11,7 @@ export const PostCardMedia = ({
   children,
 }: PostCardMediaProps) => {
   return (
-    <div className={['postCard__media', className].filter(Boolean).join(' ')}>
+    <div data-component='PostCardMedia' className={['postCard__media', className].filter(Boolean).join(' ')}>
       {image ? (
         <Image
           src={image}

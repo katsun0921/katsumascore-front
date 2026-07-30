@@ -5,7 +5,7 @@ export type PostCardSkeletonProps = {
 export const PostCardSkeleton = ({ className }: PostCardSkeletonProps) => {
   const classes = ['postCardSkeleton', className].filter(Boolean).join(' ');
   return (
-    <article className={classes} aria-busy='true'>
+    <article data-component='PostCardSkeleton' className={classes} aria-busy='true'>
       <div className='postCardSkeleton__link'>
         <div className='postCardSkeleton__media postCardSkeleton__skeleton' />
         <div className='postCardSkeleton__body'>

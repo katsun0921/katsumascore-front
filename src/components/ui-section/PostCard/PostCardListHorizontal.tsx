@@ -29,7 +29,7 @@ export const PostCardListHorizontal = ({ post, posts, postCardKind = 'imgLeft', 
     const ListTag = listType;
 
     return (
-      <ListTag className={['m-0 flex list-none flex-row flex-wrap gap-3 p-0', className].filter(Boolean).join(' ')}>
+      <ListTag data-component='PostCardListHorizontal' className={['m-0 flex list-none flex-row flex-wrap gap-3 p-0', className].filter(Boolean).join(' ')}>
         {posts.map((item, index) => (
           <li key={item.id}>
             {renderPostCard(item, postCardKind, rank === undefined ? undefined : rank + index)}

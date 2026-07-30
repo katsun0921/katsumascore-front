@@ -28,7 +28,7 @@ export const CinemaIntroduction = ({
   const text = (path: string[]) => t(messages, path, locale);
 
   return (
-    <section>
+    <section data-component='CinemaIntroduction'>
       <h2 className='font-heading text-h3 font-bold leading-[1.5] text-color-primary mb-3'>
         {text(['heading', 'prefix'])}
         {title}

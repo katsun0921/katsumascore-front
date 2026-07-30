@@ -12,7 +12,7 @@ type Props = {
 };
 
 export const PostCardImgOverlay = ({ post, rank, className }: Props) => (
-  <PostCardContainer className={['postCardImgOverlay', className].filter(Boolean).join(' ')}>
+  <PostCardContainer className={['postCardImgOverlay', className].filter(Boolean).join(' ')} dataComponent='PostCardImgOverlay'>
     <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='postCardImgOverlay__link'>
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
       <PostCardMedia image={post.image} title={post.title} />

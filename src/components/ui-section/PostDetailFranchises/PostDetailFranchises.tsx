@@ -15,7 +15,7 @@ export const PostDetailFranchises = ({ franchises }: Props) => {
   if (validFranchises.length === 0) return null;
 
   return (
-    <section className='postDetailFranchises'>
+    <section data-component='PostDetailFranchises' className='postDetailFranchises'>
       <h2 className='postDetailFranchises__sectionHeading'>
         {t(messages, ['section', 'heading'], locale)}
       </h2>

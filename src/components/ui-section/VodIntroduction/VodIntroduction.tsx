@@ -22,7 +22,7 @@ export type TVodIntroductionProps = {
 const SKELETON_COUNT = 3;
 
 const VodRelatedSkeleton = () => (
-  <div className='vod-related-skeleton' aria-hidden='true'>
+  <div data-component='VodRelatedSkeleton' className='vod-related-skeleton' aria-hidden='true'>
     <div className='vod-related-skeleton__heading' />
     <div className='vod-related-skeleton__list'>
       {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
@@ -58,7 +58,7 @@ export const VodIntroduction = ({
   const text = (path: string[]) => t(messages, path, locale);
 
   return (
-    <section>
+    <section data-component='VodIntroduction'>
       <h2 className='text-h3 font-bold leading-normal mb-3'>
         {locale === 'en' ? (
           <>

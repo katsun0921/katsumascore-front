@@ -6,7 +6,7 @@ type Props = {
 
 export const PostSection = ({ title, children }: Props) => {
   return (
-    <section className='postSection'>
+    <section data-component='PostSection' className='postSection'>
       {title && <h2 className='postSection__title'>{title}</h2>}
       <div className='postSection__body'>{children}</div>
     </section>
