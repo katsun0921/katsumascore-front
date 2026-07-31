@@ -3,8 +3,8 @@ import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 import { I18nProvider } from '@/i18n/provider';
-import { getCompanyBySlug } from '@/libs/api/wordpress';
-import { transformCompany } from '@/libs/api/wordpress';
+import { getCompanyBySlug, getPostsByCompanyId, transformCompany } from '@/libs/api/wordpress';
+import type { CompanyRelatedPost } from '@/libs/api/wordpress';
 import { CompanyTemplate } from '@/components/templates/CompanyTemplate';
 import { getEntityUrl, normalizeRouteLocale } from '@/libs/route';
 import type { Company } from '@/libs/api/wordpress/transform';
@@ -14,10 +14,11 @@ const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog
 
 type CompanyPageProps = {
   company: Company;
+  posts: CompanyRelatedPost[];
   locale: string;
 };
 
-const CompanyPage = ({ company, locale }: CompanyPageProps) => {
+const CompanyPage = ({ company, posts, locale }: CompanyPageProps) => {
   const loc = (locale ?? 'ja') as Locale;
   const displayName = loc === 'en' ? company.nameEn : company.nameJa;
   const altName = loc === 'en' ? company.nameJa : company.nameEn;
@@ -58,7 +59,7 @@ const CompanyPage = ({ company, locale }: CompanyPageProps) => {
           }}
         />
       </Head>
-      <CompanyTemplate company={company} breadcrumbs={breadcrumbs} />
+      <CompanyTemplate company={company} posts={posts} breadcrumbs={breadcrumbs} />
     </I18nProvider>
   );
 };
@@ -78,9 +79,12 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
   const wp = await getCompanyBySlug(slug);
   if (!wp) return { notFound: true };
 
+  const posts = await getPostsByCompanyId(wp.id, { lang: currentLocale, per_page: 100 });
+
   return {
     props: {
       company: transformCompany(wp),
+      posts,
       locale: currentLocale,
     },
     revalidate: REVALIDATE_DAILY,

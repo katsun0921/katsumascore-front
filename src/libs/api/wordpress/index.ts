@@ -48,6 +48,9 @@ export type {
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
 export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 
+export { getPostsByCompanyId } from "./endpoints/companyRelatedPosts";
+export type { CompanyRelatedPostsParams, CompanyRelatedPost } from "./endpoints/companyRelatedPosts";
+
 export { getChildPages, getPageBySlug, getFeaturedPages } from "./endpoints/pages";
 
 export { getPerson, getPersonBySlug, getPersons, getPersonsByRole } from "./endpoints/persons";

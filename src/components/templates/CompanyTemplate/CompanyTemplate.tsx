@@ -2,17 +2,20 @@
 import Image from 'next/image';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
+import { PostCardImgTop } from '@/components/ui-section/PostCard/PostCardImgTop';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { Company } from '@/libs/api/wordpress/transform';
+import type { CompanyRelatedPost } from '@/libs/api/wordpress';
 
 type CompanyTemplateProps = {
   company: Company;
+  posts: CompanyRelatedPost[];
   breadcrumbs: { label: string; href: string }[];
 };
 
-export const CompanyTemplate = ({ company, breadcrumbs }: CompanyTemplateProps) => {
+export const CompanyTemplate = ({ company, posts, breadcrumbs }: CompanyTemplateProps) => {
   const locale = useLocale();
   const displayName = locale === 'en' ? company.nameEn : company.nameJa;
   const altName = locale === 'en' ? company.nameJa : company.nameEn;
@@ -55,6 +58,24 @@ export const CompanyTemplate = ({ company, breadcrumbs }: CompanyTemplateProps) 
             </div>
           </div>
         </article>
+
+        {posts.length > 0 && (
+          <section className='mt-10'>
+            <h2 className='mb-4 text-xl font-bold'>
+              {t(messages, ['relatedPosts', 'heading'], locale)}
+            </h2>
+            <ul className='grid grid-cols-2 gap-3 lg:grid-cols-4'>
+              {posts.map((post) => (
+                <li key={post.id}>
+                  <PostCardImgTop
+                    post={post}
+                    caption={post.role ? t(messages, ['role', post.role], locale) : undefined}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </PageLayout>
   );
