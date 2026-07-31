@@ -5,14 +5,17 @@ import {
   mapWPPostToPost,
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
-  extractFilmStudioLinksFromParsedWp,
-  extractProductionStudioLinksFromParsedWp,
 } from "@/libs/api/wordpress";
 
 import { acfTruthy, scalarToTrimmedString } from "./acfScalars";
 import { cinemaUrlFromCinemaInfoFiled, resolveIsCinemaShowing } from "./cinema";
 import { SITE_URL } from "./constants";
-import { mapActors, mapCreditsFromParsedWp } from "./creditsActors";
+import {
+  mapActors,
+  mapCreditsFromParsedWp,
+  mapFilmStudiosFromParsedWp,
+  mapProductionStudiosFromParsedWp,
+} from "./creditsActors";
 import { splitGoodPoints } from "./goodPoints";
 import { parseOfficialSns } from "./officialSns";
 import { buildReviewSiteScoresFromAcf } from "./reviewSiteScores";
@@ -97,10 +100,8 @@ export const buildPostDetailFromWp = ({
     ""
   ).trim() || undefined;
   const officialSnsParsed = parseOfficialSns(parsed.acf?.official_sns);
-  const titleMetaFilmStudios = extractFilmStudioLinksFromParsedWp(parsed)
-    .map((s) => ({ name: s.name, href: `/film_studio/${s.slug}` }));
-  const titleMetaProductionStudios = extractProductionStudioLinksFromParsedWp(parsed)
-    .map((s) => ({ name: s.name, href: `/production_studio/${s.slug}` }));
+  const titleMetaFilmStudios = mapFilmStudiosFromParsedWp(parsed, locale);
+  const titleMetaProductionStudios = mapProductionStudiosFromParsedWp(parsed, locale);
   const titleMeta = buildTitleMetaBlock({
     parsed,
     acf,

@@ -52,8 +52,6 @@ const normalizeTaxonomy = (raw: string): string => raw.replace(/^wp_/i, "").toLo
 
 const GENRE_TAXONOMIES = new Set(["genre", "genres"]);
 const POST_TAG_TAXONOMIES = new Set(["post_tag", "tag"]);
-const FILM_STUDIO_TAXONOMIES = new Set(["film_studio"]);
-const PRODUCTION_STUDIO_TAXONOMIES = new Set(["production_studio"]);
 const DIRECTOR_TAXONOMIES = new Set(["director", "directors"]);
 const ACTOR_TAXONOMIES = new Set(["actor", "actors"]);
 const PERSON_TAXONOMIES = new Set(["person", "persons"]);
@@ -138,14 +136,6 @@ export const extractGenreLinksFromParsedWp = (wp: ParsedWPPost, locale?: string)
 /** `_embedded['wp:term']` から post_tag（および tag）のリンク用データを抽出 */
 export const extractPostTagLinksFromParsedWp = (wp: ParsedWPPost, locale?: string): PostTaxonomyLink[] =>
   extractTaxonomyLinks(wp, POST_TAG_TAXONOMIES, locale);
-
-/** `_embedded['wp:term']` から film_studio（配給会社）のリンク用データを抽出 */
-export const extractFilmStudioLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
-  extractTaxonomyLinks(wp, FILM_STUDIO_TAXONOMIES);
-
-/** `_embedded['wp:term']` から production_studio（制作会社）のリンク用データを抽出 */
-export const extractProductionStudioLinksFromParsedWp = (wp: ParsedWPPost): PostTaxonomyLink[] =>
-  extractTaxonomyLinks(wp, PRODUCTION_STUDIO_TAXONOMIES);
 
 /** `_embedded['wp:term']` の actor / actors ターム名（出演者一覧のフォールバック） */
 export const extractActorTermNamesFromParsedWp = (wp: ParsedWPPost): string[] =>

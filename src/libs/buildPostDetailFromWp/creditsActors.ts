@@ -1,10 +1,11 @@
 import type { ParsedWPPost } from "@/libs/api/wordpress";
-import type { TActor, TCreditEntry } from "@/components/features/Post/PostTitleMeta";
+import type { TActor, TCreditEntry, TStudioEntry } from "@/components/features/Post/PostTitleMeta";
 import {
   stripHtml,
   extractActorLinksFromParsedWp,
   extractPersonLinksFromParsedWp,
 } from "@/libs/api/wordpress";
+import { getEntityUrl } from "@/libs/route";
 
 /**
  * "日本語名 / English Name" 形式の結合文字列から locale に応じた部分を抽出する。
@@ -109,6 +110,38 @@ export const mapCreditsFromParsedWp = (wp: ParsedWPPost, locale: string): TCredi
   if (names.length === 0) return undefined;
   const role = locale === "en" ? "Director" : "監督";
   return [{ role, names }];
+};
+
+/**
+ * ACF `film_studio` / `production_studio`（company CPT への post_object リレーション）を
+ * name + href エントリの配列へ正規化する。company の slug から `getEntityUrl('company', ...)` で href を組み立てる。
+ */
+const collectCompanyEntriesFromAcf = (raw: unknown, locale: string): TStudioEntry[] => {
+  const entries = collectDirectorEntriesFromAcf(raw, locale);
+  const seen = new Set<string>();
+  const out: TStudioEntry[] = [];
+  for (const entry of entries) {
+    const k = entry.name.toLowerCase();
+    if (seen.has(k)) continue;
+    seen.add(k);
+    out.push({
+      name: entry.name,
+      ...(entry.slug ? { href: getEntityUrl("company", entry.slug, locale) } : {}),
+    });
+  }
+  return out;
+};
+
+/** ACF `film_studio`（配給会社・company CPT）から `TStudioEntry[]` を構築する。 */
+export const mapFilmStudiosFromParsedWp = (wp: ParsedWPPost, locale: string): TStudioEntry[] => {
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  return collectCompanyEntriesFromAcf(acf?.film_studio, locale);
+};
+
+/** ACF `production_studio`（制作会社・company CPT）から `TStudioEntry[]` を構築する。 */
+export const mapProductionStudiosFromParsedWp = (wp: ParsedWPPost, locale: string): TStudioEntry[] => {
+  const acf = wp.acf as Record<string, unknown> | undefined;
+  return collectCompanyEntriesFromAcf(acf?.production_studio, locale);
 };
 
 /**

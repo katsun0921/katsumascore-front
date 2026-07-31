@@ -46,7 +46,7 @@ export const getCompany = async (
   id: number,
   options?: WpFetchOptions,
 ): Promise<WPCompany | null> =>
-  fetchCompanies<WPCompany>(`/wp/v2/companies/${id}?acf_format=standard`, options);
+  fetchCompanies<WPCompany>(`/companies/${id}?acf_format=standard`, options);
 
 /** slug で company を取得する。 */
 export const getCompanyBySlug = async (
@@ -54,7 +54,7 @@ export const getCompanyBySlug = async (
   options?: WpFetchOptions,
 ): Promise<WPCompany | null> => {
   const results = await fetchCompanies<WPCompany[]>(
-    `/wp/v2/companies?slug=${encodeURIComponent(slug)}&acf_format=standard`,
+    `/companies?slug=${encodeURIComponent(slug)}&acf_format=standard`,
     options,
   );
   return results?.[0] ?? null;

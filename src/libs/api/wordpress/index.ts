@@ -70,8 +70,6 @@ export {
   titleSearchBlobFromParsedWp,
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
-  extractFilmStudioLinksFromParsedWp,
-  extractProductionStudioLinksFromParsedWp,
   extractDirectorTermNamesFromParsedWp,
   extractActorTermNamesFromParsedWp,
   extractDirectorLinksFromParsedWp,
