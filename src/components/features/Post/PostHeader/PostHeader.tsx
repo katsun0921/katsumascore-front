@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { ScoreWithRank } from '@/components/features/ScoreWithRank';
 import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 import { useLocale } from '@/i18n/provider';
@@ -31,13 +32,33 @@ export const PostHeader = ({
 }: PostHeaderProps) => {
   const locale = useLocale();
   const sep = t(messages, ['meta', 'sep'], locale);
+  const studioSep = ' / ';
 
   const year = releaseDate && releaseDate.length >= 4 ? releaseDate.slice(0, 4) : undefined;
-  const distributors = filmStudios?.map((s) => s.name).join(' / ');
-  const productions = productionStudios?.map((s) => s.name).join(' / ');
-
-  const metaParts = [distributors, productions, year].filter(Boolean);
   const prefix = 'post-header';
+
+  const renderStudios = (studios: TStudioEntry[]) => (
+    <>
+      {studios.map((studio, i) => (
+        <span key={studio.href ?? studio.name}>
+          {i > 0 && studioSep}
+          {studio.href ? (
+            <Link href={studio.href} className={`${prefix}__meta-link`}>
+              {studio.name}
+            </Link>
+          ) : (
+            studio.name
+          )}
+        </span>
+      ))}
+    </>
+  );
+
+  const metaParts = [
+    filmStudios && filmStudios.length > 0 ? renderStudios(filmStudios) : undefined,
+    productionStudios && productionStudios.length > 0 ? renderStudios(productionStudios) : undefined,
+    year,
+  ].filter(Boolean);
   return (
     <div data-component='PostHeader' className={prefix}>
       <hgroup className={`${prefix}__hgroup`}>

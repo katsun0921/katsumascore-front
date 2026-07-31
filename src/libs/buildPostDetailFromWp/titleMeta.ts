@@ -1,15 +1,13 @@
 import type { ParsedWPPost } from "@/libs/api/wordpress";
-import type { TTitleMetaProps } from "@/components/features/Post/PostTitleMeta";
-
-type StudioLink = { name: string; href: string };
+import type { TTitleMetaProps, TStudioEntry } from "@/components/features/Post/PostTitleMeta";
 
 export type BuildTitleMetaBlockInput = {
   parsed: ParsedWPPost;
   acf: Record<string, unknown> | undefined;
   releaseDate: string | undefined;
   officialSns: TTitleMetaProps["officialSns"];
-  filmStudios: StudioLink[];
-  productionStudios: StudioLink[];
+  filmStudios: TStudioEntry[];
+  productionStudios: TStudioEntry[];
 };
 
 /** PostDetail.TitleMeta 用。いずれかのソースがあればオブジェクトを返す */
