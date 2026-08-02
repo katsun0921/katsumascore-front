@@ -71,6 +71,7 @@ const serviceColors: Swatch[] = [
   { name: 'U-NEXT', token: '--color-unext', value: '#1a1a1a', textColor: '#ffffff' },
   { name: 'Disney+', token: '--color-disney', value: '#113ccf', textColor: '#ffffff' },
   { name: 'DMMTV', token: '--color-dmmtv', value: '#ff4b00', textColor: '#ffffff' },
+  { name: 'Yahoo', token: '--color-yahoo', value: '#ff0033', textColor: '#ffffff' },
   { name: 'Abema', token: '--color-abema', value: '#00bcd4' },
   { name: 'AppleTV+', token: '--color-appletv', value: '#555555', textColor: '#ffffff' },
   { name: 'YouTube', token: '--color-youtube', value: '#ff0000', textColor: '#ffffff' },
