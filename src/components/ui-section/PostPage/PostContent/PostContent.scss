@@ -739,6 +739,100 @@
     }
   }
 
+  // -- ProductBlock（ACF + Gutenberg。src/components/ui-section/ProductBlock が実装リファレンス） --
+  .product-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin: var(--space-40) 0;
+    padding: var(--space-16);
+    border: 1px solid var(--color-border-muted);
+    border-left: 4px solid var(--color-product-commerce);
+    border-radius: 6px;
+    background-color: var(--color-bg);
+
+    &--vod {
+      border-left-color: var(--color-product-vod);
+    }
+  }
+
+  .product-block__image {
+    flex-shrink: 0;
+    width: auto;
+    max-width: 160px;
+    margin: 0 auto;
+
+    img {
+      display: block;
+      width: 100%;
+      max-width: 160px;
+      height: auto;
+      margin: 0;
+    }
+  }
+
+  .product-block__body {
+    min-width: 0;
+  }
+
+  .product-block__title {
+    margin: 0 0 var(--space-8);
+    color: var(--color-text-primary);
+    font-size: 1em;
+    font-weight: bold;
+  }
+
+  .product-block__description {
+    margin: 0 0 var(--space-12);
+    color: var(--color-text-secondary);
+    font-size: 0.875em;
+  }
+
+  .product-block__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .product-block__link-item {
+    margin: 0;
+  }
+
+  .product-block__link-btn {
+    display: inline-block;
+    padding: var(--space-8) var(--space-12);
+    border-radius: 4px;
+    background-color: var(--color-bg-muted);
+    color: var(--color-text-inverse);
+    font-size: 0.8125em;
+    font-weight: bold;
+    text-decoration: none;
+    transition: opacity 0.15s;
+
+    &:hover {
+      opacity: 0.85;
+    }
+
+    &--netflix {
+      background-color: var(--color-netflix);
+    }
+
+    &--amazon_prime {
+      background-color: var(--color-amazon);
+    }
+
+    &--amazon {
+      background-color: var(--color-amazon-shopping);
+    }
+
+    &--rakuten {
+      background-color: var(--color-rakuten);
+    }
+  }
+
   // ─────────────────────────────────────────────
   // 7. Table
   // ─────────────────────────────────────────────
@@ -932,6 +1026,12 @@
     max-width: 100% !important;
   }
 
+  // YouTube / 動画 embed は本文幅いっぱいだと大きすぎるため 640px に制限
+  .wp-block-embed.is-type-video,
+  .wp-block-embed.wp-embed-aspect-16-9 {
+    max-width: 640px !important;
+  }
+
   // 長いURLやコードの折り返し
   p,
   li,
@@ -995,6 +1095,14 @@
 
     .wp-block-columns {
       flex-direction: row;
+    }
+
+    .product-block {
+      flex-direction: row;
+    }
+
+    .product-block__image {
+      margin: 0;
     }
 
     .alignleft {
