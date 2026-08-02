@@ -17,6 +17,7 @@ import { PostDetailFranchises } from '@/components/ui-section/PostDetailFranchis
 import { useLocale } from '@/i18n/provider';
 import { useHighScorePosts } from '@/hooks/useHighScorePosts';
 import { useVodRelatedPosts } from '@/hooks/useVodRelatedPosts';
+import { useSocialEmbedScripts } from '@/hooks/useSocialEmbedScripts';
 import type { ReactNode } from 'react';
 import type { PostDetailProps } from './PostDetail.types';
 
@@ -27,6 +28,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
 
   const { posts: highScorePosts, loading: highScoreLoading } = useHighScorePosts(locale);
   const { posts: vodRelatedPosts, loading: vodRelatedLoading } = useVodRelatedPosts(vodTermId, postId ?? 0, locale);
+  useSocialEmbedScripts('js-content', post.content);
 
   let vodIntroductionSection: ReactNode = null;
   if (post.vodIntroduction) {
