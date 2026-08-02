@@ -60,6 +60,7 @@ const textAndFeatureColors: Swatch[] = [
   { name: 'Score Rank Mid', token: '--color-score-rank-mid', value: '#2563eb' },
   { name: 'Score Rank High', token: '--color-score-rank-high', value: '#c026d3' },
   { name: 'Score Hero Text Halo', token: '--color-score-hero-text-halo', value: '#ffffff' },
+  { name: 'Category', token: '--color-category', value: '#2563eb', textColor: '#ffffff' },
 ];
 
 const serviceColors: Swatch[] = [

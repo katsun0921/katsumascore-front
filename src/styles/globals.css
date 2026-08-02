@@ -76,6 +76,7 @@
   /* Product */
   --color-product-vod: #4caf50;
   --color-product-commerce: #ff9800;
+  --color-category: #2563eb;
 
   /* Misc */
   --color-primary-dark: #1e40af;
@@ -232,6 +233,7 @@
   /* Product */
   --color-product-vod: var(--color-product-vod);
   --color-product-commerce: var(--color-product-commerce);
+  --color-category: var(--color-category);
 
   /* Misc */
   --color-primary-dark: var(--color-primary-dark);
