@@ -97,6 +97,7 @@
   --color-unext: #1a1a1a;
   --color-disney: #113ccf;
   --color-dmmtv: #ff4b00;
+  --color-yahoo: #ff0033;
   --color-abema: #00bcd4;
   --color-appletv: #555555;
   --color-youtube: #ff0000;
@@ -254,6 +255,7 @@
   --color-unext: var(--color-unext);
   --color-disney: var(--color-disney);
   --color-dmmtv: var(--color-dmmtv);
+  --color-yahoo: var(--color-yahoo);
   --color-abema: var(--color-abema);
   --color-appletv: var(--color-appletv);
   --color-youtube: var(--color-youtube);

@@ -803,33 +803,85 @@
 
   .product-block__link-btn {
     display: inline-block;
+    margin: 0;
     padding: var(--space-8) var(--space-12);
     border-radius: 4px;
-    background-color: var(--color-bg-muted);
+    background-color: var(--color-product-vod);
+    opacity: 0.8;
     color: var(--color-text-inverse);
     font-size: 0.8125em;
     font-weight: bold;
     text-decoration: none;
     transition: opacity 0.15s;
 
+    // 汎用 a:hover（余白の付け替え・背景色）を打ち消す
     &:hover {
-      opacity: 0.85;
+      margin: 0;
+      padding: var(--space-8) var(--space-12);
+      border-bottom-color: transparent;
+      background-color: var(--color-product-vod);
+      opacity: 0.65;
+      color: var(--color-text-inverse);
     }
 
     &--netflix {
       background-color: var(--color-netflix);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-netflix);
+        opacity: 0.85;
+      }
     }
 
     &--amazon_prime {
       background-color: var(--color-amazon);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-amazon);
+        opacity: 0.85;
+      }
     }
 
     &--amazon {
       background-color: var(--color-amazon-shopping);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-amazon-shopping);
+        opacity: 0.85;
+      }
     }
 
     &--rakuten {
       background-color: var(--color-rakuten);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-rakuten);
+        opacity: 0.85;
+      }
+    }
+
+    &--yahoo {
+      background-color: var(--color-yahoo);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-yahoo);
+        opacity: 0.85;
+      }
+    }
+
+    &--dmm {
+      background-color: var(--color-dmmtv);
+      opacity: 1;
+
+      &:hover {
+        background-color: var(--color-dmmtv);
+        opacity: 0.85;
+      }
     }
   }
 
