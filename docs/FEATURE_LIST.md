@@ -79,6 +79,8 @@
 | `/vod` | `pages/vod/index.tsx` | ISR | VOD サービス一覧 |
 | `/vod/[slug]` | `pages/vod/[slug]/index.tsx` | SSR | VOD サービス詳細（在庫リアルタイム取得） |
 | `/vod/[slug]/page/[page]` | `pages/vod/[slug]/page/[page].tsx` | SSR | VOD 配信記事ページング |
+| `/vod-release` | `pages/vod-release/index.tsx` | ISR | VOD配信情報（週次まとめ記事）アーカイブ |
+| `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 
 ### 1.7 Sitemap
 
@@ -255,6 +257,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `persons.ts` | `getPersons`, `getPersonBySlug` | 人物取得 |
 | `franchise.ts` | `getFranchises`, `getFranchiseBySlug` | フランチャイズ取得 |
 | `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
+| `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
 
@@ -360,6 +363,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `topPageMessages.ts` | トップページ翻訳メッセージ |
 | `searchPageMessages.ts` | 検索ページ翻訳メッセージ |
 | `vodPageMessages.ts` | VOD ページ翻訳メッセージ |
+| `vodReleasePageMessages.ts` | VOD配信情報ページ翻訳メッセージ |
 
 ### 対応言語
 

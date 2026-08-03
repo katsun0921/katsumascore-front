@@ -34,6 +34,9 @@ export type { WPGenreTerm } from "./endpoints/genre";
 export { getVodTermBySlug, getVodTerms } from "./endpoints/vodTaxonomy";
 export type { WPVodTerm } from "./endpoints/vodTaxonomy";
 
+export { getVodReleaseBySlug, getVodReleases } from "./endpoints/vodRelease";
+export type { WPVodRelease } from "./endpoints/vodRelease";
+
 export { getVodList } from "./endpoints/vodList";
 export type {
   VodListTerm,

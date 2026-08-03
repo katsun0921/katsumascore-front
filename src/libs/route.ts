@@ -77,6 +77,14 @@ export const getEntityUrl = (type: EntityType, slug: string, lang = DEFAULT_LOCA
 export const getVodHubPath = (lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/vod`;
 
+/** VOD配信情報（週次まとめ記事）アーカイブのパス（例: `/ja/vod-release`）。 */
+export const getVodReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/vod-release`;
+
+/** VOD配信情報（週次まとめ記事）詳細のパス（例: `/ja/vod-release/2026-08-w2`）。 */
+export const getVodReleaseUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
+  `${getVodReleaseArchivePath(lang)}/${slug}`;
+
 /** VOD 一覧の基底パス（例: `/ja/vod/netflix`）。 */
 export const getVodArchivePath = (pathSlug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/vod/${pathSlug}`;
