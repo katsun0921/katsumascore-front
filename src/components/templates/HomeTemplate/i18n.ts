@@ -21,4 +21,8 @@ export const messages = {
     title: { ja: 'VODで探す', en: 'Find on VOD' },
     workCountSuffix: { ja: '作品', en: ' titles' },
   },
+  releaseHighlight: {
+    theaterTitle: { ja: '劇場公開情報', en: 'Theatrical Releases' },
+    vodTitle: { ja: 'VOD配信情報', en: 'Streaming Releases' },
+  },
 } as const;

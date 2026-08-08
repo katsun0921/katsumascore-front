@@ -34,6 +34,16 @@ const defaultArgs = {
   recommendBlocks: mockRecommendBlocks,
   vodFinderItems: mockVodFinderItems,
   featuredItems: mockFeaturedItems,
+  theaterReleaseHighlight: {
+    title: '今週公開の映画まとめ（2026年8月第1週）',
+    publishedAt: '2026-08-08',
+    href: '/theater-release/theater-release-2026-08-02',
+  },
+  vodReleaseHighlight: {
+    title: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
+    publishedAt: '2026-08-08',
+    href: '/vod-release/vod-release-2026-08-02',
+  },
 };
 
 export const Default: Story = {
@@ -59,5 +69,13 @@ export const NoImages: Story = {
     latestPosts: mockLatestPosts.map((p) => ({ ...p, image: null })),
     animePosts: mockAnimePosts.map((p) => ({ ...p, image: null })),
     highScorePosts: mockHighScorePosts.map((p) => ({ ...p, image: null })),
+  },
+};
+
+export const NoReleaseHighlight: Story = {
+  args: {
+    ...defaultArgs,
+    theaterReleaseHighlight: undefined,
+    vodReleaseHighlight: undefined,
   },
 };
