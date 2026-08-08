@@ -315,8 +315,8 @@ export interface Company {
   } | null;
 }
 
-type WPPerson = import("./generated/wp-schema").components["schemas"]["WPPerson"];
-type WPCompany = import("./generated/wp-schema").components["schemas"]["WPCompany"];
+type WPPerson = import("./endpoints/persons").WPPerson;
+type WPCompany = import("./endpoints/companies").WPCompany;
 
 /** WPPerson の `_embedded['wp:term']`（要 `_embed`）から国籍（`country` タクソノミー）のターム名を抽出する。 */
 const extractCountryNamesFromWPPerson = (wp: WPPerson): string[] => {

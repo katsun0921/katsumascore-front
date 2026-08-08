@@ -1,11 +1,30 @@
 /**
  * `/companies` CPT エンドポイントの取得ヘルパー（OpenAPI スキーマ外のため生 fetch を使用）。
  */
-import type { components } from "../generated/wp-schema";
 import { wpApiBaseUrl, defaultFetchOptions, sleep, shouldRetryStatus } from "../client";
 import type { WpFetchOptions } from "../client";
 
-type WPCompany = components["schemas"]["WPCompany"];
+/** WP メディア画像（ACF image フィールド等）の REST レスポンス。 */
+export type WPImage = {
+  url: string;
+  alt?: string;
+  width?: number;
+  height?: number;
+};
+
+/** `/companies` CPT の REST レスポンス（必要なフィールドのみ）。 */
+export type WPCompany = {
+  id: number;
+  slug: string;
+  title: { rendered: string };
+  acf: {
+    name_ja: string;
+    name_en: string;
+    roles: ("production" | "distributor")[];
+    description?: string;
+    logo?: WPImage;
+  };
+};
 
 const buildCompaniesUrl = (path: string): string | null => {
   if (!wpApiBaseUrl) return null;
