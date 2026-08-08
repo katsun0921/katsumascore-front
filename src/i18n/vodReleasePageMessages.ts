@@ -33,5 +33,6 @@ export const messages = {
     publishedAt: { ja: "公開日", en: "Published" },
     backToArchive: { ja: "配信情報の一覧へ", en: "All streaming roundups" },
     findByService: { ja: "配信サービスから探す", en: "Browse by service" },
+    theaterRelease: { ja: "劇場公開情報を見る", en: "Theatrical releases" },
   },
 } as const;

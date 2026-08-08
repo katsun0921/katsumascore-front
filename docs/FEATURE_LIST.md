@@ -72,7 +72,7 @@
 | `/seasonal-anime-and-dramas-reviews` | `pages/seasonal-anime-and-dramas-reviews/index.tsx` | ISR | 季節アニメ＆ドラマレビュー一覧 |
 | `/seasonal-anime-and-dramas-reviews/[slug]` | `pages/seasonal-anime-and-dramas-reviews/[slug].tsx` | ISR | 季節アニメ＆ドラマレビュー詳細 |
 
-### 1.6 VOD 関連ページ
+### 1.6 VOD・劇場公開関連ページ
 
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
@@ -81,6 +81,8 @@
 | `/vod/[slug]/page/[page]` | `pages/vod/[slug]/page/[page].tsx` | SSR | VOD 配信記事ページング |
 | `/vod-release` | `pages/vod-release/index.tsx` | ISR | VOD配信情報（週次まとめ記事）アーカイブ |
 | `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
+| `/theater-release` | `pages/theater-release/index.tsx` | ISR | 劇場公開情報（週次まとめ記事）アーカイブ |
+| `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | ISR | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 
 ### 1.7 Sitemap
 
@@ -367,6 +369,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `searchPageMessages.ts` | 検索ページ翻訳メッセージ |
 | `vodPageMessages.ts` | VOD ページ翻訳メッセージ |
 | `vodReleasePageMessages.ts` | VOD配信情報ページ翻訳メッセージ |
+| `theaterReleasePageMessages.ts` | 劇場公開情報ページ翻訳メッセージ |
 
 ### 対応言語
 
