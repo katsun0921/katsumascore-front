@@ -1,6 +1,37 @@
 import Link from 'next/link';
 import { linkLocaleForHref } from '@/libs/nextLinkLocale';
+import type { ReleaseWorkItem } from '@/libs/releaseWorks';
 import type { HomeReleaseHighlightProps, ReleaseHighlightBlock } from './HomeReleaseHighlight.types';
+
+/** 作品タイトル。リンクが無ければただのテキスト、外部リンクなら新規タブで開く。 */
+const WorkTitle = ({ title, href, isExternal }: ReleaseWorkItem) => {
+  if (href === undefined) {
+    return <span className='homeReleaseHighlight__workTitle'>{title}</span>;
+  }
+
+  if (isExternal === true) {
+    return (
+      <a
+        href={href}
+        className='homeReleaseHighlight__workTitle homeReleaseHighlight__workTitle--link'
+        target='_blank'
+        rel='noopener noreferrer'
+      >
+        {title}
+      </a>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      locale={linkLocaleForHref(href)}
+      className='homeReleaseHighlight__workTitle homeReleaseHighlight__workTitle--link'
+    >
+      {title}
+    </Link>
+  );
+};
 
 const ReleaseBlock = ({
   label,
@@ -26,7 +57,7 @@ const ReleaseBlock = ({
       <ul className='homeReleaseHighlight__workList'>
         {works.map((work) => (
           <li key={work.title} className='homeReleaseHighlight__work'>
-            <span className='homeReleaseHighlight__workTitle'>{work.title}</span>
+            <WorkTitle {...work} />
             {work.meta && <span className='homeReleaseHighlight__workMeta'>{work.meta}</span>}
           </li>
         ))}

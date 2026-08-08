@@ -68,6 +68,15 @@
     font-size: 13px;
     font-weight: 600;
     line-height: 1.4;
+
+    &--link {
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--color-score-rank-high);
+        text-decoration: underline;
+      }
+    }
   }
 
   &__workMeta {
