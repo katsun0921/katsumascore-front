@@ -5,7 +5,8 @@ import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/Home
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
-import type { ReleaseHighlightItem } from "@/components/ui-home/HomeReleaseHighlight";
+import type { ReleaseHighlightBlock } from "@/components/ui-home/HomeReleaseHighlight";
+import { extractReleaseWorks } from "@/libs/releaseWorks";
 import type { Post } from "@/types/post";
 import { getRankingIcon } from "@/components/features/ScoreWithRank/getRankingIcon";
 import type { ScoreRank } from "@/types/wordpress";
@@ -135,29 +136,29 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
   return { slides };
 };
 
-/** 劇場公開情報（週次まとめ記事）の最新1件を TOP ハイライト用データに変換する。 */
+/** 劇場公開情報（週次まとめ記事）の最新1件を、作品リスト付きの TOP ハイライト用ブロックに変換する。 */
 const toTheaterReleaseHighlight = (
   release: WPTheaterRelease | undefined,
   lang: "ja" | "en",
-): ReleaseHighlightItem | undefined =>
+): ReleaseHighlightBlock | undefined =>
   release
     ? {
-        title: stripHtml(release.title.rendered),
-        publishedAt: release.date,
         href: getTheaterReleaseUrl(release.slug, lang),
+        works: extractReleaseWorks(release.content.rendered),
+        articleTitle: stripHtml(release.title.rendered),
       }
     : undefined;
 
-/** VOD配信情報（週次まとめ記事）の最新1件を TOP ハイライト用データに変換する。 */
+/** VOD配信情報（週次まとめ記事）の最新1件を、作品リスト付きの TOP ハイライト用ブロックに変換する。 */
 const toVodReleaseHighlight = (
   release: WPVodRelease | undefined,
   lang: "ja" | "en",
-): ReleaseHighlightItem | undefined =>
+): ReleaseHighlightBlock | undefined =>
   release
     ? {
-        title: stripHtml(release.title.rendered),
-        publishedAt: release.date,
         href: getVodReleaseUrl(release.slug, lang),
+        works: extractReleaseWorks(release.content.rendered),
+        articleTitle: stripHtml(release.title.rendered),
       }
     : undefined;
 

@@ -58,8 +58,9 @@ export const HomeTemplate = ({
             <HomeReleaseHighlight
               theaterTitle={t(messages, ['releaseHighlight', 'theaterTitle'], locale)}
               vodTitle={t(messages, ['releaseHighlight', 'vodTitle'], locale)}
-              theaterItem={theaterReleaseHighlight}
-              vodItem={vodReleaseHighlight}
+              seeAllLabel={t(messages, ['releaseHighlight', 'seeAll'], locale)}
+              theater={theaterReleaseHighlight}
+              vod={vodReleaseHighlight}
             />
           </section>
         )}
