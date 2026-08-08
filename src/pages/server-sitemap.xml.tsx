@@ -9,6 +9,7 @@ import {
   getChildPages,
   getPersons,
   getVodReleases,
+  getTheaterReleases,
 } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import type { PostType } from '@/libs/route';
@@ -20,6 +21,8 @@ import {
   getVodArchivePath,
   getVodReleaseArchivePath,
   getVodReleaseUrl,
+  getTheaterReleaseArchivePath,
+  getTheaterReleaseUrl,
 } from '@/libs/route';
 import { VOD_ARCHIVE_PATH_SLUGS } from '@/libs/vodPathToWpSlug';
 
@@ -44,15 +47,17 @@ const escapeXml = (str: string): string =>
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
-  const [wpPosts, genres, tags, franchiseSlugs, seasonal, persons, vodReleases] = await Promise.all([
-    getPostsPagedMerge({ per_page: 100 }, SITEMAP_POSTS_MAX_PAGES),
-    getGenres(),
-    getTags(),
-    getAllFranchiseSlugs(),
-    seasonalParentId ? getChildPages(seasonalParentId) : Promise.resolve([]),
-    getPersons(100),
-    getVodReleases(100),
-  ]);
+  const [wpPosts, genres, tags, franchiseSlugs, seasonal, persons, vodReleases, theaterReleases] =
+    await Promise.all([
+      getPostsPagedMerge({ per_page: 100 }, SITEMAP_POSTS_MAX_PAGES),
+      getGenres(),
+      getTags(),
+      getAllFranchiseSlugs(),
+      seasonalParentId ? getChildPages(seasonalParentId) : Promise.resolve([]),
+      getPersons(100),
+      getVodReleases(100),
+      getTheaterReleases(100),
+    ]);
 
   const staticPaths: SitemapItem[] = LOCALES.flatMap((lang) => [
     { loc: `${SITE_URL}/${lang}`, changefreq: 'daily', priority: 1 },
@@ -121,8 +126,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     })),
   ]);
 
-  // VOD配信情報は日本語記事のみのため、canonical と同じく ja のみ列挙する
-  const vodReleaseItems: SitemapItem[] = [
+  // VOD配信情報・劇場公開情報は日本語記事のみのため、canonical と同じく ja のみ列挙する
+  const releaseItems: SitemapItem[] = [
     { loc: `${SITE_URL}${getVodReleaseArchivePath('ja')}`, changefreq: 'weekly', priority: 0.6 },
     ...vodReleases.map((release) => ({
       loc: `${SITE_URL}${getVodReleaseUrl(release.slug, 'ja')}`,
@@ -130,9 +135,16 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       changefreq: 'monthly',
       priority: 0.5,
     })),
+    { loc: `${SITE_URL}${getTheaterReleaseArchivePath('ja')}`, changefreq: 'weekly', priority: 0.6 },
+    ...theaterReleases.map((release) => ({
+      loc: `${SITE_URL}${getTheaterReleaseUrl(release.slug, 'ja')}`,
+      lastmod: new Date(release.modified ?? release.date).toISOString(),
+      changefreq: 'monthly',
+      priority: 0.5,
+    })),
   ];
 
-  const fields: SitemapItem[] = [...staticPaths, ...postItems, ...archiveItems, ...vodReleaseItems];
+  const fields: SitemapItem[] = [...staticPaths, ...postItems, ...archiveItems, ...releaseItems];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

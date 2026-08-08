@@ -85,6 +85,14 @@ export const getVodReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
 export const getVodReleaseUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
   `${getVodReleaseArchivePath(lang)}/${slug}`;
 
+/** 劇場公開情報（週次まとめ記事）アーカイブのパス（例: `/ja/theater-release`）。 */
+export const getTheaterReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/theater-release`;
+
+/** 劇場公開情報（週次まとめ記事）詳細のパス（例: `/ja/theater-release/2026-08-w2`）。 */
+export const getTheaterReleaseUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
+  `${getTheaterReleaseArchivePath(lang)}/${slug}`;
+
 /** VOD 一覧の基底パス（例: `/ja/vod/netflix`）。 */
 export const getVodArchivePath = (pathSlug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/vod/${pathSlug}`;

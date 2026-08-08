@@ -1,4 +1,4 @@
-// ISR: revalidate REVALIDATE_DAILY — VOD配信情報（週次まとめ記事）詳細ページ
+// ISR: revalidate REVALIDATE_DAILY — 劇場公開情報（週次まとめ記事）詳細ページ
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -8,19 +8,18 @@ import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import { t, type Locale } from '@/i18n/t';
-import { messages } from '@/i18n/vodReleasePageMessages';
-import { getVodReleaseBySlug } from '@/libs/api/wordpress';
+import { messages } from '@/i18n/theaterReleasePageMessages';
+import { getTheaterReleaseBySlug } from '@/libs/api/wordpress';
 import {
   getTheaterReleaseArchivePath,
-  getVodHubPath,
+  getTheaterReleaseUrl,
   getVodReleaseArchivePath,
-  getVodReleaseUrl,
   normalizeRouteLocale,
 } from '@/libs/route';
 
 const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 
-type VodReleaseDetailProps = {
+type TheaterReleaseDetailProps = {
   title: string;
   html: string;
   slug: string;
@@ -35,17 +34,17 @@ const buildDescription = (html: string, fallback: string): string => {
   return text ? text.slice(0, 120) : fallback;
 };
 
-const VodReleaseDetailPage = ({
+const TheaterReleaseDetailPage = ({
   title,
   html,
   slug,
   publishedAt,
   modifiedAt,
   locale,
-}: VodReleaseDetailProps) => {
+}: TheaterReleaseDetailProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
   // 記事は日本語のみのため、canonical はロケールに関わらず /ja/ に固定する（en側の重複コンテンツ回避）
-  const canonicalUrl = `${SITE_URL}${getVodReleaseUrl(slug, 'ja')}`;
+  const canonicalUrl = `${SITE_URL}${getTheaterReleaseUrl(slug, 'ja')}`;
   const description = buildDescription(
     html,
     t(messages, ['head', 'detailDescriptionFallback'], loc),
@@ -53,7 +52,10 @@ const VodReleaseDetailPage = ({
 
   const breadcrumbItems = [
     { label: t(messages, ['breadcrumb', 'home'], loc), href: '/' },
-    { label: t(messages, ['breadcrumb', 'vodRelease'], loc), href: getVodReleaseArchivePath(loc) },
+    {
+      label: t(messages, ['breadcrumb', 'theaterRelease'], loc),
+      href: getTheaterReleaseArchivePath(loc),
+    },
     { label: title },
   ];
 
@@ -112,14 +114,11 @@ const VodReleaseDetailPage = ({
           </p>
           <PostContent content={html} />
           <nav className='mt-10 flex flex-wrap gap-4 border-t border-color-border pt-6'>
-            <Link href={getVodReleaseArchivePath(loc)} className='text-primary hover:underline'>
+            <Link href={getTheaterReleaseArchivePath(loc)} className='text-primary hover:underline'>
               {t(messages, ['detail', 'backToArchive'], loc)}
             </Link>
-            <Link href={getVodHubPath(loc)} className='text-primary hover:underline'>
-              {t(messages, ['detail', 'findByService'], loc)}
-            </Link>
-            <Link href={getTheaterReleaseArchivePath(loc)} className='text-primary hover:underline'>
-              {t(messages, ['detail', 'theaterRelease'], loc)}
+            <Link href={getVodReleaseArchivePath(loc)} className='text-primary hover:underline'>
+              {t(messages, ['detail', 'vodRelease'], loc)}
             </Link>
           </nav>
         </article>
@@ -128,18 +127,21 @@ const VodReleaseDetailPage = ({
   );
 };
 
-export default VodReleaseDetailPage;
+export default TheaterReleaseDetailPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
   paths: [],
   fallback: 'blocking',
 });
 
-export const getStaticProps: GetStaticProps<VodReleaseDetailProps> = async ({ params, locale }) => {
+export const getStaticProps: GetStaticProps<TheaterReleaseDetailProps> = async ({
+  params,
+  locale,
+}) => {
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
 
-  const wp = await getVodReleaseBySlug(slug);
+  const wp = await getTheaterReleaseBySlug(slug);
   if (!wp) return { notFound: true };
 
   return {
