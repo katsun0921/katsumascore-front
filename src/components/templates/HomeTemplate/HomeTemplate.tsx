@@ -4,6 +4,7 @@ import { AdBanner } from '@/components/ui-section/AdBanner';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
+import { HomeReleaseHighlight } from '@/components/ui-home/HomeReleaseHighlight';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { VodLegend } from '@/components/ui-section/VodLegend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
@@ -16,8 +17,8 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
  *
  * 表示順:
- *   Hero → 広告バナー（ja） → VOD バッジ凡例 → Ranking → 最新レビュー → ショート動画 → 注目のアニメ → 高評価
- *   → Recommend → 特集 → VOD
+ *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → Ranking → 最新レビュー
+ *   → ショート動画 → 注目のアニメ → 高評価 → Recommend → 特集 → VOD
  */
 export const HomeTemplate = ({
   hero,
@@ -31,6 +32,8 @@ export const HomeTemplate = ({
   recommendBlocks,
   vodFinderItems,
   featuredItems,
+  theaterReleaseHighlight,
+  vodReleaseHighlight,
 }: HomeTemplateProps) => {
   const locale = useLocale();
 
@@ -49,6 +52,18 @@ export const HomeTemplate = ({
         <section className='homeTemplate__section'>
           <VodLegend services={vodFinderItems.map((item) => item.vod)} badgeColor='light' />
         </section>
+
+        {(theaterReleaseHighlight || vodReleaseHighlight) && (
+          <section className='homeTemplate__section'>
+            <HomeReleaseHighlight
+              theaterTitle={t(messages, ['releaseHighlight', 'theaterTitle'], locale)}
+              vodTitle={t(messages, ['releaseHighlight', 'vodTitle'], locale)}
+              seeAllLabel={t(messages, ['releaseHighlight', 'seeAll'], locale)}
+              theater={theaterReleaseHighlight}
+              vod={vodReleaseHighlight}
+            />
+          </section>
+        )}
 
         <section className='homeTemplate__section'>
           <HomeRanking

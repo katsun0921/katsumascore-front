@@ -39,6 +39,9 @@ export type { WPVodRelease } from "./endpoints/vodRelease";
 export { getTheaterReleaseBySlug, getTheaterReleases } from "./endpoints/theaterRelease";
 export type { WPTheaterRelease } from "./endpoints/theaterRelease";
 
+export { getTheaterReleaseBySlug, getTheaterReleases } from "./endpoints/theaterRelease";
+export type { WPTheaterRelease } from "./endpoints/theaterRelease";
+
 export { getVodList } from "./endpoints/vodList";
 export type {
   VodListTerm,

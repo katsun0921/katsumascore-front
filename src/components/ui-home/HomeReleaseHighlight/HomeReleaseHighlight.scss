@@ -1,0 +1,94 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.homeReleaseHighlight {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &__block {
+    padding: 14px 16px;
+    background: var(--color-score-bg);
+    border: 0.5px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+  }
+
+  &__blockHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  &__blockTitle {
+    color: var(--color-score-accent);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  &__seeAll {
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--color-text-inverse);
+    }
+  }
+
+  &__workList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+
+  &__work {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+    padding-bottom: 8px;
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.06);
+
+    &:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+  }
+
+  &__workTitle {
+    color: var(--color-text-inverse);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+
+    &--link {
+      transition: color 0.2s;
+
+      &:hover {
+        color: var(--color-score-rank-high);
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__workMeta {
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 11px;
+  }
+
+  &__fallback {
+    color: var(--color-text-inverse);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+}

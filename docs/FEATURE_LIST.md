@@ -142,7 +142,7 @@
 | `Header` | `components/ui-layout/Header` | ヘッダー（多言語対応） |
 | `Sidebar` | `components/ui-layout/Sidebar` | サイドバー |
 
-### 3.3 ui-home（ホームページ専用・6 コンポーネント）
+### 3.3 ui-home（ホームページ専用・7 コンポーネント）
 
 HomeTemplate からのみ参照。ロジック禁止。
 
@@ -154,6 +154,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeRanking` | `components/ui-home/HomeRanking` | ランキング表示 |
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
+| `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
 
 ### 3.4 ui-section（意味のある UI・24 コンポーネント）
 
@@ -304,6 +305,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | 関数 / ファイル | 説明 |
 |---------------|------|
 | `homeStaticProps.ts` | ホームページ静的 props 生成 |
+| `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
 | `buildVodFinderItems.ts` | VOD 検索アイテム構築 |
@@ -450,3 +452,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | i18n 実装 | `.claude/rules/src/components/i18n-implementation.md` | i18n 設計・フェーズ構成 |
 | Entity 実装仕様 | `docs/ENTITY_IMPLEMENTATION_SPEC.md` | Entity 設計 |
 | TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_movie.youtube` の抽出・モーダル再生仕様 |
+| TOP 劇場公開・VOD配信ハイライト | `docs/features/home_release_highlight.md` | 週次まとめ記事の本文からの作品リスト抽出・リンク解決仕様 |
