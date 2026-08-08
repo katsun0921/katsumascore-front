@@ -303,6 +303,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | 関数 / ファイル | 説明 |
 |---------------|------|
 | `homeStaticProps.ts` | ホームページ静的 props 生成 |
+| `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
 | `buildVodFinderItems.ts` | VOD 検索アイテム構築 |

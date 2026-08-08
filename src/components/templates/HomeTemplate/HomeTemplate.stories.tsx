@@ -35,14 +35,20 @@ const defaultArgs = {
   vodFinderItems: mockVodFinderItems,
   featuredItems: mockFeaturedItems,
   theaterReleaseHighlight: {
-    title: '今週公開の映画まとめ（2026年8月第1週）',
-    publishedAt: '2026-08-08',
     href: '/theater-release/theater-release-2026-08-02',
+    articleTitle: '今週公開の映画まとめ（2026年8月第1週）',
+    works: [
+      { title: 'ゴースト・オブ・ウエノ', meta: '8月8日(土)公開' },
+      { title: '真夏の方程式 リブート', meta: '8月8日(土)公開' },
+    ],
   },
   vodReleaseHighlight: {
-    title: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
-    publishedAt: '2026-08-08',
     href: '/vod-release/vod-release-2026-08-02',
+    articleTitle: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
+    works: [
+      { title: 'スター・ウォーズ：ビジョンズ／九人目のジェダイ', meta: 'Disney+' },
+      { title: 'ストレンジャー・シングス シーズン5', meta: 'Netflix' },
+    ],
   },
 };
 

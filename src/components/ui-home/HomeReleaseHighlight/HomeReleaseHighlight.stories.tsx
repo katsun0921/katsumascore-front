@@ -5,8 +5,9 @@ const meta: Meta<typeof HomeReleaseHighlight> = {
   title: 'UI-Home/HomeReleaseHighlight',
   component: HomeReleaseHighlight,
   args: {
-    theaterTitle: '劇場公開情報',
-    vodTitle: 'VOD配信情報',
+    theaterTitle: '今週の劇場公開',
+    vodTitle: '今週のVOD配信開始',
+    seeAllLabel: 'まとめ記事を見る →',
   },
   parameters: { layout: 'padded' },
   decorators: [
@@ -21,50 +22,86 @@ const meta: Meta<typeof HomeReleaseHighlight> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+const theaterBlock = {
+  href: '/theater-release/theater-release-2026-08-02',
+  articleTitle: '今週公開の映画まとめ（2026年8月第1週）',
+  works: [
+    { title: 'ゴースト・オブ・ウエノ', meta: '8月8日(土)公開' },
+    { title: '真夏の方程式 リブート', meta: '8月8日(土)公開' },
+    { title: 'ミッドナイト・ランナウェイ', meta: '8月9日(日)公開' },
+  ],
+};
+
+const vodBlock = {
+  href: '/vod-release/vod-release-2026-08-02',
+  articleTitle: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
+  works: [
+    { title: 'スター・ウォーズ：ビジョンズ／九人目のジェダイ', meta: 'Disney+' },
+    { title: 'ストレンジャー・シングス シーズン5', meta: 'Netflix' },
+    { title: '呪術廻戦 死滅回游編', meta: 'Prime Video' },
+  ],
+};
+
 export const Default: Story = {
   args: {
-    theaterItem: {
-      title: '今週公開の映画まとめ（2026年8月第1週）',
-      publishedAt: '2026-08-08',
-      href: '/theater-release/theater-release-2026-08-02',
-    },
-    vodItem: {
-      title: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
-      publishedAt: '2026-08-08',
-      href: '/vod-release/vod-release-2026-08-02',
-    },
+    theater: theaterBlock,
+    vod: vodBlock,
   },
 };
 
 export const LongTitle: Story = {
   args: {
-    theaterItem: {
-      title: '今週公開の映画まとめ（2026年8月第1週）とても長いタイトルが入った場合の折り返し表示テスト用サンプル',
-      publishedAt: '2026-08-08',
-      href: '/theater-release/theater-release-2026-08-02',
+    theater: {
+      ...theaterBlock,
+      works: [
+        {
+          title:
+            'とても長いタイトルの映画作品名が入った場合の折り返し表示を確認するためのサンプル作品タイトル',
+          meta: '8月8日(土)公開',
+        },
+        ...theaterBlock.works,
+      ],
     },
-    vodItem: {
-      title: '今週配信開始のVOD作品まとめ（2026年8月第1週）とても長いタイトルが入った場合の折り返し表示テスト用サンプル',
-      publishedAt: '2026-08-08',
-      href: '/vod-release/vod-release-2026-08-02',
-    },
+    vod: vodBlock,
   },
 };
 
 export const MixedData: Story = {
   args: {
-    theaterItem: {
-      title: '今週公開の映画まとめ（2026年8月第1週）',
-      publishedAt: '2026-08-08',
-      href: '/theater-release/theater-release-2026-08-02',
+    theater: theaterBlock,
+    vod: undefined,
+  },
+};
+
+export const FallbackNoWorks: Story = {
+  args: {
+    theater: { ...theaterBlock, works: [] },
+    vod: { ...vodBlock, works: [] },
+  },
+};
+
+export const Dense: Story = {
+  args: {
+    theater: {
+      ...theaterBlock,
+      works: Array.from({ length: 6 }, (_, i) => ({
+        title: `劇場公開作品 ${i + 1}`,
+        meta: `8月${8 + i}日公開`,
+      })),
     },
-    vodItem: undefined,
+    vod: {
+      ...vodBlock,
+      works: Array.from({ length: 6 }, (_, i) => ({
+        title: `VOD配信作品 ${i + 1}`,
+        meta: ['Netflix', 'Prime Video', 'Disney+', 'U-NEXT', 'Hulu', 'DMM TV'][i],
+      })),
+    },
   },
 };
 
 export const Empty: Story = {
   args: {
-    theaterItem: undefined,
-    vodItem: undefined,
+    theater: undefined,
+    vod: undefined,
   },
 };

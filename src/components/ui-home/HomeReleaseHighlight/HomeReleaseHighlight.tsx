@@ -1,39 +1,55 @@
 import Link from 'next/link';
 import { linkLocaleForHref } from '@/libs/nextLinkLocale';
-import type { HomeReleaseHighlightProps, ReleaseHighlightItem } from './HomeReleaseHighlight.types';
+import type { HomeReleaseHighlightProps, ReleaseHighlightBlock } from './HomeReleaseHighlight.types';
 
-const ReleaseHighlightCard = ({
+const ReleaseBlock = ({
   label,
-  item: { title, publishedAt, href },
+  seeAllLabel,
+  block: { href, works, articleTitle },
 }: {
   label: string;
-  item: ReleaseHighlightItem;
+  seeAllLabel: string;
+  block: ReleaseHighlightBlock;
 }) => (
-  <Link
-    href={href}
-    locale={linkLocaleForHref(href)}
-    className='homeReleaseHighlight__card'
-  >
-    <span className='homeReleaseHighlight__cardLabel'>{label}</span>
-    <span className='homeReleaseHighlight__cardTitle'>{title}</span>
-    <span className='homeReleaseHighlight__cardDate'>{publishedAt.slice(0, 10)}</span>
-  </Link>
+  <div className='homeReleaseHighlight__block'>
+    <div className='homeReleaseHighlight__blockHeader'>
+      <h3 className='homeReleaseHighlight__blockTitle'>{label}</h3>
+      <Link
+        href={href}
+        locale={linkLocaleForHref(href)}
+        className='homeReleaseHighlight__seeAll'
+      >
+        {seeAllLabel}
+      </Link>
+    </div>
+    {works.length > 0 ? (
+      <ul className='homeReleaseHighlight__workList'>
+        {works.map((work) => (
+          <li key={work.title} className='homeReleaseHighlight__work'>
+            <span className='homeReleaseHighlight__workTitle'>{work.title}</span>
+            {work.meta && <span className='homeReleaseHighlight__workMeta'>{work.meta}</span>}
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p className='homeReleaseHighlight__fallback'>{articleTitle}</p>
+    )}
+  </div>
 );
 
 export const HomeReleaseHighlight = ({
   theaterTitle,
   vodTitle,
-  theaterItem,
-  vodItem,
+  seeAllLabel,
+  theater,
+  vod,
 }: HomeReleaseHighlightProps) => {
-  if (!theaterItem && !vodItem) return null;
+  if (!theater && !vod) return null;
 
   return (
     <section data-component='HomeReleaseHighlight' className='homeReleaseHighlight'>
-      <div className='homeReleaseHighlight__grid'>
-        {theaterItem && <ReleaseHighlightCard label={theaterTitle} item={theaterItem} />}
-        {vodItem && <ReleaseHighlightCard label={vodTitle} item={vodItem} />}
-      </div>
+      {theater && <ReleaseBlock label={theaterTitle} seeAllLabel={seeAllLabel} block={theater} />}
+      {vod && <ReleaseBlock label={vodTitle} seeAllLabel={seeAllLabel} block={vod} />}
     </section>
   );
 };

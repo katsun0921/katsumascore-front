@@ -22,7 +22,8 @@ export const messages = {
     workCountSuffix: { ja: '作品', en: ' titles' },
   },
   releaseHighlight: {
-    theaterTitle: { ja: '劇場公開情報', en: 'Theatrical Releases' },
-    vodTitle: { ja: 'VOD配信情報', en: 'Streaming Releases' },
+    theaterTitle: { ja: '今週の劇場公開', en: 'In Theaters This Week' },
+    vodTitle: { ja: '今週のVOD配信開始', en: 'New on Streaming This Week' },
+    seeAll: { ja: 'まとめ記事を見る →', en: 'Read the roundup →' },
   },
 } as const;
