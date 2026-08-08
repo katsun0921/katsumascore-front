@@ -26,7 +26,8 @@ type VodReleaseArchiveProps = {
 
 const VodReleaseArchivePage = ({ items, locale }: VodReleaseArchiveProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
-  const canonicalUrl = `${SITE_URL}${getVodReleaseArchivePath(loc)}`;
+  // 記事は日本語のみのため、canonical はロケールに関わらず /ja/ に固定する（en側の重複コンテンツ回避）
+  const canonicalUrl = `${SITE_URL}${getVodReleaseArchivePath('ja')}`;
 
   return (
     <I18nProvider locale={loc}>

@@ -119,16 +119,20 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       changefreq: 'monthly',
       priority: 0.55,
     })),
-    { loc: `${SITE_URL}${getVodReleaseArchivePath(lang)}`, changefreq: 'weekly', priority: 0.6 },
+  ]);
+
+  // VOD配信情報は日本語記事のみのため、canonical と同じく ja のみ列挙する
+  const vodReleaseItems: SitemapItem[] = [
+    { loc: `${SITE_URL}${getVodReleaseArchivePath('ja')}`, changefreq: 'weekly', priority: 0.6 },
     ...vodReleases.map((release) => ({
-      loc: `${SITE_URL}${getVodReleaseUrl(release.slug, lang)}`,
+      loc: `${SITE_URL}${getVodReleaseUrl(release.slug, 'ja')}`,
       lastmod: new Date(release.modified ?? release.date).toISOString(),
       changefreq: 'monthly',
       priority: 0.5,
     })),
-  ]);
+  ];
 
-  const fields: SitemapItem[] = [...staticPaths, ...postItems, ...archiveItems];
+  const fields: SitemapItem[] = [...staticPaths, ...postItems, ...archiveItems, ...vodReleaseItems];
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

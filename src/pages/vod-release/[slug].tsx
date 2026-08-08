@@ -43,7 +43,8 @@ const VodReleaseDetailPage = ({
   locale,
 }: VodReleaseDetailProps) => {
   const loc = normalizeRouteLocale(locale) as Locale;
-  const canonicalUrl = `${SITE_URL}${getVodReleaseUrl(slug, loc)}`;
+  // 記事は日本語のみのため、canonical はロケールに関わらず /ja/ に固定する（en側の重複コンテンツ回避）
+  const canonicalUrl = `${SITE_URL}${getVodReleaseUrl(slug, 'ja')}`;
   const description = buildDescription(
     html,
     t(messages, ['head', 'detailDescriptionFallback'], loc),
