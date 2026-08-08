@@ -140,7 +140,7 @@
 | `Header` | `components/ui-layout/Header` | ヘッダー（多言語対応） |
 | `Sidebar` | `components/ui-layout/Sidebar` | サイドバー |
 
-### 3.3 ui-home（ホームページ専用・6 コンポーネント）
+### 3.3 ui-home（ホームページ専用・7 コンポーネント）
 
 HomeTemplate からのみ参照。ロジック禁止。
 
@@ -152,6 +152,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeRanking` | `components/ui-home/HomeRanking` | ランキング表示 |
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
+| `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
 
 ### 3.4 ui-section（意味のある UI・24 コンポーネント）
 
@@ -258,6 +259,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `franchise.ts` | `getFranchises`, `getFranchiseBySlug` | フランチャイズ取得 |
 | `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
 | `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
+| `theaterRelease.ts` | `getTheaterReleaseBySlug`, `getTheaterReleases` | 劇場公開情報 CPT（`theater_release`）取得 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
 

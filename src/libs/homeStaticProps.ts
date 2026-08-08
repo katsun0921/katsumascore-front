@@ -5,6 +5,7 @@ import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/Home
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
+import type { ReleaseHighlightItem } from "@/components/ui-home/HomeReleaseHighlight";
 import type { Post } from "@/types/post";
 import { getRankingIcon } from "@/components/features/ScoreWithRank/getRankingIcon";
 import type { ScoreRank } from "@/types/wordpress";
@@ -17,11 +18,14 @@ import {
   getCategoryBySlug,
   getFeaturedPages,
   getVodTerms,
+  getTheaterReleases,
+  getVodReleases,
 } from "@/libs/api/wordpress";
+import type { WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
-import { getPostTypeArchivePath } from "@/libs/route";
+import { getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
@@ -131,6 +135,32 @@ const buildHeroFromPosts = (posts: Post[]): HomeHeroProps => {
   return { slides };
 };
 
+/** 劇場公開情報（週次まとめ記事）の最新1件を TOP ハイライト用データに変換する。 */
+const toTheaterReleaseHighlight = (
+  release: WPTheaterRelease | undefined,
+  lang: "ja" | "en",
+): ReleaseHighlightItem | undefined =>
+  release
+    ? {
+        title: stripHtml(release.title.rendered),
+        publishedAt: release.date,
+        href: getTheaterReleaseUrl(release.slug, lang),
+      }
+    : undefined;
+
+/** VOD配信情報（週次まとめ記事）の最新1件を TOP ハイライト用データに変換する。 */
+const toVodReleaseHighlight = (
+  release: WPVodRelease | undefined,
+  lang: "ja" | "en",
+): ReleaseHighlightItem | undefined =>
+  release
+    ? {
+        title: stripHtml(release.title.rendered),
+        publishedAt: release.date,
+        href: getVodReleaseUrl(release.slug, lang),
+      }
+    : undefined;
+
 /**
  * フィーチャー枠（`HomeFeatured`）用のカード行データに、投稿を最大 6 件まで変換する。
  * カテゴリ名をラベルに、抜粋を説明に使い、先頭 1 件を `isPrimary: true` にする。
@@ -174,11 +204,13 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags, vodTerms] = await Promise.all([
+  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
     pickRandomTags(3),
     getVodTerms(),
+    getTheaterReleases(1),
+    getVodReleases(1),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -251,5 +283,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),
     featuredItems,
+    theaterReleaseHighlight: toTheaterReleaseHighlight(theaterReleases[0], lang),
+    vodReleaseHighlight: toVodReleaseHighlight(vodReleases[0], lang),
   };
 };
