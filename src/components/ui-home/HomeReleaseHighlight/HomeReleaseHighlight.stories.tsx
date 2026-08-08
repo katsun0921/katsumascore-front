@@ -26,8 +26,11 @@ const theaterBlock = {
   href: '/theater-release/theater-release-2026-08-02',
   articleTitle: '今週公開の映画まとめ（2026年8月第1週）',
   works: [
-    { title: 'ゴースト・オブ・ウエノ', meta: '8月8日(土)公開' },
-    { title: '真夏の方程式 リブート', meta: '8月8日(土)公開' },
+    // 自サイトのレビュー記事があるケース
+    { title: 'ゴースト・オブ・ウエノ', meta: '8月8日(土)公開', href: '/ja/movie/ghost-of-ueno', isExternal: false },
+    // 公式サイト（外部）へのリンクのみのケース
+    { title: '真夏の方程式 リブート', meta: '8月8日(土)公開', href: 'https://example.com/', isExternal: true },
+    // リンクが無いケース
     { title: 'ミッドナイト・ランナウェイ', meta: '8月9日(日)公開' },
   ],
 };
@@ -36,8 +39,8 @@ const vodBlock = {
   href: '/vod-release/vod-release-2026-08-02',
   articleTitle: '今週配信開始のVOD作品まとめ（2026年8月第1週）',
   works: [
-    { title: 'スター・ウォーズ：ビジョンズ／九人目のジェダイ', meta: 'Disney+' },
-    { title: 'ストレンジャー・シングス シーズン5', meta: 'Netflix' },
+    { title: 'スター・ウォーズ：ビジョンズ／九人目のジェダイ', meta: 'Disney+', href: 'https://www.disneyplus.com/', isExternal: true },
+    { title: 'ストレンジャー・シングス シーズン5', meta: 'Netflix', href: '/ja/drama/stranger-things-5', isExternal: false },
     { title: '呪術廻戦 死滅回游編', meta: 'Prime Video' },
   ],
 };
