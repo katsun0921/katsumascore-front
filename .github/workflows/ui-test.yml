@@ -32,6 +32,24 @@ jobs:
       - name: Stylelint
         run: npm run lint:scss
 
+      - name: Type check
+        run: npx tsc --noEmit
+
+      # generated/wp-schema.d.ts は openapi/wp.yaml からの生成物。
+      # 手編集すると次回の `npm run wp:gen-types` で消えるため、
+      # 再生成しても差分が出ないことを検査する。
+      - name: Check generated WP schema is up to date
+        run: |
+          npm run wp:gen-types
+
+          if ! git diff --exit-code --stat -- src/libs/api/wordpress/generated/wp-schema.d.ts; then
+            echo ""
+            echo "::error::generated/wp-schema.d.ts が openapi/wp.yaml と一致しません。"
+            echo "手編集した型は endpoints/ 配下のファイルへ移動し、"
+            echo "npm run wp:gen-types を実行した結果をコミットしてください。"
+            exit 1
+          fi
+
       - name: Build Storybook
         run: npm run build-storybook
 
