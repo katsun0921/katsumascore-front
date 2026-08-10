@@ -15,6 +15,9 @@ export {
   getPostsByFranchiseTermId,
 } from "./endpoints/posts";
 
+export { getSitemapPosts } from "./endpoints/sitemapPosts";
+export type { WPSitemapPost } from "./endpoints/sitemapPosts";
+
 export {
   getCategories,
   getCategoriesForArchiveResolve,
