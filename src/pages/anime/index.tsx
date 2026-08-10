@@ -112,6 +112,12 @@ export default AnimeIndexPage;
 export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, 1, ANIME_LIST_PER_PAGE);
+  // WP 取得失敗を notFound にすると、ビルド時の一時的な失敗が静的出力に
+  // 404 として焼き付き revalidate でも復旧しない（本番で実際に発生した）。
+  // throw してビルドを失敗させ、誤った 404 を配信しない
+  if ('fetchFailed' in data) {
+    throw new Error('[anime] WP から記事一覧を取得できなかったためビルドを中止する');
+  }
   if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {

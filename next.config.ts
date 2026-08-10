@@ -82,6 +82,8 @@ const nextConfig: NextConfig = {
         source: '/:locale(ja|en)?/genre/:slug',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
       },
+      // `?p=N` は `/genre/:slug` 側のルールで一致する。
+      // この `/p/:page` は middleware の内部 rewrite 先として残す
       {
         source: '/:locale(ja|en)?/genre/:slug/p/:page',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
@@ -98,6 +100,8 @@ const nextConfig: NextConfig = {
         source: '/:locale(ja|en)?/tag/:slug',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
       },
+      // `?p=N` は `/tag/:slug` 側のルールで一致する。
+      // この `/p/:page` は middleware の内部 rewrite 先として残す
       {
         source: '/:locale(ja|en)?/tag/:slug/p/:page',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
@@ -131,6 +135,30 @@ const nextConfig: NextConfig = {
         source: "/:year(\\d{4})/:month(\\d{2})",
         destination: "/404",
         permanent: false,
+      },
+      // ページネーションを `?p=N` に一本化する。
+      // `/p/N` と `?p=N` の両方が 200 を返し、Search Console で別ページとして
+      // 扱われていたため、旧形式は 301 で恒久的に寄せる。
+      {
+        source: "/:locale(ja|en)/genre/:slug/p/:page(\\d+)",
+        destination: "/:locale/genre/:slug?p=:page",
+        permanent: true,
+      },
+      {
+        source: "/:locale(ja|en)/tag/:slug/p/:page(\\d+)",
+        destination: "/:locale/tag/:slug?p=:page",
+        permanent: true,
+      },
+      // ロケール接頭辞なし（`/genre/foo/p/2`）も同様に寄せる
+      {
+        source: "/genre/:slug/p/:page(\\d+)",
+        destination: "/genre/:slug?p=:page",
+        permanent: true,
+      },
+      {
+        source: "/tag/:slug/p/:page(\\d+)",
+        destination: "/tag/:slug?p=:page",
+        permanent: true,
       },
     ];
   },

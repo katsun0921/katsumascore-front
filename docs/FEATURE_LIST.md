@@ -59,9 +59,9 @@
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
 | `/genre/[slug]` | `pages/genre/[slug]/index.tsx` | ISR | ジャンル一覧 |
-| `/genre/[slug]/p/[p]` | `pages/genre/[slug]/p/[p].tsx` | ISR | ジャンル一覧ページング |
+| `/genre/[slug]?p=N` | `pages/genre/[slug]/p/[p].tsx` | ISR | ジャンル一覧ページング。正規URLは `?p=N`（middleware が内部で `/p/N` へ rewrite）。旧 `/p/N` は 301 |
 | `/tag/[slug]` | `pages/tag/[slug]/index.tsx` | ISR | タグ一覧 |
-| `/tag/[slug]/p/[p]` | `pages/tag/[slug]/p/[p].tsx` | ISR | タグ一覧ページング |
+| `/tag/[slug]?p=N` | `pages/tag/[slug]/p/[p].tsx` | ISR | タグ一覧ページング。正規URLは `?p=N`（middleware が内部で `/p/N` へ rewrite）。旧 `/p/N` は 301 |
 
 ### 1.5 季節レビュー
 

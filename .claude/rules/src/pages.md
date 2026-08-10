@@ -42,6 +42,43 @@ Next.js 15 Pages Router のページファイルを管理するディレクト�
 - 正規URLは `/ja/...` / `/en/...`（接頭辞なしは `/ja/...` へリダイレクトされる）
 - 記事URL例: `/ja/movie/{slug}` / `/en/movie/{slug}`
 
+## 一覧ページのページネーション（必須）
+
+**ページ切り替えはクエリパラメータ `?p=N` を使う。パスセグメント（`/p/N`）で表現しない。**
+
+```
+✅ /ja/genre/drama?p=2
+❌ /ja/genre/drama/p/2
+```
+
+理由: `/p/N` と `?p=N` の両方が 200 を返すと Search Console で別ページとして扱われ、重複コンテンツになる。実際に `genre` / `tag` で発生した。
+
+| 項目 | ルール |
+|---|---|
+| 1ページ目 | パラメータを付けない（`/ja/genre/drama`） |
+| 2ページ目以降 | `?p=N`（`/ja/genre/drama?p=2`） |
+| canonical | 自己参照。`?p=2` のページは `?p=2` を指す |
+| 旧 `/p/N` 形式 | `next.config.ts` の `redirects()` で恒久リダイレクト |
+| sitemap | 1ページ目のみ列挙する。`?p=N` は載せない |
+
+### 実装方法
+
+一覧ページは SSG のため `getStaticProps` からクエリを読めない。`middleware.ts` で `?p=N`（N≧2）を内部的に `/p/N` ルートへ **rewrite** する（URL は `?p=N` のまま）。
+
+```ts
+// middleware.ts
+const url = request.nextUrl.clone();
+url.pathname = `/${locale}/${taxonomy}/${slug}/p/${pageNum}`;
+url.searchParams.delete('p');
+return NextResponse.rewrite(url);
+```
+
+> **注意:** i18n 有効時、`/ja/genre/foo` でも middleware に渡る `pathname` は `/genre/foo` になることがある。接頭辞あり・なしの両方を受け、`nextUrl.locale` で補完すること。これを怠ると rewrite が効かず常に1ページ目が表示される。
+
+### 例外: `movie` / `anime` / `drama` / `vod`
+
+これらは `/page/N` 形式（`?page=N` を rewrite）で先に実装されている。**新規の一覧ページは `?p=N` に統一する。**
+
 ## StorybookコンポーネントのNext.jsページへの配置
 
 Score・VodBadge・PostCard 等のStorybookコンポーネントはそのままimportして配置する。

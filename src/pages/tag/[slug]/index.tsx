@@ -44,7 +44,7 @@ const TagPage = ({ tagName, slug, posts, currentPage, totalPages, locale }: TagP
 
   const handlePageChange = (page: number) => {
     const base = getTaxonomyUrl('tag', slug, loc);
-    void router.push(page === 1 ? base : `${base}/p/${page}`, undefined, { scroll: true });
+    void router.push(page === 1 ? base : `${base}?p=${page}`, undefined, { scroll: true });
   };
 
   return (
