@@ -1,19 +1,25 @@
 /**
  * カテゴリ一覧ページのフィルタ・ページネーション済み投稿を CSR 向けに返す。
  * filter / page 指定時は Post[]（表示用フルデータ）を、未指定時は FilterPost[]（フィルタ選択肢用）を返す。
+ *
+ * 絞り込み・ソート・ページングは WP のカスタムエンドポイント（`/v1/category-list`）が
+ * SQL で行う。以前は WP から全記事（映画は466件）を取得してメモリ上で処理しており
+ * 実測約6.4秒かかっていた。
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getCategoriesForArchiveResolve, getPostsWithMeta } from '@/libs/api/wordpress';
-import { normalizePosts } from '@/utils/normalizePost';
+import { getCategoryList, toVodServices } from '@/libs/api/wordpress';
+import type {
+  CategoryListFilter,
+  CategoryListItem,
+  CategoryListFilterOptions,
+} from '@/libs/api/wordpress';
 import {
   CATEGORY_LIST_PER_PAGE,
-  filterPostsByListFilters,
   getSortFilterFromUrlParams,
   getTaxonomyFilterFromUrlParams,
-  paginatePosts,
 } from '@/libs/listFilters';
+import { getPostUrl, resolvePostType } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
-import type { WPPost } from '@/types/wordpress';
 
 export type CategoryFilterPostsResponse = {
   posts: FilterPost[];
@@ -26,35 +32,74 @@ export type CategoryPagedPostsResponse = {
   totalPages: number;
 };
 
-const FETCH_OPTIONS = { timeoutMs: 10000, maxRetries: 1 } as const;
+/** 1ページ分のみの取得になったため、従来の10秒から既定（3秒）に戻せる余地はあるが、
+ *  コールド時の余裕を見て5秒とする（実測: コールド 0.66〜1.24秒） */
+const FETCH_OPTIONS = { timeoutMs: 5000, maxRetries: 1 } as const;
 
-/** WP から全件取得して正規化した Post[] を返す内部ヘルパー。 */
-const fetchAllNormalizedPosts = async (
-  categoryId: number,
-  locale: 'ja' | 'en',
-): Promise<Post[] | null> => {
-  const first = await getPostsWithMeta(
-    { category: categoryId, page: 1, per_page: 100 },
-    FETCH_OPTIONS,
-  );
-  if (!first) return null;
+/** `genre:xxx` / `tag:xxx` 形式のタクソノミーフィルタを、WP へ渡すクエリへ分解する。 */
+const splitTaxonomyFilter = (taxonomyFilter?: string): { genre?: string; tag?: string } => {
+  if (!taxonomyFilter) return {};
+  const [type, ...rest] = taxonomyFilter.split(':');
+  const slug = rest.join(':');
+  if (slug.length === 0) return {};
+  if (type === 'genre') return { genre: slug };
+  if (type === 'tag') return { tag: slug };
+  return {};
+};
 
-  const rawPosts: WPPost[] = [...first.items];
-  const rawTotalWpPages = Math.max(1, first.meta.totalPages);
+/** WP のレスポンス1件を、表示用の `Post` へ変換する。 */
+const toPost = (item: CategoryListItem, locale: 'ja' | 'en'): Post => {
+  const type = resolvePostType(item.category);
+  const vods = toVodServices(item.vods);
+  const genres = item.genres.map(({ name, slug }) => ({ name, slug }));
+  const tags = item.tags.map(({ name, slug }) => ({ name, slug }));
 
-  if (rawTotalWpPages > 1) {
-    const remainingPages = Array.from({ length: rawTotalWpPages - 1 }, (_, i) => i + 2);
-    const batches = await Promise.all(
-      remainingPages.map((p) =>
-        getPostsWithMeta({ category: categoryId, page: p, per_page: 100 }, FETCH_OPTIONS),
-      ),
-    );
-    for (const batch of batches) {
-      if (batch) rawPosts.push(...batch.items);
-    }
-  }
+  return {
+    id: String(item.id),
+    // `Post.slug` はリンクの href としてそのまま使われるためロケール込みのフルパスにする
+    slug: getPostUrl(type, item.slug, locale),
+    title: item.title,
+    excerpt: item.excerpt,
+    image: item.featuredImage?.url ?? null,
+    publishedAt: item.date.slice(0, 10),
+    updatedAt: item.modified.slice(0, 10),
+    lang: locale,
+    type,
+    category: item.category,
+    ...(item.score !== null ? { score: item.score } : {}),
+    ...(vods.length > 0 ? { vods } : {}),
+    ...(genres.length > 0 ? { genres } : {}),
+    ...(tags.length > 0 ? { tags } : {}),
+  };
+};
 
-  return normalizePosts(rawPosts, locale);
+/**
+ * フィルタ選択肢用の `FilterPost[]` を組み立てる。
+ *
+ * UI（`getPostTaxonomyFilterOptionRows`）は投稿配列を走査して
+ * genre / tag の選択肢を作るため、選択肢と同じ形の擬似的な投稿を1件ずつ用意する。
+ * 全記事を取得しなくても選択肢を出せるようにするための変換で、
+ * これらは表示には使われない。
+ */
+const toFilterOptionPosts = (options: CategoryListFilterOptions): FilterPost[] => {
+  const posts: FilterPost[] = [];
+  options.genres.forEach((genre, index) => {
+    posts.push({
+      id: `filter-genre-${index}`,
+      slug: '',
+      publishedAt: '',
+      genres: [{ name: genre.name, slug: genre.slug }],
+    });
+  });
+  options.tags.forEach((tag, index) => {
+    posts.push({
+      id: `filter-tag-${index}`,
+      slug: '',
+      publishedAt: '',
+      tags: [{ name: tag.name, slug: tag.slug }],
+    });
+  });
+  return posts;
 };
 
 const handler = async (
@@ -78,69 +123,53 @@ const handler = async (
       : CATEGORY_LIST_PER_PAGE;
 
   const currentLocale = locale === 'en' ? 'en' : 'ja';
+  const sortFilter = getSortFilterFromUrlParams({ filter, genre, tag });
+  const taxonomyFilter = getTaxonomyFilterFromUrlParams({ filter, genre, tag });
+  const { genre: genreSlug, tag: tagSlug } = splitTaxonomyFilter(taxonomyFilter);
 
-  const categories = await getCategoriesForArchiveResolve(FETCH_OPTIONS);
-  const category = categories.find((c) => c.slug === slug);
-  if (!category) {
-    res.status(404).json({ error: 'Category not found' });
-    return;
-  }
+  const requestedPage = typeof pageParam === 'string' ? Number.parseInt(pageParam, 10) : undefined;
+  const hasPage = requestedPage !== undefined && Number.isFinite(requestedPage);
 
-  const normalizedPosts = await fetchAllNormalizedPosts(category.id, currentLocale);
-  if (!normalizedPosts) {
+  const result = await getCategoryList(
+    {
+      category: slug,
+      lang: currentLocale,
+      page: hasPage ? Math.max(1, requestedPage) : 1,
+      perPage,
+      filter: sortFilter as CategoryListFilter,
+      ...(genreSlug !== undefined ? { genre: genreSlug } : {}),
+      ...(tagSlug !== undefined ? { tag: tagSlug } : {}),
+    },
+    FETCH_OPTIONS,
+  );
+
+  if (!result) {
+    console.error(`[category-filter-posts] WP から取得できなかった（slug=${slug} locale=${currentLocale}）`);
+    res.setHeader('Cache-Control', 'no-store');
     res.status(503).json({ error: 'Failed to fetch posts' });
     return;
   }
 
   res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1800');
 
+  const filterPosts = toFilterOptionPosts(result.filterOptions);
+
   // page / filter 指定あり → フィルタ・ページネーション済みの Post[] を返す
-  const requestedPage = typeof pageParam === 'string' ? Number.parseInt(pageParam, 10) : undefined;
-  if (requestedPage !== undefined && Number.isFinite(requestedPage)) {
-    const sortFilter = getSortFilterFromUrlParams({ filter, genre, tag });
-    const taxonomyFilter = getTaxonomyFilterFromUrlParams({ filter, genre, tag });
-    const filteredPosts = filterPostsByListFilters(normalizedPosts, { sortFilter, taxonomyFilter });
-    const totalPages = Math.max(1, Math.ceil(filteredPosts.length / perPage));
-    const safePage = Math.min(Math.max(1, requestedPage), totalPages);
-    const pagedPosts = paginatePosts(filteredPosts, safePage, perPage);
-
-    const filterPosts: FilterPost[] = normalizedPosts.map(
-      ({ id, slug: postSlug, score, publishedAt, vods, genres, tags: postTags }) => ({
-        id,
-        slug: postSlug,
-        score: score ?? null,
-        publishedAt,
-        vods: vods ?? null,
-        genres: genres ?? null,
-        tags: postTags ?? null,
-      }),
-    );
-
+  if (hasPage) {
     const response: CategoryPagedPostsResponse = {
-      posts: pagedPosts,
+      posts: result.items.map((item) => toPost(item, currentLocale)),
       filterPosts,
-      totalPages,
+      totalPages: Math.max(1, result.meta.totalPages),
     };
     res.status(200).json(response);
     return;
   }
 
   // page 未指定 → フィルタ選択肢用の FilterPost[] を返す（後方互換）
-  const totalPages = Math.max(1, Math.ceil(normalizedPosts.length / perPage));
-  const posts: FilterPost[] = normalizedPosts.map(
-    ({ id, slug: postSlug, score, publishedAt, vods, genres, tags: postTags }) => ({
-      id,
-      slug: postSlug,
-      score: score ?? null,
-      publishedAt,
-      vods: vods ?? null,
-      genres: genres ?? null,
-      tags: postTags ?? null,
-    }),
-  );
-
-  const response: CategoryFilterPostsResponse = { posts, totalPages };
-  res.status(200).json(response);
+  res.status(200).json({
+    posts: filterPosts,
+    totalPages: Math.max(1, result.meta.totalPages),
+  });
 };
 
 export default handler;

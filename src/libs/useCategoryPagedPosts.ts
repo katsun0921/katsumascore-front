@@ -64,6 +64,11 @@ export const useCategoryPagedPosts = ({
         if (perPage !== undefined) params.set('perPage', String(perPage));
 
         const r = await fetch(`/api/category-filter-posts?${params.toString()}`);
+        // 503（WP 取得失敗）時に空配列で上書きすると一覧が消えるため、初期表示を維持する
+        if (!r.ok) {
+          if (!cancelled) setIsLoading(false);
+          return;
+        }
         const data = (await r.json()) as CategoryPagedPostsResponse;
         if (!cancelled) {
           setCsrPosts(data.posts);

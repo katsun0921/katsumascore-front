@@ -51,6 +51,15 @@ export type {
   VodListParams,
 } from "./endpoints/vodList";
 
+export { getCategoryList, toVodServices } from "./endpoints/categoryList";
+export type {
+  CategoryListFilter,
+  CategoryListParams,
+  CategoryListItem,
+  CategoryListFilterOptions,
+  CategoryListResponse,
+} from "./endpoints/categoryList";
+
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
 export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 

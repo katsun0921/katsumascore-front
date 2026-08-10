@@ -252,6 +252,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | ファイル | 主要関数 | 説明 |
 |---------|---------|------|
 | `posts.ts` | `getPosts`, `getPostBySlug`, `getRelatedPosts`, `searchPosts` | 投稿取得 |
+| `categoryList.ts` | `getCategoryList`, `toVodServices` | カテゴリ記事一覧専用カスタムエンドポイント（`/wp-json/v1/category-list`）。絞り込み・ソート・ページングをWP側のSQLで処理し1ページ分のみ取得する（従来の全件取得 約6.4秒 → 約0.5〜1.2秒） |
 | `pages.ts` | `getPage`, `getPageBySlug` | 固定ページ取得 |
 | `categories.ts` | `getCategories`, `getCategoriesForArchiveResolve`, `getPostsByCategory` | カテゴリ取得 |
 | `tags.ts` | `getTags`, `getPostsByTag` | タグ取得 |
