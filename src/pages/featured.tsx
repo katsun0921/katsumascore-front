@@ -10,6 +10,9 @@ import { WP_FEATURED_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { getCategoryBySlug, getPostsWithMeta } from '@/libs/api/wordpress';
 import { normalizePosts } from '@/utils/normalizePost';
 import type { Post } from '@/types/post';
+/** per_page=100 は `_embed` 込みで約7MB・コールド約6〜7秒かかるため、既定3秒を上書きする */
+const FEATURED_FETCH_OPTIONS = { timeoutMs: 15_000, maxRetries: 1 } as const;
+
 const FILTER_OPTIONS = [
   { label: '評価順', value: 'score' },
   { label: '新着', value: 'new' },
@@ -62,15 +65,29 @@ export default FeaturedPage;
 export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale }) => {
   const currentLocale = (locale === 'en' ? 'en' : 'ja') as import('@/libs/api/wordpress/lang').Locale;
   const slug = WP_FEATURED_CATEGORY_SLUG;
-  const category = await getCategoryBySlug(slug);
-  if (!category) return { notFound: true };
+  const category = await getCategoryBySlug(slug, FEATURED_FETCH_OPTIONS);
 
-  const fetched = await getPostsWithMeta({
-    category: category.id,
-    page: 1,
-    per_page: 100,
-  });
-  if (!fetched) return { notFound: true };
+  // WP 側に `featured` カテゴリが存在しない場合もここに入る。
+  // 取得失敗と設定不備を切り分けられるようログを残す（現状 WP には movie / anime / drama のみ）
+  if (!category) {
+    console.error(`[featured] カテゴリ "${slug}" を WP から解決できないため 404 を返す`);
+    return { notFound: true };
+  }
+
+  const fetched = await getPostsWithMeta(
+    {
+      category: category.id,
+      page: 1,
+      per_page: 100,
+    },
+    FEATURED_FETCH_OPTIONS,
+  );
+
+  // 取得失敗を notFound（404）にすると、WP の一時的な不調で特集ページが
+  // 検索エンジンから消える。throw して ISR に前回の生成結果を維持させる
+  if (!fetched) {
+    throw new Error('[featured] WP から特集記事を取得できなかったため ISR の再生成を中止する');
+  }
 
   return {
     props: {

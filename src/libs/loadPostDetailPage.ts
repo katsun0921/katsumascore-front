@@ -5,7 +5,7 @@
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import {
   getPostBySlug,
-  getPosts,
+  getSitemapPosts,
   getRelatedPosts,
   parseWPPostUnknown,
   mapWPPostToPost,
@@ -52,8 +52,19 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   const locs = (locales ?? ['ja', 'en']).filter((l: string) => l !== 'default');
   const paths: { params: { slug: string }; locale: string }[] = [];
 
+  // 必要なのは slug のみ。`_embed` と本文を含む取得は per_page=100 で約7MB・約7秒に達し、
+  // 既定3秒のタイムアウトで失敗して paths が常に0件になっていた。
+  // サイトマップと同じ軽量取得（約21KB）を使う
+  const posts = await getSitemapPosts(100, 10);
+
+  // 取得失敗時は空の paths を返す。`fallback: 'blocking'` によりリクエスト時に生成されるため
+  // ページ自体は表示できるが、事前生成の効果が失われるためログを残す
+  if (posts === null) {
+    console.error('[getStaticPaths] WP から記事スラッグを取得できず、事前生成をスキップする');
+    return { paths: [], fallback: 'blocking' };
+  }
+
   for (const loc of locs) {
-    const posts = await getPosts({ per_page: 100 });
     for (const p of posts) {
       if (typeof p.slug === 'string') {
         paths.push({ params: { slug: p.slug }, locale: loc });
