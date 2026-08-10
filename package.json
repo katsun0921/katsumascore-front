@@ -17,6 +17,7 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
     "lint": "eslint src .storybook eslint-rules eslint.config.mjs",
     "lint:scss": "stylelint \"src/**/*.scss\"",
     "lint:ui": "node scripts/lint-ui.mjs",
