@@ -87,9 +87,8 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(slug, currentLocale, 1);
-  if ('fetchFailed' in data) {
-    throw new Error('[actor] WP から記事一覧を取得できなかった');
-  }
+  // 取得失敗時も 404（fallback: 'blocking' のためリクエスト時に再生成される）
+  if ('fetchFailed' in data) return { notFound: true, revalidate: 60 };
   if ('notFound' in data) return { notFound: true };
 
   return {
