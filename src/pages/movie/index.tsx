@@ -15,7 +15,7 @@ import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import { WP_MOVIE_CATEGORY_SLUG } from '@/config/wpContent.config';
 import { CATEGORY_LIST_PER_PAGE } from '@/libs/listFilters';
-import { loadCategoryListPage } from '@/libs/loadCategoryListPage';
+import { loadCategoryListPage, buildEmptyCategoryListPage } from '@/libs/loadCategoryListPage';
 import { useCategoryPagedPosts } from '@/libs/useCategoryPagedPosts';
 import {
   getActiveListFilterValuesFromUrlParams,
@@ -112,11 +112,22 @@ export default MovieIndexPage;
 export const getStaticProps: GetStaticProps<MovieIndexProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_MOVIE_CATEGORY_SLUG, currentLocale, 1);
-  // WP 取得失敗を notFound にすると、ビルド時の一時的な失敗が静的出力に
-  // 404 として焼き付き revalidate でも復旧しない（本番で実際に発生した）。
-  // throw してビルドを失敗させ、誤った 404 を配信しない
+  // WP 取得失敗時は 404 を焼き付けず、ビルドも止めない。
+  // 空一覧を短い revalidate で生成し、リクエスト時の ISR 再生成で復旧させる
+  // （ビルド環境から WP へ到達できない状態が常態化しているため。
+  //   詳細は docs/develop/BUILD_WP_UNREACHABLE.md）
   if ('fetchFailed' in data) {
-    throw new Error('[movie] WP から記事一覧を取得できなかったためビルドを中止する');
+    const fallback = buildEmptyCategoryListPage(WP_MOVIE_CATEGORY_SLUG, currentLocale);
+    return {
+      props: {
+        categoryName: fallback.categoryName,
+        posts: fallback.posts,
+        currentPage: fallback.currentPage,
+        totalPages: fallback.totalPages,
+        locale: currentLocale,
+      },
+      revalidate: REVALIDATE_NOT_FOUND,
+    };
   }
   if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 

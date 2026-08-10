@@ -122,10 +122,11 @@ export const getStaticProps: GetStaticProps<DramaPagedProps> = async ({ params, 
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_DRAMA_CATEGORY_SLUG, currentLocale, pageNum);
-  // 取得失敗を notFound にすると誤った 404 がキャッシュされるため throw する
-  // （fallback: 'blocking' のためリクエスト時に再生成される）
+  // 取得失敗時は短い revalidate の 404 を返す（fallback: 'blocking' のため
+  // リクエスト時に再生成され、WP が復帰すれば自動的に正しい内容になる）。
+  // ビルド時は getStaticPaths が空配列を返すため、ここは事前生成されない
   if ('fetchFailed' in data) {
-    throw new Error('[drama/page] WP から記事一覧を取得できなかった');
+    return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
   }
   if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 

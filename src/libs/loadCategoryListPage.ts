@@ -13,6 +13,7 @@ import { getCategoriesForArchiveResolve, getCategoryList } from "@/libs/api/word
 import { toSerializableValue } from "@/utils/toSerializableValue";
 import { categoryListItemToPost } from "@/utils/categoryListItemToPost";
 import { CATEGORY_LIST_PER_PAGE } from "@/libs/listFilters";
+import { POST_TYPE_ARCHIVE_NAV_ITEMS } from "@/config/wpContent.config";
 import type { Post } from "@/types/post";
 
 export { CATEGORY_LIST_PER_PAGE } from "@/libs/listFilters";
@@ -23,10 +24,16 @@ export type CategoryListPageResult =
   /**
    * WP からの取得に失敗した（一時的な障害）。
    *
-   * ビルド時にこれを `notFound: true` として返すと、生成される静的出力に
-   * 404 が焼き付き、`revalidate` を設定していても復旧しない。
-   * 実際に本番で `/ja/movie` `/ja/anime` `/ja/drama` が 404 のままになった。
-   * 呼び出し側は `throw` してビルドを失敗させるか、前回の生成結果を維持すること。
+   * 2つの失敗モードがあり、扱いを分ける必要がある。
+   *
+   * 1. `notFound: true` を返す → 静的出力に 404 が焼き付き `revalidate` でも
+   *    復旧しない。実際に本番で `/ja/movie` `/ja/anime` `/ja/drama` が 404 になった
+   * 2. `throw` する → ビルド全体が失敗する。ビルド環境から WP へ到達できない
+   *    状態が常態化していると、デプロイそのものができなくなる
+   *
+   * 現状 GitHub Actions のランナーからは WP が HTTP 403 を返すため 2 が起きる。
+   * そのため呼び出し側は空一覧のページを短い `revalidate` で生成し、
+   * リクエスト時の ISR 再生成で復旧させる（`buildEmptyCategoryListPage` を使う）。
    */
   | { fetchFailed: true }
   | {
@@ -36,6 +43,29 @@ export type CategoryListPageResult =
       currentPage: number;
       totalPages: number;
     };
+
+/**
+ * WP 取得に失敗したときの一覧ページデータ（空一覧）。
+ *
+ * ビルド時に WP へ到達できなくても、404 を焼き付けず・ビルドも止めずに
+ * ページを生成するために使う。呼び出し側は短い `revalidate` を設定し、
+ * リクエスト時の ISR 再生成で実データへ復旧させること。
+ *
+ * カテゴリ名は WP から取れないため、ナビ定義のラベルで代替する。
+ */
+export const buildEmptyCategoryListPage = (
+  slug: string,
+  locale: "ja" | "en",
+): Extract<CategoryListPageResult, { posts: Post[] }> => {
+  const navItem = POST_TYPE_ARCHIVE_NAV_ITEMS.find((item) => item.postType === slug);
+  return {
+    categoryName: navItem ? navItem.label[locale] : slug,
+    slug,
+    posts: [],
+    currentPage: 1,
+    totalPages: 1,
+  };
+};
 
 /** カテゴリ名の解決のみ `/wp/v2/categories` を使うため、余裕を持たせる */
 const CATEGORY_FETCH_OPTIONS = { timeoutMs: 10000, maxRetries: 1 } as const;
