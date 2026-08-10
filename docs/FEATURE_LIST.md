@@ -253,6 +253,7 @@ hooks / state 使用可。データ取得・整形を担当。
 |---------|---------|------|
 | `posts.ts` | `getPosts`, `getPostBySlug`, `getRelatedPosts`, `searchPosts` | 投稿取得 |
 | `categoryList.ts` | `getCategoryList`, `toVodServices` | カテゴリ記事一覧専用カスタムエンドポイント（`/wp-json/v1/category-list`）。絞り込み・ソート・ページングをWP側のSQLで処理し1ページ分のみ取得する（従来の全件取得 約6.4秒 → 約0.5〜1.2秒） |
+| `sitemapPosts.ts` | `getSitemapPosts` | サイトマップ専用の投稿取得。`_embed` を外し `_fields` を slug / categories / acf.lang 等に絞ることで、`per_page=100` でもタイムアウトしない（約7MB→約21KB）。取得失敗時は空配列ではなく `null` を返す |
 | `pages.ts` | `getPage`, `getPageBySlug` | 固定ページ取得 |
 | `categories.ts` | `getCategories`, `getCategoriesForArchiveResolve`, `getPostsByCategory` | カテゴリ取得 |
 | `tags.ts` | `getTags`, `getPostsByTag` | タグ取得 |
