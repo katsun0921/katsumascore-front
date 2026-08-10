@@ -32,8 +32,12 @@ jobs:
       - name: Stylelint
         run: npm run lint:scss
 
+      # next-env.d.ts は .gitignore 対象でリポジトリに存在しないため、
+      # `tsc --noEmit` の前に `next typegen` で生成する必要がある。
+      # このファイルが無いと next/image-types/global（.webp 等の画像モジュール宣言）が
+      # 読み込まれず、TS2307 で失敗する。
       - name: Type check
-        run: npx tsc --noEmit
+        run: npm run typecheck
 
       # generated/wp-schema.d.ts は openapi/wp.yaml からの生成物。
       # 手編集すると次回の `npm run wp:gen-types` で消えるため、

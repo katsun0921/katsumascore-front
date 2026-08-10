@@ -44,6 +44,7 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 ```
 
 - テストがある場合: `npm test` / `npm run lint` の実行を指示する
+- 型チェックは `npm run typecheck` を使う（`tsc --noEmit` 単体だと `next-env.d.ts` が無い環境で画像モジュールの型解決に失敗する）
 - UIの変更: スクリーンショットとの比較を指示する
 - ビルドエラー: エラー全文を貼り付け、根本原因の修正を指示する
 
@@ -168,7 +169,7 @@ WordPress API → lib/api → features（正規化） → components → pages
 
 - 変更済みファイルの一覧
 - 実行中のタスクとその目的
-- テストコマンド（`npm test` / `npm run lint` / `npm run lint:scss`）
+- テストコマンド（`npm test` / `npm run lint` / `npm run lint:scss` / `npm run typecheck`）
 - 未解決の問題・エラーの内容
 
 ---
