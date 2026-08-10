@@ -7,18 +7,14 @@
  * 実測約6.4秒かかっていた。
  */
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getCategoryList, toVodServices } from '@/libs/api/wordpress';
-import type {
-  CategoryListFilter,
-  CategoryListItem,
-  CategoryListFilterOptions,
-} from '@/libs/api/wordpress';
+import { getCategoryList } from '@/libs/api/wordpress';
+import type { CategoryListFilter, CategoryListFilterOptions } from '@/libs/api/wordpress';
 import {
   CATEGORY_LIST_PER_PAGE,
   getSortFilterFromUrlParams,
   getTaxonomyFilterFromUrlParams,
 } from '@/libs/listFilters';
-import { getPostUrl, resolvePostType } from '@/libs/route';
+import { categoryListItemToPost } from '@/utils/categoryListItemToPost';
 import type { FilterPost, Post } from '@/types/post';
 
 export type CategoryFilterPostsResponse = {
@@ -47,31 +43,6 @@ const splitTaxonomyFilter = (taxonomyFilter?: string): { genre?: string; tag?: s
   return {};
 };
 
-/** WP のレスポンス1件を、表示用の `Post` へ変換する。 */
-const toPost = (item: CategoryListItem, locale: 'ja' | 'en'): Post => {
-  const type = resolvePostType(item.category);
-  const vods = toVodServices(item.vods);
-  const genres = item.genres.map(({ name, slug }) => ({ name, slug }));
-  const tags = item.tags.map(({ name, slug }) => ({ name, slug }));
-
-  return {
-    id: String(item.id),
-    // `Post.slug` はリンクの href としてそのまま使われるためロケール込みのフルパスにする
-    slug: getPostUrl(type, item.slug, locale),
-    title: item.title,
-    excerpt: item.excerpt,
-    image: item.featuredImage?.url ?? null,
-    publishedAt: item.date.slice(0, 10),
-    updatedAt: item.modified.slice(0, 10),
-    lang: locale,
-    type,
-    category: item.category,
-    ...(item.score !== null ? { score: item.score } : {}),
-    ...(vods.length > 0 ? { vods } : {}),
-    ...(genres.length > 0 ? { genres } : {}),
-    ...(tags.length > 0 ? { tags } : {}),
-  };
-};
 
 /**
  * フィルタ選択肢用の `FilterPost[]` を組み立てる。
@@ -157,7 +128,7 @@ const handler = async (
   // page / filter 指定あり → フィルタ・ページネーション済みの Post[] を返す
   if (hasPage) {
     const response: CategoryPagedPostsResponse = {
-      posts: result.items.map((item) => toPost(item, currentLocale)),
+      posts: result.items.map((item) => categoryListItemToPost(item, currentLocale)),
       filterPosts,
       totalPages: Math.max(1, result.meta.totalPages),
     };
