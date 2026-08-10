@@ -122,6 +122,11 @@ export const getStaticProps: GetStaticProps<AnimePagedProps> = async ({ params, 
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_ANIME_CATEGORY_SLUG, currentLocale, pageNum, ANIME_LIST_PER_PAGE);
+  // 取得失敗を notFound にすると誤った 404 がキャッシュされるため throw する
+  // （fallback: 'blocking' のためリクエスト時に再生成される）
+  if ('fetchFailed' in data) {
+    throw new Error('[anime/page] WP から記事一覧を取得できなかった');
+  }
   if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {

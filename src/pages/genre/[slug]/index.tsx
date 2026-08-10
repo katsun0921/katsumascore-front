@@ -44,7 +44,7 @@ const GenrePage = ({ genreName, slug, posts, currentPage, totalPages, locale }: 
 
   const handlePageChange = (page: number) => {
     const base = getTaxonomyUrl('genre', slug, loc);
-    void router.push(page === 1 ? base : `${base}/p/${page}`, undefined, { scroll: true });
+    void router.push(page === 1 ? base : `${base}?p=${page}`, undefined, { scroll: true });
   };
 
   return (

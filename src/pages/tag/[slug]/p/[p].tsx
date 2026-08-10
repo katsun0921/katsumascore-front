@@ -52,11 +52,12 @@ const TagPagedPage = ({
   const [activeFilter, setActiveFilter] = useState('score');
   const sortedPosts = sortPosts(posts, activeFilter);
   const loc = (locale ?? 'ja') as Locale;
-  const canonicalUrl = `${SITE_URL}${getTaxonomyUrl('tag', slug, loc)}/p/${currentPage}`;
+  // ページネーションの正規URLは `?p=N` に一本化している（`/p/N` は 301 で寄せる）
+  const canonicalUrl = `${SITE_URL}${getTaxonomyUrl('tag', slug, loc)}?p=${currentPage}`;
 
   const handlePageChange = (page: number) => {
     const base = getTaxonomyUrl('tag', slug, loc);
-    void router.push(page === 1 ? base : `${base}/p/${page}`, undefined, { scroll: true });
+    void router.push(page === 1 ? base : `${base}?p=${page}`, undefined, { scroll: true });
   };
 
   return (

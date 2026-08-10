@@ -18,7 +18,17 @@ import type { Post } from "@/types/post";
 export { CATEGORY_LIST_PER_PAGE } from "@/libs/listFilters";
 
 export type CategoryListPageResult =
+  /** カテゴリ・ページが存在しない（恒久的な 404） */
   | { notFound: true }
+  /**
+   * WP からの取得に失敗した（一時的な障害）。
+   *
+   * ビルド時にこれを `notFound: true` として返すと、生成される静的出力に
+   * 404 が焼き付き、`revalidate` を設定していても復旧しない。
+   * 実際に本番で `/ja/movie` `/ja/anime` `/ja/drama` が 404 のままになった。
+   * 呼び出し側は `throw` してビルドを失敗させるか、前回の生成結果を維持すること。
+   */
+  | { fetchFailed: true }
   | {
       categoryName: string;
       slug: string;
@@ -45,6 +55,13 @@ export const loadCategoryListPage = async (
 
   // 表示用のカテゴリ名（「映画」等）はエンドポイントが返さないため WP から解決する
   const categories = await getCategoriesForArchiveResolve(CATEGORY_FETCH_OPTIONS);
+
+  // カテゴリ一覧が空 = WP 取得失敗。「カテゴリが存在しない」と区別する
+  if (categories.length === 0) {
+    console.error(`[loadCategoryListPage] カテゴリ一覧を取得できなかった（slug=${slug}）`);
+    return { fetchFailed: true };
+  }
+
   const category = categories.find((c) => c.slug === slug);
   if (!category) return { notFound: true };
 
@@ -60,7 +77,10 @@ export const loadCategoryListPage = async (
     },
     POSTS_FETCH_OPTIONS,
   );
-  if (!result) return { notFound: true };
+  if (!result) {
+    console.error(`[loadCategoryListPage] 記事を取得できなかった（slug=${slug} page=${safePage}）`);
+    return { fetchFailed: true };
+  }
 
   // 該当言語の記事が0件のカテゴリ（例: drama の en）は 404 とする
   if (result.meta.total === 0) return { notFound: true };

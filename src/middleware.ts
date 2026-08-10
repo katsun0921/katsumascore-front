@@ -31,6 +31,31 @@ const matchPostTypeArchiveRoot = (
   return { seg, locale: nextLocale };
 };
 
+/**
+ * `/ja/genre/{slug}` `/ja/tag/{slug}` 形式。`?p=2+` を内部的に `.../p/N` へ rewrite する。
+ *
+ * ページネーションの正規 URL は `?p=N` に一本化している（`/p/N` は 301 で寄せる）。
+ * ページ実装は SSG のため `getStaticProps` からクエリを読めない。
+ * URL は `?p=N` のまま、内部で既存の `/p/[p]` ルートへ渡す。
+ */
+const matchLocaleTaxonomyArchive = (
+  pathname: string,
+  nextLocale?: 'ja' | 'en',
+): { locale: 'ja' | 'en'; taxonomy: 'genre' | 'tag'; slug: string } | null => {
+  const parts = pathname.split('/').filter(Boolean);
+
+  // i18n 有効時、`/ja/genre/foo` でも pathname が `/genre/foo` で渡ることがあるため
+  // 接頭辞あり・なしの両方を受ける（`nextUrl.locale` を補完に使う）
+  const hasPrefix = parts[0] === 'ja' || parts[0] === 'en';
+  const rest = hasPrefix ? parts.slice(1) : parts;
+  const locale = hasPrefix ? (parts[0] as 'ja' | 'en') : nextLocale;
+
+  if (locale === undefined) return null;
+  if (rest.length !== 2) return null;
+  if (rest[0] !== 'genre' && rest[0] !== 'tag') return null;
+  return { locale, taxonomy: rest[0], slug: rest[1] };
+};
+
 /** `/ja/vod/netflix` 形式。`?page=2+` は `.../page/N` へ rewrite する対象。 */
 const matchLocaleVodSlugArchive = (pathname: string): { locale: 'ja' | 'en'; slug: string } | null => {
   const parts = pathname.split('/').filter(Boolean);
@@ -62,6 +87,24 @@ export const middleware = (request: NextRequest) => {
     const url = request.nextUrl.clone();
     url.pathname = pathname === '/' ? '/ja' : `/ja${pathname}`;
     return NextResponse.redirect(url);
+  }
+
+  // genre / tag の `?p=N`（N>=2）を内部的に `/p/N` ルートへ渡す。
+  // URL は `?p=N` のまま（正規URL）で、ページ実装は既存の SSG を使う
+  const taxonomyArchive = matchLocaleTaxonomyArchive(
+    pathname,
+    resolveNextLocale(request.nextUrl.locale),
+  );
+  if (taxonomyArchive) {
+    const pRaw = request.nextUrl.searchParams.get('p');
+    const pNum = pRaw ? Number.parseInt(pRaw, 10) : NaN;
+    if (Number.isFinite(pNum) && pNum >= 2) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/${taxonomyArchive.locale}/${taxonomyArchive.taxonomy}/${taxonomyArchive.slug}/p/${pNum}`;
+      url.searchParams.delete('p');
+      return NextResponse.rewrite(url);
+    }
+    return NextResponse.next();
   }
 
   const vodSlug = matchLocaleVodSlugArchive(pathname);
