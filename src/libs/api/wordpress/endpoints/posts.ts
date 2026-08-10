@@ -18,6 +18,12 @@ type WPPost = components["schemas"]["WPPost"];
 const FIELDS =
   "id,slug,link,title,excerpt,content,date,modified,featured_media,acf,meta,_links,_embedded";
 
+// NOTE: 一覧では `normalizePosts` が `content` を捨てるため一見不要に見えるが、
+// `_fields` から `content` を外すと `WPPostSchema`（`content` は必須）の検証に落ち、
+// `mapWPPostToPost` が全件 null を返して画像・カテゴリ・スコアが失われる。
+// 削減効果も約7MB→約4MB（コールド約5.7秒）に留まり3秒には収まらないため、
+// フィールドは削らずタイムアウトを延長する方針とする。
+
 type PostsQuery = {
   page?: number;
   per_page?: number;
