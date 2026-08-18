@@ -1,6 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
 import Head from 'next/head';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import {
   VOD_ARCHIVE_LIST_PER_PAGE,
+  buildEmptyVodArchivePage,
   loadVodArchivePage,
 } from '@/libs/loadVodArchivePage';
 import {
@@ -24,7 +25,6 @@ import {
   getTaxonomyFilterFromUrlParams,
   getUrlParamsFromListFilter,
 } from '@/libs/listFilters';
-import { VOD_ARCHIVE_PATH_SLUGS } from '@/libs/vodPathToWpSlug';
 import { getVodArchiveNextPath, getVodArchiveUrl, normalizeRouteLocale } from '@/libs/route';
 import type { FilterPost, Post } from '@/types/post';
 
@@ -112,17 +112,8 @@ const VodSlugIndexPage = ({
 
 export default VodSlugIndexPage;
 
-export const getStaticPaths: GetStaticPaths = async ({ locales }) => {
-  const locs = (locales ?? ['ja', 'en']).filter((l) => l !== 'default');
-  const pathLocales = locs.length > 0 ? locs : ['ja', 'en'];
-  const paths: { params: { slug: string }; locale: string }[] = [];
-  for (const loc of pathLocales) {
-    for (const slug of VOD_ARCHIVE_PATH_SLUGS) {
-      paths.push({ params: { slug }, locale: loc });
-    }
-  }
-  return { paths, fallback: 'blocking' };
-};
+// WordPress へ同時アクセスするビルド時生成を避け、各サービスの初回アクセス時に ISR 生成する。
+export const getStaticPaths: GetStaticPaths = async () => ({ paths: [], fallback: 'blocking' });
 
 export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params, locale }) => {
   const slug = typeof params?.slug === 'string' ? params.slug : undefined;
@@ -130,7 +121,14 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadVodArchivePage(slug, currentLocale, 1);
-  if ('notFound' in data) return { notFound: true };
+  if ('fetchFailed' in data) {
+    const fallback = buildEmptyVodArchivePage(slug, 1);
+    return {
+      props: { ...fallback, locale: currentLocale },
+      revalidate: REVALIDATE_NOT_FOUND,
+    };
+  }
+  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {

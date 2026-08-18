@@ -1,6 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
 import Head from 'next/head';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog';
 import { useRouter } from 'next/router';
@@ -15,6 +15,7 @@ import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import {
   VOD_ARCHIVE_LIST_PER_PAGE,
+  buildEmptyVodArchivePage,
   loadVodArchivePage,
 } from '@/libs/loadVodArchivePage';
 import {
@@ -126,7 +127,14 @@ export const getStaticProps: GetStaticProps<VodSlugPagedProps> = async ({ params
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadVodArchivePage(slug, currentLocale, pageNum);
-  if ('notFound' in data) return { notFound: true };
+  if ('fetchFailed' in data) {
+    const fallback = buildEmptyVodArchivePage(slug, pageNum);
+    return {
+      props: { ...fallback, locale: currentLocale },
+      revalidate: REVALIDATE_NOT_FOUND,
+    };
+  }
+  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {
