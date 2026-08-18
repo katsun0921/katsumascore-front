@@ -12,7 +12,13 @@ import {
 } from "@/libs/api/wordpress";
 import { toSerializableValue } from "@/utils/toSerializableValue";
 import type { FilterPost, Post, VodService } from "@/types/post";
-import { resolveVodWpSlug, wpVodSlugToVodService } from "@/libs/vodPathToWpSlug";
+import { VOD_CONFIG } from "@/config/vod.config";
+import {
+  isVodPathSlug,
+  resolveVodWpSlug,
+  wpVodSlugToVodService,
+} from "@/libs/vodPathToWpSlug";
+import { getPostUrl, resolvePostType, type PostType } from "@/libs/route";
 
 export const VOD_ARCHIVE_LIST_PER_PAGE = 20;
 
@@ -24,19 +30,28 @@ const toVodServices = (terms: VodListItem['vods']): VodService[] =>
   });
 
 /** `VodListItem` を一覧表示用 `Post` にマッピングする。 */
-const vodListItemToPost = (item: VodListItem): Post => ({
-  id: String(item.id),
-  slug: item.slug,
-  title: item.title,
-  excerpt: item.excerpt,
-  image: item.featuredImage?.url ?? null,
-  publishedAt: item.date,
-  lang: item.lang,
-  score: item.score ?? undefined,
-  vods: toVodServices(item.vods),
-  genres: item.genres.map((g) => ({ name: g.name, slug: g.slug })),
-  tags: item.tags.map((t) => ({ name: t.name, slug: t.slug })),
-});
+const vodListItemToPost = (item: VodListItem): Post => {
+  const typeSlug = item.genres.find((term) => POST_TYPE_SLUGS.has(term.slug))?.slug;
+  const type = resolvePostType(typeSlug);
+  return {
+    id: String(item.id),
+    slug: getPostUrl(type, item.slug, item.lang),
+    title: item.title,
+    excerpt: item.excerpt,
+    image: item.featuredImage?.url ?? null,
+    publishedAt: item.date,
+    lang: item.lang,
+    type,
+    category: type,
+    score: item.score ?? undefined,
+    vods: toVodServices(item.vods),
+    genres: item.genres.map((g) => ({ name: g.name, slug: g.slug })),
+    tags: item.tags.map((t) => ({ name: t.name, slug: t.slug })),
+  };
+};
+
+/** VOD API のターム配列に含まれる記事種別スラッグ。 */
+const POST_TYPE_SLUGS: ReadonlySet<string> = new Set<PostType>(["movie", "anime", "drama"]);
 
 /** `VodListItem` をフィルタ・ページネーション用 `FilterPost` にマッピングする。 */
 const vodListItemToFilterPost = (item: VodListItem): FilterPost => ({
@@ -51,6 +66,7 @@ const vodListItemToFilterPost = (item: VodListItem): FilterPost => ({
 
 export type VodArchivePageResult =
   | { notFound: true }
+  | { fetchFailed: true }
   | {
       categoryName: string;
       pathSlug: string;
@@ -59,6 +75,29 @@ export type VodArchivePageResult =
       currentPage: number;
       totalPages: number;
     };
+
+/**
+ * WordPress 取得失敗時に 404 を静的生成しないための空一覧データを返す。
+ * 登録済みサービスは設定上の表示名を使い、総ページ数は現在ページ未満にならないよう補正する。
+ */
+export const buildEmptyVodArchivePage = (
+  pathSlug: string,
+  page: number,
+): Extract<VodArchivePageResult, { posts: Post[] }> => {
+  const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
+  const categoryName = isVodPathSlug(pathSlug) ? VOD_CONFIG[pathSlug].label : pathSlug;
+  return {
+    categoryName,
+    pathSlug,
+    posts: [],
+    allPosts: [],
+    currentPage: safePage,
+    totalPages: safePage,
+  };
+};
+
+/** VOD タームと一覧 API はビルド環境の遅延を考慮し、既定値より長く待つ。 */
+const VOD_FETCH_OPTIONS = { timeoutMs: 10000, maxRetries: 1 } as const;
 
 /**
  * URL パス上の VOD スラッグ（例: `amazon`）でタームを解決し、
@@ -79,23 +118,33 @@ export const loadVodArchivePage = async (
     if (!trimmed) return { notFound: true };
 
     const wpSlug = resolveVodWpSlug(trimmed);
-    let term: WPVodTerm | null = await getVodTermBySlug(wpSlug);
+    let term: WPVodTerm | null = await getVodTermBySlug(wpSlug, VOD_FETCH_OPTIONS);
     if (!term) {
-      const list = await getVodTerms();
-      term = list?.find((t) => t.slug === wpSlug) ?? null;
+      const list = await getVodTerms(VOD_FETCH_OPTIONS);
+      if (list === null) {
+        console.error(`[loadVodArchivePage] VOD ターム一覧を取得できなかった（slug=${wpSlug}）`);
+        return { fetchFailed: true };
+      }
+      term = list.find((t) => t.slug === wpSlug) ?? null;
     }
     if (!term) return { notFound: true };
 
     const safePage = Number.isFinite(page) && page >= 1 ? Math.floor(page) : 1;
 
     // 指定ページのみ取得（ページネーションはサーバー側で完結）
-    const vodResponse = await getVodList({
-      vod: term.slug,
-      lang: currentLocale,
-      page: safePage,
-      per_page: VOD_ARCHIVE_LIST_PER_PAGE,
-    });
-    if (!vodResponse) return { notFound: true };
+    const vodResponse = await getVodList(
+      {
+        vod: term.slug,
+        lang: currentLocale,
+        page: safePage,
+        per_page: VOD_ARCHIVE_LIST_PER_PAGE,
+      },
+      VOD_FETCH_OPTIONS,
+    );
+    if (!vodResponse) {
+      console.error(`[loadVodArchivePage] VOD 記事一覧を取得できなかった（slug=${wpSlug} page=${safePage}）`);
+      return { fetchFailed: true };
+    }
 
     const { items, meta } = vodResponse;
     // meta.totalPages は per_page=VOD_ARCHIVE_LIST_PER_PAGE で計算されているためそのまま使用
@@ -114,8 +163,8 @@ export const loadVodArchivePage = async (
       currentPage: safePage,
       totalPages,
     };
-  } catch {
-    // 未登録 slug や API 例外時は呼び出し側で 404 を返せるよう notFound に倒す
-    return { notFound: true };
+  } catch (error) {
+    console.error(`[loadVodArchivePage] VOD アーカイブ取得中に例外が発生した（slug=${pathSlug} page=${page}）`, error);
+    return { fetchFailed: true };
   }
 };
