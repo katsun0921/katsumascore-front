@@ -403,6 +403,40 @@ export const mockPostContentDefensive: PostContentData = {
 };
 
 // ─────────────────────────────────────────────
+// Visual Link Preview（WPプラグイン出力のHTML）
+// ─────────────────────────────────────────────
+export const mockPostContentVisualLinkPreview: PostContentData = {
+  content: `
+    <h2>Visual Link Preview</h2>
+    <p>本文中に外部記事のリンクカードを挿入した状態です。</p>
+
+    <div class="vlp-link-container vlp-layout-basic block-editor-block-list__block wp-block wp-block-visual-link-preview-link">
+      <a href="https://example.com/article" class="vlp-link" title="『おおかみこどもの雨と雪』細田守監督が挑む新しいアニメ表現" rel="nofollow" target="_blank"></a>
+      <div class="vlp-layout-zone-side">
+        <div class="vlp-block-2 vlp-link-image">
+          <img decoding="async" src="/images/mock-image.webp" style="max-width: 150px; max-height: 150px">
+        </div>
+      </div>
+      <div class="vlp-layout-zone-main">
+        <div class="vlp-block-0 vlp-link-title">『おおかみこどもの雨と雪』細田守監督が挑む新しいアニメ表現 – 週刊アスキー</div>
+        <div class="vlp-block-1 vlp-link-summary">『時をかける少女』、『サマーウォーズ』が高く評価され、今や世界でもっとも注目を集めるアニメーション監督、細田守。最新作『おおかみこどもと雨と雪』制作の背景をうかがいました。</div>
+      </div>
+    </div>
+
+    <p>カードの下に続く段落です。</p>
+
+    <h3>画像なし（サマリーのみ）</h3>
+    <div class="vlp-link-container vlp-layout-basic wp-block wp-block-visual-link-preview-link">
+      <a href="https://example.com/no-image" class="vlp-link" title="画像を取得できなかったリンク" rel="nofollow" target="_blank"></a>
+      <div class="vlp-layout-zone-main">
+        <div class="vlp-block-0 vlp-link-title">画像を取得できなかったリンクのタイトル</div>
+        <div class="vlp-block-1 vlp-link-summary">サムネイル画像が存在しない場合でも、レイアウトが崩れないことを確認します。</div>
+      </div>
+    </div>
+  `,
+};
+
+// ─────────────────────────────────────────────
 // 全セクション統合（All-in-one）
 // ─────────────────────────────────────────────
 export const mockPostContentFull: PostContentData = {
@@ -415,5 +449,6 @@ export const mockPostContentFull: PostContentData = {
     mockPostContentTable.content,
     mockPostContentCode.content,
     mockPostContentDefensive.content,
+    mockPostContentVisualLinkPreview.content,
   ].join('\n'),
 };
