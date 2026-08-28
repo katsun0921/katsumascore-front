@@ -10,6 +10,7 @@ import {
   mockPostContentMedia,
   mockPostContentTable,
   mockPostContentTypography,
+  mockPostContentVisualLinkPreview,
 } from '@/mocks/post';
 import { PostContent } from './PostContent';
 
@@ -84,6 +85,13 @@ export const Code: Story = {
 export const Defensive: Story = {
   args: {
     content: mockPostContentDefensive.content,
+  },
+};
+
+/** Visual Link Preview（WPプラグイン）のリンクカード */
+export const VisualLinkPreview: Story = {
+  args: {
+    content: mockPostContentVisualLinkPreview.content,
   },
 };
 

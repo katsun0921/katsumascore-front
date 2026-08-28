@@ -885,6 +885,97 @@
     }
   }
 
+  // -- Visual Link Preview（WPプラグイン。ProductBlock と同じカード意匠に揃える） --
+  // DOM: .vlp-link-container > a.vlp-link（全面を覆う空アンカー）
+  //                          + .vlp-layout-zone-side（画像）
+  //                          + .vlp-layout-zone-main（タイトル・要約）
+  .vlp-link-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-16);
+    margin: var(--space-40) 0;
+    padding: var(--space-16);
+    border: 1px solid var(--color-border-muted);
+    border-left: 4px solid var(--color-category);
+    border-radius: 6px;
+    background-color: var(--color-bg);
+    transition: box-shadow 250ms ease-in-out;
+
+    &:hover {
+      box-shadow: 0 2px 10px rgba(var(--color-black-rgb), 0.1);
+    }
+  }
+
+  // 全面を覆う空アンカー。汎用 a のスタイル（下線・ホバー余白）を打ち消す
+  .vlp-link {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+
+    &:hover {
+      margin: 0;
+      padding: 0;
+      border: none;
+      border-radius: 6px;
+      background-color: transparent;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  .vlp-layout-zone-side {
+    flex-shrink: 0;
+    width: auto;
+    max-width: 160px;
+    margin: 0 auto;
+  }
+
+  .vlp-link-image {
+    img {
+      display: block;
+      width: 100%;
+      max-width: 160px !important; // プラグインのインライン max-width:150px を上書き
+      height: auto;
+      margin: 0;
+      border-radius: 4px;
+      box-shadow: none;
+      object-fit: cover;
+
+      // 汎用 img:hover の浮き上がりを無効化（カード全体のホバーに統一）
+      &:hover {
+        transform: none;
+        box-shadow: none;
+      }
+    }
+  }
+
+  .vlp-layout-zone-main {
+    min-width: 0;
+  }
+
+  .vlp-link-title {
+    margin: 0 0 var(--space-8);
+    color: var(--color-text-primary);
+    font-size: 1em;
+    font-weight: bold;
+    line-height: 1.5;
+  }
+
+  .vlp-link-summary {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 0.875em;
+    line-height: 1.7;
+  }
+
   // ─────────────────────────────────────────────
   // 7. Table
   // ─────────────────────────────────────────────
@@ -1154,6 +1245,14 @@
     }
 
     .product-block__image {
+      margin: 0;
+    }
+
+    .vlp-link-container {
+      flex-direction: row;
+    }
+
+    .vlp-layout-zone-side {
       margin: 0;
     }
 
