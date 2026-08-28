@@ -161,6 +161,7 @@
     aspect-ratio: 2 / 3;
     border-radius: 4px;
     overflow: hidden;
+    opacity: 0.5;
     @include layout-md {
       grid-area: poster;
       position: relative;
@@ -170,6 +171,7 @@
       width: 100%;
       aspect-ratio: unset;
       overflow: visible;
+      opacity: 1;
     }
   }
 
