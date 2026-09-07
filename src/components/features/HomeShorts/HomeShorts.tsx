@@ -1,5 +1,12 @@
 'use client';
 
+/**
+ * HomeShorts — TOPページのショート動画紹介セクション。
+ *
+ * 現在 HomeTemplate 側でコメントアウトしており、アプリからは未使用（Storybook のみ参照）。
+ * 一時的な非表示のため削除せず残している。復活時は HomeTemplate.tsx のコメントアウトを解除する。
+ */
+
 import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { CloseIcon, PlayIcon } from '@/assets/icons';

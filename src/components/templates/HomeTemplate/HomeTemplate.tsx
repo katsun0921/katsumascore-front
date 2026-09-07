@@ -1,5 +1,6 @@
 import { HomeHero } from '@/components/features/HomeHero';
-import { HomeShorts } from '@/components/features/HomeShorts';
+// TODO: ショート動画セクションは一時的に非表示（復活時はこのコメントアウトを解除する）
+// import { HomeShorts } from '@/components/features/HomeShorts';
 import { AdBanner } from '@/components/ui-section/AdBanner';
 import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
@@ -18,7 +19,10 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  *
  * 表示順:
  *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → Ranking → 最新レビュー
- *   → ショート動画 → 注目のアニメ → 高評価 → Recommend → 特集 → VOD
+ *   → 注目のアニメ → 高評価 → Recommend → 特集 → VOD
+ *
+ * ※ ショート動画セクション（HomeShorts）は一時的に非表示中。
+ *   最新レビューと注目のアニメの間のコメントアウトを解除すると復活する。
  */
 export const HomeTemplate = ({
   hero,
@@ -28,7 +32,7 @@ export const HomeTemplate = ({
   animeArchiveHref,
   animePosts,
   highScorePosts,
-  shortVideoPosts,
+  // shortVideoPosts, — ショート動画セクション一時非表示のため未使用
   recommendBlocks,
   vodFinderItems,
   featuredItems,
@@ -80,6 +84,7 @@ export const HomeTemplate = ({
           />
         </section>
 
+        {/* ショート動画セクションは一時的に非表示（復活時はこのコメントアウトを解除する）
         {shortVideoPosts.length > 0 && (
           <section className='homeTemplate__section'>
             <HomeShorts
@@ -88,6 +93,7 @@ export const HomeTemplate = ({
             />
           </section>
         )}
+        */}
 
         <section className='homeTemplate__section'>
           <HomeCardScrollList
