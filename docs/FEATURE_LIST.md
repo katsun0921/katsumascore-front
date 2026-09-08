@@ -83,7 +83,7 @@
 | `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 | `/theater-release` | `pages/theater-release/index.tsx` | ISR | 劇場公開情報（週次まとめ記事）アーカイブ |
 | `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | ISR | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
-| `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行）。劇場公開情報は**日本語のみ**の運用のため記事は常に `lang=ja`、canonical は `/ja/now-showing` 固定 |
+| `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行）。劇場公開情報は**日本語のみ**の運用のため記事は常に `lang=ja`（TOP のセクションは ja のみ）。canonical は各ロケールの自己参照 |
 
 ### 1.7 Sitemap
 
