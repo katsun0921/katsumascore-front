@@ -5,6 +5,9 @@
  * 全件を ISR で取得し、ソート・絞り込み・ページングはクライアント側で行う
  * （`nowShowingFilters`）。フィルタを切り替えるたびの再取得が不要になる。
  *
+ * 劇場公開情報は日本語のみの運用のため、ルートのロケールに関わらず `lang=ja` で取得する
+ * （週次まとめ記事の `/theater-release` と同じ扱い）。
+ *
  * WP 側の実装は `/wp-json/v1/theater-list`。
  * @see katsumascore_wordpress_theme/docs/feature/THEATER_LIST_API_SPEC.md
  */
@@ -32,20 +35,19 @@ export type NowShowingPostsResult =
   | { posts: Post[] };
 
 /**
- * 上映中の記事を劇場公開日の新しい順で全件取得し、表示用の `Post` 配列にして返す。
+ * 上映中の記事（日本語のみ）を劇場公開日の新しい順で全件取得し、表示用の `Post` 配列にして返す。
  * 並び順は WP 側の `filter=release`（公開日降順）をそのまま保持する。
- *
- * @param locale — ルートのロケール。`en` のみ英語、それ以外は日本語として扱う。
+ * 記事リンクも日本語記事の URL（`/ja/...`）になる。
  */
-export const loadNowShowingPosts = async (locale: string): Promise<NowShowingPostsResult> => {
-  const lang = locale === "en" ? "en" : "ja";
+export const loadNowShowingPosts = async (): Promise<NowShowingPostsResult> => {
+  const lang = "ja" as const;
 
   const first = await getTheaterList(
     { lang, page: 1, perPage: FETCH_PER_PAGE, filter: "release" },
     FETCH_OPTIONS,
   );
   if (!first) {
-    console.error(`[loadNowShowingPosts] 上映中の記事を取得できなかった（lang=${lang}）`);
+    console.error("[loadNowShowingPosts] 上映中の記事を取得できなかった");
     return { fetchFailed: true };
   }
 
@@ -55,7 +57,7 @@ export const loadNowShowingPosts = async (locale: string): Promise<NowShowingPos
     const next = await getTheaterList({ lang, page, perPage: FETCH_PER_PAGE, filter: "release" }, FETCH_OPTIONS);
     // 途中ページの失敗は取得済み分を活かす（一覧が丸ごと空になるより実害が小さい）
     if (!next) {
-      console.error(`[loadNowShowingPosts] ${page}ページ目を取得できなかった（lang=${lang}）`);
+      console.error(`[loadNowShowingPosts] ${page}ページ目を取得できなかった`);
       break;
     }
     items.push(...next.items);

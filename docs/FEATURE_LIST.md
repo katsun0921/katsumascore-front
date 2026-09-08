@@ -83,7 +83,7 @@
 | `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 | `/theater-release` | `pages/theater-release/index.tsx` | ISR | 劇場公開情報（週次まとめ記事）アーカイブ |
 | `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | ISR | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
-| `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行） |
+| `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行）。劇場公開情報は**日本語のみ**の運用のため記事は常に `lang=ja`、canonical は `/ja/now-showing` 固定 |
 
 ### 1.7 Sitemap
 
@@ -303,7 +303,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `loadTagListPage` | `loadTagListPage.ts` | タグ一覧ページのデータロード |
 | `loadCategoryListPage` | `loadCategoryListPage.ts` | カテゴリ一覧ページのデータロード |
 | `loadVodArchivePage` | `loadVodArchivePage.ts` | VOD アーカイブページのデータロード |
-| `loadNowShowingPosts` | `loadNowShowingPosts.ts` | 劇場公開中の作品一覧ページのデータロード（`/v1/theater-list` を公開日順で全件取得） |
+| `loadNowShowingPosts` | `loadNowShowingPosts.ts` | 劇場公開中の作品一覧ページのデータロード（`/v1/theater-list` を公開日順で全件取得。日本語のみ） |
 
 ### 4.4 ユーティリティ関数（`src/libs/` / `src/utils/`）
 

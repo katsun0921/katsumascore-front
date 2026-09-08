@@ -1,6 +1,8 @@
-// ISR: revalidate REVALIDATE_NORMAL — 劇場公開中の作品一覧（/now-showing, /en/now-showing）。
+// ISR: revalidate REVALIDATE_NORMAL — 劇場公開中の作品一覧（/now-showing）。
 // 上映中は常時数件〜十数件のため WP の /v1/theater-list で全件を ISR 取得し、
 // ソート・絞り込み・ページングはクエリを見てクライアント側で行う（フィルタ切替時の再取得なし）。
+// 劇場公開情報は日本語のみの運用のため記事は常に ja を取得し、canonical も /ja に固定する
+// （週次まとめ記事の /theater-release と同じ扱い）。
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
@@ -96,8 +98,9 @@ const NowShowingPage = ({ posts: allPosts, locale }: NowShowingPageProps) => {
     ...taxonomyFilterRows,
   ];
 
-  // フィルター・ページは同じ一覧の見え方の違いのため、canonical は常に基底 URL へ寄せる
-  const canonicalUrl = `${SITE_URL}${getNowShowingArchivePath(loc)}`;
+  // 記事は日本語のみのため canonical はロケールに関わらず /ja に固定する（en 側の重複コンテンツ回避）。
+  // フィルター・ページは同じ一覧の見え方の違いのため、クエリは canonical に含めない
+  const canonicalUrl = `${SITE_URL}${getNowShowingArchivePath('ja')}`;
 
   return (
     <I18nProvider locale={loc}>
@@ -125,7 +128,7 @@ export default NowShowingPage;
 
 export const getStaticProps: GetStaticProps<NowShowingPageProps> = async ({ locale }) => {
   const currentLocale = normalizeRouteLocale(locale);
-  const result = await loadNowShowingPosts(currentLocale);
+  const result = await loadNowShowingPosts();
 
   // WP 取得失敗時は 404 を焼き付けず、空一覧を短い revalidate で生成して ISR 再生成で復旧させる
   // （ビルド環境から WP へ到達できない状態が常態化しているため。詳細は docs/develop/BUILD_WP_UNREACHABLE.md）

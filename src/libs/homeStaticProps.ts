@@ -200,6 +200,7 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
  * アニメ枠・ショート動画枠・おすすめ（タグ）・特集・VOD ブロックを含む。
+ * 劇場公開中枠は日本語のみの運用のため、`ja` のときだけ取得する（`en` では空配列＝非表示）。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
@@ -217,8 +218,11 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     getVodTerms(),
     getTheaterReleases(1),
     getVodReleases(1),
-    // 上映中の作品（`/v1/theater-list`）。取得失敗・0件ならセクションを出さない
-    getTheaterList({ lang, page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" }),
+    // 上映中の作品（`/v1/theater-list`）。劇場公開情報は日本語のみの運用のため ja の TOP でのみ取得する。
+    // 取得しない・取得失敗・0件のときはセクションごと出さない
+    lang === "ja"
+      ? getTheaterList({ lang: "ja", page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" })
+      : Promise.resolve(null),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -287,8 +291,8 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,
-    nowShowingPosts: (nowShowing?.items ?? []).map((item) => theaterListItemToPost(item, lang)),
-    nowShowingSeeAllHref: getNowShowingArchivePath(lang),
+    nowShowingPosts: (nowShowing?.items ?? []).map((item) => theaterListItemToPost(item, "ja")),
+    nowShowingSeeAllHref: getNowShowingArchivePath("ja"),
     shortVideoPosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),
