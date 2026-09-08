@@ -16,10 +16,12 @@ import type { ListTemplateProps } from './ListTemplate.types';
 
 export const ListTemplate = ({
   categoryName,
+  categoryLabel,
   categoryDescription,
   posts,
   filterOptionPosts,
   filterOptions,
+  filterOptionRows,
   getFilterHref,
   activeFilter = 'score',
   onFilterSelect,
@@ -53,8 +55,8 @@ export const ListTemplate = ({
   ];
   const defaultFilterOptions = defaultFilterOptionRows.flat();
 
-  const resolvedFilterOptions = filterOptions ?? defaultFilterOptions;
-  const resolvedFilterOptionRows = filterOptions ? [filterOptions] : defaultFilterOptionRows;
+  const resolvedFilterOptionRows = filterOptionRows ?? (filterOptions ? [filterOptions] : defaultFilterOptionRows);
+  const resolvedFilterOptions = filterOptionRows ? filterOptionRows.flat() : (filterOptions ?? defaultFilterOptions);
 
   const vodMid =
     vodHubBreadcrumb ?
@@ -93,7 +95,7 @@ export const ListTemplate = ({
         <section className='px-4 py-8 md:py-12'>
           <div className='space-y-2'>
             <p className='font-ui text-xs tracking-[0.2em] text-score-accent uppercase'>
-              {t(messages, ['category', 'label'], locale)}
+              {categoryLabel ?? t(messages, ['category', 'label'], locale)}
             </p>
             <h1 className='font-bold text-color-inverse'>
               {categoryName}

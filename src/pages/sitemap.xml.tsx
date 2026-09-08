@@ -12,6 +12,8 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     { loc: `${SITE_URL}/en`, changefreq: 'daily', priority: 1 },
     { loc: `${SITE_URL}/ja/featured`, changefreq: 'weekly', priority: 0.7 },
     { loc: `${SITE_URL}/en/featured`, changefreq: 'weekly', priority: 0.7 },
+    // 劇場公開情報は日本語のみの運用のため /ja のみ載せる
+    { loc: `${SITE_URL}/ja/now-showing`, changefreq: 'daily', priority: 0.8 },
     { loc: `${SITE_URL}/ja/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
     { loc: `${SITE_URL}/en/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
   ];

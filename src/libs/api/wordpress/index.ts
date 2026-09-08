@@ -63,6 +63,16 @@ export type {
   CategoryListResponse,
 } from "./endpoints/categoryList";
 
+export { getTheaterList } from "./endpoints/theaterList";
+export type {
+  TheaterListFilter,
+  TheaterListParams,
+  TheaterListTerm,
+  TheaterListItem,
+  TheaterListFilterOptions,
+  TheaterListResponse,
+} from "./endpoints/theaterList";
+
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
 export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 

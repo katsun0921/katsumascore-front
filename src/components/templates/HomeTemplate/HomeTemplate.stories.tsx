@@ -30,6 +30,8 @@ const defaultArgs = {
   animeArchiveHref: '/anime',
   animePosts: mockAnimePosts,
   highScorePosts: mockHighScorePosts,
+  nowShowingPosts: mockLatestPosts.slice(0, 4),
+  nowShowingSeeAllHref: '/ja/now-showing',
   shortVideoPosts: mockShortVideoPosts,
   recommendBlocks: mockRecommendBlocks,
   vodFinderItems: mockVodFinderItems,

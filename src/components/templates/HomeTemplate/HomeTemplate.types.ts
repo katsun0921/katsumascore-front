@@ -13,6 +13,13 @@ export type HomeTemplateProps = {
   animeArchiveHref: string;
   animePosts: Post[];
   highScorePosts: Post[];
+  /**
+   * 現在劇場公開中の作品（WP `/v1/theater-list` 由来）。0件のときセクションごと出さない。
+   * 劇場公開情報は日本語のみの運用のため、`en` のルートでは常に空配列。
+   */
+  nowShowingPosts: Post[];
+  /** 上映中の作品一覧ページ（`/now-showing`）へのリンク */
+  nowShowingSeeAllHref: string;
   /** 記事紹介ショート動画付きの投稿（`shortVideoId` を持つもののみ） */
   shortVideoPosts: Post[];
   recommendBlocks: RecommendBlock[];

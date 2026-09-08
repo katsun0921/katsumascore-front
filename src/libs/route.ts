@@ -93,6 +93,29 @@ export const getTheaterReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
 export const getTheaterReleaseUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
   `${getTheaterReleaseArchivePath(lang)}/${slug}`;
 
+/** 上映中の作品一覧（`/v1/theater-list` 由来）のパス（例: `/ja/now-showing`）。 */
+export const getNowShowingArchivePath = (lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/now-showing`;
+
+/**
+ * 上映中の作品一覧の URL。ソート・タクソノミー絞り込み・ページはすべてクエリで表す。
+ * ページ本体は1ページ分の ISR ではなく上映中の全件を持つため、`page` はクライアント側の表示位置。
+ */
+export const getNowShowingUrl = (
+  lang = DEFAULT_LOCALE,
+  query: { filter?: string; genre?: string; tag?: string; category?: string; page?: number } = {},
+): string => {
+  const base = getNowShowingArchivePath(lang);
+  const params = new URLSearchParams();
+  if (query.filter) params.set('filter', query.filter);
+  if (query.category) params.set('category', query.category);
+  if (query.genre) params.set('genre', query.genre);
+  if (query.tag) params.set('tag', query.tag);
+  if (query.page !== undefined && query.page > 1) params.set('page', String(query.page));
+  if (params.size === 0) return base;
+  return `${base}?${params.toString()}`;
+};
+
 /** VOD 一覧の基底パス（例: `/ja/vod/netflix`）。 */
 export const getVodArchivePath = (pathSlug: string, lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/vod/${pathSlug}`;

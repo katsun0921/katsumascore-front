@@ -92,6 +92,11 @@ const nextConfig: NextConfig = {
         source: '/:locale(ja|en)?/seasonal-reviews',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
       },
+      // 劇場公開中の作品一覧（ISR 600s に対応）
+      {
+        source: '/:locale(ja|en)?/now-showing',
+        headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],
+      },
       {
         source: '/featured',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=600, stale-while-revalidate=1800' }],

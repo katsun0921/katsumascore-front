@@ -21,15 +21,20 @@ import {
   getVodTerms,
   getTheaterReleases,
   getVodReleases,
+  getTheaterList,
 } from "@/libs/api/wordpress";
 import type { WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
-import { getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
+import { getNowShowingArchivePath, getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
+import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
+
+/** TOP の「劇場公開中」枠に出す件数。横スクロール1本に収まる範囲に留める。 */
+const NOW_SHOWING_HOME_LIMIT = 10;
 
 /** スコア（小数可）からヒーロー表示用の ScoreRank を返す。範囲外は 'A'（中央）。 */
 const rankFromScore = (score: number | undefined): ScoreRank =>
@@ -195,6 +200,7 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
  * アニメ枠・ショート動画枠・おすすめ（タグ）・特集・VOD ブロックを含む。
+ * 劇場公開中枠は日本語のみの運用のため、`ja` のときだけ取得する（`en` では空配列＝非表示）。
  *
  * @param locale — Next の `locale` 文字列。`en` のとき英語、それ以外は日本語として扱う。
  * @returns ISR / `getStaticProps` からそのまま渡せるシリアライズ可能な `HomeTemplateProps`。
@@ -205,13 +211,18 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases] = await Promise.all([
+  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases, nowShowing] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
     pickRandomTags(3),
     getVodTerms(),
     getTheaterReleases(1),
     getVodReleases(1),
+    // 上映中の作品（`/v1/theater-list`）。劇場公開情報は日本語のみの運用のため ja の TOP でのみ取得する。
+    // 取得しない・取得失敗・0件のときはセクションごと出さない
+    lang === "ja"
+      ? getTheaterList({ lang: "ja", page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" })
+      : Promise.resolve(null),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -280,6 +291,8 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,
+    nowShowingPosts: (nowShowing?.items ?? []).map((item) => theaterListItemToPost(item, "ja")),
+    nowShowingSeeAllHref: getNowShowingArchivePath("ja"),
     shortVideoPosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),

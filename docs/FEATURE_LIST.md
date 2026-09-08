@@ -83,6 +83,7 @@
 | `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 | `/theater-release` | `pages/theater-release/index.tsx` | ISR | 劇場公開情報（週次まとめ記事）アーカイブ |
 | `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | ISR | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
+| `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行）。劇場公開情報は**日本語のみ**の運用のため記事は常に `lang=ja`（TOP のセクションは ja のみ）。canonical は各ロケールの自己参照 |
 
 ### 1.7 Sitemap
 
@@ -223,7 +224,7 @@ hooks / state 使用可。データ取得・整形を担当。
 |------------|------|------|
 | `PageLayout` | `components/templates/PageLayout` | ページレイアウト基盤 |
 | `HomeTemplate` | `components/templates/HomeTemplate` | ホームページ |
-| `ListTemplate` | `components/templates/ListTemplate` | 映画 / アニメ / ドラマ一覧 |
+| `ListTemplate` | `components/templates/ListTemplate` | 映画 / アニメ / ドラマ / 劇場公開中 一覧（`filterOptionRows` でチップの行構成、`categoryLabel` でキッカーを差し替え可） |
 | `PostDetail` | `components/templates/PostDetail` | 記事詳細 |
 | `FranchiseTemplate` | `components/templates/FranchiseTemplate` | フランチャイズ詳細（Hero / CTA / Highlights / PostList / Timeline） |
 | `PersonTemplate` | `components/templates/PersonTemplate` | 人物詳細（映画をもっと楽しむための人物ページ: 基本情報 / 編集部解説 / 人物の魅力 / キャリア / 作風・演技・演出（+得意ジャンル+映画界での位置づけ） / 代表作品 / おすすめ作品 / 出演・監督作品 / FAQ） |
@@ -264,6 +265,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
 | `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
 | `theaterRelease.ts` | `getTheaterReleaseBySlug`, `getTheaterReleases` | 劇場公開情報 CPT（`theater_release`）取得 |
+| `theaterList.ts` | `getTheaterList` | 劇場公開中の記事一覧専用カスタムエンドポイント（`/wp-json/v1/theater-list`）。ACF `cinema_info_filed.is_cinema_showing` で絞り込み、公開日順 / 新着 / 評価順のソートとページングをWP側で処理する。週次まとめ記事の `theater_release` CPT とは別物 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
 
@@ -301,6 +303,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `loadTagListPage` | `loadTagListPage.ts` | タグ一覧ページのデータロード |
 | `loadCategoryListPage` | `loadCategoryListPage.ts` | カテゴリ一覧ページのデータロード |
 | `loadVodArchivePage` | `loadVodArchivePage.ts` | VOD アーカイブページのデータロード |
+| `loadNowShowingPosts` | `loadNowShowingPosts.ts` | 劇場公開中の作品一覧ページのデータロード（`/v1/theater-list` を公開日順で全件取得。日本語のみ） |
 
 ### 4.4 ユーティリティ関数（`src/libs/` / `src/utils/`）
 
@@ -310,6 +313,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
+| `nowShowingFilters.ts` | 劇場公開中一覧のクエリ解釈とクライアント側の絞り込み・並べ替え |
 | `buildVodFinderItems.ts` | VOD 検索アイテム構築 |
 | `scoreDisplay.ts` | スコア表示ロジック |
 | `searchRelevance.ts` | 検索スコアリング |
@@ -324,6 +328,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `formatDate.ts` (utils) | 日付フォーマット |
 | `normalizePost.ts` (utils) | 投稿データ正規化（`normalizePosts` / `mapWPPostToPost`） |
 | `ranking.ts` (utils) | スコア → ランク変換（`getScoreRank`: 1〜5 → C/B/A/S/SS） |
+| `theaterListItemToPost.ts` (utils) | `/v1/theater-list` のレスポンス1件を表示用 `Post` へ変換 |
 | `toSerializableValue.ts` (utils) | `getStaticProps` 用シリアライズ変換 |
 
 ### 4.5 キャッシュ（`src/libs/cache/`）
@@ -372,6 +377,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `vodPageMessages.ts` | VOD ページ翻訳メッセージ |
 | `vodReleasePageMessages.ts` | VOD配信情報ページ翻訳メッセージ |
 | `theaterReleasePageMessages.ts` | 劇場公開情報ページ翻訳メッセージ |
+| `nowShowingPageMessages.ts` | 劇場公開中の作品一覧ページ翻訳メッセージ |
 
 ### 対応言語
 
