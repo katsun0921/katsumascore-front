@@ -213,6 +213,22 @@ const fontSizeEntries: FontSizeEntry[] = [
     sampleText: '補足・メタ情報・キャプション',
   },
   {
+    role: 'Fixed 14',
+    tokenPc: '--font-size-fixed-14',
+    valuePc: '14px',
+    tokenSp: '--font-size-fixed-14',
+    valueSp: '14px',
+    sampleText: '固定14px（PostCardタイトル等）',
+  },
+  {
+    role: 'Fixed 12',
+    tokenPc: '--font-size-fixed-12',
+    valuePc: '12px',
+    tokenSp: '--font-size-fixed-12',
+    valueSp: '12px',
+    sampleText: '固定12px（カテゴリー・メタ情報等）',
+  },
+  {
     role: 'Score Hero Int',
     tokenPc: '--font-size-score-hero-int-lg',
     valuePc: '120px',

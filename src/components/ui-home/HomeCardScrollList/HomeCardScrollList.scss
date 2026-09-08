@@ -23,7 +23,7 @@
     flex-shrink: 0;
     color: var(--color-text-secondary);
     font-family: var(--font-ui);
-    font-size: 10px;
+    font-size: var(--font-size-fixed-12);
     transition: color 0.2s;
 
     &:hover {

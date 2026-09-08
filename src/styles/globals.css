@@ -159,6 +159,8 @@
   --font-size-body: clamp(14px, 1.2vw, 16px);
   --font-size-ui: clamp(12px, 1vw, 14px);
   --font-size-caption: clamp(10px, 0.8vw, 12px);
+  --font-size-fixed-14: 14px;
+  --font-size-fixed-12: 12px;
 
   /* ScoreWithRank ヒーロー（ランク数字・画像重なり） */
   --score-scale: clamp(72px, 8vw, 96px);
