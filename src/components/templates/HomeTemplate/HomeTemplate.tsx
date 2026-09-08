@@ -18,7 +18,7 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
  *
  * 表示順:
- *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → Ranking → 最新レビュー
+ *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → 劇場公開中 → Ranking → 最新レビュー
  *   → 注目のアニメ → 高評価 → Recommend → 特集 → VOD
  *
  * ※ ショート動画セクション（HomeShorts）は一時的に非表示中。
@@ -32,6 +32,8 @@ export const HomeTemplate = ({
   animeArchiveHref,
   animePosts,
   highScorePosts,
+  nowShowingPosts,
+  nowShowingSeeAllHref,
   // shortVideoPosts, — ショート動画セクション一時非表示のため未使用
   recommendBlocks,
   vodFinderItems,
@@ -65,6 +67,16 @@ export const HomeTemplate = ({
               seeAllLabel={t(messages, ['releaseHighlight', 'seeAll'], locale)}
               theater={theaterReleaseHighlight}
               vod={vodReleaseHighlight}
+            />
+          </section>
+        )}
+
+        {nowShowingPosts.length > 0 && (
+          <section className='homeTemplate__section'>
+            <HomeCardScrollList
+              title={t(messages, ['cardScrollList', 'nowShowing'], locale)}
+              posts={nowShowingPosts}
+              seeAllHref={nowShowingSeeAllHref}
             />
           </section>
         )}

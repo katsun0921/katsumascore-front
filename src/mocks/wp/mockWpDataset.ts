@@ -58,6 +58,11 @@ type BuildPostOpts = {
   shortVideo?: string;
   /** ACF `director`（post_object。実際の WP は監督名の文字列を格納する） */
   director?: string;
+  /**
+   * 現在劇場公開中の作品として扱う（ACF `cinema_info_filed.is_cinema_showing`）。
+   * `releaseDate` は ACF `release.release_date` と同じ `Ymd` 形式で渡す。
+   */
+  cinema?: { releaseDate: string; url?: string };
 };
 
 const buildPost = (o: BuildPostOpts): MockWPPost => {
@@ -71,6 +76,15 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
     ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
     ...(o.shortVideo !== undefined ? { short_movie: { youtube: o.shortVideo } } : {}),
     ...(o.director !== undefined ? { director: o.director } : {}),
+    ...(o.cinema !== undefined
+      ? {
+          cinema_info_filed: {
+            is_cinema_showing: true,
+            ...(o.cinema.url !== undefined ? { cinema_list_filed: o.cinema.url } : {}),
+          },
+          release: { release_date: o.cinema.releaseDate },
+        }
+      : {}),
   };
 
   return {
@@ -107,6 +121,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       vodFlags: { netflix: true },
       shortVideo: "https://www.youtube.com/shorts/M7lc1UVf-VE",
       director: "佐藤監督",
+      cinema: { releaseDate: "20260807", url: "https://mock.katsumascore.local/cinema/hanataba" },
     },
     {
       id: 1002,
@@ -137,6 +152,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       score: 4,
       extraTermGroups: [[TAG_ACTION], [GENRE_SCI_FI], [VOD_NETFLIX, VOD_AMAZON]],
       vodFlags: { netflix: true, amazon: true },
+      cinema: { releaseDate: "20260821" },
     },
     {
       id: 1005,
@@ -197,6 +213,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       lang: "ja",
       score: 4,
       extraTermGroups: [[TAG_HORROR], [GENRE_HORROR]],
+      cinema: { releaseDate: "20260731" },
     },
     {
       id: 1012,
@@ -243,6 +260,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       category: CAT_ANIME,
       lang: "ja",
       score: 5,
+      cinema: { releaseDate: "20260814" },
     },
     {
       id: 1017,
@@ -278,6 +296,7 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       score: 4,
       excerpt: "Mock excerpt for English route.",
       shortVideo: "https://www.youtube.com/shorts/aqz-KE-bpKQ",
+      cinema: { releaseDate: "20260808" },
     },
     {
       id: 1021,

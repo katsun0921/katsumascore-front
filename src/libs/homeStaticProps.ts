@@ -21,15 +21,20 @@ import {
   getVodTerms,
   getTheaterReleases,
   getVodReleases,
+  getTheaterList,
 } from "@/libs/api/wordpress";
 import type { WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
-import { getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
+import { getNowShowingArchivePath, getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
+import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
+
+/** TOP の「劇場公開中」枠に出す件数。横スクロール1本に収まる範囲に留める。 */
+const NOW_SHOWING_HOME_LIMIT = 10;
 
 /** スコア（小数可）からヒーロー表示用の ScoreRank を返す。範囲外は 'A'（中央）。 */
 const rankFromScore = (score: number | undefined): ScoreRank =>
@@ -205,13 +210,15 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases] = await Promise.all([
+  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases, nowShowing] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
     pickRandomTags(3),
     getVodTerms(),
     getTheaterReleases(1),
     getVodReleases(1),
+    // 上映中の作品（`/v1/theater-list`）。取得失敗・0件ならセクションを出さない
+    getTheaterList({ lang, page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" }),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -280,6 +287,8 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     animeArchiveHref: getPostTypeArchivePath({ type: "anime", lang }),
     animePosts,
     highScorePosts,
+    nowShowingPosts: (nowShowing?.items ?? []).map((item) => theaterListItemToPost(item, lang)),
+    nowShowingSeeAllHref: getNowShowingArchivePath(lang),
     shortVideoPosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),

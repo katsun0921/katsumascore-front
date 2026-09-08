@@ -4,6 +4,7 @@ export const messages = {
   },
   cardScrollList: {
     latest: { ja: '最新レビュー', en: 'Latest Reviews' },
+    nowShowing: { ja: '劇場公開中', en: 'Now Showing' },
     anime: { ja: '注目のアニメ', en: 'Spotlight Anime' },
     highScore: { ja: '高評価作品', en: 'Top Rated' },
   },
