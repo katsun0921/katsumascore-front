@@ -4,6 +4,7 @@
 import type { HomeTemplateProps } from "@/components/templates/HomeTemplate/HomeTemplate.types";
 import type { HomeHeroProps } from "@/components/features/HomeHero";
 import type { FeaturedItem } from "@/components/ui-home/HomeFeatured";
+import type { YoutubeFreeItem } from "@/components/ui-home/HomeYoutubeFree";
 import type { RecommendBlock } from "@/components/ui-home/HomeRecommend";
 import type { ReleaseHighlightBlock } from "@/components/ui-home/HomeReleaseHighlight";
 import { extractReleaseWorks } from "@/libs/releaseWorks";
@@ -22,6 +23,7 @@ import {
   getTheaterReleases,
   getVodReleases,
   getTheaterList,
+  getYoutubeFreeList,
 } from "@/libs/api/wordpress";
 import type { WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
 import { stripHtml } from "@/libs/api/wordpress";
@@ -29,12 +31,19 @@ import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
 import { getNowShowingArchivePath, getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
 import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
+import { youtubeFreeItemToCard } from "@/utils/youtubeFreeItemToCard";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 
 const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
 
 /** TOP の「劇場公開中」枠に出す件数。横スクロール1本に収まる範囲に留める。 */
 const NOW_SHOWING_HOME_LIMIT = 10;
+
+/**
+ * TOP の「YouTubeで無料配信中」枠に出す件数。
+ * 無料公開は同時に何本も走らないため、劇場公開中枠より少なくてよい。
+ */
+const YOUTUBE_FREE_HOME_LIMIT = 8;
 
 /** スコア（小数可）からヒーロー表示用の ScoreRank を返す。範囲外は 'A'（中央）。 */
 const rankFromScore = (score: number | undefined): ScoreRank =>
@@ -211,7 +220,16 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases, nowShowing] = await Promise.all([
+  const [
+    categories,
+    poolRaw,
+    randomTags,
+    vodTerms,
+    theaterReleases,
+    vodReleases,
+    nowShowing,
+    youtubeFree,
+  ] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
     pickRandomTags(3),
@@ -223,6 +241,10 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     lang === "ja"
       ? getTheaterList({ lang: "ja", page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" })
       : Promise.resolve(null),
+    // YouTube で無料配信中の作品（`/v1/youtube-free-list`）。
+    // 劇場公開中と違い言語を絞らない（英語記事にも無料公開はあり得る）。
+    // 取得失敗・0件のときはセクションごと出さない
+    getYoutubeFreeList({ lang, page: 1, perPage: YOUTUBE_FREE_HOME_LIMIT, filter: "streaming" }),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -283,6 +305,13 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const featuredItems =
     featuredItemsFromPages.length > 0 ? featuredItemsFromPages : toFeaturedItems(featuredSource);
 
+  // NEW 判定の基準時刻は1つに固定する。件ごとに `new Date()` を取ると
+  // 日付境界をまたいだときに同じビルド内で判定がぶれる
+  const youtubeFreeNow = new Date();
+  const youtubeFreeItems: YoutubeFreeItem[] = (youtubeFree?.items ?? []).map((item) =>
+    youtubeFreeItemToCard(item, lang, youtubeFreeNow),
+  );
+
   return {
     hero: buildHeroFromPosts(pool),
     rankingPosts,
@@ -293,6 +322,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     highScorePosts,
     nowShowingPosts: (nowShowing?.items ?? []).map((item) => theaterListItemToPost(item, "ja")),
     nowShowingSeeAllHref: getNowShowingArchivePath("ja"),
+    youtubeFreeItems,
     shortVideoPosts,
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),

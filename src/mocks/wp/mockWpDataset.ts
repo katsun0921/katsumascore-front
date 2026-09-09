@@ -63,6 +63,11 @@ type BuildPostOpts = {
    * `releaseDate` は ACF `release.release_date` と同じ `Ymd` 形式で渡す。
    */
   cinema?: { releaseDate: string; url?: string };
+  /**
+   * YouTube で無料公開中の作品として扱う（ACF `youtube`）。
+   * `startedAt` は ACF `youtube.streaming_started_at` と同じ `Y-m-d H:i:s` 形式で渡す。
+   */
+  youtubeFree?: { startedAt: string; channelName: string; url: string };
 };
 
 const buildPost = (o: BuildPostOpts): MockWPPost => {
@@ -76,6 +81,17 @@ const buildPost = (o: BuildPostOpts): MockWPPost => {
     ...(o.vodFlags?.unext ? { unext: { status: "streaming" } } : {}),
     ...(o.shortVideo !== undefined ? { short_movie: { youtube: o.shortVideo } } : {}),
     ...(o.director !== undefined ? { director: o.director } : {}),
+    ...(o.youtubeFree !== undefined
+      ? {
+          youtube: {
+            scraping_url: o.youtubeFree.url,
+            status: "streaming",
+            price: 0,
+            streaming_started_at: o.youtubeFree.startedAt,
+            channel_name: o.youtubeFree.channelName,
+          },
+        }
+      : {}),
     ...(o.cinema !== undefined
       ? {
           cinema_info_filed: {
@@ -162,6 +178,11 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       lang: "ja",
       score: 3,
       extraTermGroups: [[TAG_SF]],
+      youtubeFree: {
+        startedAt: "2026-07-20 06:00:00",
+        channelName: "東宝MOVIEチャンネル",
+        url: "https://www.youtube.com/watch?v=mock-movie-c",
+      },
     },
     {
       id: 1006,
@@ -204,6 +225,11 @@ export const MOCK_WP_POSTS: MockWPPost[] = (() => {
       score: 3,
       extraTermGroups: [[TAG_HORROR], [GENRE_HORROR], [VOD_NETFLIX]],
       vodFlags: { netflix: true },
+      youtubeFree: {
+        startedAt: "2026-09-08 06:00:00",
+        channelName: "【公式】プレシディオチャンネル",
+        url: "https://www.youtube.com/watch?v=mock-horror",
+      },
     },
     {
       id: 1011,

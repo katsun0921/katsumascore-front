@@ -73,6 +73,16 @@ export type {
   TheaterListResponse,
 } from "./endpoints/theaterList";
 
+export { getYoutubeFreeList } from "./endpoints/youtubeFreeList";
+export type {
+  YoutubeFreeListFilter,
+  YoutubeFreeListParams,
+  YoutubeFreeListTerm,
+  YoutubeFreeListItem,
+  YoutubeFreeListFilterOptions,
+  YoutubeFreeListResponse,
+} from "./endpoints/youtubeFreeList";
+
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
 export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 

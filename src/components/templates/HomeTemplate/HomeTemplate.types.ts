@@ -4,6 +4,7 @@ import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import type { ReleaseHighlightBlock } from '@/components/ui-home/HomeReleaseHighlight';
 import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';
 import type { FeaturedItem } from '@/components/ui-home/HomeFeatured';
+import type { YoutubeFreeItem } from '@/components/ui-home/HomeYoutubeFree';
 
 export type HomeTemplateProps = {
   hero: HomeHeroProps;
@@ -20,6 +21,12 @@ export type HomeTemplateProps = {
   nowShowingPosts: Post[];
   /** 上映中の作品一覧ページ（`/now-showing`）へのリンク */
   nowShowingSeeAllHref: string;
+  /**
+   * YouTube で無料配信中の作品（WP `/v1/youtube-free-list` 由来）。
+   * 0件のときセクションごと出さない。期間限定の無料公開のみを扱うため、
+   * 他のVOD枠とは別セクションで見せる。
+   */
+  youtubeFreeItems: YoutubeFreeItem[];
   /** 記事紹介ショート動画付きの投稿（`shortVideoId` を持つもののみ） */
   shortVideoPosts: Post[];
   recommendBlocks: RecommendBlock[];

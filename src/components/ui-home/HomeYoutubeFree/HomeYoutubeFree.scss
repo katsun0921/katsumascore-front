@@ -1,0 +1,157 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+// 期間限定の無料公開であることを一目で伝えるため、他の横スクロール枠とは
+// 別の面（YouTube カラーの枠付きパネル）として扱う。
+.homeYoutubeFree {
+  padding: 14px 16px;
+  background: var(--color-score-bg);
+  border: 0.5px solid rgba(var(--color-white-rgb), 0.06);
+  border-left: 3px solid var(--color-youtube);
+  border-radius: 8px;
+
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+
+  &__titleRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  &__freeBadge {
+    flex-shrink: 0;
+    padding: 2px 8px;
+    background: var(--color-youtube);
+    border-radius: 4px;
+    color: var(--color-text-inverse);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+
+  &__title {
+    color: var(--color-text-inverse);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-h3);
+    font-weight: 700;
+  }
+
+  &__note {
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 11px;
+    line-height: 1.5;
+  }
+
+  &__track {
+    display: flex;
+    gap: 14px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    list-style: none;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    @include layout-md {
+      gap: 18px;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 4px;
+    width: 160px;
+  }
+
+  &__card {
+    display: block;
+    cursor: pointer;
+  }
+
+  &__media {
+    width: 160px;
+    height: 218px;
+    border-radius: 10px;
+    background: var(--color-secondary);
+    transition: transform 0.2s;
+  }
+
+  &__card:hover &__media {
+    transform: scale(1.03);
+  }
+
+  &__score {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+  }
+
+  // 新しく無料になった作品の目印。無料公開は入れ替わりが早く、
+  // 前回来たときとの差分が分かることに価値がある。
+  &__new {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 2px 6px;
+    background: var(--color-youtube);
+    border-radius: 3px;
+    color: var(--color-text-inverse);
+    font-family: var(--font-ui);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  &__cardTitle {
+    display: -webkit-box;
+    overflow: hidden;
+    margin-top: 8px;
+    color: var(--color-text-inverse);
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  &__channel {
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--color-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    line-height: 1.4;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  &__period {
+    color: var(--color-score-accent);
+    font-family: var(--font-ui);
+    font-size: 10px;
+  }
+
+  &__watch {
+    margin-top: 2px;
+    color: var(--color-youtube);
+    font-family: var(--font-ui);
+    font-size: 10px;
+    font-weight: 700;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 0.7;
+      text-decoration: underline;
+    }
+  }
+}

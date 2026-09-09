@@ -143,7 +143,7 @@
 | `Header` | `components/ui-layout/Header` | ヘッダー（多言語対応） |
 | `Sidebar` | `components/ui-layout/Sidebar` | サイドバー |
 
-### 3.3 ui-home（ホームページ専用・7 コンポーネント）
+### 3.3 ui-home（ホームページ専用・8 コンポーネント）
 
 HomeTemplate からのみ参照。ロジック禁止。
 
@@ -156,6 +156,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 | `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
+| `HomeYoutubeFree` | `components/ui-home/HomeYoutubeFree` | YouTube で無料配信中の作品セクション。期間限定の無料公開のみを扱うため、無料バッジ・NEW バッジ・チャンネル名・公開開始日を出して他の横スクロール枠と差別化する |
 
 ### 3.4 ui-section（意味のある UI・24 コンポーネント）
 
@@ -266,6 +267,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
 | `theaterRelease.ts` | `getTheaterReleaseBySlug`, `getTheaterReleases` | 劇場公開情報 CPT（`theater_release`）取得 |
 | `theaterList.ts` | `getTheaterList` | 劇場公開中の記事一覧専用カスタムエンドポイント（`/wp-json/v1/theater-list`）。ACF `cinema_info_filed.is_cinema_showing` で絞り込み、公開日順 / 新着 / 評価順のソートとページングをWP側で処理する。週次まとめ記事の `theater_release` CPT とは別物 |
+| `youtubeFreeList.ts` | `getYoutubeFreeList` | YouTube 無料配信中の記事一覧専用カスタムエンドポイント（`/wp-json/v1/youtube-free-list`）。ACF `youtube.status = streaming` かつ `youtube.price` が 0 で絞り込む。YouTube の「見放題」はサブスクではなく無料公開を指すため、レンタル・購入も含む `vod-list?vod=youtube` では代用できない |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
 
@@ -329,6 +331,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `normalizePost.ts` (utils) | 投稿データ正規化（`normalizePosts` / `mapWPPostToPost`） |
 | `ranking.ts` (utils) | スコア → ランク変換（`getScoreRank`: 1〜5 → C/B/A/S/SS） |
 | `theaterListItemToPost.ts` (utils) | `/v1/theater-list` のレスポンス1件を表示用 `Post` へ変換 |
+| `youtubeFreeItemToCard.ts` (utils) | `/v1/youtube-free-list` のレスポンス1件を `HomeYoutubeFree` のカードデータへ変換。NEW 判定（無料公開の開始から7日以内）と日付整形もここで行う |
 | `toSerializableValue.ts` (utils) | `getStaticProps` 用シリアライズ変換 |
 
 ### 4.5 キャッシュ（`src/libs/cache/`）
