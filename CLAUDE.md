@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v4.6 ― 200行以内に分割。詳細は `.claude/rules/` へ移動
-> 2026年5月16日
+> v4.7 ― OpenNextトラブル記録の追記先を統一
+> 2026年9月10日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -86,6 +86,10 @@ Claude に実装を依頼するときは、**「どうすれば正しいか確�
 > **docs/ ディレクトリ構成:** `features/`（使用中）/ `develop/`（開発中）/ `idea/`（未着手）/ `archive/`（完了・見送り）。詳細は [`docs/README.md`](docs/README.md) を参照。
 
 > **Obsidian関連マップの更新（IMPORTANT）:** `docs/` にドキュメントを追加・削除・大幅リライトしたら、Obsidian Vault側の [`../obsidian/katsumascore-front/_関連マップ.md`](../obsidian/katsumascore-front/_関連マップ.md) も同じタイミングで更新する（新規ファイルの関連付け追加、削除ファイルの記載除去）。あわせてリポジトリ横断の関連がある場合は [`../obsidian/_横断マップ.md`](../obsidian/_横断マップ.md) も確認・更新する。これらのマップファイルは本リポジトリではなくObsidian Vault（`katsumscore/obsidian/`）側の管理物。
+
+### OpenNextトラブル記録（IMPORTANT）
+
+OpenNext / Cloudflare Workersに関する障害、再現結果、原因、回避策、バージョン変更、上流Issue・PRの状況は、必ず [`docs/develop/opennext_pages_router_custom_404.md`](docs/develop/opennext_pages_router_custom_404.md) に追記する。READMEには詳細を書かず、この記録へのリンクだけを維持する。関連するトラブル記録を別ファイルへ分散させない。
 
 ---
 
