@@ -2,7 +2,7 @@
  * `/v1/youtube-free-list`（YouTube 無料配信中の記事一覧エンドポイント）のモック。
  *
  * `MOCK_WP_POSTS` のうち ACF `youtube.status` が `streaming` かつ `youtube.price` が
- * 0（または未入力）の投稿だけを対象にする。WP 側の SQL と同じ順序で
+ * 0 の投稿だけを対象にする。WP 側の SQL と同じ順序で
  * 絞り込み → ソート → ページングを行う。
  */
 import { MOCK_WP_POSTS } from "./mockWpDataset";
@@ -33,14 +33,17 @@ const acfGroupValue = (acf: Record<string, unknown> | undefined, group: string, 
 };
 
 /**
- * YouTube で無料配信中か。WP 側と同じく「`streaming` かつ価格が 0 か未入力」で判定する。
+ * YouTube で無料配信中か。WP 側と同じく「`streaming` かつ価格が 0」で判定する。
  * レンタル・購入は価格が入るためここで落ちる。
+ *
+ * 価格が未入力（`undefined` / `null` / 空文字）の記事は無料に含めない。
+ * WP 側も `youtube_price` が空の行を弾いているため、モックだけ緩めると
+ * 開発時にだけ出る作品ができてしまう。
  */
 const isYoutubeFree = (post: unknown): boolean => {
   const acf = (post as { acf?: Record<string, unknown> }).acf;
   if (acfGroupValue(acf, "youtube", "status") !== "streaming") return false;
-  const price = acfGroupValue(acf, "youtube", "price");
-  return price === undefined || price === null || price === "" || price === 0;
+  return acfGroupValue(acf, "youtube", "price") === 0;
 };
 
 /** ACF `youtube.streaming_started_at`（`Y-m-d H:i:s`）を WP と同じ `Y-m-d` へ整形する。 */
