@@ -51,27 +51,37 @@
 .homeRankingCard {
   position: relative;
   flex-shrink: 0;
+  padding-left: 16px;
 
+  // 順位はポスター左下に食い込ませる。スコアバッジ（左上）と干渉しない位置に置く
   &__rank {
     position: absolute;
-    top: 6px;
-    left: 6px;
+    bottom: 62px;
+    left: 0;
     z-index: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
-    background: rgba(10, 6, 24, 0.75);
-    color: var(--color-text-secondary);
+    color: transparent;
     font-family: var(--font-ui);
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 60px;
+    font-style: italic;
+    font-weight: 900;
     line-height: 1;
+    letter-spacing: -0.04em;
+    -webkit-text-stroke: 2px var(--color-text-secondary);
+    text-shadow: 0 2px 12px rgba(10, 6, 24, 0.9);
+    pointer-events: none;
 
-    &--top1 { color: var(--color-score-accent); font-size: 14px; }
-    &--top2 { color: var(--color-score-rank-high); }
-    &--top3 { color: var(--color-score-rank-high); }
+    &--top1 {
+      -webkit-text-stroke-color: var(--color-score-accent);
+    }
+
+    &--top2,
+    &--top3 {
+      -webkit-text-stroke-color: var(--color-score-rank-high);
+    }
+  }
+
+  // 2桁の順位でも数字とタイトルが重ならないよう、本文に左の逃げを作る
+  .homeCard .postCard__body {
+    padding-left: 42px;
   }
 }
