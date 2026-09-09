@@ -193,6 +193,10 @@ npm run deploy
 3. `npm run preview`（`opennextjs-cloudflare build` + `wrangler dev`）で主要ページが表示されること（KV を使う API はバインディングが必要な場合あり）。
 4. デプロイログおよびブラウザで API 接続エラーが出ていないこと。
 
+### 既知の問題
+
+- Pages Router の動的ルートが `notFound` を返した際にカスタム `404.tsx` が描画されない問題は、[OpenNext Pages Router カスタム 404 問題](./docs/develop/opennext_pages_router_custom_404.md)を参照してください。
+
 ### ISR 再検証（Webhook）
 
 `REVALIDATE_SECRET` を設定したうえで、`POST /api/revalidate` にシークレット付きでパスを渡すと On-Demand Revalidation が走ります。
