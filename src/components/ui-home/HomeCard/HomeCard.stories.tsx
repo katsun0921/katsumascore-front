@@ -34,10 +34,6 @@ export const Default: Story = {
   args: { post: basePost },
 };
 
-export const ScoreBadgeTopRight: Story = {
-  args: { post: basePost, scoreBadgePosition: 'top-right' },
-};
-
 export const NoImage: Story = {
   args: { post: { ...basePost, image: null } },
 };
