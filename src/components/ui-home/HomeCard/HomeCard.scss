@@ -19,7 +19,14 @@
   &__score {
     position: absolute;
     top: 8px;
-    left: 8px;
+
+    &--top-left {
+      left: 8px;
+    }
+
+    &--top-right {
+      right: 8px;
+    }
   }
 
   &__vods {

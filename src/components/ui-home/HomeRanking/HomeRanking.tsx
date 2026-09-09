@@ -33,7 +33,7 @@ export const HomeRanking = ({ title, posts, seeAllHref }: HomeRankingProps) => {
               >
                 {rank}
               </span>
-              <HomeCard post={post} />
+              <HomeCard post={post} scoreBadgePosition='top-right' />
             </div>
           );
         })}
