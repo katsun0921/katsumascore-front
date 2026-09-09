@@ -10,24 +10,24 @@ export const ScoreHexBadge = ({ score, className }: ScoreHexBadgeProps) => {
   return (
     <svg
       data-component='ScoreHexBadge'
-      width='24'
-      height='26'
-      viewBox='0 0 24 26'
+      width='48'
+      height='52'
+      viewBox='0 0 48 52'
       aria-label={`スコア ${score}`}
       className={className}
     >
       <polygon
-        points='12,1 23,7 23,19 12,25 1,19 1,7'
+        points='24,2 46,14 46,38 24,50 2,38 2,14'
         fill='rgba(20,8,46,0.8)'
         stroke={color}
-        strokeWidth='1'
+        strokeWidth='2'
       />
       <text
-        x='12'
-        y='16'
+        x='24'
+        y='31'
         textAnchor='middle'
         fill={color}
-        fontSize='7'
+        fontSize='14'
         fontWeight='700'
         fontFamily='var(--font-ui)'
       >
