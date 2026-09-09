@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（AGENTS.md）
 
-> v4.4 ― src/libs の関数に説明コメント必須を追加
-> 2026年5月4日
+> v4.5 ― OpenNextトラブル記録の追記先を統一
+> 2026年9月10日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -34,6 +34,12 @@
 タイトル: feat: Add PostCard component
 概要: Added PostCard component for displaying article thumbnails.
 ```
+
+---
+
+## ■ OpenNextトラブル記録（必須）
+
+OpenNext / Cloudflare Workersに関する障害、再現結果、原因、回避策、バージョン変更、上流Issue・PRの状況は、必ず [`docs/develop/opennext_pages_router_custom_404.md`](docs/develop/opennext_pages_router_custom_404.md) に追記する。READMEには詳細を書かず、この記録へのリンクだけを維持する。関連するトラブル記録を別ファイルへ分散させない。
 
 ---
 
