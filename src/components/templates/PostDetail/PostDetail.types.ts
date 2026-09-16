@@ -20,6 +20,7 @@ import type { ProfileProps } from '@/components/ui-section/Profile';
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
 import type { GenreNavTag } from '@/components/features/GenreNav/GenreNav';
 import type { PostTaxonomyLink } from '@/libs/api/wordpress';
+import type { TRating } from '@/libs/rating';
 
 export type PostDetailData = Post & {
   // コンテンツ
@@ -45,6 +46,8 @@ export type PostDetailData = Post & {
   }
 
   // 基本情報（basic-info + studio-info の統合）
+  /** ACF `rating`（映倫の年齢区分）。表示ラベルの日英出し分けは RatingBadge が担う */
+  rating?: TRating
   TitleMeta?: Omit<TTitleMetaProps, 'locale'>
 
   // スタッフ・キャスト（director-info + actors-info）

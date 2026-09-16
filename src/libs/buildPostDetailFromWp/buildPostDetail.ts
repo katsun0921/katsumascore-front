@@ -6,6 +6,7 @@ import {
   extractGenreLinksFromParsedWp,
   extractPostTagLinksFromParsedWp,
 } from "@/libs/api/wordpress";
+import { parseRating } from "@/libs/rating";
 
 import { acfTruthy, scalarToTrimmedString } from "./acfScalars";
 import { cinemaUrlFromCinemaInfoFiled, resolveIsCinemaShowing } from "./cinema";
@@ -99,6 +100,8 @@ export const buildPostDetailFromWp = ({
     parsed.acf?.release_date?.trim() ||
     ""
   ).trim() || undefined;
+  /** レーティング（映倫の年齢区分）。値はスラッグで、表示ラベルは RatingBadge が出し分ける */
+  const rating = parseRating(parsed.acf?.rating ?? acf?.rating);
   const officialSnsParsed = parseOfficialSns(parsed.acf?.official_sns);
   const titleMetaFilmStudios = mapFilmStudiosFromParsedWp(parsed, locale);
   const titleMetaProductionStudios = mapProductionStudiosFromParsedWp(parsed, locale);
@@ -193,6 +196,7 @@ export const buildPostDetailFromWp = ({
     ...(authorComment ? { authorComment } : {}),
     ...(goodPoints ? { goodPoints } : {}),
     ...(summary ? { summary } : {}),
+    ...(rating ? { rating } : {}),
     ...(titleMeta ? { TitleMeta: titleMeta } : {}),
     ...(credits ? { credits } : {}),
     ...(actors ? { actors } : {}),
