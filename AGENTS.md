@@ -88,6 +88,13 @@ components/
 ❌ 禁止: post.title.rendered  
 ✅ 必須: normalizedPost.title
 
+### 4. WordPress REST スキーマの欠損値チェック（必須）
+
+- `src/libs/api/wordpress/schema.ts` の ACF フィールドを追加・変更するときは、実際の REST 応答で未設定値が `undefined` / `null` / `false` / `""` / `[]` のどれになるか確認する。型の想像だけで `z.string().optional()` などを指定しない。
+- 未設定の補助フィールドを正規化する際は、そのフィールドだけを `undefined` にし、`WPPostSchema` の失敗で投稿全体が一覧から消えないようにする。必要な値の不正を無条件に通す変更はしない。
+- `rating` は未設定時に `false` または `null` が返りうる。これを文字列だけのスキーマで検証すると、TOPページの `mapWPPostToPost` が投稿を除外する。
+- ACF スキーマ変更時は、未設定値と正常値を含む `tests/unit/wp-post-schema.test.ts` を更新し、`npm run test:wp-schema` を実行する。この検査は PR の CI でも実行する。
+
 ---
 
 ## ■ UI設計原則（追加）
