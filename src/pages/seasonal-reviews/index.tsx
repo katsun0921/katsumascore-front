@@ -6,11 +6,12 @@ import { PageLayout } from '@/components/templates/PageLayout';
 import { PostCardImgLeft } from '@/components/ui-section/PostCard/PostCardImgLeft';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getChildPages, normalizePageContent } from '@/libs/api/wordpress';
+import { getChildPages, getSeasonalReviews, normalizePageContent } from '@/libs/api/wordpress';
 import {
   resolveSeasonalReviewParentId,
   WORDPRESS_SEASONAL_REVIEWS_PARENT_SLUG_DEFAULT,
 } from '@/libs/seasonalReviewParent';
+import { normalizeSeasonalReview, sortSeasonalReviews } from '@/libs/seasonalReview';
 import type { Post } from '@/types/post';
 
 type SeasonalIndexProps = {
@@ -68,27 +69,47 @@ const SeasonalIndexPage = ({ items, locale }: SeasonalIndexProps) => {
 
 export default SeasonalIndexPage;
 
+/**
+ * 移行前の固定ページ（親ページの子）から一覧を組み立てる。
+ * CPT `seasonal_review` へ移行途中のフォールバック。移行完了後に削除する。
+ */
+const buildItemsFromPages = async (lang: 'ja' | 'en', basePath: string): Promise<Post[]> => {
+  const parentId = await resolveSeasonalReviewParentId();
+  if (!parentId) return [];
+  return [...(await getChildPages(parentId))]
+    .sort((a, b) => pageSortDate(b).localeCompare(pageSortDate(a)))
+    .map((p) => ({
+      id: String(p.id),
+      slug: `${basePath}/${p.slug}`,
+      title: normalizePageContent(p).title,
+      excerpt: '',
+      image: pageFeaturedImage(p),
+      publishedAt: (p.modified ?? p.date).slice(0, 10),
+      lang,
+    }));
+};
+
 export const buildSeasonalIndexProps = async (
   locale: string | undefined,
   basePath = SEASONAL_REVIEWS_BASE_PATH,
 ): Promise<SeasonalIndexProps> => {
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
   const lang = currentLocale === 'en' ? 'en' : 'ja';
-  const parentId = await resolveSeasonalReviewParentId();
-  let items: Post[] = [];
-  if (parentId) {
-    items = [...(await getChildPages(parentId))]
-      .sort((a, b) => pageSortDate(b).localeCompare(pageSortDate(a)))
-      .map((p) => ({
-        id: String(p.id),
-        slug: `${basePath}/${p.slug}`,
-        title: normalizePageContent(p).title,
-        excerpt: '',
-        image: pageFeaturedImage(p),
-        publishedAt: (p.modified ?? p.date).slice(0, 10),
-        lang,
-      }));
-  }
+
+  // CPT を優先し、まだ1件も無ければ移行前の固定ページから組み立てる
+  const reviews = (await getSeasonalReviews()).map(normalizeSeasonalReview);
+  const items: Post[] =
+    reviews.length > 0
+      ? sortSeasonalReviews(reviews).map((r) => ({
+          id: String(r.id),
+          slug: `${basePath}/${r.slug}`,
+          title: r.title,
+          excerpt: '',
+          image: r.image,
+          publishedAt: r.publishedAt,
+          lang,
+        }))
+      : await buildItemsFromPages(lang, basePath);
 
   return { items, locale: currentLocale };
 };

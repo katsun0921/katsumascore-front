@@ -19,7 +19,8 @@ paths:
 | `ranking.ts` | スコアランク変換関数（1〜5 → SS/S/A/B/C） |
 | `i18n.ts` | 多言語ヘルパー関数 |
 | `vod.ts` | VOD サービス定義（`VOD_CONFIG`）の後方互換エクスポートと派生マップ（`VOD_COLOR_VAR` / `VOD_BORDER_CLASS`）。マスターは `@/config/vod.config` |
-| `seasonalReviewParent.ts` | 季節レビュー親固定ページをスラッグから ID に解決 |
+| `seasonalReviewParent.ts` | 季節レビュー親固定ページをスラッグから ID に解決（移行前の固定ページ用） |
+| `seasonalReview.ts` | 季節まとめ（`seasonal_review` CPT）の正規化・並び替え |
 
 ## wordpress.ts の関数一覧
 
