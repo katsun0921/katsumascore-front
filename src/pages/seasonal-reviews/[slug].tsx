@@ -19,18 +19,11 @@ import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import { normalizeSeasonalReview, type SeasonalEntry } from '@/libs/seasonalReview';
 import { getPostUrl, resolvePostType, normalizeRouteLocale } from '@/libs/route';
 
-/** 区分ごとの見出し。`SeasonalEntry['category']` と対応する */
-const CATEGORY_HEADINGS: Record<SeasonalEntry['category'], string> = {
-  anime: 'アニメ',
-  drama: 'ドラマ',
-  movie: '映画',
-};
-
+/** まとめページ内で区分を並べる順序。見出し文言は SeasonalEntryList 側の i18n が持つ */
 const CATEGORY_ORDER: SeasonalEntry['category'][] = ['anime', 'drama', 'movie'];
 
 type SeasonalGroup = {
   category: SeasonalEntry['category'];
-  heading: string;
   items: SeasonalEntryItem[];
 };
 
@@ -53,7 +46,7 @@ const SeasonalDetailPage = ({ title, html, groups, locale }: SeasonalDetailProps
           <h1 className='text-2xl font-bold mb-6 text-color-primary'>{title}</h1>
           {html ? <PostContent content={html} /> : null}
           {groups.map((group) => (
-            <SeasonalEntryList key={group.category} heading={group.heading} items={group.items} />
+            <SeasonalEntryList key={group.category} category={group.category} items={group.items} />
           ))}
         </div>
       </PageLayout>
@@ -88,7 +81,6 @@ const buildGroups = async (
 
   return CATEGORY_ORDER.map((category) => ({
     category,
-    heading: CATEGORY_HEADINGS[category],
     items: entries
       .filter((e) => e.category === category)
       .map((e) => ({

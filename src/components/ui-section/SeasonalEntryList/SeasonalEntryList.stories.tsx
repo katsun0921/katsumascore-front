@@ -14,7 +14,7 @@ type Story = StoryObj<typeof SeasonalEntryList>;
 
 export const Default: Story = {
   args: {
-    heading: 'アニメ',
+    category: 'anime' as const,
     items: [
       {
         postId: 1,
@@ -35,7 +35,7 @@ export const Default: Story = {
 /** 一口メモが未入力の行はタイトルのみを表示する */
 export const WithoutMemo: Story = {
   args: {
-    heading: 'ドラマ',
+    category: 'drama' as const,
     items: [
       {
         postId: 3,
@@ -50,7 +50,7 @@ export const WithoutMemo: Story = {
 /** 個別記事がまだ無い（パスを解決できない）場合はリンクにしない */
 export const WithoutLink: Story = {
   args: {
-    heading: '映画',
+    category: 'movie' as const,
     items: [
       {
         postId: 4,
