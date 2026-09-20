@@ -120,7 +120,11 @@ const wpPostAcfObjectSchema = z
         .partial()
         .optional(),
     ),
-    rating: z.string().optional(),
+    /** 未設定の ACF select は REST で false / null になるため、投稿全体を無効にしない。 */
+    rating: z.preprocess(
+      (v: unknown) => (v == null || v === false || v === "" ? undefined : v),
+      z.string().optional(),
+    ),
     /** 本番で数値や空が混ざると string 解釈で ACF 全体の parse が落ちるため緩める */
     author_comment: z.preprocess(
       (v) => {
