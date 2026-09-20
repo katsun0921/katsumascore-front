@@ -110,7 +110,7 @@
 
 ## 3. コンポーネント一覧
 
-### 3.1 ui-parts（純粋 UI・15 コンポーネント）
+### 3.1 ui-parts（純粋 UI・16 コンポーネント）
 
 ロジック禁止。props の値を表示するのみ。
 
@@ -122,6 +122,7 @@
 | `HeaderNav` | `components/ui-parts/HeaderNav` | ヘッダーナビゲーション |
 | `HighlightText` | `components/ui-parts/HighlightText` | テキストハイライト（XSS 安全） |
 | `PostCard` | `components/ui-parts/PostCard` | 記事カード（Container / Body / Media / RankBadge / Skeleton） |
+| `RatingBadge` | `components/ui-parts/RatingBadge` | レーティング（映倫の年齢区分）バッジ。ja / en でラベル・補足を出し分け |
 | `Score` | `components/ui-parts/Score` | スコア表示（1〜5） |
 | `ScoreHexBadge` | `components/ui-parts/ScoreHexBadge` | 六角形スコアバッジ |
 | `SearchResultItem` | `components/ui-parts/SearchResultItem` | 検索結果 1 件表示 |
@@ -316,6 +317,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `nowShowingFilters.ts` | 劇場公開中一覧のクエリ解釈とクライアント側の絞り込み・並べ替え |
 | `buildVodFinderItems.ts` | VOD 検索アイテム構築 |
 | `scoreDisplay.ts` | スコア表示ロジック |
+| `rating.ts` | レーティング（映倫の年齢区分）のスラッグ定義と正規化（`parseRating`） |
 | `searchRelevance.ts` | 検索スコアリング |
 | `route.ts` | ルーティングユーティリティ |
 | `nextLinkLocale.ts` | Next.js Link 言語対応 |

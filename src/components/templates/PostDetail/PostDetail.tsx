@@ -59,6 +59,7 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
           productionStudios={post.TitleMeta?.productionStudios}
           releaseDate={post.TitleMeta?.releaseDate}
           copyright={post.TitleMeta?.copyright}
+          rating={post.rating}
           score={post.score}
           comment={post.authorComment}
         />

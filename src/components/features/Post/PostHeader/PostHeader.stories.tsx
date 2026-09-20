@@ -45,6 +45,11 @@ export const MinimalMeta: Story = {
   },
 };
 
+export const WithRating: Story = {
+  args: { rating: 'pg12' },
+};
+
 export const English: Story = {
+  args: { rating: 'pg12' },
   globals: { locale: 'en' },
 };

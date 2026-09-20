@@ -1,10 +1,12 @@
 import Link from 'next/link';
+import { RatingBadge } from '@/components/ui-parts/RatingBadge';
 import { ScoreWithRank } from '@/components/features/ScoreWithRank';
 import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 import type { TStudioEntry } from '@/components/features/Post/PostTitleMeta';
+import type { TRating } from '@/libs/rating';
 export type PostHeaderProps = {
   category: string
   titleOfficial: string
@@ -13,6 +15,8 @@ export type PostHeaderProps = {
   productionStudios?: TStudioEntry[]
   releaseDate?: string  // 'YYYYMMDD'
   copyright?: string
+  /** 映倫の年齢区分。ラベルは RatingBadge が locale で出し分ける */
+  rating?: TRating
   // PostHeroScore から移動
   score?: number
   scoreMax?: number
@@ -26,6 +30,7 @@ export const PostHeader = ({
   productionStudios,
   releaseDate,
   copyright,
+  rating,
   score,
   scoreMax = SCORE_DISPLAY_MAX,
   comment,
@@ -58,6 +63,7 @@ export const PostHeader = ({
     filmStudios && filmStudios.length > 0 ? renderStudios(filmStudios) : undefined,
     productionStudios && productionStudios.length > 0 ? renderStudios(productionStudios) : undefined,
     year,
+    rating ? <RatingBadge rating={rating} /> : undefined,
   ].filter(Boolean);
   return (
     <div data-component='PostHeader' className={prefix}>
