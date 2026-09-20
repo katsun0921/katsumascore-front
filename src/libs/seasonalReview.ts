@@ -41,6 +41,10 @@ const toNumber = (value: number | string | undefined | ""): number | null => {
 /**
  * `year` / `quarter` から並び替えキー（`2026q3`）を組み立てる。
  * ACF の `sort_key` が入力済みならそれを優先する。
+ *
+ * WordPress 側では `sort_key` は任意項目で、`year` / `quarter` が必須。
+ * したがって `sort_key` 未入力のハブが存在しうるため、ここで導出して
+ * 並び順が崩れないようにする。
  */
 export const buildSortKey = (acf: WPSeasonalReview["acf"]): string => {
   const explicit = acf?.sort_key?.trim();
@@ -132,7 +136,7 @@ export const normalizeSeasonalReview = (review: WPSeasonalReview): SeasonalRevie
  *
  * `sort_key`（`2026q3`）は辞書順がそのまま時系列順になるため文字列比較で足りる。
  * 更新日でソートすると一括更新時に順序が崩れるため使わない。
- * `sort_key` が未入力のものは末尾へ送る。
+ * `year` / `quarter` からも導出できないものだけが末尾へ送られる。
  */
 export const sortSeasonalReviews = <T extends { sortKey: string; publishedAt: string }>(
   reviews: T[],
