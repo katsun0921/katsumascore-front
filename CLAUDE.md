@@ -127,6 +127,12 @@ OpenNext / Cloudflare Workersに関する障害、再現結果、原因、回避
 ❌ 禁止: `post.title.rendered`  
 ✅ 必須: `normalizedPost.title`
 
+### WordPress REST スキーマの欠損値チェック
+
+- `src/libs/api/wordpress/schema.ts` の ACF フィールドを追加・変更するときは、実際の REST 応答で未設定値（`undefined` / `null` / `false` / `""` / `[]`）を確認し、必要な値だけ正規化する。`z.string().optional()` は `null` や `false` を許可しない。
+- 補助フィールドの型違いで `WPPostSchema` が投稿全体を落とさないか、`mapWPPostToPost` を通して検証する。`rating: false/null` は TOP の記事が消える原因になりうる。
+- ACF スキーマを変更したら `tests/unit/wp-post-schema.test.ts` に正常値と未設定値のケースを追加し、`npm run test:wp-schema` を実行する。PR の CI でも同じ検査を実行する。
+
 ---
 
 ## ■ 禁止ルール

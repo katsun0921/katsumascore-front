@@ -39,6 +39,9 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      - name: WordPress REST schema regression test
+        run: npm run test:wp-schema
+
       # generated/wp-schema.d.ts は openapi/wp.yaml からの生成物。
       # 手編集すると次回の `npm run wp:gen-types` で消えるため、
       # 再生成しても差分が出ないことを検査する。
