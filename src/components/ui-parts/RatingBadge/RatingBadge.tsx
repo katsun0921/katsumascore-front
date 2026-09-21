@@ -19,7 +19,7 @@ export const RatingBadge = ({ rating, withNote = false }: TRatingBadgeProps) => 
     <span data-component='RatingBadge' className='inline-flex items-center gap-2' aria-label={label}>
       <span
         title={note}
-        className='inline-block rounded-[3px] border border-color-border-muted px-2 py-1 text-[var(--font-size-caption-lg)] font-bold leading-[1.2] text-color-primary'
+        className='inline-block rounded-[3px] border border-color-border-muted px-2 py-1 text-[var(--font-size-caption-lg)] font-bold leading-[1.2]'
       >
         {code}
       </span>
