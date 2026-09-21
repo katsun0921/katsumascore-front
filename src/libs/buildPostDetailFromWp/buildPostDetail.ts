@@ -19,6 +19,7 @@ import {
 } from "./creditsActors";
 import { splitGoodPoints } from "./goodPoints";
 import { parseOfficialSns } from "./officialSns";
+import { parseEpisodeCount, parseReleaseSeason } from "./release";
 import { buildReviewSiteScoresFromAcf } from "./reviewSiteScores";
 import { buildRentalServices, buildStreamingVods } from "./streamingRental";
 import { buildTitleMetaBlock } from "./titleMeta";
@@ -100,6 +101,10 @@ export const buildPostDetailFromWp = ({
     parsed.acf?.release_date?.trim() ||
     ""
   ).trim() || undefined;
+  /** そのクール分の話数（アニメ・ドラマ用。映画は未入力） */
+  const episodeCount = parseEpisodeCount(releaseGroup?.episode_count);
+  /** 紐付く季節まとめハブ（`seasonal_review`）。まとめページへのリンクに使う */
+  const releaseSeason = parseReleaseSeason(releaseGroup?.release_season, locale);
   /** レーティング（映倫の年齢区分）。値はスラッグで、表示ラベルは RatingBadge が出し分ける */
   const rating = parseRating(parsed.acf?.rating ?? acf?.rating);
   const officialSnsParsed = parseOfficialSns(parsed.acf?.official_sns);
@@ -109,6 +114,8 @@ export const buildPostDetailFromWp = ({
     parsed,
     acf,
     releaseDate,
+    episodeCount,
+    releaseSeason,
     officialSns: officialSnsParsed,
     filmStudios: titleMetaFilmStudios,
     productionStudios: titleMetaProductionStudios,
