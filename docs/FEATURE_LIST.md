@@ -67,8 +67,8 @@
 
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
-| `/seasonal-reviews` | `pages/seasonal-reviews/index.tsx` | ISR | 季節レビュー一覧 |
-| `/seasonal-reviews/[slug]` | `pages/seasonal-reviews/[slug].tsx` | ISR | 季節レビュー詳細 |
+| `/seasonal-reviews` | `pages/seasonal-reviews/index.tsx` | ISR | 季節レビュー一覧（`seasonal_review` CPT 優先・固定ページへフォールバック。並び順は ACF `sort_key`） |
+| `/seasonal-reviews/[slug]` | `pages/seasonal-reviews/[slug].tsx` | ISR | 季節レビュー詳細（`seasonal_review` CPT 優先・固定ページへフォールバック。収録作品リストを描画） |
 | `/seasonal-anime-and-dramas-reviews` | `pages/seasonal-anime-and-dramas-reviews/index.tsx` | ISR | 季節アニメ＆ドラマレビュー一覧 |
 | `/seasonal-anime-and-dramas-reviews/[slug]` | `pages/seasonal-anime-and-dramas-reviews/[slug].tsx` | ISR | 季節アニメ＆ドラマレビュー詳細 |
 
@@ -158,7 +158,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 | `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
 
-### 3.4 ui-section（意味のある UI・24 コンポーネント）
+### 3.4 ui-section（意味のある UI・25 コンポーネント）
 
 props でデータを受け取る。読み取り専用 hooks（`useLocale` など）のみ許可。
 
@@ -181,6 +181,7 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `Profile` | `components/ui-section/Profile` | プロフィール |
 | `RelatedPosts` | `components/ui-section/RelatedPosts` | 関連記事 |
 | `RelationPost` | `components/ui-section/RelationPost` | 関連投稿 |
+| `SeasonalEntryList` | `components/ui-section/SeasonalEntryList` | 季節まとめの収録作品リスト（個別記事へのリンク＋一口メモ） |
 | `StreamingVod` | `components/ui-section/StreamingVod` | ストリーミング配信情報 |
 | `VodIntroduction` | `components/ui-section/VodIntroduction` | VOD 紹介 |
 | `VodItem` | `components/ui-section/VodItem` | VOD アイテム |
@@ -266,6 +267,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `vodTaxonomy.ts` | `getVodTermBySlug`, `getVodTerms` | VOD 分類取得 |
 | `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
 | `theaterRelease.ts` | `getTheaterReleaseBySlug`, `getTheaterReleases` | 劇場公開情報 CPT（`theater_release`）取得 |
+| `seasonalReview.ts` | `getSeasonalReviewBySlug`, `getSeasonalReviews` | 季節まとめ CPT（`seasonal_review`）取得 |
 | `theaterList.ts` | `getTheaterList` | 劇場公開中の記事一覧専用カスタムエンドポイント（`/wp-json/v1/theater-list`）。ACF `cinema_info_filed.is_cinema_showing` で絞り込み、公開日順 / 新着 / 評価順のソートとページングをWP側で処理する。週次まとめ記事の `theater_release` CPT とは別物 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
@@ -325,7 +327,8 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `toc.ts` | 目次（TableOfContents）生成 |
 | `vod.ts` | VOD 関連ユーティリティ |
 | `vodPathToWpSlug.ts` | VOD パス → WP スラッグ変換 |
-| `seasonalReviewParent.ts` | 季節レビュー親スラッグ解決 |
+| `seasonalReviewParent.ts` | 季節レビュー親スラッグ解決（移行前の固定ページ用。CPT移行完了後に削除予定） |
+| `seasonalReview.ts` | 季節まとめ（`seasonal_review`）の正規化・並び替え（`normalizeSeasonalReview` / `sortSeasonalReviews`） |
 | `wpMockMode.ts` | WP モックモード制御 |
 | `formatDate.ts` (utils) | 日付フォーマット |
 | `normalizePost.ts` (utils) | 投稿データ正規化（`normalizePosts` / `mapWPPostToPost`） |

@@ -85,6 +85,14 @@ export const getVodReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
 export const getVodReleaseUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
   `${getVodReleaseArchivePath(lang)}/${slug}`;
 
+/** 季節まとめ（シーズンごとの鑑賞まとめ）アーカイブのパス（例: `/ja/seasonal-reviews`）。 */
+export const getSeasonalReviewArchivePath = (lang = DEFAULT_LOCALE): string =>
+  `${getLocalePathPrefix(lang)}/seasonal-reviews`;
+
+/** 季節まとめ詳細のパス（例: `/ja/seasonal-reviews/2026-summer-anime-drama`）。 */
+export const getSeasonalReviewUrl = (slug: string, lang = DEFAULT_LOCALE): string =>
+  `${getSeasonalReviewArchivePath(lang)}/${slug}`;
+
 /** 劇場公開情報（週次まとめ記事）アーカイブのパス（例: `/ja/theater-release`）。 */
 export const getTheaterReleaseArchivePath = (lang = DEFAULT_LOCALE): string =>
   `${getLocalePathPrefix(lang)}/theater-release`;

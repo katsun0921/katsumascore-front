@@ -9,6 +9,7 @@ import {
   getChildPages,
   getPersons,
   getVodReleases,
+  getSeasonalReviews,
   getTheaterReleases,
 } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
@@ -57,7 +58,18 @@ const escapeXml = (str: string): string =>
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
-  const [wpPosts, categories, genres, tags, franchiseSlugs, seasonal, persons, vodReleases, theaterReleases] =
+  const [
+    wpPosts,
+    categories,
+    genres,
+    tags,
+    franchiseSlugs,
+    seasonal,
+    persons,
+    vodReleases,
+    theaterReleases,
+    seasonalReviews,
+  ] =
     await Promise.all([
       getSitemapPosts(100, SITEMAP_POSTS_MAX_PAGES),
       getCategories(),
@@ -68,7 +80,20 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       getPersons(100),
       getVodReleases(100),
       getTheaterReleases(100),
+      getSeasonalReviews(100),
     ]);
+
+  // 季節まとめは CPT を優先し、まだ1件も無ければ移行前の固定ページを列挙する
+  const seasonalItems: { slug: string; lastmod: string }[] =
+    seasonalReviews.length > 0
+      ? seasonalReviews.map((r) => ({
+          slug: r.slug,
+          lastmod: new Date(r.modified ?? r.date).toISOString(),
+        }))
+      : seasonal.map((p) => ({
+          slug: p.slug,
+          lastmod: new Date(p.modified ?? p.date).toISOString(),
+        }));
 
   const staticPaths: SitemapItem[] = LOCALES.flatMap((lang) => [
     { loc: `${SITE_URL}/${lang}`, changefreq: 'daily', priority: 1 },
@@ -157,9 +182,9 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       changefreq: 'monthly',
       priority: 0.5,
     })),
-    ...seasonal.map((p) => ({
-      loc: `${SITE_URL}/${lang}/seasonal-reviews/${p.slug}`,
-      lastmod: new Date(p.modified ?? p.date).toISOString(),
+    ...seasonalItems.map((item) => ({
+      loc: `${SITE_URL}/${lang}/seasonal-reviews/${item.slug}`,
+      lastmod: item.lastmod,
       changefreq: 'monthly',
       priority: 0.55,
     })),
