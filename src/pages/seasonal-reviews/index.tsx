@@ -96,20 +96,22 @@ export const buildSeasonalIndexProps = async (
   const currentLocale = locale === 'default' ? 'ja' : (locale ?? 'ja');
   const lang = currentLocale === 'en' ? 'en' : 'ja';
 
-  // CPT を優先し、まだ1件も無ければ移行前の固定ページから組み立てる
+  // CPT と移行前の固定ページの両方から集め、slug の重複は CPT を優先する。
+  // 移行は季節ごとに順次進むため、一部だけ CPT 化された状態でも
+  // 残りの固定ページを一覧から消さない。
   const reviews = (await getSeasonalReviews()).map(normalizeSeasonalReview);
-  const items: Post[] =
-    reviews.length > 0
-      ? sortSeasonalReviews(reviews).map((r) => ({
-          id: String(r.id),
-          slug: `${basePath}/${r.slug}`,
-          title: r.title,
-          excerpt: '',
-          image: r.image,
-          publishedAt: r.publishedAt,
-          lang,
-        }))
-      : await buildItemsFromPages(lang, basePath);
+  const cptItems: Post[] = sortSeasonalReviews(reviews).map((r) => ({
+    id: String(r.id),
+    slug: `${basePath}/${r.slug}`,
+    title: r.title,
+    excerpt: '',
+    image: r.image,
+    publishedAt: r.publishedAt,
+    lang,
+  }));
+  const pageItems = await buildItemsFromPages(lang, basePath);
+  const cptSlugs = new Set(cptItems.map((item) => item.slug));
+  const items: Post[] = [...cptItems, ...pageItems.filter((item) => !cptSlugs.has(item.slug))];
 
   return { items, locale: currentLocale };
 };

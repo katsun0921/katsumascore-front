@@ -23,7 +23,7 @@ export const RatingBadge = ({ rating, withNote = false }: TRatingBadgeProps) => 
       >
         {code}
       </span>
-      {withNote && <span className='text-[var(--font-size-caption-sm)] text-color-secondary'>{note}</span>}
+      {withNote && <span className='text-[var(--font-size-caption-sm)] text-color-inverse/55'>{note}</span>}
     </span>
   );
 };
