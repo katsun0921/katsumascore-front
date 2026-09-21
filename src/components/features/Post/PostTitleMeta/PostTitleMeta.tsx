@@ -36,10 +36,21 @@ export type TOfficialSnsEntry = {
   embedHtml?: string
 }
 
+/** 季節まとめハブ（`seasonal_review`）への参照 */
+export type TReleaseSeason = {
+  title: string
+  /** まとめページへのパス。未設定ならリンクにしない */
+  href?: string
+}
+
 export type TTitleMetaProps = {
   officialUrl?: string
   copyright?: string
   releaseDate?: string
+  /** そのクール分の話数（アニメ・ドラマ用） */
+  episodeCount?: number
+  /** 紐付く季節まとめ（シーズン） */
+  releaseSeason?: TReleaseSeason
   officialSns?: Record<string, TOfficialSnsEntry>
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]

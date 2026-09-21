@@ -286,6 +286,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `buildPostDetail.ts` | メイン変換関数 |
 | `acfScalars.ts` | ACF フィールド解析 |
 | `titleMeta.ts` | タイトル・メタ情報 |
+| `release.ts` | ACF `release` グループの正規化（話数 `episode_count` / シーズン `release_season`） |
 | `creditsActors.ts` | 配役情報 |
 | `goodPoints.ts` | おすすめポイント |
 | `cinema.ts` | 映画館情報 |

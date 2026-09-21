@@ -5,7 +5,7 @@ import { SCORE_DISPLAY_MAX } from '@/libs/scoreDisplay';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
-import type { TStudioEntry } from '@/components/features/Post/PostTitleMeta';
+import type { TStudioEntry, TReleaseSeason } from '@/components/features/Post/PostTitleMeta';
 import type { TRating } from '@/libs/rating';
 export type PostHeaderProps = {
   category: string
@@ -14,6 +14,10 @@ export type PostHeaderProps = {
   filmStudios?: TStudioEntry[]
   productionStudios?: TStudioEntry[]
   releaseDate?: string  // 'YYYYMMDD'
+  /** そのクール分の話数（アニメ・ドラマ用。映画は未設定） */
+  episodeCount?: number
+  /** 紐付く季節まとめ（シーズン）。href があればまとめページへリンクする */
+  releaseSeason?: TReleaseSeason
   copyright?: string
   /** 映倫の年齢区分。ラベルは RatingBadge が locale で出し分ける */
   rating?: TRating
@@ -29,6 +33,8 @@ export const PostHeader = ({
   filmStudios,
   productionStudios,
   releaseDate,
+  episodeCount,
+  releaseSeason,
   copyright,
   rating,
   score,
@@ -59,10 +65,35 @@ export const PostHeader = ({
     </>
   );
 
+  const episodesLabel =
+    episodeCount === undefined
+      ? undefined
+      : [
+          t(messages, ['meta', 'episodesPrefix'], locale),
+          episodeCount,
+          t(
+            messages,
+            ['meta', episodeCount === 1 ? 'episodesSuffixSingular' : 'episodesSuffix'],
+            locale,
+          ),
+        ].join('');
+
+  const seasonPart = releaseSeason
+    ? (releaseSeason.href ? (
+        <Link href={releaseSeason.href} className={`${prefix}__meta-link`}>
+          {releaseSeason.title}
+        </Link>
+      ) : (
+        releaseSeason.title
+      ))
+    : undefined;
+
   const metaParts = [
     filmStudios && filmStudios.length > 0 ? renderStudios(filmStudios) : undefined,
     productionStudios && productionStudios.length > 0 ? renderStudios(productionStudios) : undefined,
     year,
+    seasonPart,
+    episodesLabel,
     rating ? <RatingBadge rating={rating} /> : undefined,
   ].filter(Boolean);
   return (

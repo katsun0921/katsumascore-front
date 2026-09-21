@@ -132,6 +132,37 @@ const wpPostAcfObjectSchema = z
     ),
     rental_services: z.array(rentalRowSchema).optional(),
     release_date: z.string().optional(),
+    /**
+     * ACF グループ `release`（公開年 / 公開日 / シーズン / 話数）。
+     * 本番では未入力時に `release_season: false` / `episode_count: ""` が返るため、
+     * それぞれ union で受けて後段の正規化で落とす。
+     */
+    release: z.preprocess(
+      (v) => {
+        if (v == null || Array.isArray(v) || typeof v !== "object") return undefined;
+        return v;
+      },
+      z
+        .object({
+          release_date: z.string().optional(),
+          /** そのクール分の話数。未入力は空文字で返る */
+          episode_count: z.union([z.number(), z.string()]).optional(),
+          /** 季節まとめハブ（`seasonal_review` CPT）。未選択は false で返る */
+          release_season: z
+            .union([
+              z.object({
+                ID: z.number(),
+                post_title: z.string().optional(),
+                post_name: z.string().optional(),
+              }).passthrough(),
+              z.literal(false),
+              z.number(),
+            ])
+            .optional(),
+        })
+        .passthrough()
+        .optional(),
+    ),
     copyright: z.string().optional(),
     /** タイトル上のタグライン（本番 post meta / ACF キー名 `tagline`） */
     tagline: z.preprocess(
