@@ -83,17 +83,21 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
       getSeasonalReviews(100),
     ]);
 
-  // 季節まとめは CPT を優先し、まだ1件も無ければ移行前の固定ページを列挙する
-  const seasonalItems: { slug: string; lastmod: string }[] =
-    seasonalReviews.length > 0
-      ? seasonalReviews.map((r) => ({
-          slug: r.slug,
-          lastmod: new Date(r.modified ?? r.date).toISOString(),
-        }))
-      : seasonal.map((p) => ({
-          slug: p.slug,
-          lastmod: new Date(p.modified ?? p.date).toISOString(),
-        }));
+  // 季節まとめは CPT と移行前の固定ページの両方を列挙し、slug の重複は CPT を優先する
+  const seasonalCptItems: { slug: string; lastmod: string }[] = seasonalReviews.map((r) => ({
+    slug: r.slug,
+    lastmod: new Date(r.modified ?? r.date).toISOString(),
+  }));
+  const seasonalCptSlugs = new Set(seasonalCptItems.map((item) => item.slug));
+  const seasonalItems: { slug: string; lastmod: string }[] = [
+    ...seasonalCptItems,
+    ...seasonal
+      .filter((p) => !seasonalCptSlugs.has(p.slug))
+      .map((p) => ({
+        slug: p.slug,
+        lastmod: new Date(p.modified ?? p.date).toISOString(),
+      })),
+  ];
 
   const staticPaths: SitemapItem[] = LOCALES.flatMap((lang) => [
     { loc: `${SITE_URL}/${lang}`, changefreq: 'daily', priority: 1 },
