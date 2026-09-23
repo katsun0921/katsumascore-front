@@ -388,6 +388,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `vodReleasePageMessages.ts` | VOD配信情報ページ翻訳メッセージ |
 | `theaterReleasePageMessages.ts` | 劇場公開情報ページ翻訳メッセージ |
 | `nowShowingPageMessages.ts` | 劇場公開中の作品一覧ページ翻訳メッセージ |
+| `seasonalReviewPageMessages.ts` | 季節まとめページ翻訳メッセージ（パンくず） |
 
 ### 対応言語
 

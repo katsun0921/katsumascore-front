@@ -3,11 +3,13 @@ import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { PageLayout } from '@/components/templates/PageLayout';
+import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { SeasonalEntryList, type SeasonalEntryItem } from '@/components/ui-section/SeasonalEntryList';
 import { SeasonalWorkExplorer } from '@/components/features/SeasonalWorkExplorer';
 import { I18nProvider } from '@/i18n/provider';
-import type { Locale } from '@/i18n/t';
+import { t, type Locale } from '@/i18n/t';
+import { messages } from '@/i18n/seasonalReviewPageMessages';
 import {
   getChildPages,
   getPageBySlug,
@@ -19,7 +21,16 @@ import {
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import { normalizeSeasonalReview, type SeasonalEntry } from '@/libs/seasonalReview';
 import { extractSeasonalWorks, type SeasonalWork } from '@/libs/seasonalWorks';
-import { getPostUrl, resolvePostType, normalizeRouteLocale } from '@/libs/route';
+import {
+  getPostUrl,
+  getSeasonalReviewArchivePath,
+  getSeasonalReviewUrl,
+  resolvePostType,
+  normalizeRouteLocale,
+} from '@/libs/route';
+
+/** 構造化データの絶対URL組み立てに使うサイトURL。末尾スラッシュは持たせない。 */
+const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://katsumascore.blog').replace(/\/$/, '');
 
 /** まとめページ内で区分を並べる順序。見出し文言は SeasonalEntryList 側の i18n が持つ */
 const CATEGORY_ORDER: SeasonalEntry['category'][] = ['anime', 'drama', 'movie'];
@@ -31,6 +42,8 @@ type SeasonalGroup = {
 
 type SeasonalDetailProps = {
   title: string;
+  /** パンくず・canonical の組み立てに使う。公開URLの末尾セグメント */
+  slug: string;
   html: string | null;
   groups: SeasonalGroup[];
   /**
@@ -41,16 +54,49 @@ type SeasonalDetailProps = {
   locale: string;
 };
 
-const SeasonalDetailPage = ({ title, html, groups, works, locale }: SeasonalDetailProps) => {
+const SeasonalDetailPage = ({ title, slug, html, groups, works, locale }: SeasonalDetailProps) => {
   const loc = (locale ?? 'ja') as Locale;
   // 作品を抽出できたときは一覧 UI を優先する。抽出できない入稿では従来どおり本文を描画する
   const hasWorks = works.length > 0;
+
+  // パンくずは「ホーム / 季節のレビュー / 記事タイトル」。
+  // 旧スラッグ（/seasonal-anime-and-dramas-reviews）配下でも、リンク先は
+  // 移行後の正のパス（/seasonal-reviews）へ寄せる
+  const breadcrumbItems = [
+    { label: t(messages, ['breadcrumb', 'home'], loc), href: '/' },
+    {
+      label: t(messages, ['breadcrumb', 'seasonalReview'], loc),
+      href: getSeasonalReviewArchivePath(loc),
+    },
+    { label: title },
+  ];
+
+  const canonicalUrl = `${SITE_URL}${getSeasonalReviewUrl(slug, loc)}`;
+
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumbItems.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.label,
+      item: item.href ? `${SITE_URL}${item.href === '/' ? '' : item.href}` : canonicalUrl,
+    })),
+  };
+
   return (
     <I18nProvider locale={loc}>
       <Head>
         <title>{title} | KatsumaScore</title>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        />
       </Head>
       <PageLayout>
+        <div className='px-4 pt-3 pb-0'>
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
         <div className={`px-4 py-8 mx-auto ${hasWorks ? 'max-w-5xl' : 'max-w-3xl'}`}>
           <h1 className='text-2xl font-bold mb-6 text-color-primary'>{title}</h1>
           {hasWorks ? <SeasonalWorkExplorer works={works} /> : null}
@@ -138,6 +184,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
     return {
       props: {
         title: normalized.title,
+        slug,
         html: normalized.html,
         groups,
         // ACF entries が入稿済みならそちら（SeasonalEntryList）を正とし、
@@ -156,6 +203,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
   return {
     props: {
       title: normalized.title,
+      slug,
       html: normalized.html,
       groups: [],
       works: extractSeasonalWorks(normalized.html ?? ''),
