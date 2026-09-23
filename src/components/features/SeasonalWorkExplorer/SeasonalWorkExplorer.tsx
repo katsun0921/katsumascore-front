@@ -34,7 +34,6 @@ export const SeasonalWorkExplorer = ({ works }: TSeasonalWorkExplorerProps) => {
 
   const [keyword, setKeyword] = useState('');
   const [vod, setVod] = useState<string | null>(null);
-  const [isIndexOpen, setIsIndexOpen] = useState(false);
 
   const vodFilters = useMemo(() => collectVodFilters(works), [works]);
   const visible = useMemo(() => filterWorks(works, keyword, vod), [works, keyword, vod]);
@@ -110,29 +109,21 @@ export const SeasonalWorkExplorer = ({ works }: TSeasonalWorkExplorerProps) => {
         )}
       </div>
 
-      {/* 索引: 全タイトルへのアンカー。絞り込み結果に追従させ、今見えている作品だけを並べる */}
+      {/* 索引: 全タイトルへのアンカー。常時表示し、絞り込み結果に追従させる */}
       {visible.length > 0 && (
         <div className='seasonalWorkExplorer__index'>
-          <button
-            type='button'
-            className='seasonalWorkExplorer__indexToggle'
-            aria-expanded={isIndexOpen}
-            aria-controls={indexId}
-            onClick={() => setIsIndexOpen((prev) => !prev)}
-          >
+          <p className='seasonalWorkExplorer__label' id={indexId}>
             {t(messages, ['index', 'title'], locale)}
-          </button>
-          {isIndexOpen && (
-            <ul id={indexId} className='seasonalWorkExplorer__indexList'>
-              {visible.map((work) => (
-                <li key={work.id}>
-                  <a href={`#${work.id}`} className='seasonalWorkExplorer__indexLink'>
-                    {work.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
+          </p>
+          <ul className='seasonalWorkExplorer__indexList' aria-labelledby={indexId}>
+            {visible.map((work) => (
+              <li key={work.id}>
+                <a href={`#${work.id}`} className='seasonalWorkExplorer__indexLink'>
+                  {work.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
