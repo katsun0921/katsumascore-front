@@ -1,0 +1,214 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.seasonalWorkExplorer {
+  min-width: 0;
+  max-width: 100%;
+
+  &__controls {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+    background: var(--color-bg-muted);
+    border-radius: 8px;
+  }
+
+  &__label {
+    display: block;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-ui);
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  &__searchInputWrap {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    height: 44px;
+    padding: 0 16px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-body);
+    transition: border-color 0.2s ease;
+
+    &::placeholder {
+      color: var(--color-text-secondary);
+    }
+
+    &:focus {
+      border-color: var(--color-primary);
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.2);
+    }
+  }
+
+  &__vodList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 9999px;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-caption);
+    line-height: 1.4;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+
+    &[aria-pressed="true"] {
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+      color: var(--color-text-inverse);
+    }
+  }
+
+  &__chipCount {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-caption);
+
+    .seasonalWorkExplorer__chip[aria-pressed="true"] & {
+      color: var(--color-text-inverse);
+    }
+  }
+
+  &__status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+  }
+
+  &__count {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-ui);
+    margin: 0;
+  }
+
+  &__reset {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: var(--font-size-ui);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  &__index {
+    margin-top: 12px;
+  }
+
+  &__indexToggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-primary);
+    font-size: var(--font-size-ui);
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+
+    &:hover {
+      border-color: var(--color-primary);
+    }
+
+    &::after {
+      content: "▾";
+      font-size: 10px;
+      transition: transform 0.2s ease;
+    }
+
+    &[aria-expanded="true"]::after {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__indexList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px 16px;
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 12px;
+    max-height: 320px;
+    overflow-y: auto;
+    background: var(--color-bg-muted);
+    border-radius: 6px;
+
+    @include layout-md {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__indexLink {
+    display: block;
+    padding: 4px 0;
+    color: var(--color-primary);
+    font-size: var(--font-size-ui);
+    line-height: 1.5;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
+  }
+
+  &__empty {
+    margin: 32px 0;
+    padding: 32px 16px;
+    background: var(--color-bg-muted);
+    border-radius: 8px;
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-body);
+    text-align: center;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    list-style: none;
+    margin: 24px 0 0;
+    padding: 0;
+
+    @include layout-md {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  &__gridItem {
+    min-width: 0;
+
+    /* インデックスからのジャンプ時、ヘッダーに隠れないよう余白を確保する */
+    scroll-margin-top: 80px;
+  }
+}
