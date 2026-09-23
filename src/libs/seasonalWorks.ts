@@ -1,18 +1,24 @@
 /**
- * 季節まとめ固定ページの本文 HTML から作品リストを抽出する（サーバー側想定）。
+ * 季節まとめの作品リストを、表示用の `SeasonalWork` へ正規化する（サーバー側想定）。
  *
- * CPT（`seasonal_review`）へ移行するまでのあいだ、まとめページの中身は
- * WordPress 固定ページの本文 HTML として入稿されている。本文は
+ * データの出どころは2つあり、どちらも同じ `SeasonalWork` を返す。
+ * 一覧 UI はどちらで描画されているかを知らないまま両方を扱える。
+ *
+ * 1. `normalizeSeasonalWorks` — ACF `works` リピーター（入稿済みならこちらを優先）
+ * 2. `extractSeasonalWorks` — 移行前の固定ページ本文 HTML
+ *
+ * 本文は
  * `<h2><a>作品名</a></h2><p>あらすじ</p><details><summary>配信サービス</summary><ul><li>…</li></ul></details>`
- * の繰り返しという規則的な構造を持つため、ここで表示用のデータへ落とす。
- *
- * CPT 移行後は `normalizeSeasonalEntries` が同じ形（`SeasonalWork`）を返すようにし、
- * 一覧 UI 側はデータの出どころを知らないまま差し替えられるようにする。
+ * の繰り返しという規則的な構造を持つため、ACF が空のあいだはここから拾う。
  */
 import { parseDocument } from 'htmlparser2';
 import { textContent } from 'domutils';
 import type { Element, ChildNode } from 'domhandler';
 import { VOD_CONFIG, type VodService } from '@/config/vod.config';
+import type {
+  WPSeasonalReviewWork,
+  WPSeasonalReviewWorkVod,
+} from '@/libs/api/wordpress/endpoints/seasonalReview';
 
 /** まとめページに並ぶ作品1件分（表示用）。 */
 export type SeasonalWork = {
@@ -207,4 +213,135 @@ export const collectVodFilters = (works: SeasonalWork[]): { key: string; count: 
   return [...counts.entries()]
     .map(([key, count]) => ({ key, count }))
     .sort((a, b) => (b.count === a.count ? a.key.localeCompare(b.key) : b.count - a.count));
+};
+
+/**
+ * ACF `works` の `service` 値 → 表示ラベル。
+ * WordPress 側 `acf-json/group_seasonal_review.json` の choices と対応する。
+ * 追加・変更したら両方を揃えること。
+ */
+const ACF_SERVICE_LABELS: Record<string, string> = {
+  danime: 'dアニメストア',
+  unext: 'U-NEXT',
+  abema: 'ABEMA',
+  anime_houdai: 'アニメ放題',
+  netflix: 'Netflix',
+  prime_video: 'Prime Video',
+  animefesta: 'AnimeFesta',
+  anime_times: 'アニメタイムズ',
+  hulu: 'Hulu',
+  youtube: 'YouTube',
+  disney: 'Disney+',
+  dmmtv: 'DMM TV',
+  appletv: 'Apple TV+',
+  lemino: 'Lemino',
+  tver: 'TVer',
+  fod: 'FOD',
+  crunchyroll: 'Crunchyroll',
+};
+
+/** ACF `note` の値 → バッジに添える注記。 */
+const ACF_NOTE_LABELS: Record<string, string> = {
+  exclusive: '独占',
+  world_exclusive: '世界独占',
+  premium: 'プレミアム',
+};
+
+/** ACF `delivery_status` の値 → 配信未定を表す表示ラベル。 */
+const ACF_STATUS_LABELS: Record<string, string> = {
+  undecided: '配信サービス未発表',
+  undecided_planned: '配信サービス未発表（配信予定あり）',
+  undecided_sequential: '配信サービス未発表（順次配信予定）',
+};
+
+/** ACF true_false は 1 / 0 / true / false のいずれでも返りうる。 */
+const toBoolean = (value: boolean | number | string | undefined): boolean =>
+  value === true || value === 1 || value === '1';
+
+/** ACF の数値フィールドは文字列で返ることがあるため、数値へ寄せる。 */
+const toOrder = (value: number | string | undefined | ''): number | null => {
+  if (typeof value === 'number') return Number.isFinite(value) ? value : null;
+  if (typeof value !== 'string' || value.trim() === '') return null;
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+/** ACF `works.vods` の1行を表示用の配信サービスへ変換する。 */
+const toAcfVod = (row: WPSeasonalReviewWorkVod): SeasonalWorkVod | null => {
+  const service = row.service?.trim();
+  if (!service) return null;
+
+  // `other` は自由入力のサービス名を正とする
+  const key = service === 'other' ? (row.service_other?.trim() ?? '') : (ACF_SERVICE_LABELS[service] ?? service);
+  if (key.length === 0) return null;
+
+  const note = typeof row.note === 'string' ? ACF_NOTE_LABELS[row.note] : undefined;
+
+  return {
+    label: note ? `${key}（${note}）` : key,
+    key,
+    colorVar: COLOR_VAR_BY_LABEL.get(key.toLowerCase()) ?? null,
+    isUndecided: false,
+  };
+};
+
+/**
+ * ACF `works` リピーターを表示用の作品リストへ正規化する。
+ *
+ * 本文 HTML のパース（`extractSeasonalWorks`）と同じ `SeasonalWork` を返すため、
+ * 一覧 UI はデータの出どころを知らないまま両方を扱える。
+ *
+ * 並び順は `display_order` の昇順。未入力の行は入力済みの行より後ろに置き、
+ * 同順のものは元の行順を保つ（安定ソート）。
+ */
+export const normalizeSeasonalWorks = (
+  works: WPSeasonalReviewWork[] | false | undefined,
+): SeasonalWork[] => {
+  if (!Array.isArray(works)) return [];
+
+  const mapped: { work: SeasonalWork; order: number | null; index: number }[] = [];
+
+  works.forEach((row, index) => {
+    const title = row.title?.trim();
+    if (!title) return;
+
+    const vods = (Array.isArray(row.vods) ? row.vods : [])
+      .map(toAcfVod)
+      .filter((v): v is SeasonalWorkVod => v !== null);
+
+    // 配信未発表・その他は「サービス」ではないため、専用フィールドからバッジを組み立てる
+    const statusLabel = ACF_STATUS_LABELS[row.delivery_status ?? ''];
+    if (statusLabel) {
+      vods.push({ label: statusLabel, key: statusLabel, colorVar: null, isUndecided: true });
+    }
+    if (toBoolean(row.has_other_services)) {
+      vods.push({
+        label: 'その他の配信サービス',
+        key: 'その他の配信サービス',
+        colorVar: null,
+        isUndecided: true,
+      });
+    }
+
+    mapped.push({
+      work: {
+        id: `seasonal-work-${index}`,
+        title,
+        summary: row.description?.trim() ?? '',
+        officialUrl: row.official_url?.trim() || null,
+        vods,
+      },
+      order: toOrder(row.display_order),
+      index,
+    });
+  });
+
+  return mapped
+    .sort((a, b) => {
+      if (a.order === b.order) return a.index - b.index;
+      if (a.order === null) return 1;
+      if (b.order === null) return -1;
+      return a.order - b.order;
+    })
+    .map((m) => m.work);
 };

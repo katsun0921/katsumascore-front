@@ -333,7 +333,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `seasonalReviewParent.ts` | 季節レビュー親スラッグ解決（移行前の固定ページ用。CPT移行完了後に削除予定） |
 | `seasonalReview.ts` | 季節まとめ（`seasonal_review`）の正規化・並び替え（`normalizeSeasonalReview` / `sortSeasonalReviews`） |
 | `seasonalReviewIndex.ts` | 季節まとめ一覧の組み立て（CPT＋移行前の固定ページを統合。一覧ページと TOP の特集枠で共有） |
-| `seasonalWorks.ts` | 季節まとめ固定ページの本文 HTML から作品を抽出（`extractSeasonalWorks` / `collectVodFilters`） |
+| `seasonalWorks.ts` | 季節まとめの作品リスト正規化。ACF `works`（`normalizeSeasonalWorks`）と移行前の本文 HTML（`extractSeasonalWorks`）の両方を同じ形へ落とす。`collectVodFilters` で絞り込み選択肢を作る |
 | `wpMockMode.ts` | WP モックモード制御 |
 | `formatDate.ts` (utils) | 日付フォーマット |
 | `normalizePost.ts` (utils) | 投稿データ正規化（`normalizePosts` / `mapWPPostToPost`） |
