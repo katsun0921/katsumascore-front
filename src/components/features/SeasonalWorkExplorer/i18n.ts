@@ -10,7 +10,6 @@ export const messages = {
   },
   index: {
     title: { ja: '作品インデックス', en: 'Title index' },
-    toggle: { ja: '作品インデックスを開閉する', en: 'Toggle title index' },
   },
   result: {
     /** `{shown}` / `{total}` をプレースホルダとして差し替える */
