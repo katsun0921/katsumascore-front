@@ -110,7 +110,7 @@
 
 ## 3. コンポーネント一覧
 
-### 3.1 ui-parts（純粋 UI・16 コンポーネント）
+### 3.1 ui-parts（純粋 UI・17 コンポーネント）
 
 ロジック禁止。props の値を表示するのみ。
 
@@ -126,6 +126,7 @@
 | `Score` | `components/ui-parts/Score` | スコア表示（1〜5） |
 | `ScoreHexBadge` | `components/ui-parts/ScoreHexBadge` | 六角形スコアバッジ |
 | `SearchResultItem` | `components/ui-parts/SearchResultItem` | 検索結果 1 件表示 |
+| `SeasonalWorkCard` | `components/ui-parts/SeasonalWorkCard` | 季節まとめの作品カード（あらすじ＋配信サービス＋検索語ハイライト） |
 | `ShareButtons` | `components/ui-parts/ShareButtons` | ソーシャルシェアボタン |
 | `VideoEmbed` | `components/ui-parts/VideoEmbed` | YouTube / 動画埋め込み |
 | `VodDots` | `components/ui-parts/VodDots` | VOD 配信状態インジケータ |
@@ -188,7 +189,7 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `VodLegend` | `components/ui-section/VodLegend` | VOD バッジ凡例（頭文字の意味を説明） |
 | `VodPanel` | `components/ui-section/VodPanel` | VOD パネル |
 
-### 3.5 features（ロジック・19 コンポーネント）
+### 3.5 features（ロジック・20 コンポーネント）
 
 hooks / state 使用可。データ取得・整形を担当。
 
@@ -214,6 +215,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `ScoreWithRank` | `components/features/ScoreWithRank` | スコア＋ランク（SS/S/A/B/C） |
 | `Search` | `components/features/Search` | インクリメンタル検索（ヘッダードロップダウン） |
 | `SearchBox` | `components/features/SearchBox` | 検索ボックス |
+| `SeasonalWorkExplorer` | `components/features/SeasonalWorkExplorer` | 季節まとめの作品一覧（検索・配信サービス絞り込み・索引・カードグリッド） |
 | `StreamingVod` | `components/features/StreamingVod` | ストリーミング配信（ロジック） |
 | `VodMenu` | `components/features/VodMenu` | VOD メニュー |
 | `SeoHead` | `components/features/seo/SeoHead` | SEO 用 `<head>` メタタグ |
@@ -330,6 +332,8 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `vodPathToWpSlug.ts` | VOD パス → WP スラッグ変換 |
 | `seasonalReviewParent.ts` | 季節レビュー親スラッグ解決（移行前の固定ページ用。CPT移行完了後に削除予定） |
 | `seasonalReview.ts` | 季節まとめ（`seasonal_review`）の正規化・並び替え（`normalizeSeasonalReview` / `sortSeasonalReviews`） |
+| `seasonalReviewIndex.ts` | 季節まとめ一覧の組み立て（CPT＋移行前の固定ページを統合。一覧ページと TOP の特集枠で共有） |
+| `seasonalWorks.ts` | 季節まとめ固定ページの本文 HTML から作品を抽出（`extractSeasonalWorks` / `collectVodFilters`） |
 | `wpMockMode.ts` | WP モックモード制御 |
 | `formatDate.ts` (utils) | 日付フォーマット |
 | `normalizePost.ts` (utils) | 投稿データ正規化（`normalizePosts` / `mapWPPostToPost`） |

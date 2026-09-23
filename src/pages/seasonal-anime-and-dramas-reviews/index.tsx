@@ -1,10 +1,11 @@
 // ISR: revalidate REVALIDATE_NORMAL — WordPress 旧スラッグの季節レビュー一覧
 import type { GetStaticProps } from 'next';
 import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
-import SeasonalIndexPage, {
+import SeasonalIndexPage from '../seasonal-reviews';
+import {
   buildSeasonalIndexProps,
   WORDPRESS_SEASONAL_REVIEWS_BASE_PATH,
-} from '../seasonal-reviews';
+} from '@/libs/seasonalReviewIndex';
 
 export default SeasonalIndexPage;
 

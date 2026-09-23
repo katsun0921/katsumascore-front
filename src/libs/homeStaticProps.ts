@@ -30,8 +30,7 @@ import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } f
 import { getNowShowingArchivePath, getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
 import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
-
-const SEASONAL_REVIEWS_BASE_PATH = "/seasonal-reviews";
+import { buildSeasonalIndexProps, SEASONAL_REVIEWS_BASE_PATH } from "@/libs/seasonalReviewIndex";
 
 /** TOP の「劇場公開中」枠に出す件数。横スクロール1本に収まる範囲に留める。 */
 const NOW_SHOWING_HOME_LIMIT = 10;
@@ -169,20 +168,44 @@ const toVodReleaseHighlight = (
 
 /**
  * フィーチャー枠（`HomeFeatured`）用のカード行データに、投稿を最大 6 件まで変換する。
- * カテゴリ名をラベルに、抜粋を説明に使い、先頭 1 件を `isPrimary: true` にする。
+ * カテゴリ名をラベルに、抜粋を説明に使う。
+ * `isPrimary`（先頭カードの強調）は並び確定後に呼び出し側がまとめて付与する。
  *
  * @param posts — 特集ページが無い場合のフォールバック元となる `Post` の配列。
  * @returns `FeaturedItem` の配列（最大 6 要素）。
  */
 const toFeaturedItems = (posts: Post[]): FeaturedItem[] =>
-  posts.slice(0, 6).map((p, i) => ({
+  posts.slice(0, 6).map((p) => ({
     label: (p.category ?? "PICK").slice(0, 12).toUpperCase(),
     title: p.title,
     description:
       p.excerpt.length > 80 ? `${p.excerpt.slice(0, 80)}…` : p.excerpt || p.title,
     href: p.slug,
-    isPrimary: i === 0,
   }));
+
+/** TOP の特集枠で季節まとめに付けるラベル。 */
+const SEASONAL_FEATURED_LABEL = "SEASONAL";
+
+/**
+ * 最新の季節まとめ1件を特集枠のカードへ変換する。
+ *
+ * 季節まとめは「今期に何を観るか」という回遊の入口になるため、特集枠の
+ * 先頭に固定して TOP から直接辿れるようにする。
+ * 並び順・CPT と固定ページの統合は `buildSeasonalIndexProps` が持つため、
+ * その先頭要素をそのまま最新として採用する。
+ *
+ * @returns 変換した `FeaturedItem`。季節まとめが1件も無ければ `undefined`。
+ */
+const toSeasonalFeaturedItem = (items: Post[]): FeaturedItem | undefined => {
+  const latest = items[0];
+  if (!latest) return undefined;
+  return {
+    label: SEASONAL_FEATURED_LABEL,
+    title: latest.title,
+    description: latest.excerpt.length > 80 ? `${latest.excerpt.slice(0, 80)}…` : latest.excerpt || latest.title,
+    href: latest.slug,
+  };
+};
 
 /**
  * TOP の特集枠に固定ページを出す際のリンク先を決める。
@@ -247,7 +270,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const animeCategoryId = resolveCategoryMeta(categories, WP_ANIME_CATEGORY_SLUG)?.id;
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
-  const [animeRaw, movieCategory, recommendBlockRows, featuredPages] = await Promise.all([
+  const [animeRaw, movieCategory, recommendBlockRows, featuredPages, seasonalIndex] = await Promise.all([
     animeCategoryId ? getPosts({ per_page: 8, category: animeCategoryId }) : Promise.resolve([]),
     getCategoryBySlug(movieSlug),
     Promise.all(
@@ -261,17 +284,19 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
       }),
     ),
     getFeaturedPages(),
+    buildSeasonalIndexProps(locale),
   ]);
 
   const animePosts = toMappedPostsForRoute(animeRaw, lang);
   const recommendBlocks = recommendBlockRows.filter((b) => b.posts.length > 0);
 
-  const featuredItemsFromPages: FeaturedItem[] = featuredPages.map((p, i) => ({
+  const seasonalFeaturedItem = toSeasonalFeaturedItem(seasonalIndex.items);
+
+  const featuredItemsFromPages: FeaturedItem[] = featuredPages.map((p) => ({
     label: "FEATURED",
     title: stripHtml(p.title.rendered),
     description: stripHtml(p.title.rendered),
     href: getFeaturedPageHref(p, seasonalParentId),
-    isPrimary: i === 0,
   }));
 
   const movieRaw = featuredItemsFromPages.length === 0 && movieCategory
@@ -280,8 +305,14 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const moviePosts = toMappedPostsForRoute(movieRaw, lang);
   const featuredSource =
     moviePosts.length > 0 ? moviePosts : [...pool].sort(sortByDateDesc).slice(0, 6);
-  const featuredItems =
+  const featuredRest =
     featuredItemsFromPages.length > 0 ? featuredItemsFromPages : toFeaturedItems(featuredSource);
+
+  // 季節まとめを特集枠の先頭に固定する。取得できなければ従来どおりの並びに戻す。
+  // 強調（isPrimary）は必ず先頭の1件だけになるよう、ここで最終的に決める
+  const featuredItems: FeaturedItem[] = (
+    seasonalFeaturedItem ? [seasonalFeaturedItem, ...featuredRest] : featuredRest
+  ).map((item, i) => ({ ...item, isPrimary: i === 0 }));
 
   return {
     hero: buildHeroFromPosts(pool),

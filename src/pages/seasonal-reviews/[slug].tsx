@@ -5,6 +5,7 @@ import { REVALIDATE_HIGH } from '@/config/revalidate.config';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { SeasonalEntryList, type SeasonalEntryItem } from '@/components/ui-section/SeasonalEntryList';
+import { SeasonalWorkExplorer } from '@/components/features/SeasonalWorkExplorer';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
 import {
@@ -17,6 +18,7 @@ import {
 } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import { normalizeSeasonalReview, type SeasonalEntry } from '@/libs/seasonalReview';
+import { extractSeasonalWorks, type SeasonalWork } from '@/libs/seasonalWorks';
 import { getPostUrl, resolvePostType, normalizeRouteLocale } from '@/libs/route';
 
 /** まとめページ内で区分を並べる順序。見出し文言は SeasonalEntryList 側の i18n が持つ */
@@ -31,20 +33,28 @@ type SeasonalDetailProps = {
   title: string;
   html: string | null;
   groups: SeasonalGroup[];
+  /**
+   * 本文 HTML から抽出した作品リスト。
+   * 1件以上あるときは本文 HTML の代わりに検索・絞り込み付き一覧を出す。
+   */
+  works: SeasonalWork[];
   locale: string;
 };
 
-const SeasonalDetailPage = ({ title, html, groups, locale }: SeasonalDetailProps) => {
+const SeasonalDetailPage = ({ title, html, groups, works, locale }: SeasonalDetailProps) => {
   const loc = (locale ?? 'ja') as Locale;
+  // 作品を抽出できたときは一覧 UI を優先する。抽出できない入稿では従来どおり本文を描画する
+  const hasWorks = works.length > 0;
   return (
     <I18nProvider locale={loc}>
       <Head>
         <title>{title} | KatsumaScore</title>
       </Head>
       <PageLayout>
-        <div className='px-4 py-8 max-w-3xl mx-auto'>
+        <div className={`px-4 py-8 mx-auto ${hasWorks ? 'max-w-5xl' : 'max-w-3xl'}`}>
           <h1 className='text-2xl font-bold mb-6 text-color-primary'>{title}</h1>
-          {html ? <PostContent content={html} /> : null}
+          {hasWorks ? <SeasonalWorkExplorer works={works} /> : null}
+          {!hasWorks && html ? <PostContent content={html} /> : null}
           {groups.map((group) => (
             <SeasonalEntryList key={group.category} category={group.category} items={group.items} />
           ))}
@@ -124,11 +134,15 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
   const review = await getSeasonalReviewBySlug(slug);
   if (review) {
     const normalized = normalizeSeasonalReview(review);
+    const groups = await buildGroups(normalized.entries, lang);
     return {
       props: {
         title: normalized.title,
         html: normalized.html,
-        groups: await buildGroups(normalized.entries, lang),
+        groups,
+        // ACF entries が入稿済みならそちら（SeasonalEntryList）を正とし、
+        // まだ空のハブでは本文 HTML から作品を拾って一覧化する
+        works: groups.length > 0 ? [] : extractSeasonalWorks(normalized.html ?? ''),
         locale: currentLocale,
       },
       revalidate: REVALIDATE_HIGH,
@@ -144,6 +158,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
       title: normalized.title,
       html: normalized.html,
       groups: [],
+      works: extractSeasonalWorks(normalized.html ?? ''),
       locale: currentLocale,
     },
     revalidate: REVALIDATE_HIGH,
