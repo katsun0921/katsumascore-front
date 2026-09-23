@@ -27,6 +27,45 @@ export type WPSeasonalReviewEntry = {
   display_order?: number | string | "";
 };
 
+/** `works.vods` リピーターの1行。作品が視聴できる配信サービス1件分。 */
+export type WPSeasonalReviewWorkVod = {
+  /** ACF select の値（`danime` / `abema` / `other` など） */
+  service?: string;
+  /** `service` が `other` のときのサービス名 */
+  service_other?: string;
+  /** 注記。`exclusive` / `world_exclusive` / `premium`、無ければ空 */
+  note?: string | false;
+};
+
+/**
+ * `works` リピーターの1行。今クールのラインナップ1作品分。
+ *
+ * `entries` と違い `post`（レビュー記事）は任意で、レビュー未執筆でも登録できる。
+ */
+export type WPSeasonalReviewWork = {
+  title?: string;
+  category?: "anime" | "drama" | "movie" | "";
+  display_order?: number | string | "";
+  official_url?: string;
+  /** レビュー記事。未執筆なら false / null を返す */
+  post?:
+    | {
+        ID: number;
+        post_title: string;
+        post_name: string;
+      }
+    | number
+    | false
+    | null;
+  description?: string;
+  /** `available` / `undecided` / `undecided_planned` / `undecided_sequential` */
+  delivery_status?: string;
+  /** ACF true_false は 1 / 0 を返す */
+  has_other_services?: boolean | number | "";
+  /** ACF repeater は空のとき false を返す */
+  vods?: WPSeasonalReviewWorkVod[] | false;
+};
+
 /** `seasonal_review` CPT の REST レスポンス（必要なフィールドのみ）。 */
 export type WPSeasonalReview = {
   id: number;
@@ -43,6 +82,8 @@ export type WPSeasonalReview = {
     sort_key?: string;
     /** ACF repeater は空のとき false を返す */
     entries?: WPSeasonalReviewEntry[] | false;
+    /** 今クールのラインナップ。ACF repeater は空のとき false を返す */
+    works?: WPSeasonalReviewWork[] | false;
   };
   _embedded?: {
     "wp:featuredmedia"?: { source_url?: string }[];
