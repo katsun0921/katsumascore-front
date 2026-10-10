@@ -17,10 +17,15 @@ import {
   getSeasonalReviewBySlug,
   getSeasonalReviews,
   normalizePageContent,
+  type WPSeasonalReview,
 } from '@/libs/api/wordpress';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import { normalizeSeasonalReview, type SeasonalEntry } from '@/libs/seasonalReview';
-import { extractSeasonalWorks, type SeasonalWork } from '@/libs/seasonalWorks';
+import {
+  extractSeasonalWorks,
+  normalizeSeasonalWorks,
+  type SeasonalWork,
+} from '@/libs/seasonalWorks';
 import {
   getPostUrl,
   getSeasonalReviewArchivePath,
@@ -47,7 +52,7 @@ type SeasonalDetailProps = {
   html: string | null;
   groups: SeasonalGroup[];
   /**
-   * 本文 HTML から抽出した作品リスト。
+   * 一覧に出す作品リスト。ACF `works` か、移行前の本文 HTML から作る。
    * 1件以上あるときは本文 HTML の代わりに検索・絞り込み付き一覧を出す。
    */
   works: SeasonalWork[];
@@ -169,6 +174,19 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
   return { paths, fallback: 'blocking' };
 };
 
+/**
+ * 一覧に出す作品リストを決める。
+ *
+ * ACF `works` が入稿済みならそれを正とし、まだ空のハブでは移行前の
+ * 本文 HTML から拾う。どちらも同じ `SeasonalWork` を返すため、
+ * 描画側（`SeasonalWorkExplorer`）は出どころを意識しない。
+ */
+const resolveWorks = (review: WPSeasonalReview, html: string | null): SeasonalWork[] => {
+  const fromAcf = normalizeSeasonalWorks(review.acf?.works);
+  if (fromAcf.length > 0) return fromAcf;
+  return extractSeasonalWorks(html ?? '');
+};
+
 export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ params, locale }) => {
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
@@ -187,9 +205,11 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
         slug,
         html: normalized.html,
         groups,
-        // ACF entries が入稿済みならそちら（SeasonalEntryList）を正とし、
-        // まだ空のハブでは本文 HTML から作品を拾って一覧化する
-        works: groups.length > 0 ? [] : extractSeasonalWorks(normalized.html ?? ''),
+        // データの優先順位:
+        //   1. ACF entries（鑑賞後のレビューまとめ）→ SeasonalEntryList で描画
+        //   2. ACF works（今クールのラインナップ）→ SeasonalWorkExplorer で描画
+        //   3. 本文 HTML のパース → 同上（ACF がまだ空のハブ向け）
+        works: groups.length > 0 ? [] : resolveWorks(review, normalized.html),
         locale: currentLocale,
       },
       revalidate: REVALIDATE_HIGH,
