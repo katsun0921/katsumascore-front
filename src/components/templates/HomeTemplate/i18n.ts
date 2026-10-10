@@ -22,6 +22,10 @@ export const messages = {
     title: { ja: 'VODで探す', en: 'Find on VOD' },
     workCountSuffix: { ja: '作品', en: ' titles' },
   },
+  curated: {
+    seeAll: { ja: 'すべて見る →', en: 'See all →' },
+    seriesWorkCount: { ja: '全{n}作品', en: '{n} titles' },
+  },
   releaseHighlight: {
     theaterTitle: { ja: '今週の劇場公開', en: 'In Theaters This Week' },
     vodTitle: { ja: '今週のVOD配信開始', en: 'New on Streaming This Week' },

@@ -9,6 +9,7 @@ import {
   mockRecommendBlocks,
   mockVodFinderItems,
   mockFeaturedItems,
+  mockCuratedSeriesItems,
 } from '@/components/ui-home/mocks/home';
 import { HomeTemplate } from './HomeTemplate';
 
@@ -36,6 +37,22 @@ const defaultArgs = {
   recommendBlocks: mockRecommendBlocks,
   vodFinderItems: mockVodFinderItems,
   featuredItems: mockFeaturedItems,
+  curatedCollections: [
+    {
+      kind: 'posts' as const,
+      label: '泣けるアニメ映画',
+      description: '観終わったあと、しばらく動けなくなる作品を集めた。',
+      seeAllHref: null,
+      posts: mockLatestPosts.slice(0, 5),
+    },
+    {
+      kind: 'series' as const,
+      label: 'いま追うべきシリーズ',
+      description: '',
+      seeAllHref: null,
+      items: mockCuratedSeriesItems,
+    },
+  ],
   theaterReleaseHighlight: {
     href: '/theater-release/theater-release-2026-08-02',
     articleTitle: '今週公開の映画まとめ（2026年8月第1週）',
@@ -85,5 +102,12 @@ export const NoReleaseHighlight: Story = {
     ...defaultArgs,
     theaterReleaseHighlight: undefined,
     vodReleaseHighlight: undefined,
+  },
+};
+
+export const NoCuratedCollections: Story = {
+  args: {
+    ...defaultArgs,
+    curatedCollections: [],
   },
 };
