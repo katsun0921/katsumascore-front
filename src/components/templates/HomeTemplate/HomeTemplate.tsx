@@ -6,6 +6,8 @@ import { HomeRanking } from '@/components/ui-home/HomeRanking';
 import { HomeCardScrollList } from '@/components/ui-home/HomeCardScrollList';
 import { HomeVodFinder } from '@/components/ui-home/HomeVodFinder';
 import { HomeReleaseHighlight } from '@/components/ui-home/HomeReleaseHighlight';
+import { HomeCuratedPosts } from '@/components/ui-home/HomeCuratedPosts';
+import { HomeCuratedSeries } from '@/components/ui-home/HomeCuratedSeries';
 import { HomeRecommend } from '@/components/ui-home/HomeRecommend';
 import { VodLegend } from '@/components/ui-section/VodLegend';
 import { HomeFeatured } from '@/components/ui-home/HomeFeatured';
@@ -18,7 +20,7 @@ import type { HomeTemplateProps } from './HomeTemplate.types';
  * DOM順はSPファースト。body（.homeTemplate__body）は SP / PC とも 1 列の縦積み。
  *
  * 表示順:
- *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → 劇場公開中 → Ranking → 最新レビュー
+ *   Hero → 広告バナー（ja） → VOD バッジ凡例 → 劇場公開/VOD配信 最新情報 → 劇場公開中 → キュレーション枠 → Ranking → 最新レビュー
  *   → 注目のアニメ → 高評価 → Recommend → 特集 → VOD
  *
  * ※ ショート動画セクション（HomeShorts）は一時的に非表示中。
@@ -38,6 +40,7 @@ export const HomeTemplate = ({
   recommendBlocks,
   vodFinderItems,
   featuredItems,
+  curatedCollections,
   theaterReleaseHighlight,
   vodReleaseHighlight,
 }: HomeTemplateProps) => {
@@ -80,6 +83,29 @@ export const HomeTemplate = ({
             />
           </section>
         )}
+
+        {curatedCollections.map((collection) => (
+          <section key={collection.label} className='homeTemplate__section'>
+            {collection.kind === 'posts' ? (
+              <HomeCuratedPosts
+                label={collection.label}
+                description={collection.description}
+                seeAllHref={collection.seeAllHref}
+                seeAllLabel={t(messages, ['curated', 'seeAll'], locale)}
+                posts={collection.posts}
+              />
+            ) : (
+              <HomeCuratedSeries
+                label={collection.label}
+                description={collection.description}
+                seeAllHref={collection.seeAllHref}
+                seeAllLabel={t(messages, ['curated', 'seeAll'], locale)}
+                workCountTemplate={t(messages, ['curated', 'seriesWorkCount'], locale)}
+                items={collection.items}
+              />
+            )}
+          </section>
+        ))}
 
         <section className='homeTemplate__section'>
           <HomeRanking

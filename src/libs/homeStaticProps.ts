@@ -22,15 +22,23 @@ import {
   getTheaterReleases,
   getVodReleases,
   getTheaterList,
+  getHomeCuratedCollections,
 } from "@/libs/api/wordpress";
-import type { WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
+import type { TheaterListItem, WPCuratedCollection, WPTheaterRelease, WPVodRelease } from "@/libs/api/wordpress";
+import type { HomeCuratedCollection } from "@/components/templates/HomeTemplate/HomeTemplate.types";
 import { stripHtml } from "@/libs/api/wordpress";
 import { buildVodFinderItemsFromTerms } from "@/libs/vodPathToWpSlug";
 import { resolveCategoryMeta, WP_ANIME_CATEGORY_SLUG, WP_MOVIE_CATEGORY_SLUG } from "@/config/wpContent.config";
-import { getNowShowingArchivePath, getPostTypeArchivePath, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
+import { getNowShowingArchivePath, getPostTypeArchivePath, getTaxonomyUrl, getTheaterReleaseUrl, getVodReleaseUrl } from "@/libs/route";
 import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 import { buildSeasonalIndexProps, SEASONAL_REVIEWS_BASE_PATH } from "@/libs/seasonalReviewIndex";
+
+/**
+ * TOP の「こちらもおすすめ」に出すランダムタグの数。
+ * 現在は1つだが、`recommendBlocks` は複数ブロックを前提とした配列のまま保つ。
+ */
+const RECOMMEND_TAG_COUNT = 1;
 
 /** TOP の「劇場公開中」枠に出す件数。横スクロール1本に収まる範囲に留める。 */
 const NOW_SHOWING_HOME_LIMIT = 10;
@@ -219,6 +227,45 @@ const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalPa
 };
 
 /**
+ * WP のキュレーション枠を、表示用の `HomeCuratedCollection` に変換する。
+ *
+ * 並び順は WP が返した順をそのまま使う。記事は `theaterListItemToPost` で `Post` 化し、
+ * ACF `lang` が `lang` と異なるものを除外する。除外の結果 0 件になった枠・シリーズは捨てる
+ * （空見出しを残さない）。見出しのリンク先は `franchise` のみ解決する
+ * （`series` CPT のページは未実装のため `null`＝テキストのみ）。
+ */
+const toCuratedCollections = (rows: WPCuratedCollection[], lang: "ja" | "en"): HomeCuratedCollection[] => {
+  const toPosts = (items: TheaterListItem[]): Post[] =>
+    items
+      .filter((item) => item.lang === "" || item.lang === lang)
+      .map((item) => theaterListItemToPost(item, lang));
+
+  return rows.flatMap((row): HomeCuratedCollection[] => {
+    const base = { label: row.label, description: row.description, seeAllHref: row.seeAllHref };
+    if (row.kind === "posts") {
+      const posts = toPosts(row.items);
+      return posts.length > 0 ? [{ ...base, kind: "posts", posts }] : [];
+    }
+    const items = row.items.flatMap((item) => {
+      const posts = toPosts(item.posts);
+      if (posts.length === 0) return [];
+      return [
+        {
+          id: String(item.id),
+          title: item.title,
+          href: row.kind === "franchise" ? getTaxonomyUrl("franchise", item.slug, lang) : null,
+          description: item.description,
+          image: item.image,
+          postCount: item.postCount,
+          posts,
+        },
+      ];
+    });
+    return items.length > 0 ? [{ ...base, kind: "series", items }] : [];
+  });
+};
+
+/**
  * TOP ページ（`HomeTemplate`）向けに、WordPress から必要データを並列取得して `HomeTemplateProps` を組み立てる。
  * 投稿プールは `getPosts` の 1 ページ目から開始し、正規化後の `Post.lang` が内部言語（`ja` / `en`）と一致する投稿のみ採用する。
  * プールが 15 件未満のときは 2 ページ目以降を最大 4 ページまで取得し、`id` 重複を除いてマージする。
@@ -234,10 +281,10 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
 
   const homePoolFetchOptions = { timeoutMs: 15_000, maxRetries: 3 };
 
-  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases, nowShowing] = await Promise.all([
+  const [categories, poolRaw, randomTags, vodTerms, theaterReleases, vodReleases, nowShowing, curated] = await Promise.all([
     getCategoriesForArchiveResolve(),
     getPosts({ per_page: 100 }, homePoolFetchOptions),
-    pickRandomTags(3),
+    pickRandomTags(RECOMMEND_TAG_COUNT),
     getVodTerms(),
     getTheaterReleases(1),
     getVodReleases(1),
@@ -246,6 +293,8 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     lang === "ja"
       ? getTheaterList({ lang: "ja", page: 1, perPage: NOW_SHOWING_HOME_LIMIT, filter: "release" })
       : Promise.resolve(null),
+    // 編集部のキュレーション枠。取得失敗・未設定は空配列（TOP の既存セクションは落とさない）
+    getHomeCuratedCollections(lang),
   ]);
 
   let pool = dedupePostsById(toMappedPostsForRoute(poolRaw, lang));
@@ -328,6 +377,7 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
     recommendBlocks,
     vodFinderItems: buildVodFinderItemsFromTerms(vodTerms ?? []),
     featuredItems,
+    curatedCollections: toCuratedCollections(curated, lang),
     theaterReleaseHighlight: toTheaterReleaseHighlight(theaterReleases[0], lang),
     vodReleaseHighlight: toVodReleaseHighlight(vodReleases[0], lang),
   };

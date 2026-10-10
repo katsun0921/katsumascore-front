@@ -76,6 +76,9 @@ export type {
   TheaterListResponse,
 } from "./endpoints/theaterList";
 
+export { getHomeCuratedCollections, parseHomeCuratedResponse } from "./endpoints/homeCurated";
+export type { WPCuratedCollection, WPCuratedSeriesItem } from "./endpoints/homeCurated";
+
 export { getPostsByPersonId } from "./endpoints/personRelatedPosts";
 export type { PersonRelatedPostsParams, PersonRelatedPost } from "./endpoints/personRelatedPosts";
 

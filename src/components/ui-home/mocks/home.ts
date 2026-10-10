@@ -3,6 +3,7 @@ import type { HomeHeroProps } from '@/components/features/HomeHero';
 import type { VodFinderItem } from '@/components/ui-home/HomeVodFinder';
 import type { RecommendBlock } from '@/components/ui-home/HomeRecommend';
 import type { FeaturedItem } from '@/components/ui-home/HomeFeatured';
+import type { CuratedSeriesView } from '@/components/ui-home/HomeCuratedSeries';
 
 export const mockHeroData: HomeHeroProps = {
   slides: [
@@ -358,5 +359,26 @@ export const mockShortVideoPosts: Post[] = [
     category: '映画',
     score: 3.5,
     shortVideoId: 'M7lc1UVf-VE',
+  },
+];
+
+export const mockCuratedSeriesItems: CuratedSeriesView[] = [
+  {
+    id: 'mock-series-1',
+    title: 'DUNE',
+    href: '/ja/franchise/dune',
+    description: '新作公開に合わせて、Part1 から公開順に振り返る。',
+    image: 'https://placehold.jp/3d4070/ffffff/400x400.png',
+    postCount: 2,
+    posts: mockLatestPosts.slice(0, 2),
+  },
+  {
+    id: 'mock-series-2',
+    title: 'バイオハザード',
+    href: '/ja/franchise/resident-evil',
+    description: '',
+    image: null,
+    postCount: 3,
+    posts: mockLatestPosts.slice(0, 3),
   },
 ];

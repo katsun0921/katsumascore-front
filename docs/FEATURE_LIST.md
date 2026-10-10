@@ -155,6 +155,8 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeCardScrollList` | `components/ui-home/HomeCardScrollList` | カード横スクロールリスト |
 | `HomeFeatured` | `components/ui-home/HomeFeatured` | 特集セクション |
 | `HomeRanking` | `components/ui-home/HomeRanking` | ランキング表示 |
+| `HomeCuratedPosts` | `components/ui-home/HomeCuratedPosts` | TOP キュレーション枠（kind: posts）。見出し + 説明文 + 記事の横スクロール |
+| `HomeCuratedSeries` | `components/ui-home/HomeCuratedSeries` | TOP キュレーション枠（kind: series / franchise）。シリーズ見出し + 作品記事の横スクロール |
 | `HomeRecommend` | `components/ui-home/HomeRecommend` | おすすめ表示 |
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 | `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
@@ -270,6 +272,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | `vodRelease.ts` | `getVodReleaseBySlug`, `getVodReleases` | VOD配信情報 CPT（`vod_release`）取得 |
 | `theaterRelease.ts` | `getTheaterReleaseBySlug`, `getTheaterReleases` | 劇場公開情報 CPT（`theater_release`）取得 |
 | `seasonalReview.ts` | `getSeasonalReviewBySlug`, `getSeasonalReviews` | 季節まとめ CPT（`seasonal_review`）取得 |
+| `homeCurated.ts` | `getHomeCuratedCollections` / `parseHomeCuratedResponse` | TOP キュレーション枠（`/wp-json/v1/home-curated`）。ACF オプションページで選んだ枠を解決済みで返す。取得失敗・未設定は空配列 |
 | `theaterList.ts` | `getTheaterList` | 劇場公開中の記事一覧専用カスタムエンドポイント（`/wp-json/v1/theater-list`）。ACF `cinema_info_filed.is_cinema_showing` で絞り込み、公開日順 / 新着 / 評価順のソートとページングをWP側で処理する。週次まとめ記事の `theater_release` CPT とは別物 |
 | `vodList.ts` | `getVodList` | VOD 一覧専用カスタムエンドポイント（`/wp-json/v1/vod-list`）。フィルター・ソート・ページネーションをサーバー側で処理 |
 | `personRelatedPosts.ts` | `getPostsByPersonId` | 人物の出演・監督作品一覧専用カスタムエンドポイント（`/wp-json/v1/posts-by-person`）。ACF post_object（`director` / `actors_filed.actor`）から記事を逆引き |
