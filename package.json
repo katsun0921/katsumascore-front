@@ -2,10 +2,10 @@
   "name": "katsumascore-front",
   "version": "1.0.0",
   "private": true,
-  "packageManager": "npm@11.11.0",
+  "packageManager": "npm@11.21.0",
   "engines": {
     "node": "25.8.1",
-    "npm": "11.11.0"
+    "npm": "11.21.0"
   },
   "scripts": {
     "generate:breakpoints": "node scripts/generate-breakpoints.mjs",
@@ -38,21 +38,21 @@
     "*.scss": "stylelint --fix"
   },
   "dependencies": {
-    "@opennextjs/cloudflare": "^1.20.7",
+    "@opennextjs/cloudflare": "^1.20.10",
     "clsx": "^2.1.1",
     "domhandler": "^6.0.1",
     "domutils": "^4.0.2",
     "gsap": "^3.15.0",
     "htmlparser2": "^12.0.0",
-    "next": "^16.3.1",
+    "next": "^16.4.0",
     "openapi-fetch": "^0.17.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "swiper": "^14.3.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
+    "@playwright/test": "^1.64.0",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/addon-links": "^10.6.1",
     "@storybook/addon-vitest": "^10.6.1",
@@ -63,24 +63,24 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser-playwright": "^5.0.3",
-    "@vitest/coverage-v8": "^5.0.0",
-    "chromatic": "^18.10.1",
+    "@vitest/coverage-v8": "^5.0.3",
+    "chromatic": "^18.12.0",
     "eslint": "^10",
-    "eslint-config-next": "16.3.8",
+    "eslint-config-next": "16.4.0",
     "eslint-plugin-storybook": "10.6.1",
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
     "openapi-typescript": "^7.13.0",
-    "playwright": "^1.60.0",
+    "playwright": "^1.64.0",
     "sass": "^1.105.1",
-    "storybook": "^10.3.5",
+    "storybook": "^10.6.1",
     "stylelint": "^17.16.0",
     "stylelint-config-standard-scss": "^17.0.0",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^6",
-    "vitest": "^5.0.0"
+    "vitest": "^5.0.3"
   },
   "overrides": {
     "typescript": "^6"
