@@ -358,7 +358,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 |------|---------|------|
 | `useHighScorePosts` | `src/hooks/useHighScorePosts.ts` | 高スコア投稿データ取得（Client fetch） |
 | `useVodRelatedPosts` | `src/hooks/useVodRelatedPosts.ts` | VOD 関連投稿データ取得（Client fetch） |
-| `useExternalLinks` | `src/hooks/useExternalLinks.ts` | 記事本文内の外部ドメインリンクへ `target="_blank"` / `rel="noopener"` と別窓アイコンを自動付与 |
+| `useExternalLinks` | `src/hooks/useExternalLinks.ts` | 記事本文内の外部ドメインリンクへ `target="_blank"` / `rel="noopener"` と別窓アイコン（CSS）を自動付与 |
 | `useLayout` | `src/hooks/useLayout.ts` | レイアウト状態管理 |
 | `useCategoryFilterPosts` | `src/libs/useCategoryFilterPosts.ts` | カテゴリフィルタ投稿取得 |
 | `useCategoryPagedPosts` | `src/libs/useCategoryPagedPosts.ts` | カテゴリページド投稿取得 |

@@ -340,13 +340,16 @@
     }
   }
 
-  // 外部リンクの別窓アイコン（useExternalLinks が末尾に挿入する inline SVG）
-  .p-content__externalIcon {
+  // 外部リンクの別窓アイコン（useExternalLinks が data-external-icon を付与。CSSのみで描画）
+  a[data-external-icon]::after {
     display: inline-block;
-    width: 0.85em;
-    height: 0.85em;
-    margin-left: 0.2em;
-    vertical-align: -0.1em;
+    width: 0.6em;
+    height: 0.6em;
+    margin-left: 0.3em;
+    border: 1px solid currentColor;
+    border-top-width: 0.2em;
+    border-right-width: 0.2em;
+    content: '';
   }
 
   // ─────────────────────────────────────────────
