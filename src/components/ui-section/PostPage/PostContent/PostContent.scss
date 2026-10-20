@@ -340,6 +340,15 @@
     }
   }
 
+  // 外部リンクの別窓アイコン（useExternalLinks が末尾に挿入する inline SVG）
+  .p-content__externalIcon {
+    display: inline-block;
+    width: 0.85em;
+    height: 0.85em;
+    margin-left: 0.2em;
+    vertical-align: -0.1em;
+  }
+
   // ─────────────────────────────────────────────
   // 4. Lists
   // ─────────────────────────────────────────────
