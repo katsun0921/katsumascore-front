@@ -340,6 +340,18 @@
     }
   }
 
+  // 外部リンクの別窓アイコン（useExternalLinks が data-external-icon を付与。CSSのみで描画）
+  a[data-external-icon]::after {
+    display: inline-block;
+    width: 0.6em;
+    height: 0.6em;
+    margin-left: 0.3em;
+    border: 1px solid currentColor;
+    border-top-width: 0.2em;
+    border-right-width: 0.2em;
+    content: '';
+  }
+
   // ─────────────────────────────────────────────
   // 4. Lists
   // ─────────────────────────────────────────────
