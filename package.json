@@ -31,6 +31,7 @@
     "preview": "opennextjs-cloudflare build && wrangler dev",
     "deploy": "opennextjs-cloudflare build && wrangler deploy",
     "build:freeze": "NEXT_PUBLIC_SSG_FREEZE=1 opennextjs-cloudflare build && NEXT_PUBLIC_SSG_FREEZE=1 opennextjs-cloudflare populateCache local && node scripts/summarize-freeze-build.mjs",
+    "check:freeze-images": "node scripts/check-freeze-images.mjs",
     "preview:freeze": "npm run build:freeze && wrangler dev",
     "deploy:freeze": "npm run build:freeze && wrangler deploy",
     "storybook": "storybook dev -p 6006",
