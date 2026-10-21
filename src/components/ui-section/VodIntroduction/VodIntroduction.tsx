@@ -1,4 +1,4 @@
-import { stripWpImagesFromHtml } from '@/libs/freeze/hideWpImages';
+import { replaceWpImagesInHtml } from '@/libs/freeze/hideWpImages';
 import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft';
 import { useLocale } from '@/i18n/provider';
@@ -104,7 +104,7 @@ export const VodIntroduction = ({
       {affiliateHtml ? (
         <div
           className='mb-4'
-          dangerouslySetInnerHTML={{ __html: stripWpImagesFromHtml(affiliateHtml) }}
+          dangerouslySetInnerHTML={{ __html: replaceWpImagesInHtml(affiliateHtml) }}
         />
       ) : (
         <PostCardImgLeft post={{

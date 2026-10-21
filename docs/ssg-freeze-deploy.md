@@ -18,7 +18,7 @@
 | `/api/search` ほか WP を呼ぶ API | WP を取得して返す | **503 + `{"maintenance":true}`**（WP へアクセスしない） |
 | 検索ページ | 検索結果を表示 | 「現在メンテナンス中のため、この機能は一時停止しています。」を表示 |
 | 一覧の絞り込み・並び替え | CSR で API 取得 | 事前生成した一覧を表示し、メンテナンス文言を表示 |
-| WP 画像（アイキャッチ・本文内画像など） | `next/image` で WP から取得・最適化 | **非表示**（WP へリクエストしない） |
+| WP 画像（アイキャッチ・本文内画像など） | `next/image` で WP から取得・最適化 | **ダミー画像に差し替え**（WP へリクエストしない） |
 | 記事詳細の「出演者の他作品」「高スコア記事」「VOD 関連記事」 | CSR で API 取得 | **非表示**（取得しない） |
 | ビルド時の WP 取得 | 失敗しても空データで続行 | 同時4件・5xx は最大3回再試行・同一 URL は1回だけ取得。**失敗したらビルド中止** |
 
@@ -65,11 +65,11 @@ npx wrangler deploy
 
 ## 4. 既知の制約・要確認事項
 
-- **画像（一時的に非表示）**: WP へのリクエストに例外を設けない方針のため、`/wp-content/` を含む画像はすべて描画しない。
-  - `next/image` は webpack alias（`next.config.ts`）で `src/libs/freeze/FreezeImage.tsx` に差し替え、WP 画像の src なら何も描画しない（アイキャッチ、ヒーロー、人物写真、ロゴ以外の WP 画像すべて）。
-  - 記事本文 HTML の `<img>` / `<source>`（`/wp-content/` を含むもの）と、インライン style の `url(.../wp-content/...)` は `stripWpImagesFromHtml` で除去（`PostContent` / `VodIntroduction`）。
+- **画像（ダミー画像に差し替え）**: WP へのリクエストに例外を設けない方針のため、`/wp-content/` を含む画像はすべて `public/images/freeze-dummy.svg` に差し替える（非表示だとレイアウトが崩れるため、寸法・class はそのまま）。
+  - `next/image` は webpack alias（`next.config.ts`）で `src/libs/freeze/FreezeImage.tsx` に差し替え、WP 画像の src ならダミー画像を `unoptimized` で描画する。
+  - 記事本文 HTML の `<img>` は src をダミーにして srcset 等を除去、`<source>` は削除、インライン style の `url(.../wp-content/...)` はダミーにする（`replaceWpImagesInHtml`。`PostContent` / `VodIntroduction`）。
   - `public/` 配下の画像や他ホストの画像（TMDB 等）は対象外で、そのまま表示される。
-  - OGP・JSON-LD の画像 URL は文字列として残る（ページ表示時に取得されない。SNS クローラーが取得しに来る場合は WP 側が停止していれば失敗する）。
+  - OGP・JSON-LD の画像 URL は文字列として残る（ページ表示時には取得されない。SNS クローラーが取得しに来る場合、WP 停止中は失敗する）。
   - 復旧時は `main` をデプロイし直せば画像は元に戻る。
 - **一覧のフィルタ・並び替え**: 停止中は利用不可（事前生成した並びを表示）。ページ送りは静的ページ遷移で動く。
 - **記事詳細の付随機能**（他作品・高スコア・VOD 関連）: 停止中は非表示。

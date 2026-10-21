@@ -359,7 +359,7 @@ WordPress 停止に備え、実行時に WP へアクセスしないよう全ペ
 | `freeze/ssgFreeze.ts` | 凍結モード判定 `isSsgFreeze` / `freezeFallback`（`false` or `'blocking'`）/ `isr`（凍結時は `revalidate` を外す） |
 | `freeze/enumeratePaths.ts` | `getStaticPaths` 用の全件パス列挙（記事・一覧のページ送り・person・company・franchise・tag・genre・VOD 等）。種別ごとの件数をビルドログに出力 |
 | `freeze/wpFetchGuard.ts` | ビルド時の WP 取得ガード（同時4件・5xx 再試行3回・プロセス内キャッシュ・失敗時ビルド中止） |
-| `freeze/hideWpImages.ts` / `freeze/FreezeImage.tsx` | 凍結時に `/wp-content/` を含む画像を非表示にする（本文 HTML の除去と、`next/image` の webpack alias 差し替え） |
+| `freeze/hideWpImages.ts` / `freeze/FreezeImage.tsx` | 凍結時に `/wp-content/` を含む画像をダミー画像（`public/images/freeze-dummy.svg`）に差し替える（本文 HTML の置換と、`next/image` の webpack alias 差し替え） |
 | `freeze/withFreezeGuard.ts` | 実行時に WP を呼ぶ API ルートを 503（メンテナンス）にするラッパー |
 | `sitemap/buildSitemaps.ts` | サイトマップ XML の組み立て（ビルド時に `scripts/generate-sitemaps.mts` から呼ぶ） |
 
