@@ -4,6 +4,9 @@ import { NORMALIZE_VERSION } from './src/libs/cache/version'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // SSG 凍結ビルドでは WP への同時リクエストを全体で抑えるため、ビルドのワーカーを 1 にする
+  // （取得ガードの同時実行制限はプロセス単位のため、ワーカーが複数だと制限が効かない）
+  ...(process.env.NEXT_PUBLIC_SSG_FREEZE === '1' ? { experimental: { cpus: 1 } } : {}),
   // SSG 凍結ビルドでは WP 画像を描画しない `next/image` に差し替える（src/libs/freeze/FreezeImage.tsx）
   webpack: (config) => {
     if (process.env.NEXT_PUBLIC_SSG_FREEZE === '1') {

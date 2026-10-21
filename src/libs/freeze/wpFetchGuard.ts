@@ -2,9 +2,10 @@
  * SSG 凍結ビルド専用の WordPress 取得ガード。
  *
  * ConoHa への負荷を抑え、取得失敗のまま空データをデプロイしないために `globalThis.fetch` を差し替える。
- * - 同時リクエスト数を制限する
- * - 一時的な 5xx / 429 / ネットワークエラーを指数バックオフで再試行する
- * - 同一 URL の GET をプロセス内でキャッシュする
+ * - 同時リクエスト数を制限する（`next.config.ts` でビルドのワーカーを 1 にしているため、全体で同時 3 件）
+ * - 一時的な 5xx / 429 / ネットワークエラーを指数バックオフで再試行する（最大 5 回）
+ * - 同一 URL の GET をプロセス内とディスク（`.ssg-freeze-cache/`、30 分有効）でキャッシュする。
+ *   失敗して再実行したとき、取得済みの分を WP へ再リクエストしない
  * - 再試行しても失敗したらビルドを失敗させる（`process.exit(1)`）
  *
  * ビルド中（`NEXT_PHASE=phase-production-build`）かつ `NEXT_PUBLIC_SSG_FREEZE=1` のときだけ有効。
@@ -12,10 +13,12 @@
  */
 import { isSsgFreeze } from './ssgFreeze';
 
-const MAX_CONCURRENCY = 4;
-const MAX_RETRIES = 3;
-const INITIAL_BACKOFF_MS = 1000;
-const TIMEOUT_MS = 60_000;
+const MAX_CONCURRENCY = Number.parseInt(process.env.SSG_FREEZE_CONCURRENCY ?? '', 10) || 3;
+const MAX_RETRIES = 5;
+const INITIAL_BACKOFF_MS = 2000;
+const TIMEOUT_MS = 90_000;
+const DISK_CACHE_DIR = '.ssg-freeze-cache';
+const DISK_CACHE_TTL_MS = 30 * 60 * 1000;
 const CACHE_LIMIT_BYTES = 256 * 1024 * 1024;
 
 type CachedResponse = {
@@ -45,6 +48,41 @@ const acquire = async (): Promise<void> => {
 const release = (): void => {
   active -= 1;
   waiters.shift()?.();
+};
+
+/** URL をディスクキャッシュのファイルパスに変換する。 */
+const diskCachePath = async (url: string): Promise<string> => {
+  const { createHash } = await import('node:crypto');
+  const { join } = await import('node:path');
+  return join(process.cwd(), DISK_CACHE_DIR, `${createHash('sha256').update(url).digest('hex')}.json`);
+};
+
+/** ディスクキャッシュから読む。無い・期限切れ・壊れている場合は `null`。 */
+const readDiskCache = async (url: string): Promise<CachedResponse | null> => {
+  try {
+    const { readFile, stat } = await import('node:fs/promises');
+    const file = await diskCachePath(url);
+    const { mtimeMs } = await stat(file);
+    if (Date.now() - mtimeMs > DISK_CACHE_TTL_MS) return null;
+    return JSON.parse(await readFile(file, 'utf8')) as CachedResponse;
+  } catch {
+    return null;
+  }
+};
+
+/** ディスクキャッシュへ書く（一時ファイル経由で原子的に置換する）。失敗しても無視する。 */
+const writeDiskCache = async (url: string, value: CachedResponse): Promise<void> => {
+  try {
+    const { mkdir, rename, writeFile } = await import('node:fs/promises');
+    const { dirname } = await import('node:path');
+    const file = await diskCachePath(url);
+    await mkdir(dirname(file), { recursive: true });
+    const tmp = `${file}.${process.pid}.tmp`;
+    await writeFile(tmp, JSON.stringify(value), 'utf8');
+    await rename(tmp, file);
+  } catch {
+    /* キャッシュは最適化なので失敗してもビルドは続行する */
+  }
 };
 
 /** 再試行しても解消しない失敗か（5xx / 429 / 401 / 403）。 */
@@ -129,7 +167,14 @@ export const installWpFetchGuard = (baseUrl: string | undefined): void => {
     const headers = init?.headers ?? (input instanceof Request ? input.headers : undefined);
     let entry = cache.get(url);
     if (!entry) {
-      entry = fetchWithRetry(original, url, headers).then((c) => {
+      entry = (async () => {
+        const fromDisk = await readDiskCache(url);
+        if (fromDisk) return fromDisk;
+        const fetched = await fetchWithRetry(original, url, headers);
+        // 一時的な失敗でない応答（200 / 404 等）だけを保存する。fetchWithRetry は失敗時に戻らない
+        await writeDiskCache(url, fetched);
+        return fetched;
+      })().then((c) => {
         cachedBytes += c.body.length;
         // 上限を超えたら以降はキャッシュしない（同一 URL の再取得は許容する）
         if (cachedBytes > CACHE_LIMIT_BYTES) cache.delete(url);

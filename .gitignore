@@ -64,3 +64,4 @@ zenn/*
 # SSG 凍結ビルドで生成するサイトマップ（docs/ssg-freeze-deploy.md）
 /public/sitemap.xml
 /public/server-sitemap.xml
+/.ssg-freeze-cache/
