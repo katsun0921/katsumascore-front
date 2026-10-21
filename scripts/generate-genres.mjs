@@ -11,6 +11,11 @@ const rootDir = path.resolve(__dirname, '..')
 const outputPath = path.join(rootDir, 'src/data/genres.json')
 
 const WP_API_URL = process.env.WP_API_URL
+if (!WP_API_URL && process.env.NEXT_PUBLIC_SSG_FREEZE === '1') {
+  // 凍結ビルドで WP_API_URL が無いと空データのままデプロイされるため、最初に止める
+  console.error('[generate-genres] WP_API_URL が未設定のため、SSG 凍結ビルドを中止します（export WP_API_URL=https://cms.katsumascore.blog/wp-json/wp/v2）')
+  process.exit(1)
+}
 if (!WP_API_URL) {
   console.warn('[generate-genres] WP_API_URL が未設定のため空配列を書き出します')
   await mkdir(path.dirname(outputPath), { recursive: true })
