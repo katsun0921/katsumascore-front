@@ -1,5 +1,6 @@
 import type { PostContentData } from '@/types/post';
 import { publicAssetUrl } from '@/libs/publicAssetUrl';
+import { stripWpImagesFromHtml } from '@/libs/freeze/hideWpImages';
 /** 本文HTML内の `/images/...` を Storybook サブパス配信でも解決できるようにする */
 const rewritePublicImageSrc = (html: string): string => {
   return html.replace(/src="(\/images\/[^"]+)"/g, (_, path: string) => {
@@ -21,7 +22,7 @@ const injectHeadingIds = (html: string): string => {
 };
 
 export const PostContent = ({ content }: PostContentData) => {
-  const html = injectHeadingIds(rewritePublicImageSrc(content));
+  const html = injectHeadingIds(rewritePublicImageSrc(stripWpImagesFromHtml(content)));
   return (
     <div
       data-component='PostContent'

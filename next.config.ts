@@ -4,6 +4,16 @@ import { NORMALIZE_VERSION } from './src/libs/cache/version'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // SSG 凍結ビルドでは WP 画像を描画しない `next/image` に差し替える（src/libs/freeze/FreezeImage.tsx）
+  webpack: (config) => {
+    if (process.env.NEXT_PUBLIC_SSG_FREEZE === '1') {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'next/image$': path.resolve('./src/libs/freeze/FreezeImage.tsx'),
+      };
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {
