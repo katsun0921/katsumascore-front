@@ -2,6 +2,8 @@
  * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（ISR 300 秒）。
  */
 // ISR: revalidate 300s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
+import { enumeratePostDetailPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback, isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import {
   getPostBySlug,
@@ -47,8 +49,9 @@ export type PostDetailPageProps = {
   vodTermId?: number;
 };
 
-/** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: 'blocking'`。 */
-export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
+/** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: freezeFallback()`。 */
+export const makeGetStaticPaths = (type: 'movie' | 'anime' | 'drama'): GetStaticPaths => async ({ locales }) => {
+  if (isSsgFreeze()) return { paths: await enumeratePostDetailPaths(type), fallback: false };
   const locs = (locales ?? ['ja', 'en']).filter((l: string) => l !== 'default');
   const paths: { params: { slug: string }; locale: string }[] = [];
 
@@ -57,11 +60,11 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
   // サイトマップと同じ軽量取得（約21KB）を使う
   const posts = await getSitemapPosts(100, 10);
 
-  // 取得失敗時は空の paths を返す。`fallback: 'blocking'` によりリクエスト時に生成されるため
+  // 取得失敗時は空の paths を返す。`fallback: freezeFallback()` によりリクエスト時に生成されるため
   // ページ自体は表示できるが、事前生成の効果が失われるためログを残す
   if (posts === null) {
     console.error('[getStaticPaths] WP から記事スラッグを取得できず、事前生成をスキップする');
-    return { paths: [], fallback: 'blocking' };
+    return { paths: [], fallback: freezeFallback() };
   }
 
   for (const loc of locs) {
@@ -72,10 +75,10 @@ export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
     }
   }
 
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
-/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 300` で返す。 */
+/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 300`（凍結時は ISR なし）で返す。 */
 export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
   async ({ params, locale }) => {
     const slug = params?.slug;
@@ -83,14 +86,14 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
     const wpPost = await getPostBySlug(slug);
-    if (!wpPost) return { notFound: true, revalidate: 60 };
+    if (!wpPost) return { notFound: true, ...isr(60) };
     const wpAny = wpPost as Record<string, unknown>;
     const wpAcf = wpAny.acf as Record<string, unknown> | undefined;
     const postLang = detectLang(
       typeof wpAny.link === 'string' ? wpAny.link : undefined,
       typeof wpAcf?.lang === 'string' ? wpAcf.lang : undefined,
     );
-    if (postLang !== loc) return { notFound: true, revalidate: 60 };
+    if (postLang !== loc) return { notFound: true, ...isr(60) };
 
     const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
     const relationIds = extractRelationPostIds(acfRecord);
@@ -165,7 +168,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       relationPosts: relationPosts.length > 0 ? relationPosts : undefined,
       postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
     });
-    if (!detail) return { notFound: true, revalidate: 60 };
+    if (!detail) return { notFound: true, ...isr(60) };
 
     // ACF actors_filed.actor（person CPT リレーション）からキャスト名 → person ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
@@ -201,6 +204,6 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
         postId: wpPost.id,
         ...(vodTermId !== undefined ? { vodTermId } : {}),
       },
-      revalidate: 300,
+      ...isr(300),
     };
   };

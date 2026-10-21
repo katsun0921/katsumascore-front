@@ -10,8 +10,9 @@
   "scripts": {
     "generate:breakpoints": "node scripts/generate-breakpoints.mjs",
     "generate:genres": "node scripts/generate-genres.mjs",
+    "generate:sitemaps": "tsx scripts/generate-sitemaps.mts",
     "predev": "npm run generate:breakpoints && npm run generate:genres",
-    "prebuild": "npm run generate:breakpoints && npm run generate:genres",
+    "prebuild": "npm run generate:breakpoints && npm run generate:genres && npm run generate:sitemaps",
     "prestorybook": "npm run generate:breakpoints && npm run generate:genres",
     "prebuild-storybook": "npm run generate:breakpoints && npm run generate:genres",
     "dev": "next dev",
@@ -29,6 +30,9 @@
     "chromatic": "chromatic",
     "preview": "opennextjs-cloudflare build && wrangler dev",
     "deploy": "opennextjs-cloudflare build && wrangler deploy",
+    "build:freeze": "NEXT_PUBLIC_SSG_FREEZE=1 opennextjs-cloudflare build && NEXT_PUBLIC_SSG_FREEZE=1 opennextjs-cloudflare populateCache local && node scripts/summarize-freeze-build.mjs",
+    "preview:freeze": "npm run build:freeze && wrangler dev",
+    "deploy:freeze": "npm run build:freeze && wrangler deploy",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "rm -rf storybook-static && storybook build -o storybook-static",
     "prepare": "husky"

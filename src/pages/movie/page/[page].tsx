@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — 映画一覧 2 ページ目以降。ISR の posts を初期表示に使い、フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
+import { enumerateCategoryPagedPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
@@ -110,8 +112,8 @@ const MoviePagedPage = ({
 export default MoviePagedPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateCategoryPagedPaths(WP_MOVIE_CATEGORY_SLUG, CATEGORY_LIST_PER_PAGE),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<MoviePagedProps> = async ({ params, locale }) => {
@@ -122,13 +124,13 @@ export const getStaticProps: GetStaticProps<MoviePagedProps> = async ({ params, 
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(WP_MOVIE_CATEGORY_SLUG, currentLocale, pageNum);
-  // 取得失敗時は短い revalidate の 404 を返す（fallback: 'blocking' のため
+  // 取得失敗時は短い revalidate の 404 を返す（fallback: freezeFallback() のため
   // リクエスト時に再生成され、WP が復帰すれば自動的に正しい内容になる）。
   // ビルド時は getStaticPaths が空配列を返すため、ここは事前生成されない
   if ('fetchFailed' in data) {
-    return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
+    return { notFound: true, ...isr(REVALIDATE_NOT_FOUND) };
   }
-  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
+  if ('notFound' in data) return { notFound: true, ...isr(REVALIDATE_NOT_FOUND) };
 
   return {
     props: {
@@ -138,6 +140,6 @@ export const getStaticProps: GetStaticProps<MoviePagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

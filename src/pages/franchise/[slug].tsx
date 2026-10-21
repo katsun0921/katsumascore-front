@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_LOW — franchise（シリーズ）特集ページ
+import { enumerateFranchisePaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback, isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_LOW } from '@/config/revalidate.config';
@@ -71,10 +73,11 @@ const FranchisePage = ({ franchise, locale }: FranchisePageProps) => {
 export default FranchisePage;
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  if (isSsgFreeze()) return { paths: await enumerateFranchisePaths(), fallback: false };
   const slugs = await getAllFranchiseSlugs();
   return {
     paths: slugs.map((slug) => ({ params: { slug } })),
-    fallback: 'blocking',
+    fallback: freezeFallback(),
   };
 };
 
@@ -97,6 +100,6 @@ export const getStaticProps: GetStaticProps<FranchisePageProps> = async ({ param
       franchise: transformFranchise(term, posts),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_LOW,
+    ...isr(REVALIDATE_LOW),
   };
 };

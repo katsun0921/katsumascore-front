@@ -1,3 +1,4 @@
+import { withFreezeGuard } from '@/libs/freeze/withFreezeGuard';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getPosts, mapWPPostToPost } from '@/libs/api/wordpress';
 import { pickRandom } from '@/libs/highscore';
@@ -35,4 +36,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
   res.status(200).json(posts);
 };
 
-export default handler;
+export default withFreezeGuard(handler);

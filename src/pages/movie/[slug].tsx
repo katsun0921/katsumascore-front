@@ -18,5 +18,5 @@ const MoviePage = ({ post, locale, genres, actorTermEntries, postId, vodTermId }
 
 export default MoviePage;
 
-export const getStaticPaths = makeGetStaticPaths();
+export const getStaticPaths = makeGetStaticPaths('movie');
 export const getStaticProps = makeGetStaticProps();

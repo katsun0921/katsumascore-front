@@ -22,6 +22,8 @@ const url = new URL(`${WP_API_URL}/genre`)
 url.searchParams.set('per_page', '100')
 url.searchParams.set('acf_format', 'standard')
 
+const freeze = process.env.NEXT_PUBLIC_SSG_FREEZE === '1'
+
 let genres = []
 try {
   const res = await fetch(url.toString())
@@ -29,7 +31,17 @@ try {
   const json = await res.json()
   genres = Array.isArray(json) ? json : []
 } catch (err) {
+  if (freeze) {
+    // 凍結ビルドでは空のジャンル一覧をデプロイしないため失敗させる
+    console.error(`[generate-genres] フェッチ失敗: ${err.message} — SSG 凍結ビルドのため中止します`)
+    process.exit(1)
+  }
   console.warn(`[generate-genres] フェッチ失敗: ${err.message} — 空配列を書き出します`)
+}
+
+if (freeze && genres.length === 0) {
+  console.error('[generate-genres] ジャンルが 0 件のため、SSG 凍結ビルドを中止します')
+  process.exit(1)
 }
 
 await mkdir(path.dirname(outputPath), { recursive: true })

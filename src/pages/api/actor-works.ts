@@ -1,3 +1,4 @@
+import { withFreezeGuard } from '@/libs/freeze/withFreezeGuard';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getPostsByPersonId } from '@/libs/api/wordpress';
 import { normalizeRouteLocale } from '@/libs/route';
@@ -33,4 +34,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<ResponseData>) 
   res.status(200).json(works);
 };
 
-export default handler;
+export default withFreezeGuard(handler);

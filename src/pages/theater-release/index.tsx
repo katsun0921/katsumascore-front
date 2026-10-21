@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_DAILY — 劇場公開情報（週次まとめ記事）アーカイブ
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
@@ -101,6 +102,6 @@ export const getStaticProps: GetStaticProps<TheaterReleaseArchiveProps> = async 
       })),
       locale: normalizeRouteLocale(locale),
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

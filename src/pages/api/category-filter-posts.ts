@@ -6,6 +6,7 @@
  * SQL で行う。以前は WP から全記事（映画は466件）を取得してメモリ上で処理しており
  * 実測約6.4秒かかっていた。
  */
+import { withFreezeGuard } from '@/libs/freeze/withFreezeGuard';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCategoryList } from '@/libs/api/wordpress';
 import type { CategoryListFilter, CategoryListFilterOptions } from '@/libs/api/wordpress';
@@ -143,4 +144,4 @@ const handler = async (
   });
 };
 
-export default handler;
+export default withFreezeGuard(handler);

@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_DAILY — person 一覧ページ
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import Link from 'next/link';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
@@ -115,6 +116,6 @@ export const getStaticProps: GetStaticProps<PersonListPageProps> = async ({ loca
       persons,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

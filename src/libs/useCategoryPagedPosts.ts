@@ -3,6 +3,7 @@
  * 初期表示（page=1・フィルタなし）は ISR の posts をそのまま使い、
  * ページ変更・フィルタ変更時のみ /api/category-filter-posts から Post[] を取得する。
  */
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import { useState, useEffect } from 'react';
 import type { FilterPost, Post } from '@/types/post';
 import type { CategoryPagedPostsResponse } from '@/pages/api/category-filter-posts';
@@ -45,10 +46,11 @@ export const useCategoryPagedPosts = ({
   const [csrPosts, setCsrPosts] = useState<Post[] | null>(null);
   const [filterPosts, setFilterPosts] = useState<FilterPost[]>([]);
   const [csrTotalPages, setCsrTotalPages] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(!useInitial);
+  const [isLoading, setIsLoading] = useState(!useInitial && !isSsgFreeze());
 
   useEffect(() => {
-    if (useInitial) return;
+    // 凍結モードでは絞り込み・並び替えの API を呼ばず、事前生成した一覧をそのまま表示する
+    if (useInitial || isSsgFreeze()) return;
 
     let cancelled = false;
 

@@ -60,3 +60,7 @@ katsumascore_wordpress_theme/*
 
 # tech blog
 zenn/*
+
+# SSG 凍結ビルドで生成するサイトマップ（docs/ssg-freeze-deploy.md）
+/public/sitemap.xml
+/public/server-sitemap.xml

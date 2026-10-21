@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_DAILY — WP genre taxonomy アーカイブ（カテゴリ一覧は /categories/[slug]）
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
@@ -79,7 +80,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
       paths.push({ params: { slug: genre.slug }, locale: loc });
     }
   }
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
 const paramAsString = (v: string | string[] | undefined): string | undefined => {
@@ -105,6 +106,6 @@ export const getStaticProps: GetStaticProps<GenrePageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

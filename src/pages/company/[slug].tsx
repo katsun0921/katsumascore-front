@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — company CPT 詳細ページ
+import { enumerateCompanyPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
@@ -67,8 +69,8 @@ const CompanyPage = ({ company, posts, locale }: CompanyPageProps) => {
 export default CompanyPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateCompanyPaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params, locale }) => {
@@ -87,6 +89,6 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
       posts,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import type { PickUpPost } from '@/components/features/PickUpAndScore/PickUpAndScore';
 
 /**
@@ -20,6 +21,8 @@ export const useHighScorePosts = (locale: 'ja' | 'en' = 'ja'): HighScorePostsSta
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // 凍結モードでは WP へ依存する API を呼ばない（サイドバーは非表示になる）
+    if (isSsgFreeze()) return;
     const fetchPosts = async () => {
       setLoading(true);
       try {

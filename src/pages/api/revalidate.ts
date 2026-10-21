@@ -1,5 +1,6 @@
 // On-demand ISR: POST only。WordPress 等から本 URL を叩いて静的ページを再生成する。
 // slug クエリが指定された場合は Cloudflare Edge Cache も同時にパージする。
+import { withFreezeGuard } from '@/libs/freeze/withFreezeGuard';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { NORMALIZE_VERSION } from '@/libs/cache/version';
 
@@ -146,4 +147,4 @@ const handler = async (
   return res.status(200).json({ ok: true, paths });
 };
 
-export default handler;
+export default withFreezeGuard(handler);

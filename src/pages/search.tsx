@@ -8,6 +8,7 @@ import { searchPageMessages } from '@/i18n/searchPageMessages';
 import { SearchResultTemplate } from '@/components/templates/SearchResultTemplate';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import type { SearchDimensionFilter } from '@/libs/searchRelevance';
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import type { Post } from '@/types/post';
 
 const DIMENSION_VALUES: SearchDimensionFilter[] = ['all', 'actor', 'director', 'genre'];
@@ -28,6 +29,8 @@ const SearchPage = () => {
 
   const q = useMemo(() => {
     const raw = router.query.q;
+    // 凍結モードでは検索を行わない（メンテナンス表示にするため、クエリを無視する）
+    if (isSsgFreeze()) return '';
     return typeof raw === 'string' ? raw.trim() : '';
   }, [router.query.q]);
 
@@ -103,7 +106,7 @@ const SearchPage = () => {
         }}
         isLoading={displayLoading}
         loadingMessage={t(searchPageMessages, ['loading'], locale)}
-        emptyQueryMessage={t(searchPageMessages, ['emptyQuery'], locale)}
+        emptyQueryMessage={t(searchPageMessages, [isSsgFreeze() ? 'maintenance' : 'emptyQuery'], locale)}
         emptyResultsMessage={t(searchPageMessages, ['emptyResults'], locale)}
       />
     </I18nProvider>

@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_NORMAL — 季節レビュー一覧
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
@@ -43,6 +44,6 @@ export default SeasonalIndexPage;
 export const getStaticProps: GetStaticProps<SeasonalIndexProps> = async ({ locale }) => {
   return {
     props: await buildSeasonalIndexProps(locale),
-    revalidate: REVALIDATE_NORMAL,
+    ...isr(REVALIDATE_NORMAL),
   };
 };

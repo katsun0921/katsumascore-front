@@ -11,6 +11,7 @@ import { t } from '@/i18n/t';
 import { getPostTaxonomyFilterOptionRows } from '@/libs/listFilters';
 import { getVodHubPath } from '@/libs/route';
 import type { VodService } from '@/libs/vod';
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import { messages } from './i18n';
 import type { ListTemplateProps } from './ListTemplate.types';
 
@@ -115,6 +116,9 @@ export const ListTemplate = ({
           activeValue={activeFilter}
           onSelect={handleFilterSelect}
         />
+        {isSsgFreeze() && activeFilter !== 'score' && (
+          <p className='mt-3 text-sm text-color-secondary'>{t(messages, ['maintenance', 'filter'], locale)}</p>
+        )}
       </div>
 
       {/* Main layout — SPファーストDOM順: メイン→サイドバー */}

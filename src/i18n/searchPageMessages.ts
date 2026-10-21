@@ -16,6 +16,10 @@ export const searchPageMessages = {
     ja: 'キーワードを入力して検索してください。',
     en: 'Enter a keyword to search.',
   },
+  maintenance: {
+    ja: '現在メンテナンス中のため、この機能は一時停止しています。',
+    en: 'This feature is temporarily unavailable due to maintenance.',
+  },
   loading: { ja: '読み込み中…', en: 'Loading…' },
   emptyResults: { ja: '記事が見つかりませんでした。', en: 'No posts found.' },
   categoryDescription: {

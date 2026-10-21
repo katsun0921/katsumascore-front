@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_DAILY — VOD ハブ（/ja/vod 等）
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticProps } from 'next';
@@ -92,6 +93,6 @@ export const getStaticProps: GetStaticProps<VodHubProps> = async ({ locale }) =>
       locale: normalizeRouteLocale(locale),
       vodItems,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

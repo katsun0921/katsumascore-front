@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_NORMAL — 特集カテゴリ一覧
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { useState } from 'react';
 import type { GetStaticProps } from 'next';
@@ -95,6 +96,6 @@ export const getStaticProps: GetStaticProps<FeaturedPageProps> = async ({ locale
       posts: normalizePosts(fetched.items, currentLocale),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_NORMAL,
+    ...isr(REVALIDATE_NORMAL),
   };
 };

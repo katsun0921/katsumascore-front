@@ -3,6 +3,7 @@
  */
 import createClient from "openapi-fetch";
 import type { paths } from "./generated/wp-schema";
+import { installWpFetchGuard } from "@/libs/freeze/wpFetchGuard";
 
 /** 末尾スラッシュを除いた API ベース（例: `.../wp-json/wp/v2`）。空は `undefined`。 */
 const normalizeWpApiBaseUrl = (raw: string | undefined): string | undefined => {
@@ -36,6 +37,9 @@ const buildClient = () => {
   client.use(defaultParamsMiddleware);
   return client;
 };
+
+// SSG 凍結ビルド時のみ fetch を差し替える（openapi-fetch が作成時に fetch を取り込むため、クライアント生成より前に行う）
+installWpFetchGuard(wpApiBaseUrl);
 
 export const wpClient = buildClient();
 

@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_NORMAL — WP タグタクソノミーアーカイブ
+import { enumerateTagPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback, isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 
@@ -72,6 +74,7 @@ const TagPage = ({ tagName, slug, posts, currentPage, totalPages, locale }: TagP
 export default TagPage;
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
+  if (isSsgFreeze()) return { paths: await enumerateTagPaths(), fallback: false };
   const paths = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
     const tags = await getTags();
@@ -79,7 +82,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
       paths.push({ params: { slug: tag.slug }, locale: loc });
     }
   }
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
 const paramAsString = (v: string | string[] | undefined): string | undefined => {
@@ -105,6 +108,6 @@ export const getStaticProps: GetStaticProps<TagPageProps> = async ({ params, loc
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_NORMAL,
+    ...isr(REVALIDATE_NORMAL),
   };
 };

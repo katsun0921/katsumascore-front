@@ -1,5 +1,7 @@
-// SSR: WPデータを含む XML sitemap をリクエスト時に生成。Cache-Control でエッジキャッシュに乗せる
-import type { GetServerSideProps } from 'next';
+/**
+ * WP データを含む server-sitemap.xml の本文を組み立てる。
+ * SSG 凍結ビルドでは `scripts/generate-sitemaps.ts` がビルド時に呼び、静的ファイルとして書き出す。
+ */
 import {
   getSitemapPosts,
   getCategories,
@@ -12,6 +14,7 @@ import {
   getSeasonalReviews,
   getTheaterReleases,
 } from '@/libs/api/wordpress';
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import { resolveSeasonalReviewParentId } from '@/libs/seasonalReviewParent';
 import type { PostType } from '@/libs/route';
 import {
@@ -55,7 +58,8 @@ type SitemapItem = {
 const escapeXml = (str: string): string =>
   str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
-export const getServerSideProps: GetServerSideProps = async ({ res }) => {
+/** WP から全 URL を集めて sitemap XML を返す。取得に失敗した場合は例外を投げる。 */
+export const buildServerSitemapXml = async (): Promise<string> => {
   const seasonalParentId = await resolveSeasonalReviewParentId();
 
   const [
@@ -71,7 +75,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
     seasonalReviews,
   ] =
     await Promise.all([
-      getSitemapPosts(100, SITEMAP_POSTS_MAX_PAGES),
+      getSitemapPosts(100, isSsgFreeze() ? 1000 : SITEMAP_POSTS_MAX_PAGES),
       getCategories(),
       getGenres(),
       getTags(),
@@ -111,11 +115,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   // WP 取得自体に失敗した場合は、記事が存在しないサイトマップを 200 で返さない。
   // 空のサイトマップを返すとクローラーに「記事が消えた」と伝わるため 503 で一時的失敗を示す
   if (wpPosts === null) {
-    console.error('[server-sitemap] WP からの記事取得に失敗したため 503 を返す');
-    res.statusCode = 503;
-    res.setHeader('Cache-Control', 'no-store');
-    res.end();
-    return { props: {} };
+    throw new Error('[server-sitemap] WP からの記事取得に失敗した');
   }
 
   // カテゴリ ID → PostType。`_embed` を使わないため ID から解決する
@@ -146,11 +146,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
 
   // 取得は成功したが記事 URL が 1 件も組み立てられなかった場合も異常として扱う
   if (postItems.length === 0) {
-    console.error(`[server-sitemap] 記事URLが0件（取得件数: ${wpPosts.length}）。カテゴリ解決を確認すること`);
-    res.statusCode = 503;
-    res.setHeader('Cache-Control', 'no-store');
-    res.end();
-    return { props: {} };
+    throw new Error(`[server-sitemap] 記事URLが0件（取得件数: ${wpPosts.length}）。カテゴリ解決を確認すること`);
   }
 
   // 記事一覧・VOD・タクソノミーのアーカイブページ（ja / en 両方）
@@ -228,15 +224,29 @@ ${field.lastmod ? `    <lastmod>${field.lastmod}</lastmod>` : ''}
   .join('\n')}
 </urlset>`;
 
-  // 24時間エッジキャッシュ。Cloudflare が初回リクエスト後はキャッシュから返すため Workers の CPU 制限を回避できる
-  res.setHeader('Content-Type', 'application/xml; charset=utf-8');
-  res.setHeader('Cache-Control', 'public, s-maxage=86400, stale-while-revalidate=86400');
-  res.write(xml);
-  res.end();
-
-  return { props: {} };
+  return xml;
 };
 
-const ServerSitemap = () => null;
+/** 固定 URL のみの sitemap.xml 本文を返す（WP 非依存）。 */
+export const buildStaticSitemapXml = (): string => {
+  const staticPaths = [
+    { loc: `${SITE_URL}/ja`, changefreq: 'daily', priority: 1 },
+    { loc: `${SITE_URL}/en`, changefreq: 'daily', priority: 1 },
+    { loc: `${SITE_URL}/ja/featured`, changefreq: 'weekly', priority: 0.7 },
+    { loc: `${SITE_URL}/en/featured`, changefreq: 'weekly', priority: 0.7 },
+    // 劇場公開情報は日本語のみの運用のため /ja のみ載せる
+    { loc: `${SITE_URL}/ja/now-showing`, changefreq: 'daily', priority: 0.8 },
+    { loc: `${SITE_URL}/ja/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
+    { loc: `${SITE_URL}/en/seasonal-reviews`, changefreq: 'weekly', priority: 0.6 },
+  ];
 
-export default ServerSitemap;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${staticPaths.map((path) => `  <url>
+    <loc>${escapeXml(path.loc)}</loc>
+    <changefreq>${path.changefreq}</changefreq>
+    <priority>${path.priority}</priority>
+  </url>`).join('\n')}
+</urlset>`;
+  return xml;
+};

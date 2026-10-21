@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_HIGH — 季節まとめ（seasonal_review CPT／移行前は固定ページ）
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_HIGH } from '@/config/revalidate.config';
@@ -166,7 +167,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
       paths.push({ params: { slug }, locale: loc });
     }
   }
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
 export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ params, locale }) => {
@@ -192,7 +193,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
         works: groups.length > 0 ? [] : extractSeasonalWorks(normalized.html ?? ''),
         locale: currentLocale,
       },
-      revalidate: REVALIDATE_HIGH,
+      ...isr(REVALIDATE_HIGH),
     };
   }
 
@@ -209,6 +210,6 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
       works: extractSeasonalWorks(normalized.html ?? ''),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_HIGH,
+    ...isr(REVALIDATE_HIGH),
   };
 };

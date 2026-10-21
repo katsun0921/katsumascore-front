@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — person CPT 詳細ページ
+import { enumeratePersonPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
@@ -147,8 +149,8 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
 export default PersonPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumeratePersonPaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, locale }) => {
@@ -170,6 +172,6 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
       recommendedWorks: pickTopScored(posts, 5),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

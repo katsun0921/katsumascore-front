@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — genre アーカイブのページネーション（/genre/[slug]/p/[p] — `page` セグメントは OpenNext 等と衝突しうるため `p` を使用）
+import { enumerateGenrePagedPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY } from '@/config/revalidate.config';
 
@@ -85,8 +87,8 @@ const GenrePagedPage = ({
 export default GenrePagedPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateGenrePagedPaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, locale }) => {
@@ -110,6 +112,6 @@ export const getStaticProps: GetStaticProps<GenrePagedProps> = async ({ params, 
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_DAILY — アニメカテゴリ記事一覧（/anime, /en/anime）。1ページ目は ISR、ページ変更・フィルタ変更時のみ CSR（/api/category-filter-posts）で取得。
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
@@ -126,10 +127,10 @@ export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }
         totalPages: fallback.totalPages,
         locale: currentLocale,
       },
-      revalidate: REVALIDATE_NOT_FOUND,
+      ...isr(REVALIDATE_NOT_FOUND),
     };
   }
-  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
+  if ('notFound' in data) return { notFound: true, ...isr(REVALIDATE_NOT_FOUND) };
 
   return {
     props: {
@@ -139,6 +140,6 @@ export const getStaticProps: GetStaticProps<AnimeIndexProps> = async ({ locale }
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

@@ -89,8 +89,8 @@
 
 | ルート | ファイル | 説明 |
 |--------|----------|------|
-| `/sitemap.xml` | `pages/sitemap.xml.tsx` | クライアント側サイトマップ |
-| `/server-sitemap.xml` | `pages/server-sitemap.xml.tsx` | サーバー側サイトマップ |
+| `/sitemap.xml` | `public/sitemap.xml`（`scripts/generate-sitemaps.mts` がビルド時に生成） | 固定 URL のサイトマップ（SSG 凍結ブランチ。本文は `src/libs/sitemap/buildSitemaps.ts`） |
+| `/server-sitemap.xml` | `public/server-sitemap.xml`（同上） | WP データを含むサイトマップ（ビルド時に静的生成。実行時に WP へアクセスしない） |
 
 ---
 
@@ -349,6 +349,18 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | ファイル | 説明 |
 |---------|------|
 | `version.ts` | キャッシュバージョン管理 |
+
+### 4.6 SSG 凍結（`src/libs/freeze/`・`src/libs/sitemap/`）
+
+WordPress 停止に備え、実行時に WP へアクセスしないよう全ページをビルド時に生成する仕組み（`NEXT_PUBLIC_SSG_FREEZE=1`）。手順は [`ssg-freeze-deploy.md`](ssg-freeze-deploy.md)。
+
+| ファイル | 説明 |
+|---------|------|
+| `freeze/ssgFreeze.ts` | 凍結モード判定 `isSsgFreeze` / `freezeFallback`（`false` or `'blocking'`）/ `isr`（凍結時は `revalidate` を外す） |
+| `freeze/enumeratePaths.ts` | `getStaticPaths` 用の全件パス列挙（記事・一覧のページ送り・person・company・franchise・tag・genre・VOD 等）。種別ごとの件数をビルドログに出力 |
+| `freeze/wpFetchGuard.ts` | ビルド時の WP 取得ガード（同時4件・5xx 再試行3回・プロセス内キャッシュ・失敗時ビルド中止） |
+| `freeze/withFreezeGuard.ts` | 実行時に WP を呼ぶ API ルートを 503（メンテナンス）にするラッパー |
+| `sitemap/buildSitemaps.ts` | サイトマップ XML の組み立て（ビルド時に `scripts/generate-sitemaps.mts` から呼ぶ） |
 
 ---
 

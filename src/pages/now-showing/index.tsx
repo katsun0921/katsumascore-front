@@ -3,6 +3,7 @@
 // ソート・絞り込み・ページングはクエリを見てクライアント側で行う（フィルタ切替時の再取得なし）。
 // 劇場公開情報は日本語のみの運用のため記事は常に ja を取得する。
 // canonical は自己参照（/ja/now-showing・/en/now-showing それぞれ自分自身）とする。
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { GetStaticProps } from 'next';
@@ -135,12 +136,12 @@ export const getStaticProps: GetStaticProps<NowShowingPageProps> = async ({ loca
   if ('fetchFailed' in result) {
     return {
       props: { posts: [], locale: currentLocale },
-      revalidate: REVALIDATE_NOT_FOUND,
+      ...isr(REVALIDATE_NOT_FOUND),
     };
   }
 
   return {
     props: { posts: result.posts, locale: currentLocale },
-    revalidate: REVALIDATE_NORMAL,
+    ...isr(REVALIDATE_NORMAL),
   };
 };

@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 1 ページ目（/ja/vod/netflix 等）
+import { enumerateVodSlugPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
@@ -113,7 +115,10 @@ const VodSlugIndexPage = ({
 export default VodSlugIndexPage;
 
 // WordPress へ同時アクセスするビルド時生成を避け、各サービスの初回アクセス時に ISR 生成する。
-export const getStaticPaths: GetStaticPaths = async () => ({ paths: [], fallback: 'blocking' });
+export const getStaticPaths: GetStaticPaths = async () => ({
+  paths: await enumerateVodSlugPaths(),
+  fallback: freezeFallback(),
+});
 
 export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params, locale }) => {
   const slug = typeof params?.slug === 'string' ? params.slug : undefined;
@@ -125,10 +130,10 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
     const fallback = buildEmptyVodArchivePage(slug, 1);
     return {
       props: { ...fallback, locale: currentLocale },
-      revalidate: REVALIDATE_NOT_FOUND,
+      ...isr(REVALIDATE_NOT_FOUND),
     };
   }
-  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
+  if ('notFound' in data) return { notFound: true, ...isr(REVALIDATE_NOT_FOUND) };
 
   return {
     props: {
@@ -140,6 +145,6 @@ export const getStaticProps: GetStaticProps<VodSlugIndexProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

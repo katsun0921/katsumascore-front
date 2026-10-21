@@ -1,3 +1,4 @@
+import { withFreezeGuard } from '@/libs/freeze/withFreezeGuard';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { mapWPPostToPost, searchPosts } from '@/libs/api/wordpress';
 import { prepareSearchResults, type SearchDimensionFilter } from '@/libs/searchRelevance';
@@ -38,4 +39,4 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<Post[]>) => {
   res.status(200).json(posts);
 };
 
-export default handler;
+export default withFreezeGuard(handler);

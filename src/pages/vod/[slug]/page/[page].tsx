@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — VOD 別記事一覧 2 ページ目以降。公開 URL は /ja/vod/{slug}?page=N（middleware rewrite）
+import { enumerateVodPagedPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_DAILY, REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 
@@ -113,8 +115,8 @@ const VodSlugPagedPage = ({
 export default VodSlugPagedPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateVodPagedPaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<VodSlugPagedProps> = async ({ params, locale }) => {
@@ -131,10 +133,10 @@ export const getStaticProps: GetStaticProps<VodSlugPagedProps> = async ({ params
     const fallback = buildEmptyVodArchivePage(slug, pageNum);
     return {
       props: { ...fallback, locale: currentLocale },
-      revalidate: REVALIDATE_NOT_FOUND,
+      ...isr(REVALIDATE_NOT_FOUND),
     };
   }
-  if ('notFound' in data) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
+  if ('notFound' in data) return { notFound: true, ...isr(REVALIDATE_NOT_FOUND) };
 
   return {
     props: {
@@ -146,6 +148,6 @@ export const getStaticProps: GetStaticProps<VodSlugPagedProps> = async ({ params
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

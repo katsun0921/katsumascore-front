@@ -15,6 +15,12 @@ export const messages = {
     genre: { ja: 'ジャンル', en: 'Genre' },
     tag: { ja: 'タグ', en: 'Tag' },
   },
+  maintenance: {
+    filter: {
+      ja: '現在メンテナンス中のため、絞り込み・並び替えは一時停止しています。',
+      en: 'Filtering and sorting are temporarily unavailable due to maintenance.',
+    },
+  },
   empty: {
     posts: { ja: 'この条件に該当する記事はまだありません。', en: 'No posts match this view yet.' },
   },

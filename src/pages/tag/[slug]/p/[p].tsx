@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_NORMAL — タグアーカイブのページネーション（/tag/[slug]/p/[p]）
+import { enumerateTagPagedPaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { REVALIDATE_NORMAL } from '@/config/revalidate.config';
 
@@ -85,8 +87,8 @@ const TagPagedPage = ({
 export default TagPagedPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateTagPagedPaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<TagPagedProps> = async ({ params, locale }) => {
@@ -110,6 +112,6 @@ export const getStaticProps: GetStaticProps<TagPagedProps> = async ({ params, lo
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_NORMAL,
+    ...isr(REVALIDATE_NORMAL),
   };
 };

@@ -1,5 +1,6 @@
 'use client';
 
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import { useEffect, useState } from 'react';
 import type { ActorTermEntry } from '@/libs/loadPostDetailPage';
 
@@ -23,10 +24,11 @@ export const useActorWorks = (
   postId: number,
 ): ActorWorksState => {
   const [worksMap, setWorksMap] = useState<ActorWorksMap>(new Map());
-  const [loading, setLoading] = useState(actorTermEntries.length > 0);
+  const [loading, setLoading] = useState(actorTermEntries.length > 0 && !isSsgFreeze());
 
   useEffect(() => {
-    if (actorTermEntries.length === 0) return;
+    // 凍結モードでは WP へ依存する API を呼ばない（他作品の表示は省略される）
+    if (actorTermEntries.length === 0 || isSsgFreeze()) return;
 
     const fetchAll = async () => {
       const entries = await Promise.all(

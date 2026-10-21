@@ -18,5 +18,5 @@ const AnimePage = ({ post, locale, genres, actorTermEntries, postId, vodTermId }
 
 export default AnimePage;
 
-export const getStaticPaths = makeGetStaticPaths();
+export const getStaticPaths = makeGetStaticPaths('anime');
 export const getStaticProps = makeGetStaticProps();

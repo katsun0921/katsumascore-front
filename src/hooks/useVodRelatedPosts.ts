@@ -1,5 +1,6 @@
 'use client';
 
+import { isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import { useEffect, useState } from 'react';
 import type { Post } from '@/types/post';
 
@@ -20,7 +21,8 @@ export const useVodRelatedPosts = (vodTermId: number | undefined, postId: number
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (vodTermId === undefined) return;
+    // 凍結モードでは WP へ依存する API を呼ばない（VOD 関連記事セクションは非表示になる）
+    if (vodTermId === undefined || isSsgFreeze()) return;
 
     const fetchPosts = async () => {
       setLoading(true);

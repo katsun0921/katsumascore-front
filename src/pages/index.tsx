@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_HIGH — TOPページ
+import { isr } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticProps } from 'next';
 import { REVALIDATE_HIGH } from '@/config/revalidate.config';
@@ -42,6 +43,6 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const templateProps = await loadHomeTemplateProps(locale);
   return {
     props: toSerializableValue({ ...templateProps, locale }),
-    revalidate: REVALIDATE_HIGH,
+    ...isr(REVALIDATE_HIGH),
   };
 };

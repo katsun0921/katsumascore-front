@@ -18,5 +18,5 @@ const DramaPage = ({ post, locale, genres, actorTermEntries, postId, vodTermId }
 
 export default DramaPage;
 
-export const getStaticPaths = makeGetStaticPaths();
+export const getStaticPaths = makeGetStaticPaths('drama');
 export const getStaticProps = makeGetStaticProps();

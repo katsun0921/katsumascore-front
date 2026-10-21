@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_HIGH — WP固定ページ（特集ページ等）の動的ルート
+import { enumerateFeaturedPagePaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback, isSsgFreeze } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { REVALIDATE_HIGH } from '@/config/revalidate.config';
@@ -35,6 +37,7 @@ const WPPage = ({ title, html, locale }: WPPageProps) => {
 export default WPPage;
 
 export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
+  if (isSsgFreeze()) return { paths: await enumerateFeaturedPagePaths(), fallback: false };
   const paths: { params: { slug: string }; locale: string }[] = [];
   for (const loc of locales.filter((l) => l !== 'default')) {
     const pages = await getFeaturedPages();
@@ -42,7 +45,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
       paths.push({ params: { slug: p.slug }, locale: loc });
     }
   }
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
 export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, locale }) => {
@@ -78,6 +81,6 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_HIGH,
+    ...isr(REVALIDATE_HIGH),
   };
 };

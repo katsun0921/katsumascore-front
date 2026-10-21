@@ -1,4 +1,6 @@
 // ISR: revalidate REVALIDATE_DAILY — 劇場公開情報（週次まとめ記事）詳細ページ
+import { enumerateTheaterReleasePaths } from '@/libs/freeze/enumeratePaths';
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -130,8 +132,8 @@ const TheaterReleaseDetailPage = ({
 export default TheaterReleaseDetailPage;
 
 export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
+  paths: await enumerateTheaterReleasePaths(),
+  fallback: freezeFallback(),
 });
 
 export const getStaticProps: GetStaticProps<TheaterReleaseDetailProps> = async ({
@@ -153,6 +155,6 @@ export const getStaticProps: GetStaticProps<TheaterReleaseDetailProps> = async (
       modifiedAt: wp.modified,
       locale: normalizeRouteLocale(locale),
     },
-    revalidate: REVALIDATE_DAILY,
+    ...isr(REVALIDATE_DAILY),
   };
 };

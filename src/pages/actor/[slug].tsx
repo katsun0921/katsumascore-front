@@ -1,4 +1,5 @@
 // ISR: revalidate REVALIDATE_HIGH — 現状運用: WP category として管理 (将来 /person/{slug} に統合予定)
+import { isr, freezeFallback } from '@/libs/freeze/ssgFreeze';
 import Head from 'next/head';
 import { useState } from 'react';
 import { REVALIDATE_HIGH } from '@/config/revalidate.config';
@@ -78,7 +79,7 @@ export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
       paths.push({ params: { slug: category.slug }, locale: loc });
     }
   }
-  return { paths, fallback: 'blocking' };
+  return { paths, fallback: freezeFallback() };
 };
 
 export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, locale }) => {
@@ -87,8 +88,8 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
 
   const currentLocale = normalizeRouteLocale(locale);
   const data = await loadCategoryListPage(slug, currentLocale, 1);
-  // 取得失敗時も 404（fallback: 'blocking' のためリクエスト時に再生成される）
-  if ('fetchFailed' in data) return { notFound: true, revalidate: 60 };
+  // 取得失敗時も 404（fallback: freezeFallback() のためリクエスト時に再生成される）
+  if ('fetchFailed' in data) return { notFound: true, ...isr(60) };
   if ('notFound' in data) return { notFound: true };
 
   return {
@@ -100,6 +101,6 @@ export const getStaticProps: GetStaticProps<ActorPageProps> = async ({ params, l
       totalPages: data.totalPages,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_HIGH,
+    ...isr(REVALIDATE_HIGH),
   };
 };
