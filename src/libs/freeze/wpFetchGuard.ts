@@ -52,15 +52,15 @@ const release = (): void => {
 
 /** URL をディスクキャッシュのファイルパスに変換する。 */
 const diskCachePath = async (url: string): Promise<string> => {
-  const { createHash } = await import('node:crypto');
-  const { join } = await import('node:path');
+  const { createHash } = await import(/* webpackIgnore: true */ 'node:crypto');
+  const { join } = await import(/* webpackIgnore: true */ 'node:path');
   return join(process.cwd(), DISK_CACHE_DIR, `${createHash('sha256').update(url).digest('hex')}.json`);
 };
 
 /** ディスクキャッシュから読む。無い・期限切れ・壊れている場合は `null`。 */
 const readDiskCache = async (url: string): Promise<CachedResponse | null> => {
   try {
-    const { readFile, stat } = await import('node:fs/promises');
+    const { readFile, stat } = await import(/* webpackIgnore: true */ 'node:fs/promises');
     const file = await diskCachePath(url);
     const { mtimeMs } = await stat(file);
     if (Date.now() - mtimeMs > DISK_CACHE_TTL_MS) return null;
@@ -73,8 +73,8 @@ const readDiskCache = async (url: string): Promise<CachedResponse | null> => {
 /** ディスクキャッシュへ書く（一時ファイル経由で原子的に置換する）。失敗しても無視する。 */
 const writeDiskCache = async (url: string, value: CachedResponse): Promise<void> => {
   try {
-    const { mkdir, rename, writeFile } = await import('node:fs/promises');
-    const { dirname } = await import('node:path');
+    const { mkdir, rename, writeFile } = await import(/* webpackIgnore: true */ 'node:fs/promises');
+    const { dirname } = await import(/* webpackIgnore: true */ 'node:path');
     const file = await diskCachePath(url);
     await mkdir(dirname(file), { recursive: true });
     const tmp = `${file}.${process.pid}.tmp`;
