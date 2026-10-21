@@ -220,8 +220,7 @@ WordPress 側では更新フックから上記 URL を `wp_remote_post` 等で�
 | [docs/features/vod_personalization_design.md](./docs/features/vod_personalization_design.md) | VODパーソナライズ & 通知機能設計 |
 | [docs/features/franchise_acf_design.md](./docs/features/franchise_acf_design.md) | Franchise（シリーズ）ACF設計 ― リニューアル後施策 |
 | [docs/features/wpgraphql-acf-evaluation.md](./docs/features/wpgraphql-acf-evaluation.md) | WPGraphQL for ACF 導入評価（現リリース見送り・カスタムポストタイプ追加時に再検討） |
-| [log/README.md](./log/README.md) | 障害・緊急対応の記録（2026-10-21 PHP 重大脆弱性に伴う WP 停止対応：PHP の問題 / WP へのリクエスト問題 / 画像問題 / 緊急 SSG） |
-| [log/2026-10-21_emergency-ssg.md](./log/2026-10-21_emergency-ssg.md) | 緊急対応としての SSG（凍結ブランチの内容・検証結果・`main` へのマージ可否・復旧手順） |
+| [log/2026-10-21_php-vulnerability-emergency.md](./log/2026-10-21_php-vulnerability-emergency.md) | PHPの脆弱性による緊急対応の記録（PHP の問題 / WP へのリクエスト問題 / 画像問題 / 緊急 SSG・`main` へのマージ可否・復旧手順） |
 | [docs/ssg-freeze-deploy.md](./docs/ssg-freeze-deploy.md) | SSG 凍結ビルドのビルド・デプロイ・復旧手順（ローカル Mac で実行） |
 | [docs/ssg-freeze-inventory.md](./docs/ssg-freeze-inventory.md) | SSG 凍結に向けた事前調査（ページ・API・WP 取得箇所の一覧） |
 
