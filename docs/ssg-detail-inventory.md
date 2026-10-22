@@ -150,3 +150,16 @@ PR #259（`ccr-fa1ec93e-efnobs`、`NEXT_PUBLIC_SSG_FREEZE=1` で全ページSSG�
 ### 流用しないもの
 
 画像のダミー差し替え、`/api/*` の503化、サイトマップのビルド時生成、`fallback: false`、ローカルMac前提のデプロイ手順。いずれも「WP停止」前提で、今回の恒久対応とは目的が異なる。
+
+## 10. 2026-10-22 ローカル再調査・実装方針（コード変更前）
+
+公開 REST を読み取り確認した。`per_page=1` の `X-WP-Total` は posts **603**、pages **20**、persons **1,158**、companies **92**、franchise **63**、seasonal_review **2**、theater_release **11**、vod_release **7**。人物・企業・franchise は共通データを ja/en 両方へ生成する。記事は ACF lang の言語だけ生成する。概算は `603 + (20 + 1158 + 92 + 63 + 2 + 11 + 7) × 2 = 3,309`。固定ルートとの衝突除外、階層ページ、旧季節レビューURLの分を補正するため、実際の件数は生成マニフェストで照合する。「記事数×言語数」は翻訳を自動生成する意味ではない。
+
+- `series` は WP に存在するが詳細フロント未実装。`episode_review` / `short_post` もフロント未実装なので追加しない。
+- 追加CPT `seasonal_review` / `theater_release` / `vod_release` も実装済み詳細ページとしてSSG化する。actor はカテゴリ一覧なのでISRを維持する。
+- 固定ページは `/pages` 全件を列挙し、既存の固定Nextルートと階層を尊重する。季節まとめ子ページは既存の専用ルートへ列挙する。
+- 記事はカテゴリと言語で正しいルートだけを列挙する。全件ページネーションに上限10ページを設けない。
+- VOD配信フラグは既に生成時のACF。日付を getStaticProps でJST生成して表示し、VOD関連記事も生成時取得へ戻す。キャスト他作品・高スコアのCSRは対象外として維持する。
+- WP fetch を共通化し、秘密ヘッダー、同時4件、5xx/429/通信失敗の最大3回再試行、ビルド中のレスポンス共有を実装する。通信障害を既存catchで握りつぶさない。Nextビルドのワーカー数も制限する。
+- 既存デプロイワークフローへ日次/手動トリガーを統合し、二重デプロイ経路を作らない。Dependabot由来pushはマージコミット本文も確認して除外する。
+- `open-next.config.ts` の dummy cache を解消する。読み取り専用static-assets cacheでは一覧ISRとblocking生成の保存が成立しないため、公式のR2 incremental cache + Durable Object queueを採用する。**画像R2移行とは別のページキャッシュ**。R2バケットの作成・WAF/Secrets設定・本番デプロイは今回実行しない。OpenNextに関する詳細・検証記録は規定の `docs/develop/opennext_pages_router_custom_404.md` に集約する。
