@@ -1,7 +1,10 @@
 /** WordPress 専用の通信入口。ビルド中だけ成功レスポンスを共有し、実行時のISRには残さない。 */
+import { createWpResponseCache } from './responseCache';
+import type { BufferedWpResponse } from './responseCache';
+
 let activeRequests = 0;
 const waiting: (() => void)[] = [];
-const buildResponses = new Map<string, Promise<Response>>();
+const buildResponses = createWpResponseCache();
 
 /** 通信障害を投稿の不存在と区別するエラー。URL・ヘッダー・トークンは含めない。 */
 export class WpRequestError extends Error {
@@ -33,7 +36,7 @@ const release = (): void => {
 };
 
 /** 呼び出し元の短いタイムアウトとは独立して、本文読了まで制限・最大3回再試行する。 */
-const requestWordPress = async (request: Request): Promise<Response> => {
+const requestWordPress = async (request: Request): Promise<BufferedWpResponse> => {
   for (let attempt = 0; attempt <= 3; attempt += 1) {
     await acquire();
     let retry = false;
@@ -52,7 +55,7 @@ const requestWordPress = async (request: Request): Promise<Response> => {
       retry = response.status === 429 || response.status >= 500;
       if (!retry) {
         if (!response.ok) throw new WpRequestError(response.status);
-        return new Response(body, { status: response.status, headers: response.headers });
+        return { body, status: response.status, statusText: response.statusText, headers: [...response.headers.entries()] };
       }
       if (attempt === 3) throw new WpRequestError(response.status);
     } catch (error) {
@@ -65,6 +68,15 @@ const requestWordPress = async (request: Request): Promise<Response> => {
     if (retry) await new Promise<void>((resolve) => setTimeout(resolve, 500 * 2 ** attempt));
   }
   throw new WpRequestError();
+};
+
+/** 応答ごとに独立した本文を渡す。本文が許されない204/205はnullにし、転送時の圧縮ヘッダーを除く。 */
+const toResponse = (response: BufferedWpResponse): Response => {
+  const headers = new Headers(response.headers);
+  headers.delete('content-encoding');
+  headers.delete('content-length');
+  const body = response.status === 204 || response.status === 205 ? null : response.body;
+  return new Response(body, { status: response.status, statusText: response.statusText, headers });
 };
 
 /**
@@ -81,15 +93,6 @@ export const wpFetch: typeof fetch = async (input, init) => {
     throw new WpRequestError();
   }
   const cacheEnabled = process.env.WP_SSG_BUILD === '1';
-  const key = request.url;
-  const cached = cacheEnabled ? buildResponses.get(key) : undefined;
-  if (cached) return (await cached).clone();
-  const pending = requestWordPress(request);
-  if (cacheEnabled) buildResponses.set(key, pending);
-  try {
-    return (await pending).clone();
-  } catch (error) {
-    buildResponses.delete(key);
-    throw error;
-  }
+  if (!cacheEnabled) return toResponse(await requestWordPress(request));
+  return toResponse(await buildResponses.getOrFetch(request.url, () => requestWordPress(request)));
 };
