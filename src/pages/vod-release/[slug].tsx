@@ -1,4 +1,5 @@
-// SSG: 日次ビルド + fallback blocking（revalidateなし）
+// SSG: 日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -137,7 +138,7 @@ export const getStaticProps: GetStaticProps<VodReleaseDetailProps> = async ({ pa
   if (typeof slug !== 'string') return { notFound: true };
 
   const wp = await getVodReleaseBySlug(slug);
-  if (!wp) return { notFound: true };
+  if (!wp) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {

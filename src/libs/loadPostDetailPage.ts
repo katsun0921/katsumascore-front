@@ -4,6 +4,7 @@
 // SSG: 詳細は日次ビルド、未生成パスはblocking生成。
 import type { GetStaticProps } from 'next';
 import { makePostStaticPaths, formatVodSnapshotDate } from '@/libs/api/wordpress/staticPaths';
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import { pickRandom } from '@/libs/highscore';
 import { isStrictWpBuild } from '@/libs/api/wordpress/transport';
 import {
@@ -59,7 +60,8 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
     const wpPost = await getPostBySlug(slug);
-    if (!wpPost) return { notFound: true };
+    // 一時的なWP障害の404が永続化しないよう、短い再検証間隔を残す
+    if (!wpPost) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
     const wpAny = wpPost as Record<string, unknown>;
     const wpAcf = wpAny.acf as Record<string, unknown> | undefined;
     const postLang = detectLang(
@@ -143,7 +145,7 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
     });
     if (!detail) {
       if (isStrictWpBuild()) throw new Error('Published WP post could not be normalized');
-      return { notFound: true };
+      return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
     }
 
     // ACF actors_filed.actor（person CPT リレーション）からキャスト名 → person ID のマップを構築する（CSR用にシリアライズして渡す）

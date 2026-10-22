@@ -1,4 +1,5 @@
-// SSG: WP固定ページ。日次ビルド + fallback blocking（revalidateなし）
+// SSG: WP固定ページ。日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
@@ -59,7 +60,7 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
         };
       }
     }
-    return { notFound: true };
+    return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
   }
   const normalized = normalizePageContent(page);
 

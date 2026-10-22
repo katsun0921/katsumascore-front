@@ -1,4 +1,5 @@
 // SSG: 季節CPTと移行前固定ページ。日次ビルド + fallback blocking
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
 import { seasonalDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
@@ -174,7 +175,7 @@ export const getStaticProps: GetStaticProps<SeasonalDetailProps> = async ({ para
   }
 
   const page = await getPageBySlug(slug);
-  if (!page) return { notFound: true };
+  if (!page) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
   const normalized = normalizePageContent(page);
 
   return {
