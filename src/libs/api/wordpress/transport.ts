@@ -39,7 +39,7 @@ const requestWordPress = async (request: Request): Promise<Response> => {
     let retry = false;
     try {
       const headers = new Headers(request.headers);
-      const token = process.env.WP_BUILD_TOKEN;
+      const token = process.env.WP_BUILD_TOKEN?.trim();
       if (token) headers.set('x-build-token', token);
       const response = await fetch(request.url, {
         method: request.method,

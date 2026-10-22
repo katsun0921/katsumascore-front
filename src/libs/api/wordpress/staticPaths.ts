@@ -1,4 +1,4 @@
-/** 詳細SSG用の公開コレクション全件列挙。途中ページの欠落・不正データはビルドを中止する。 */
+/** 詳細SSG用の公開コレクション全件列挙。途中ページの欠落・不正データはトークン登録済みビルドを中止する。 */
 import type { GetStaticPaths } from 'next';
 import { wpApiBaseUrl } from './client';
 import { wpFetch, isStrictWpBuild } from './transport';

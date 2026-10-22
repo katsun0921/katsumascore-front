@@ -143,13 +143,13 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
       process.env.WP_SSG_BUILD = '1';
       assert.equal(await getPostBySlug('compat-403'), null);
       assert.deepEqual(await getFeaturedPages(), []);
-      assert.deepEqual(await makeDetailStaticPaths('persons')({ locales: ['ja', 'en'] }), { paths: [], fallback: 'blocking' });
+      assert.deepEqual(await makeDetailStaticPaths('persons-403')({ locales: ['ja', 'en'] }), { paths: [], fallback: 'blocking' });
       process.env.WP_BUILD_TOKEN = '   ';
       assert.equal(await getPostBySlug('compat-blank-token'), null);
       process.env.WP_BUILD_TOKEN = 'test-only-token';
       await assert.rejects(getPostBySlug('strict-403'), WpRequestError);
       await assert.rejects(getFeaturedPages(), WpRequestError);
-      await assert.rejects(getAllStaticEntries('persons'), WpRequestError);
+      await assert.rejects(getAllStaticEntries('persons-403'), WpRequestError);
       delete process.env.WP_SSG_BUILD;
       assert.equal(await getPostBySlug('runtime-403'), null);
       assert.deepEqual(await getFeaturedPages(), []);

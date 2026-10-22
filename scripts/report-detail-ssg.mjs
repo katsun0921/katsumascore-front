@@ -1,4 +1,4 @@
-/** 生成マニフェストから詳細ページの実数を報告する。不完全な生成はデプロイ前に中止する。 */
+/** 生成マニフェストから詳細ページの実数を報告する。トークン登録後は不完全な生成をデプロイ前に中止する。 */
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const detailRoutes = new Set([

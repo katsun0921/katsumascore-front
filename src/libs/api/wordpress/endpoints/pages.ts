@@ -72,8 +72,6 @@ const fetchPages = async (
         signal: controller.signal,
       });
       clearTimeout(timeoutId);
-      if (isStrictWpBuild()) throw error;
-      if (error instanceof WpRequestError) return [];
       if (!response.ok) {
         if (!shouldRetryStatus(response.status) || attempt === maxRetries) return null;
         await sleep(initialBackoffMs * 2 ** attempt);
