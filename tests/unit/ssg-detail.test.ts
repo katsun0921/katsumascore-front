@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import { readFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
+import { REVALIDATE_NOT_FOUND } from '../../src/config/revalidate.config';
 
 process.env.WP_API_URL = 'https://wp.example/wp-json/wp/v2';
 process.env.USE_WP_MOCK = 'false';
@@ -44,6 +45,18 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
         return Response.json([]);
       };
       await wpFetch(urls[0]);
+    });
+
+    await t.test('本文のないWP応答を再構築し、圧縮時の長さを引き継がない', async () => {
+      globalThis.fetch = async () => new Response(null, { status: 204 });
+      const empty = await wpFetch('https://wp.example/wp-json/wp/v2/no-content');
+      assert.equal(empty.status, 204);
+      assert.equal(await empty.text(), '');
+      globalThis.fetch = async () => Response.json([], { headers: { 'content-encoding': 'gzip', 'content-length': '99' } });
+      const decoded = await wpFetch('https://wp.example/wp-json/wp/v2/decoded');
+      assert.deepEqual(await decoded.json(), []);
+      assert.equal(decoded.headers.has('content-encoding'), false);
+      assert.equal(decoded.headers.has('content-length'), false);
     });
 
     await t.test('5xxは最大3回再試行し、失敗は空配列や404に変換しない', async () => {
@@ -122,7 +135,8 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
           assert.equal(props.post.vodSnapshotDate, formatVodSnapshotDate());
           assert.equal('revalidate' in result, false);
         }
-        assert.deepEqual(await load({ params: { slug: 'ssg-unknown-path' }, locale: 'ja' }), { notFound: true });
+        // 一時的なWP障害の404が永続化しないよう、不存在は短い再検証間隔つきで返す
+        assert.deepEqual(await load({ params: { slug: 'ssg-unknown-path' }, locale: 'ja' }), { notFound: true, revalidate: REVALIDATE_NOT_FOUND });
         assert.deepEqual(await load({ params: { slug: 'hanataba-review' }, locale: 'en' }), { notFound: true });
       } finally {
         process.env.USE_WP_MOCK = 'false';
@@ -160,9 +174,11 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
       assert.equal(formatVodSnapshotDate(new Date('2026-10-21T15:00:00Z')), '2026/10/22');
     });
 
-    await t.test('全対象詳細はrevalidateなし・トップと一覧のISRは残る', async () => {
+    await t.test('全対象詳細は正常ページにrevalidateなし（404のみ短い再検証）・トップと一覧のISRは残る', async () => {
       for (const file of ['src/libs/loadPostDetailPage.ts', ...['person', 'company', 'franchise', 'theater-release', 'vod-release', 'seasonal-reviews'].map((kind) => `src/pages/${kind}/[slug].tsx`), 'src/pages/[slug].tsx']) {
-        assert.doesNotMatch(await readFile(file, 'utf8'), /revalidate\s*:/, file);
+        const source = await readFile(file, 'utf8');
+        // 正常系のpropsにrevalidateを置かない。許可するのは404の REVALIDATE_NOT_FOUND のみ。
+        assert.doesNotMatch(source.replace(/revalidate:\s*REVALIDATE_NOT_FOUND/g, ''), /revalidate\s*:/, file);
       }
       assert.match(await readFile('src/pages/index.tsx', 'utf8'), /revalidate/);
       assert.match(await readFile('src/pages/movie/index.tsx', 'utf8'), /revalidate/);
