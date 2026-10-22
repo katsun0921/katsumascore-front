@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * カスタムタクソノミー `genre` の一覧・スラッグ検索・表示ラベル解決。
  */
@@ -171,7 +172,7 @@ const fetchGenresPage = async (
       u.searchParams.set("per_page", String(perPage));
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -180,8 +181,10 @@ const fetchGenresPage = async (
       }
       const json: unknown = await res.json();
       return parseGenreList(json);
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -235,7 +238,7 @@ const fetchGenreTermBySlug = async (
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -250,8 +253,10 @@ const fetchGenreTermBySlug = async (
         if (loose) return loose;
       }
       return null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

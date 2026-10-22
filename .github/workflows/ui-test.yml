@@ -39,6 +39,9 @@ jobs:
       - name: Type check
         run: npm run typecheck
 
+      - name: 詳細SSGとWP通信の回帰テスト
+        run: npm run test:ssg
+
       - name: WordPress REST schema regression test
         run: npm run test:wp-schema
 

@@ -4,6 +4,8 @@ import { NORMALIZE_VERSION } from './src/libs/cache/version'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // 全SSGを1ワーカーに集約し、WP共通通信の同時4件制限とキャッシュを共有する。
+  experimental: { cpus: 1, staticGenerationMaxConcurrency: 4 },
   images: {
     remotePatterns: [
       {
@@ -34,7 +36,7 @@ const nextConfig: NextConfig = {
         source: '/(.*)',
         headers: [{ key: 'x-normalize-version', value: NORMALIZE_VERSION }],
       },
-      // 記事詳細ページ（ISR 300s に対応）
+      // 記事詳細ページ（SSG。配信キャッシュTTLは従来どおり）
       {
         source: '/:locale(ja|en)/:type(anime|drama|movie)/:slug',
         headers: [{ key: 'Cache-Control', value: 'public, s-maxage=3600, stale-while-revalidate=86400' }],

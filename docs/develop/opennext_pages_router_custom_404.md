@@ -54,3 +54,16 @@ OpenNext は Next.js のリクエストハンドラーを直接呼び出して�
 
 - [OpenNext PR #1346: Pages Router の `notFound` でカスタム 404 を描画する修正](https://github.com/opennextjs/opennextjs-cloudflare/pull/1346)
 - [Next.js: Custom Error](https://nextjs.org/docs/pages/building-your-application/routing/custom-error)
+
+## 2026-10-22 詳細SSGと一覧ISRの併用
+
+- ローカルの `open-next.config.ts` は `defineCloudflareConfig()` のみ、incremental cache 未設定だった。依存ライブラリの static-assets 実装は読み取り専用で `set/delete` に対応せず、一覧ISRと未生成パスのblocking生成を永続化できない。
+- 対応：公式の `r2IncrementalCache` + `doQueue`、`NEXT_INC_CACHE_R2_BUCKET`、`NEXT_CACHE_DO_QUEUE`、`WORKER_SELF_REFERENCE` を設定する。R2はページキャッシュ専用で、画像URL/保存先は変更しない。
+- `wrangler deploy` 直接実行を `opennextjs-cloudflare deploy` に変更する。同コマンドはデプロイ前に生成済みキャッシュをR2へ投入する（ローカル依存の `dist/cli/commands/deploy.js` で確認）。previewもOpenNext経由でキャッシュを投入する。
+- デプロイ前の準備：R2バケット `katsumascore-incremental-cache` を作成し、デプロイトークンにR2書き込み権限を与える。DOはWrangler migration v1で作成する。WAFの秘密ヘッダー除外とActions Secret `WP_BUILD_TOKEN` も必要。これらの本番操作は今回未実施。
+- 参照：[OpenNext公式キャッシュ構成](https://opennext.js.org/cloudflare/caching)。タグベースの再検証は今回追加しない。既存 `/api/revalidate` の動作は本番相当環境で別途確認が必要。
+- 検証結果は本節へ追記する。R2/DO未作成・WAF未設定状態では本番デプロイを実行しない。
+
+### 2026-10-23 ローカル検証結果
+
+実WPのNextビルドは615秒で成功、詳細3,347件はすべてrevalidateなし・blocking。production `next start` 上で未生成モック記事を初回200/MISS、2回目200/HIT、生成時JST日付保持、不存在404として確認した。一覧/TOPのISR秒数も維持されている。これはNodeサーバーでの検証であり、Cloudflare R2/DOによる永続化・キュー再生成・本番CPU制限を確認したものではない。Cloudflareバンドルの実ビルド、WAF/Secrets/R2準備後のActions実行と本番ISR検証は未実施。

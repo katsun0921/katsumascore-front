@@ -15,20 +15,20 @@ import { Sidebar } from '@/components/ui-layout/Sidebar';
 import { PostDate } from '@/components/ui-section/PostDate';
 import { PostDetailFranchises } from '@/components/ui-section/PostDetailFranchises';
 import { useLocale } from '@/i18n/provider';
+import { t } from '@/i18n/t';
+import { messages } from './i18n';
 import { useHighScorePosts } from '@/hooks/useHighScorePosts';
-import { useVodRelatedPosts } from '@/hooks/useVodRelatedPosts';
 import { useSocialEmbedScripts } from '@/hooks/useSocialEmbedScripts';
 import { useExternalLinks } from '@/hooks/useExternalLinks';
 import type { ReactNode } from 'react';
 import type { PostDetailProps } from './PostDetail.types';
 
-export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }: PostDetailProps) => {
+export const PostDetail = ({ post, genres, actorTermEntries, postId }: PostDetailProps) => {
   const locale = useLocale();
   const workTitle =
     locale === 'en' ? (post.originalTitle ?? post.title) : post.title;
 
   const { posts: highScorePosts, loading: highScoreLoading } = useHighScorePosts(locale);
-  const { posts: vodRelatedPosts, loading: vodRelatedLoading } = useVodRelatedPosts(vodTermId, postId ?? 0, locale);
   useSocialEmbedScripts('js-content', post.content);
   useExternalLinks('js-content', post.content);
 
@@ -37,13 +37,11 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
     const { title: vodWorkTitle, ...vodRest } = post.vodIntroduction;
     const vodTitle =
       locale === 'en' ? (post.originalTitle ?? vodWorkTitle) : vodWorkTitle;
-    const relatedPosts = vodRelatedPosts.length > 0 ? vodRelatedPosts : vodRest.relatedPosts;
     vodIntroductionSection = (
       <VodIntroduction
         {...vodRest}
         title={vodTitle}
-        relatedPosts={relatedPosts}
-        relatedPostsLoading={vodRelatedLoading}
+        snapshotDate={post.vodSnapshotDate}
       />
     );
   }
@@ -138,6 +136,11 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId, vodTermId }
             />
           )}
 
+          {post.vodSnapshotDate && (
+            <p className='mt-4 mb-4 text-ui text-color-secondary'>
+              {post.vodSnapshotDate}{t(messages, ['vod', 'snapshot'], locale)}
+            </p>
+          )}
           {vodIntroductionSection}
 
           {post.franchises && post.franchises.length > 0 && (

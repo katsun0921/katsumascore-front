@@ -57,7 +57,8 @@ export type {
   VodListParams,
 } from "./endpoints/vodList";
 
-export { getCategoryList, toVodServices } from "./endpoints/categoryList";
+export { getCategoryList } from "./endpoints/categoryList";
+export { toVodServices } from "./vodServices";
 export type {
   CategoryListFilter,
   CategoryListParams,

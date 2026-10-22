@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * TOP のキュレーション枠エンドポイント（`/wp-json/v1/home-curated`）。
  *
@@ -173,7 +174,7 @@ export const getHomeCuratedCollections = async (
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetch(url, { signal: controller.signal });
+      const res = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return [];
@@ -181,8 +182,10 @@ export const getHomeCuratedCollections = async (
         continue;
       }
       return parseHomeCuratedResponse((await res.json()) as unknown);
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return [];
       if (attempt === maxRetries) return [];
       await sleep(initialBackoffMs * 2 ** attempt);
     }

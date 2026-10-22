@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * `/tags` エンドポイントとランダムタグ抽出。
  */
@@ -41,8 +42,10 @@ const fetchTags = async (options?: WpFetchOptions): Promise<WPTag[] | null> => {
         continue;
       }
       return data ?? null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -79,7 +82,7 @@ export const getTagBySlug = async (
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -94,8 +97,10 @@ export const getTagBySlug = async (
         }
       }
       return null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

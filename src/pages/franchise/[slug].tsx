@@ -1,10 +1,9 @@
-// ISR: revalidate REVALIDATE_LOW — franchise（シリーズ）特集ページ
+// SSG: 日次ビルド + fallback blocking（revalidateなし）
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_LOW } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { I18nProvider } from '@/i18n/provider';
 import {
-  getAllFranchiseSlugs,
   getFranchiseBySlug,
   transformFranchise,
   getPostsByFranchiseTermId,
@@ -70,13 +69,7 @@ const FranchisePage = ({ franchise, locale }: FranchisePageProps) => {
 
 export default FranchisePage;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const slugs = await getAllFranchiseSlugs();
-  return {
-    paths: slugs.map((slug) => ({ params: { slug } })),
-    fallback: 'blocking',
-  };
-};
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('franchise');
 
 export const getStaticProps: GetStaticProps<FranchisePageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -97,6 +90,5 @@ export const getStaticProps: GetStaticProps<FranchisePageProps> = async ({ param
       franchise: transformFranchise(term, posts),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_LOW,
   };
 };

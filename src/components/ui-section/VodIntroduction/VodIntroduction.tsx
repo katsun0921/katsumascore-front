@@ -12,6 +12,8 @@ export type TVodIntroductionProps = {
   writtenFrom: TWrittenFrom
   publishedAt: string
   updatedAt?: string
+  /** 生成時のJST日付。未指定のStoryでは従来の公開日を使う。 */
+  snapshotDate?: string
   relatedPosts?: Post[]
   /** CSR フェッチ中は true。スケルトンを表示してレイアウトシフトを防ぐ */
   relatedPostsLoading?: boolean
@@ -42,6 +44,7 @@ export const VodIntroduction = ({
   title,
   writtenFrom,
   publishedAt,
+  snapshotDate,
   relatedPosts = [],
   relatedPostsLoading = false,
   affiliateHtml,
@@ -50,7 +53,7 @@ export const VodIntroduction = ({
 
   const { vodName, vodUrl, vodImageUrl } = writtenFrom;
   const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP';
-  const dateStr = new Intl.DateTimeFormat(dateLocale, {
+  const dateStr = snapshotDate ?? new Intl.DateTimeFormat(dateLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',

@@ -1,7 +1,7 @@
-// ISR: revalidate REVALIDATE_DAILY — company CPT 詳細ページ
+// SSG: 日次ビルド + fallback blocking（revalidateなし）
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { I18nProvider } from '@/i18n/provider';
 import { getCompanyBySlug, getPostsByCompanyId, transformCompany } from '@/libs/api/wordpress';
 import type { CompanyRelatedPost } from '@/libs/api/wordpress';
@@ -66,10 +66,7 @@ const CompanyPage = ({ company, posts, locale }: CompanyPageProps) => {
 
 export default CompanyPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('companies');
 
 export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -87,6 +84,5 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
       posts,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

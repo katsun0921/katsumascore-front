@@ -1,12 +1,12 @@
-// ISR: revalidate REVALIDATE_HIGH — WP固定ページ（特集ページ等）の動的ルート
+// SSG: WP固定ページ。日次ビルド + fallback blocking（revalidateなし）
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_HIGH } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getPageBySlug, normalizePageContent, getFeaturedPages, getPostBySlug, parseWPPostUnknown } from '@/libs/api/wordpress';
+import { getPageBySlug, normalizePageContent, getPostBySlug, parseWPPostUnknown } from '@/libs/api/wordpress';
 import { resolvePostType, getPostUrl } from '@/libs/route';
 
 type WPPageProps = {
@@ -34,16 +34,7 @@ const WPPage = ({ title, html, locale }: WPPageProps) => {
 
 export default WPPage;
 
-export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
-  const paths: { params: { slug: string }; locale: string }[] = [];
-  for (const loc of locales.filter((l) => l !== 'default')) {
-    const pages = await getFeaturedPages();
-    for (const p of pages) {
-      paths.push({ params: { slug: p.slug }, locale: loc });
-    }
-  }
-  return { paths, fallback: 'blocking' };
-};
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('pages');
 
 export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -78,6 +69,5 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_HIGH,
   };
 };

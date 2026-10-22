@@ -1,7 +1,7 @@
-// ISR: revalidate REVALIDATE_DAILY — person CPT 詳細ページ
+// SSG: 日次ビルド + fallback blocking（revalidateなし）
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { I18nProvider } from '@/i18n/provider';
 import {
   getPersonBySlug,
@@ -146,10 +146,7 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
 
 export default PersonPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('persons');
 
 export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -170,6 +167,5 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
       recommendedWorks: pickTopScored(posts, 5),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

@@ -1,4 +1,4 @@
-// ISR: revalidate 60s
+// SSG: 日次ビルド + fallback blocking（revalidateなし）
 import { PostDetail } from '@/components/templates/PostDetail';
 import { SeoHead } from '@/components/features/seo/SeoHead';
 import { I18nProvider } from '@/i18n/provider';
@@ -6,17 +6,17 @@ import type { Locale } from '@/i18n/t';
 import { makeGetStaticPaths, makeGetStaticProps } from '@/libs/loadPostDetailPage';
 import type { PostDetailPageProps } from '@/libs/loadPostDetailPage';
 
-const MoviePage = ({ post, locale, genres, actorTermEntries, postId, vodTermId }: PostDetailPageProps) => {
+const MoviePage = ({ post, locale, genres, actorTermEntries, postId }: PostDetailPageProps) => {
   const currentLocale = (locale ?? 'ja') as Locale;
   return (
     <I18nProvider locale={currentLocale}>
       <SeoHead post={post} />
-      <PostDetail post={post} genres={genres} actorTermEntries={actorTermEntries} postId={postId} vodTermId={vodTermId} />
+      <PostDetail post={post} genres={genres} actorTermEntries={actorTermEntries} postId={postId} />
     </I18nProvider>
   );
 };
 
 export default MoviePage;
 
-export const getStaticPaths = makeGetStaticPaths();
+export const getStaticPaths = makeGetStaticPaths('movie');
 export const getStaticProps = makeGetStaticProps();

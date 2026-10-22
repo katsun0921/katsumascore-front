@@ -1,8 +1,8 @@
-// ISR: revalidate REVALIDATE_DAILY — 劇場公開情報（週次まとめ記事）詳細ページ
+// SSG: 日次ビルド + fallback blocking（revalidateなし）
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
@@ -129,10 +129,7 @@ const TheaterReleaseDetailPage = ({
 
 export default TheaterReleaseDetailPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('theater_release');
 
 export const getStaticProps: GetStaticProps<TheaterReleaseDetailProps> = async ({
   params,
@@ -153,6 +150,5 @@ export const getStaticProps: GetStaticProps<TheaterReleaseDetailProps> = async (
       modifiedAt: wp.modified,
       locale: normalizeRouteLocale(locale),
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

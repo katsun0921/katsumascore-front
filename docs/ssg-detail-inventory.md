@@ -163,3 +163,41 @@ PR #259（`ccr-fa1ec93e-efnobs`、`NEXT_PUBLIC_SSG_FREEZE=1` で全ページSSG�
 - WP fetch を共通化し、秘密ヘッダー、同時4件、5xx/429/通信失敗の最大3回再試行、ビルド中のレスポンス共有を実装する。通信障害を既存catchで握りつぶさない。Nextビルドのワーカー数も制限する。
 - 既存デプロイワークフローへ日次/手動トリガーを統合し、二重デプロイ経路を作らない。Dependabot由来pushはマージコミット本文も確認して除外する。
 - `open-next.config.ts` の dummy cache を解消する。読み取り専用static-assets cacheでは一覧ISRとblocking生成の保存が成立しないため、公式のR2 incremental cache + Durable Object queueを採用する。**画像R2移行とは別のページキャッシュ**。R2バケットの作成・WAF/Secrets設定・本番デプロイは今回実行しない。OpenNextに関する詳細・検証記録は規定の `docs/develop/opennext_pages_router_custom_404.md` に集約する。
+
+### コード外の準備と検証境界
+
+- WAFとSecretsの設定は仕様書の人間側作業どおり。値をコード・ログに記録しない。
+- ページキャッシュ用R2/DO構成と準備手順は [OpenNext記録](develop/opennext_pages_router_custom_404.md#2026-10-22-詳細ssgと一覧isrの併用) を参照する。
+- GitHubの通知設定でActions失敗メールを受け取る設定を有効にする。ワークフローのerror annotationだけではメール受信設定までは変更できない。
+- 本番WPへの新規記事公開、workflow_dispatchによる本番デプロイ、改修後の本番PageSpeed計測は今回のローカルコード検証に含めない。blocking/404はモックとローカルサーバーで検証する。
+- 月間利用時間は実Actionsの所要時間×約30回に通常push/手動実行を加算する。ローカル計測からFree枠に収まるとは断定しない。
+
+## 11. 実装・ローカル検証結果（2026-10-23 JST）
+
+- 実WPを使う `npm run build` 成功。Next.js 16.3.8、Webpack、1ワーカー、**615秒（10分15秒）**。全体の生成対象は3,576ページ。
+- 対象詳細は **3,347ページ**。`prerender-manifest.json` の実数で照合し、すべて `initialRevalidateSeconds: false`、動的ルートの `fallback: null`（blocking）を確認した。
+
+| 詳細ルート | 生成数 |
+|---|---:|
+| `/movie/[slug]` | 518 |
+| `/anime/[slug]` | 84 |
+| `/drama/[slug]` | 1 |
+| `/[slug]`（固定ルート衝突除外後） | 30 |
+| `/person/[slug]` | 2,316 |
+| `/company/[slug]` | 184 |
+| `/franchise/[slug]` | 126 |
+| `/seasonal-reviews/[slug]` | 26 |
+| `/seasonal-anime-and-dramas-reviews/[slug]`（旧URL） | 26 |
+| `/theater-release/[slug]` | 22 |
+| `/vod-release/[slug]` | 14 |
+
+記事合計603はWP公開件数と一致。人物1,158×2、企業92×2、franchise63×2も一致。page20件から既存固定ルートと衝突する5件を除き15×2。季節レビューはCPT2件と旧子ページ11件を各言語・新旧ルートへ生成するので13×2×2。週次記事は11×2と7×2。
+
+- TOP `/ja`・`/en` は従来どおり300秒、映画・アニメ・ジャンル一覧の確認例は86,400秒。今回一覧のrevalidate値は変更していない。
+- 記事・固定ページ・人物・企業・franchise・季節・週次記事のja/en計19URLをローカルHTTPで確認し200。dramaは日本語1件のみ。存在しない記事は404。
+- 公開WPへ新規投稿する代わりに、生成済みパスにないモック記事をproduction serverで確認した。初回は200/MISS、2回目は200/HIT、日付はいずれも生成日の `2026/10/23`。モックの不存在パスも404。
+- 最新コードを `next dev --webpack` とChromeで確認。SP/PCスクリーンショットを取得し、JST日付が見えること、`/api/vod-related` の通信が0件であることを確認。配信サービス名の純粋変換を通信モジュールから分離した後、最新のブラウザ向けチャンクに `WP_BUILD_TOKEN` / `x-build-token` が含まれないことも確認した。
+- `npm run lint`、`tsc --noEmit`、`npm run test:ssg`（8検査）、`npm run test:wp-schema`（2検査）、YAML/JSON構文検証、`git diff --check` 成功。
+- Next devが追記したAGENTS.mdのNext.jsガイド案内は維持した。ビルド中に生成されたgenres.jsonの実データ更新はコード変更に含めない。
+- 既存データに起因する警告：franchiseの1ページが128KBの推奨データ量を超える。featuredカテゴリはWPに存在せず、既存featuredページと一部英語一覧は従来の判定で404。今回の対象詳細に生成失敗/404はない。
+- 未実施：Cloudflare向けバンドルの実ビルド・R2/DO上のISR検証・Actions手動本番デプロイ・本番WPへの公開後の導線確認・デプロイ前後のPageSpeed比較。これらは本番準備後に検証する。コード側でSSG化できたことと、本番配信が検証済みであることを混同しない。

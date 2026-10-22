@@ -9,13 +9,13 @@
   },
   "scripts": {
     "generate:breakpoints": "node scripts/generate-breakpoints.mjs",
-    "generate:genres": "node scripts/generate-genres.mjs",
+    "generate:genres": "node --import tsx scripts/generate-genres.mjs",
     "predev": "npm run generate:breakpoints && npm run generate:genres",
-    "prebuild": "npm run generate:breakpoints && npm run generate:genres",
+    "prebuild": "npm run generate:breakpoints && npm run generate:genres -- --required",
     "prestorybook": "npm run generate:breakpoints && npm run generate:genres",
     "prebuild-storybook": "npm run generate:breakpoints && npm run generate:genres",
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/build-ssg.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "test:wp-schema": "node --import tsx --test tests/unit/wp-post-schema.test.ts",
@@ -27,11 +27,12 @@
     "verify:wp-section2": "tsx scripts/verify-wp-section2.ts",
     "verify:wp-section2:relax": "VERIFY_WP_SECTION2_RELAX_ACF=1 tsx scripts/verify-wp-section2.ts",
     "chromatic": "chromatic",
-    "preview": "opennextjs-cloudflare build && wrangler dev",
-    "deploy": "opennextjs-cloudflare build && wrangler deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "rm -rf storybook-static && storybook build -o storybook-static",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:ssg": "node --import tsx --test tests/unit/ssg-detail.test.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --fix",

@@ -1,7 +1,9 @@
 {
   "name": "katsumascore",
   "compatibility_date": "2026-03-30",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "main": ".open-next/worker.js",
   "assets": {
     "directory": ".open-next/assets",
@@ -12,5 +14,33 @@
     "NEXT_PUBLIC_SITE_URL": "https://katsumascore.blog",
     "NEXT_PUBLIC_SITE_NAME": "KatsumaScore",
     "WP_API_URL": "https://cms.katsumascore.blog/wp-json/wp/v2"
-  }
+  },
+  "r2_buckets": [
+    {
+      "binding": "NEXT_INC_CACHE_R2_BUCKET",
+      "bucket_name": "katsumascore-incremental-cache"
+    }
+  ],
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "katsumascore"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "NEXT_CACHE_DO_QUEUE",
+        "class_name": "DOQueueHandler"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "DOQueueHandler"
+      ]
+    }
+  ]
 }

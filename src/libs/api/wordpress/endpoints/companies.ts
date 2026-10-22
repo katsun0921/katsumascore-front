@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * `/companies` CPT エンドポイントの取得ヘルパー（OpenAPI スキーマ外のため生 fetch を使用）。
  */
@@ -43,7 +44,7 @@ const fetchCompanies = async <T>(
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetch(url, { signal: controller.signal });
+      const res = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -51,8 +52,10 @@ const fetchCompanies = async <T>(
         continue;
       }
       return (await res.json()) as T;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

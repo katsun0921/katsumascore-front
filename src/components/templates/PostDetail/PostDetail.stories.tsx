@@ -9,6 +9,7 @@ import type { PostDetailData } from './PostDetail.types';
 // ---------------------------------------------------------------------------
 const basePost: PostDetailData = {
   ...mockPost,
+  vodSnapshotDate: '2026/10/22',
   title: '花束みたいな恋をした',
   originalTitle: 'A Bouquet of Clumsy Words',
   authorComment: '東京の空気と若者のリアルな感情を丁寧に描いた、令和の恋愛映画の傑作。余韻が長く残る作品。',
@@ -109,6 +110,7 @@ const basePost: PostDetailData = {
       vodUrl: 'https://www.amazon.co.jp/prime-video',
       vodImageUrl: '/images/mock-image.webp',
     },
+    snapshotDate: '2026/10/22',
     publishedAt: '2026-04-01',
     relatedPosts: mockPosts.slice(0, 3),
   },

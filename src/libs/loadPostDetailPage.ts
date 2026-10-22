@@ -1,11 +1,14 @@
 /**
- * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（ISR 300 秒）。
+ * 映画・アニメ・ドラマの記事詳細で共有する `getStaticPaths` / `getStaticProps` ファクトリ（SSG、日次ビルド）。
  */
-// ISR: revalidate 300s. Shared getStaticPaths/Props logic for movie/anime/drama pages.
-import type { GetStaticPaths, GetStaticProps } from 'next';
+// SSG: 詳細は日次ビルド、未生成パスはblocking生成。
+import type { GetStaticProps } from 'next';
+import { makePostStaticPaths, formatVodSnapshotDate } from '@/libs/api/wordpress/staticPaths';
+import { pickRandom } from '@/libs/highscore';
+import { isStrictWpBuild } from '@/libs/api/wordpress/transport';
 import {
   getPostBySlug,
-  getSitemapPosts,
+  getPosts,
   getRelatedPosts,
   parseWPPostUnknown,
   mapWPPostToPost,
@@ -41,41 +44,14 @@ export type PostDetailPageProps = {
   genres: GenreNavTag[];
   /** CSR で otherWorks を取得するためのキャスト termId 情報 */
   actorTermEntries: ActorTermEntry[];
-  /** 現在の記事 ID（otherWorks / vod-related フェッチ時に自記事を除外するため） */
+  /** 現在の記事 ID（キャストの他作品から自記事を除外するため） */
   postId: number;
-  /** CSR で VOD 関連記事を取得するための VOD ターム ID（存在する場合のみ） */
-  vodTermId?: number;
 };
 
-/** 全ロケールの投稿スラッグから静的パスを生成する。`fallback: 'blocking'`。 */
-export const makeGetStaticPaths = (): GetStaticPaths => async ({ locales }) => {
-  const locs = (locales ?? ['ja', 'en']).filter((l: string) => l !== 'default');
-  const paths: { params: { slug: string }; locale: string }[] = [];
+/** 記事の正規カテゴリ・言語に一致する公開パスを全件列挙する。 */
+export const makeGetStaticPaths = makePostStaticPaths;
 
-  // 必要なのは slug のみ。`_embed` と本文を含む取得は per_page=100 で約7MB・約7秒に達し、
-  // 既定3秒のタイムアウトで失敗して paths が常に0件になっていた。
-  // サイトマップと同じ軽量取得（約21KB）を使う
-  const posts = await getSitemapPosts(100, 10);
-
-  // 取得失敗時は空の paths を返す。`fallback: 'blocking'` によりリクエスト時に生成されるため
-  // ページ自体は表示できるが、事前生成の効果が失われるためログを残す
-  if (posts === null) {
-    console.error('[getStaticPaths] WP から記事スラッグを取得できず、事前生成をスキップする');
-    return { paths: [], fallback: 'blocking' };
-  }
-
-  for (const loc of locs) {
-    for (const p of posts) {
-      if (typeof p.slug === 'string') {
-        paths.push({ params: { slug: p.slug }, locale: loc });
-      }
-    }
-  }
-
-  return { paths, fallback: 'blocking' };
-};
-
-/** 1 記事の詳細・目次・関連・サイド用データを組み立て、`revalidate: 300` で返す。 */
+/** 1 記事の詳細・目次・関連・サイド用データを組み立て、再検証間隔を指定せず返す。 */
 export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
   async ({ params, locale }) => {
     const slug = params?.slug;
@@ -83,14 +59,14 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     const loc = locale === 'default' ? 'ja' : (locale ?? 'ja');
     const wpPost = await getPostBySlug(slug);
-    if (!wpPost) return { notFound: true, revalidate: 60 };
+    if (!wpPost) return { notFound: true };
     const wpAny = wpPost as Record<string, unknown>;
     const wpAcf = wpAny.acf as Record<string, unknown> | undefined;
     const postLang = detectLang(
       typeof wpAny.link === 'string' ? wpAny.link : undefined,
       typeof wpAcf?.lang === 'string' ? wpAcf.lang : undefined,
     );
-    if (postLang !== loc) return { notFound: true, revalidate: 60 };
+    if (postLang !== loc) return { notFound: true };
 
     const acfRecord = wpPost.acf as Record<string, unknown> | undefined;
     const relationIds = extractRelationPostIds(acfRecord);
@@ -165,7 +141,10 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
       relationPosts: relationPosts.length > 0 ? relationPosts : undefined,
       postsGroups: postsGroups.length > 0 ? postsGroups : undefined,
     });
-    if (!detail) return { notFound: true, revalidate: 60 };
+    if (!detail) {
+      if (isStrictWpBuild()) throw new Error('Published WP post could not be normalized');
+      return { notFound: true };
+    }
 
     // ACF actors_filed.actor（person CPT リレーション）からキャスト名 → person ID のマップを構築する（CSR用にシリアライズして渡す）
     const parsedForActors = parseWPPostUnknown(wpPost);
@@ -181,6 +160,16 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
           .filter((e): e is ActorTermEntry => e !== null)
       : [];
 
+    // 配信情報・VOD関連記事を同じスナップショットとして保存する。
+    const vodRelatedRaw = vodTermId !== undefined ? await getPosts({ per_page: 12, vod: vodTermId }) : [];
+    const vodRelatedPosts = vodRelatedRaw.filter((raw) => raw.id !== wpPost.id)
+      .map(mapWPPostToPost)
+      .filter((post): post is NonNullable<typeof post> => post !== null && post.lang === loc)
+      .map(({ content: _content, ...post }) => { void _content; return post as Post; });
+    if (detail.vodIntroduction) {
+      detail.vodIntroduction.relatedPosts = pickRandom(vodRelatedPosts, 3);
+    }
+    const vodSnapshotDate = formatVodSnapshotDate();
     const toc = extractToc(detail.content);
 
     const genres = await loadStaticGenreNavTags(loc);
@@ -194,13 +183,11 @@ export const makeGetStaticProps = (): GetStaticProps<PostDetailPageProps> =>
 
     return {
       props: {
-        post: { ...detail, toc, profile, ...(franchises.length > 0 ? { franchises } : {}) },
+        post: { ...detail, vodSnapshotDate, toc, profile, ...(franchises.length > 0 ? { franchises } : {}) },
         locale: loc,
         genres,
         actorTermEntries,
         postId: wpPost.id,
-        ...(vodTermId !== undefined ? { vodTermId } : {}),
       },
-      revalidate: 300,
     };
   };
