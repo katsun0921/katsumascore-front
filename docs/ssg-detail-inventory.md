@@ -120,3 +120,33 @@ company:    company CPT 件数 × 言語数
 - Actions から WP へ **HTTP 403**（Azure ASN ブロック）。今回の秘密ヘッダー対応の前提。
 - 取得失敗時に `throw` するとビルド全体が失敗する（2026-08-10 発生）。
 - **指示書の「取得失敗ならビルドを失敗させる」は、WAF 書き換え前に有効化するとデプロイ不能になる。** 順序の調整が必要。
+
+---
+
+## 9. 緊急対応（PR #259）から流用できるもの
+
+PR #259（`ccr-fa1ec93e-efnobs`、`NEXT_PUBLIC_SSG_FREEZE=1` で全ページSSG）の調査・実装を確認した。
+
+### 重要な発見：incremental cache が `dummy`
+
+`open-next.config.ts` は `defineCloudflareConfig()` のみで、incremental cache が未設定（`dummy`）。
+**ビルド時に生成したHTMLは実行時に読み出されず、リクエストごとに `getStaticProps`（= WP取得）が走る。**
+「SSGの方がISRより速い」のは、緊急対応で `staticAssetsIncrementalCache` を有効にしたことによる可能性が高い。
+単に `revalidate` を外すだけでは、詳細ページは速くならない。
+
+### 流用候補
+
+| 部品 | 場所（PR #259） | 指示書のStep | 流用時の変更点 |
+|---|---|---|---|
+| WP取得ガード（同時実行制限・再試行・キャッシュ・失敗時中止） | `src/libs/freeze/wpFetchGuard.ts` | Step 3 | 判定を `NEXT_PUBLIC_SSG_FREEZE` から `WP_BUILD_TOKEN` の有無へ変更。`x-build-token` ヘッダーを付与。同時4件・再試行3回に合わせる |
+| 全件パス列挙 | `src/libs/freeze/enumeratePaths.ts` | Step 1 | 対象を詳細ページに限定。`acf.lang` で絞る |
+| 静的アセット incremental cache | `open-next.freeze-cache.ts` | （指示書に記載なし） | **ISR のままの一覧・TOPとの両立に設計判断が必要（下記）** |
+
+### 設計判断が必要な点
+
+`open-next.freeze-cache.ts` は読み取り専用（`set` / `delete` は何もしない）。これを全体に適用すると、ISR のままにするTOP・一覧も **ビルド時のHTMLを返し続け、再生成されなくなる**。
+指示書の「TOP・一覧はISRのまま」と矛盾するため、方針を決める必要がある。
+
+### 流用しないもの
+
+画像のダミー差し替え、`/api/*` の503化、サイトマップのビルド時生成、`fallback: false`、ローカルMac前提のデプロイ手順。いずれも「WP停止」前提で、今回の恒久対応とは目的が異なる。
