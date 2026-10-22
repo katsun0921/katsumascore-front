@@ -1,4 +1,4 @@
-/** Next 16.3のPagesキーからOpenNextの事前生成キャッシュを参照する互換層。 */
+/** Next 16.3以降のPagesキーからOpenNextの事前生成キャッシュを参照する互換層。 */
 import type { IncrementalCache } from '@opennextjs/aws/types/overrides.js';
 
 /** Pages Routerの実行時キーだけを事前生成物のURLパスへ変換し、他の種別は変えない。 */

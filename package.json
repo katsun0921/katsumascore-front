@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "npm@11.11.0",
   "engines": {
-    "node": "25.8.1",
+    "node": "24.22.1",
     "npm": "11.11.0"
   },
   "scripts": {
@@ -32,7 +32,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "rm -rf storybook-static && storybook build -o storybook-static",
     "prepare": "husky",
-    "test:ssg": "node --import tsx --test tests/unit/ssg-detail.test.ts"
+    "test:ssg": "node --import tsx --test tests/unit/ssg-detail.test.ts tests/unit/ssg-cache.test.ts tests/unit/ssg-paths.test.ts tests/unit/ssg-scripts.test.ts tests/unit/ssg-pages.test.ts tests/unit/ssg-config.test.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --fix",
@@ -60,7 +60,7 @@
     "@storybook/react-vite": "^10.6.2",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser-playwright": "^5.0.5",
