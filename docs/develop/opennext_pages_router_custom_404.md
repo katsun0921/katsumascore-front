@@ -179,3 +179,18 @@ Node 24.22.1 + npm 11.11.0で `npm run typecheck`、`npm run lint`、`npm run te
 Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、Lintが成功。`USE_WP_MOCK=true` でCloudflare向けビルドも成功し、詳細33件と `.open-next/worker.js` を生成した。監査は0件となった。実WPによる全件ビルド、Cloudflareへのデプロイ、実R2/DO上の検証は未実施。
 
 最終lockfileで `npm ci --engine-strict` とVite 7.3.7によるStorybookビルドも成功し、クリーンインストール後の監査も0件だった。CloudflareビルドはViteの7系への固定前に実施した（ViteはStorybook用の開発依存）。
+
+## 2026-10-24 PR #260マージ後のActions失敗
+
+- PR #260はJST 19:03:12にmainへマージされた（`2a635b24bd10e1fc48b27ac5a103dade937373b6`）。自動起動した [Deploy Cloudflare Workers #202](https://github.com/katsun0921/katsumascore-front/actions/runs/40084378670) は失敗した。
+- 依存インストールは成功。OpenNextから起動した `npm run build` のprebuildで、`generate-genres.mjs --required` が `generate-genres failed: HTTP 403` を返して停止した。Nextのページ生成・R2へのキャッシュ投入・Workerデプロイには到達していない。
+- Actionsでは `WP_BUILD_TOKEN` が設定済みであり、ジャンル取得失敗を致命的に扱う条件が有効だった。コードは共通の `wpFetch` を経由してWP RESTへ `x-build-token` を付与する。403の発生源（Cloudflare WAF・オリジン側制限等）と具体的な遮断ルールはログだけでは確定していない。
+- 次の確認：実行時刻（UTC 10:03:42前後）のWAFイベント、RESTのgenreパスに対する除外範囲、WAF側の照合値とActions Secretの一致、他の遮断ルールの適用を確認する。値そのものはコード・ログに記録しない。解消後にActionsを再実行し、実WPでの全件生成とR2/DO配信を検証する。設定変更・再実行は未実施。
+
+### ConoHa設定の確認と応答診断の追加
+
+- ユーザー確認では、ConoHaの海外アクセス制限はREST-APIがOFF、ダッシュボード/XML-RPC API/wlwmanifest.xmlがON、Abilities APIがOFF。ConoHa WAFログに該当記録はない。これだけでは遮断元を確定できず、既存記録の「ConoHa WAFが原因」という記述も推定として扱う。
+- `generate-genres.mjs` の非2xx応答に診断ログを追加した。HTTPステータス、既知のServer/Content-Type分類、CF-Rayの有無、Cloudflare challengeヘッダー、本文のCloudflare/ConoHa/Forbidden Access/WordPress RESTエラー形式の有無を出力する。Cloudflareの痕跡があっても、経由しただけか遮断したのかは追加調査が必要。
+- 本文は最大16KiBまで読み、URL・Cookie・任意のヘッダー値・本文の生値は出さない。秘密値が応答に反射されてもログへ出さず、固定の分類値と真偽値だけを記録する。厳格モードによるビルド停止は維持する。
+- 次回、修正を含むActions実行の `[generate-genres] WP response diagnostics:` を確認する。従来の失敗ジョブを再実行するだけでは古いコミットを使うため、この診断は追加されない。今回の変更は診断追加であり、403解消や本番反映を確認したものではない。
+- ローカル検証：`npm run test:ssg` は68件成功（localhost待受制限のためサンドボックス外で実行）、`npm run typecheck` 成功。反射された秘密値の非出力、本文読み取り上限、子プロセスの実ログと403時の異常終了維持を確認した。

@@ -6,6 +6,46 @@ import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promi
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { test } from 'node:test';
+import { getWpResponseDiagnostics } from '../../scripts/wp-response-diagnostics.mjs';
+
+test('WP応答診断は本文や秘密値を出力せず、遮断元の手掛かりだけを返す', async () => {
+  const secret = 'test-only-sensitive-value';
+  const response = new Response(`<html>Cloudflare Forbidden Access ${secret}</html>`, {
+    status: 403,
+    headers: {
+      server: `cloudflare ${secret}`,
+      'content-type': 'text/html',
+      'cf-ray': secret,
+      'cf-mitigated': 'challenge',
+      'set-cookie': secret,
+      'x-build-token': secret,
+    },
+  });
+  const result = await getWpResponseDiagnostics(response);
+  assert.equal(result.status, 403);
+  assert.deepEqual(result.serverHints, ['cloudflare']);
+  assert.equal(result.hasCfRay, true);
+  assert.equal(result.cloudflareChallenge, true);
+  assert.equal(result.bodyHints.cloudflare, true);
+  assert.equal(result.bodyHints.forbiddenAccess, true);
+  assert.equal(JSON.stringify(result).includes(secret), false);
+});
+
+test('WP応答診断はWordPressエラーを検出し、本文読み取りを16KiBで打ち切る', async () => {
+  const wp = await getWpResponseDiagnostics(new Response('{"code":"rest_forbidden","message":"private"}', {
+    status: 403, headers: { 'content-type': 'application/json' },
+  }));
+  assert.equal(wp.bodyHints.wordpressRestError, true);
+  assert.deepEqual(wp.contentTypeHints, ['application/json']);
+  let cancelled = false;
+  const body = new ReadableStream<Uint8Array>({
+    start: (controller) => controller.enqueue(new TextEncoder().encode('x'.repeat(20_000) + 'Cloudflare')),
+    cancel: () => { cancelled = true; },
+  });
+  const result = await getWpResponseDiagnostics(new Response(body, { status: 403 }));
+  assert.equal(result.bodyHints.cloudflare, false);
+  assert.equal(cancelled, true);
+});
 
 const repoRoot = process.cwd();
 const genresPath = path.join(repoRoot, 'src/data/genres.json');
@@ -109,13 +149,14 @@ test('生成数レポート', async (t) => {
 });
 
 /** generate-genres.mjs を子プロセスで実行し、終了コードを返す。 */
-const runGenres = (args: string[], env: Record<string, string>): Promise<number | null> =>
+const runGenres = (args: string[], env: Record<string, string>, onStderr?: (output: string) => void): Promise<number | null> =>
   new Promise((resolve, reject) => {
     const child = spawn(process.execPath, ['--import', 'tsx', 'scripts/generate-genres.mjs', ...args], {
       cwd: repoRoot,
       env: { ...process.env, WP_BUILD_TOKEN: '', ...env },
-      stdio: 'ignore',
+      stdio: ['ignore', 'ignore', 'pipe'],
     });
+    child.stderr.on('data', (chunk: Buffer) => onStderr?.(chunk.toString('utf8')));
     child.on('error', reject);
     child.on('close', resolve);
   });
@@ -172,6 +213,20 @@ test('ジャンル事前生成スクリプト', async (t) => {
       status = 403;
       assert.notEqual(await runGenres(['--required'], { WP_API_URL: apiUrl, WP_BUILD_TOKEN: 'test-only-token' }), 0);
       assert.deepEqual(JSON.parse(await readFile(genresPath, 'utf8')), [{ slug: 'kept' }]);
+    });
+
+    await t.test('403の診断ログを出し、反射されたトークンは出力せず異常終了する', async () => {
+      status = 403;
+      body = { code: 'rest_forbidden', message: 'test-only-reflected-secret' };
+      let stderr = '';
+      const code = await runGenres(['--required'], {
+        WP_API_URL: apiUrl, WP_BUILD_TOKEN: 'test-only-reflected-secret',
+      }, (output) => { stderr += output; });
+      assert.notEqual(code, 0);
+      assert.match(stderr, /WP response diagnostics:/);
+      assert.match(stderr, /"wordpressRestError":true/);
+      assert.match(stderr, /generate-genres failed: HTTP 403/);
+      assert.equal(stderr.includes('test-only-reflected-secret'), false);
     });
 
     await t.test('--required かつトークン設定済みなら、レスポンスが配列でなくても異常終了する', async () => {
