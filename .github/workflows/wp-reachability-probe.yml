@@ -1,0 +1,57 @@
+# 一時的な検証用ワークフロー（マージしない）。
+# GitHub Actions ランナーから WP REST へ、パス × User-Agent の組み合わせで GET し、HTTP ステータスだけを記録する。
+# 本番ビルドの 403（2026-10-24 デプロイ失敗）の判定条件を特定するため。URL・本文は出力しない。
+name: WP Reachability Probe
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/wp-reachability-probe.yml
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.22.1
+
+      - name: Probe WP REST
+        env:
+          WP_API_URL: ${{ secrets.WP_API_URL }}
+        run: |
+          node --input-type=module <<'JS'
+          const base = process.env.WP_API_URL.replace(/\/$/, '');
+          const root = base.replace(/\/wp\/v2$/, '');
+          const paths = {
+            'wp/v2/genre': `${base}/genre?per_page=1&_fields=id`,
+            'wp/v2/posts': `${base}/posts?per_page=1&_fields=id`,
+            'wp/v2/categories': `${base}/categories?per_page=1&_fields=id`,
+            'v1/vod-list': `${root}/v1/vod-list?per_page=1`,
+          };
+          const agents = {
+            'node(default)': undefined,
+            'custom': 'katsumascore-front-build/1.0 (+https://katsumascore.blog)',
+            'mozilla': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36',
+            'curl': 'curl/8.5.0',
+          };
+          const rows = [];
+          for (const [path, url] of Object.entries(paths)) {
+            for (const [agent, ua] of Object.entries(agents)) {
+              const headers = ua ? { 'user-agent': ua } : {};
+              try {
+                const res = await fetch(url, { headers, redirect: 'manual', signal: AbortSignal.timeout(20_000) });
+                const body = await res.text();
+                const title = body.match(/<title>([^<]{0,60})/i)?.[1] ?? '';
+                rows.push({ path, agent, status: res.status, server: res.headers.get('server') ?? '', type: (res.headers.get('content-type') ?? '').split(';')[0], title });
+              } catch (error) {
+                rows.push({ path, agent, status: `ERR ${error.name}`, server: '', type: '', title: '' });
+              }
+            }
+          }
+          console.table(rows);
+          JS
