@@ -1,3 +1,5 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
 .sb-design-rules-page {
   min-height: 100vh;
   padding: var(--space-40) var(--space-24) calc(var(--space-48) + var(--space-32));
@@ -114,7 +116,7 @@
   margin-top: var(--space-24);
   background: linear-gradient(180deg, var(--color-bg) 0%, rgba(var(--color-bg-muted-rgb), 0.75) 100%);
 }
-@media (min-width: var(--breakpoint-lg)) {
+@include layout-md {
   .sb-design-rules-grid:not(.sb-design-rules-grid--two) {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

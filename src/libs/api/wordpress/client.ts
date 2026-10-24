@@ -2,6 +2,7 @@
  * WordPress REST のベース URL・OpenAPI クライアント・再試行付き fetch の共通設定。
  */
 import createClient from "openapi-fetch";
+import { wpFetch } from "./transport";
 import type { paths } from "./generated/wp-schema";
 
 /** 末尾スラッシュを除いた API ベース（例: `.../wp-json/wp/v2`）。空は `undefined`。 */
@@ -32,7 +33,7 @@ const defaultParamsMiddleware: Parameters<
 /** `WP_API_URL` が有効なときだけ OpenAPI クライアントを生成する。無効時は `null`。 */
 const buildClient = () => {
   if (!wpApiBaseUrl) return null;
-  const client = createClient<paths>({ baseUrl: wpApiBaseUrl });
+  const client = createClient<paths>({ baseUrl: wpApiBaseUrl, fetch: wpFetch });
   client.use(defaultParamsMiddleware);
   return client;
 };

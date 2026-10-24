@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 import type { components } from "../generated/wp-schema";
 import {
   wpClient,
@@ -96,7 +97,7 @@ const fetchPostsWithMetaOverHttp = async (
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!response.ok) {
         if (!shouldRetryStatus(response.status) || attempt === maxRetries) return null;
@@ -108,8 +109,10 @@ const fetchPostsWithMetaOverHttp = async (
       const total = Number.parseInt(response.headers.get("X-WP-Total") ?? "0", 10) || 0;
       const totalPages = Number.parseInt(response.headers.get("X-WP-TotalPages") ?? "1", 10) || 1;
       return { items, meta: { total, totalPages } };
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -149,8 +152,10 @@ const fetchPosts = async (
         continue;
       }
       return data ?? null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -189,8 +194,10 @@ const fetchPostsWithMeta = async (
       const total = Number.parseInt(response.headers.get("X-WP-Total") ?? "0", 10) || 0;
       const totalPages = Number.parseInt(response.headers.get("X-WP-TotalPages") ?? "1", 10) || 1;
       return { items: data ?? [], meta: { total, totalPages } };
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

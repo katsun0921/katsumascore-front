@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * 固定ページ（子ページ・フィーチャー・スラッグ取得）の `/pages` ラッパー。
  */
@@ -32,11 +33,12 @@ export const getFeaturedPages = async (): Promise<WPPageWithAcf[]> => {
   if (!BASE_URL) return [];
   const params = new URLSearchParams({ per_page: "100", acf_format: "standard", _fields: "id,slug,title,link,parent,acf" });
   try {
-    const res = await fetch(`${BASE_URL}/pages?${params.toString()}`);
+    const res = await wpFetch(`${BASE_URL}/pages?${params.toString()}`);
     if (!res.ok) return [];
     const data: WPPageWithAcf[] = await res.json();
     return data.filter((p) => p.acf?.display_settings?.is_featured === true);
-  } catch {
+  } catch (error) {
+    if (isStrictWpBuild()) throw error;
     return [];
   }
 };
@@ -76,8 +78,10 @@ const fetchPages = async (
         continue;
       }
       return data ?? null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

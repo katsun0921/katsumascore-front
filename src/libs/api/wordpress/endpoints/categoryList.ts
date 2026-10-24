@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * カテゴリ記事一覧の専用エンドポイント（`/wp-json/v1/category-list`）。
  *
@@ -11,7 +12,6 @@ import { wpRestBaseUrl, defaultFetchOptions, sleep, shouldRetryStatus } from "..
 import type { WpFetchOptions } from "../client";
 import { isWpMockMode } from "@/libs/wpMockMode";
 import { mockCategoryList } from "@/mocks/wp/mockCategoryList";
-import type { VodService } from "@/libs/vod";
 
 /** 一覧のソート・絞り込み種別。フロントの `listFilters` と同じ語彙を使う。 */
 export type CategoryListFilter = "score" | "new" | "streaming";
@@ -65,30 +65,6 @@ export type CategoryListResponse = {
   filterOptions: CategoryListFilterOptions;
 };
 
-/**
- * WP の ACF フィールド名 → フロントの `VodService` への対応。
- *
- * WP は ACF のフィールド名をそのまま返すため、`prime-video` 等の
- * フロント側の語彙へ変換する必要がある。
- * 対象4フィールドは WP 側の `KATSUMASCORE_STREAMING_ACF_FIELDS` と対応している。
- */
-const ACF_FIELD_TO_VOD_SERVICE: Record<string, VodService> = {
-  netflix: "netflix",
-  amazon_prime_video: "prime-video",
-  hulu: "hulu",
-  unext: "unext",
-};
-
-/** WP が返す ACF フィールド名の配列を `VodService[]` へ変換する。未知の名前は捨てる。 */
-export const toVodServices = (acfFieldNames: string[]): VodService[] => {
-  const services: VodService[] = [];
-  for (const name of acfFieldNames) {
-    const service = ACF_FIELD_TO_VOD_SERVICE[name];
-    if (service !== undefined) services.push(service);
-  }
-  return services;
-};
-
 /** `CategoryListParams` を REST のクエリ文字列へ組み立てる。 */
 const buildQuery = (params: CategoryListParams): string => {
   const sp = new URLSearchParams({
@@ -124,7 +100,7 @@ export const getCategoryList = async (
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetch(url, { signal: controller.signal });
+      const res = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -142,8 +118,10 @@ export const getCategoryList = async (
         meta: parsed.meta,
         filterOptions: parsed.filterOptions ?? { genres: [], tags: [] },
       };
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

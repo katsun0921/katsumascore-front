@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * カスタムタクソノミー `vod` のターム取得（一覧ページの `vod` クエリ用 ID 解決）。
  */
@@ -95,7 +96,7 @@ export const getVodTermBySlug = async (
       u.searchParams.set("slug", trimmed);
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_fields", "id,slug,name,count");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -110,8 +111,10 @@ export const getVodTermBySlug = async (
         if (loose) return loose;
       }
       return null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -139,7 +142,7 @@ export const getVodTerms = async (
       u.searchParams.set("page", "1");
       u.searchParams.set("per_page", "100");
       u.searchParams.set("_fields", "id,slug,name,count");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -148,8 +151,10 @@ export const getVodTerms = async (
       }
       const json: unknown = await res.json();
       return parseVodList(json);
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

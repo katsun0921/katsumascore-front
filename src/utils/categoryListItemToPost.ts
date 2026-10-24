@@ -2,7 +2,7 @@
  * `/v1/category-list` のレスポンス1件を、表示用の `Post` へ変換する。
  * ISR（`loadCategoryListPage`）と CSR（`/api/category-filter-posts`）の両方から使う。
  */
-import { toVodServices } from "@/libs/api/wordpress";
+import { toVodServices } from "@/libs/api/wordpress/vodServices";
 import type { CategoryListItem } from "@/libs/api/wordpress";
 import { getPostUrl, resolvePostType } from "@/libs/route";
 import type { Post } from "@/types/post";

@@ -1,7 +1,8 @@
-// ISR: revalidate REVALIDATE_DAILY — person CPT 詳細ページ
+// SSG: 日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { I18nProvider } from '@/i18n/provider';
 import {
   getPersonBySlug,
@@ -146,10 +147,7 @@ const PersonPage = ({ person, posts, notableWorks, recommendedWorks, locale }: P
 
 export default PersonPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('persons');
 
 export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -157,7 +155,7 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
 
   const currentLocale = normalizeRouteLocale(locale);
   const wp = await getPersonBySlug(slug);
-  if (!wp) return { notFound: true };
+  if (!wp) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   const person = transformPerson(wp);
   const posts = await getPostsByPersonId(wp.id, { lang: currentLocale, per_page: 100 });
@@ -170,6 +168,5 @@ export const getStaticProps: GetStaticProps<PersonPageProps> = async ({ params, 
       recommendedWorks: pickTopScored(posts, 5),
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

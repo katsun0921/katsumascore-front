@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * `/categories` エンドポイントの取得とアーカイブ向けの解決ヘルパー。
  */
@@ -27,7 +28,7 @@ const fetchCategories = async (
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const response = await fetch(url, { signal: controller.signal });
+      const response = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!response.ok) {
         if (!shouldRetryStatus(response.status) || attempt === maxRetries) return null;
@@ -36,8 +37,10 @@ const fetchCategories = async (
       }
       const data: unknown = await response.json();
       return Array.isArray(data) ? (data as WPCategory[]) : null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

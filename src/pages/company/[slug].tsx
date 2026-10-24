@@ -1,7 +1,8 @@
-// ISR: revalidate REVALIDATE_DAILY — company CPT 詳細ページ
+// SSG: 日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { I18nProvider } from '@/i18n/provider';
 import { getCompanyBySlug, getPostsByCompanyId, transformCompany } from '@/libs/api/wordpress';
 import type { CompanyRelatedPost } from '@/libs/api/wordpress';
@@ -66,10 +67,7 @@ const CompanyPage = ({ company, posts, locale }: CompanyPageProps) => {
 
 export default CompanyPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('companies');
 
 export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -77,7 +75,7 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
 
   const currentLocale = normalizeRouteLocale(locale);
   const wp = await getCompanyBySlug(slug);
-  if (!wp) return { notFound: true };
+  if (!wp) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   const posts = await getPostsByCompanyId(wp.id, { lang: currentLocale, per_page: 100 });
 
@@ -87,6 +85,5 @@ export const getStaticProps: GetStaticProps<CompanyPageProps> = async ({ params,
       posts,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

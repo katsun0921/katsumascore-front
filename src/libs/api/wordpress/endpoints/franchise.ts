@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * カスタムタクソノミー `franchise` の一覧・スラッグ検索・ACFデータ取得。
  */
@@ -137,7 +138,7 @@ const fetchFranchises = async (options?: WpFetchOptions): Promise<WPFranchiseTer
       u.searchParams.set("per_page", "100");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -145,8 +146,10 @@ const fetchFranchises = async (options?: WpFetchOptions): Promise<WPFranchiseTer
         continue;
       }
       return parseFranchiseList(await res.json());
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }
@@ -170,7 +173,7 @@ const fetchFranchiseTermBySlug = async (
       u.searchParams.set("per_page", "1");
       u.searchParams.set("_embed", "1");
       u.searchParams.set("acf_format", "standard");
-      const res = await fetch(u.toString(), { signal: controller.signal });
+      const res = await wpFetch(u.toString(), { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         if (!shouldRetryStatus(res.status) || attempt === maxRetries) return null;
@@ -179,8 +182,10 @@ const fetchFranchiseTermBySlug = async (
       }
       const list = parseFranchiseList(await res.json());
       return list[0] ?? null;
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

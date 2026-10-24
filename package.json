@@ -4,18 +4,18 @@
   "private": true,
   "packageManager": "npm@11.11.0",
   "engines": {
-    "node": "25.8.1",
+    "node": "24.22.1",
     "npm": "11.11.0"
   },
   "scripts": {
     "generate:breakpoints": "node scripts/generate-breakpoints.mjs",
-    "generate:genres": "node scripts/generate-genres.mjs",
+    "generate:genres": "node --import tsx scripts/generate-genres.mjs",
     "predev": "npm run generate:breakpoints && npm run generate:genres",
-    "prebuild": "npm run generate:breakpoints && npm run generate:genres",
+    "prebuild": "npm run generate:breakpoints && npm run generate:genres -- --required",
     "prestorybook": "npm run generate:breakpoints && npm run generate:genres",
     "prebuild-storybook": "npm run generate:breakpoints && npm run generate:genres",
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "node scripts/build-ssg.mjs",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "test:wp-schema": "node --import tsx --test tests/unit/wp-post-schema.test.ts",
@@ -27,11 +27,12 @@
     "verify:wp-section2": "tsx scripts/verify-wp-section2.ts",
     "verify:wp-section2:relax": "VERIFY_WP_SECTION2_RELAX_ACF=1 tsx scripts/verify-wp-section2.ts",
     "chromatic": "chromatic",
-    "preview": "opennextjs-cloudflare build && wrangler dev",
-    "deploy": "opennextjs-cloudflare build && wrangler deploy",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "rm -rf storybook-static && storybook build -o storybook-static",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test:ssg": "node --import tsx --test tests/unit/ssg-detail.test.ts tests/unit/ssg-cache.test.ts tests/unit/ssg-paths.test.ts tests/unit/ssg-scripts.test.ts tests/unit/ssg-pages.test.ts tests/unit/ssg-config.test.ts"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": "eslint --fix",
@@ -59,7 +60,7 @@
     "@storybook/react-vite": "^10.6.2",
     "@tailwindcss/postcss": "^4",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26",
+    "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitest/browser-playwright": "^5.0.5",
@@ -83,6 +84,12 @@
     "vitest": "^5.0.0"
   },
   "overrides": {
-    "typescript": "^6"
+    "typescript": "^6",
+    "@node-minify/core": {
+      "glob": "10.5.0"
+    },
+    "miniflare": {
+      "undici": "7.30.1"
+    }
   }
 }

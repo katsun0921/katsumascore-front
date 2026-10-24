@@ -1,8 +1,9 @@
-// ISR: revalidate REVALIDATE_DAILY — VOD配信情報（週次まとめ記事）詳細ページ
+// SSG: 日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import Link from 'next/link';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_DAILY } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { Breadcrumb } from '@/components/ui-parts/Breadcrumb';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
@@ -130,17 +131,14 @@ const VodReleaseDetailPage = ({
 
 export default VodReleaseDetailPage;
 
-export const getStaticPaths: GetStaticPaths = async () => ({
-  paths: [],
-  fallback: 'blocking',
-});
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('vod_release');
 
 export const getStaticProps: GetStaticProps<VodReleaseDetailProps> = async ({ params, locale }) => {
   const slug = params?.slug;
   if (typeof slug !== 'string') return { notFound: true };
 
   const wp = await getVodReleaseBySlug(slug);
-  if (!wp) return { notFound: true };
+  if (!wp) return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
 
   return {
     props: {
@@ -151,6 +149,5 @@ export const getStaticProps: GetStaticProps<VodReleaseDetailProps> = async ({ pa
       modifiedAt: wp.modified,
       locale: normalizeRouteLocale(locale),
     },
-    revalidate: REVALIDATE_DAILY,
   };
 };

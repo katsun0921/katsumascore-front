@@ -14,6 +14,7 @@
 #   NEXT_PUBLIC_SITE_NAME
 #
 # 任意:
+#   WP_BUILD_TOKEN — WAF除外用秘密ヘッダー。WAF変更後に登録するとWP取得失敗でビルド中断
 #   CLOUDFLARE_ACCOUNT_ID
 #
 # 季節レビュー親スラッグ・カテゴリスラッグ・genre/vod の REST パスはコード固定（`src/config/wpContent.config.ts`）。
@@ -27,37 +28,75 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "17 19 * * *" # JST 4:17
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
 
 concurrency:
-  group: cloudflare-workers-deploy
+  group: deploy-production
   cancel-in-progress: false
 
 jobs:
   deploy:
+    if: github.actor != 'dependabot[bot]' && (github.event_name != 'push' || !contains(github.event.head_commit.message, 'dependabot/'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Dependabot由来のマージを確認
+        id: eligibility
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          should_deploy=true
+          if [ "$GITHUB_EVENT_NAME" = push ]; then
+            from_dependabot=$(gh api "repos/$GITHUB_REPOSITORY/commits/$GITHUB_SHA/pulls" --jq 'any(.[]; .user.login == "dependabot[bot]")')
+            if [ "$from_dependabot" = true ]; then should_deploy=false; fi
+          fi
+          echo "should_deploy=$should_deploy" >> "$GITHUB_OUTPUT"
+
       - name: Setup Node.js
+        if: steps.eligibility.outputs.should_deploy == 'true'
         uses: actions/setup-node@v4
         with:
           node-version-file: package.json
           cache: npm
 
       - name: Install dependencies
+        if: steps.eligibility.outputs.should_deploy == 'true'
         run: npm ci
 
       - name: Build and deploy
+        if: steps.eligibility.outputs.should_deploy == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           WP_API_URL: ${{ secrets.WP_API_URL }}
+          WP_BUILD_TOKEN: ${{ secrets.WP_BUILD_TOKEN }}
           NEXT_PUBLIC_WP_BASE_URL: ${{ secrets.NEXT_PUBLIC_WP_BASE_URL }}
           NEXT_PUBLIC_SITE_URL: ${{ secrets.NEXT_PUBLIC_SITE_URL }}
           NEXT_PUBLIC_SITE_NAME: ${{ secrets.NEXT_PUBLIC_SITE_NAME }}
-        run: npm run deploy
+        run: |
+          if [ -z "$WP_BUILD_TOKEN" ]; then
+            echo "::warning::WP_BUILD_TOKEN未設定: WP取得失敗時は従来どおりビルドを続行します。"
+          fi
+          started=$SECONDS
+          trap 'echo "Build and deploy duration: $((SECONDS - started)) seconds"' EXIT
+          npm run deploy
+
+      - name: 生成数と所要時間を保存
+        if: always() && steps.eligibility.outputs.should_deploy == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssg-detail-report
+          path: .next/ssg-detail-report.json
+          if-no-files-found: ignore
+
+      - name: 失敗時の通知案内
+        if: failure()
+        run: echo '::error::日次ビルドまたはデプロイに失敗しました。GitHub Actionsの失敗メール通知を確認してください。'

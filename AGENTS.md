@@ -437,7 +437,8 @@ Template → 画面（templates/）
 |-----------|----------------|------|
 | 固定ページ | SSG | `getStaticProps` / App Router: `generateStaticParams` |
 | LP / 特集 | SSG | 同上 |
-| 記事 | ISR | `revalidate` を設定する |
+| 記事・詳細ページ | SSG | 日次ビルドで全件事前生成 + `fallback: 'blocking'`。正常ページに `revalidate` を置かない（404のみ `REVALIDATE_NOT_FOUND`）。パスは `staticPaths.ts` で列挙 |
+| 一覧・アーカイブ | ISR | `revalidate` を設定する |
 | TOP | ISR + 動的取得 | ベースはISR、パーソナライズ等は client-side fetch |
 | VOD | SSR | `getServerSideProps` / App Router: `dynamic = 'force-dynamic'` |
 
@@ -579,3 +580,13 @@ export const English: Story = {
 
 このプロジェクトは「WordPressテーマの移植」ではない。
 “再設計されたフロントエンド”である。
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

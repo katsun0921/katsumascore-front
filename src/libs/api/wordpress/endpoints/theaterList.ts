@@ -1,3 +1,4 @@
+import { wpFetch, WpRequestError, isStrictWpBuild } from "../transport";
 /**
  * 現在劇場公開中の記事一覧エンドポイント（`/wp-json/v1/theater-list`）。
  *
@@ -115,7 +116,7 @@ export const getTheaterList = async (
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
     try {
-      const res = await fetch(url, { signal: controller.signal });
+      const res = await wpFetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (!res.ok) {
         // 501 = 上映中フラグの postmeta キーが存在しない。ACF の保存形式を確認する
@@ -137,8 +138,10 @@ export const getTheaterList = async (
         meta: parsed.meta,
         filterOptions: parsed.filterOptions ?? { categories: [], genres: [], tags: [] },
       };
-    } catch {
+    } catch (error) {
       clearTimeout(timeoutId);
+      if (isStrictWpBuild()) throw error;
+      if (error instanceof WpRequestError) return null;
       if (attempt === maxRetries) return null;
       await sleep(initialBackoffMs * 2 ** attempt);
     }

@@ -1,12 +1,13 @@
-// ISR: revalidate REVALIDATE_HIGH — WP固定ページ（特集ページ等）の動的ルート
+// SSG: WP固定ページ。日次ビルドで事前生成するのはjaのみ（enはfallback blocking）。正常ページはrevalidateなし。404のみ60秒で再検証
+import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
-import { REVALIDATE_HIGH } from '@/config/revalidate.config';
+import { makeDetailStaticPaths } from '@/libs/api/wordpress/staticPaths';
 import { PageLayout } from '@/components/templates/PageLayout';
 import { PostContent } from '@/components/ui-section/PostPage/PostContent';
 import { I18nProvider } from '@/i18n/provider';
 import type { Locale } from '@/i18n/t';
-import { getPageBySlug, normalizePageContent, getFeaturedPages, getPostBySlug, parseWPPostUnknown } from '@/libs/api/wordpress';
+import { getPageBySlug, normalizePageContent, getPostBySlug, parseWPPostUnknown } from '@/libs/api/wordpress';
 import { resolvePostType, getPostUrl } from '@/libs/route';
 
 type WPPageProps = {
@@ -34,16 +35,8 @@ const WPPage = ({ title, html, locale }: WPPageProps) => {
 
 export default WPPage;
 
-export const getStaticPaths: GetStaticPaths = async ({ locales = ['ja'] }) => {
-  const paths: { params: { slug: string }; locale: string }[] = [];
-  for (const loc of locales.filter((l) => l !== 'default')) {
-    const pages = await getFeaturedPages();
-    for (const p of pages) {
-      paths.push({ params: { slug: p.slug }, locale: loc });
-    }
-  }
-  return { paths, fallback: 'blocking' };
-};
+// 固定ページは日本語運用のため、事前生成はjaに限定してビルド件数を抑える。
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('pages', ['ja']);
 
 export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;
@@ -68,7 +61,7 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
         };
       }
     }
-    return { notFound: true };
+    return { notFound: true, revalidate: REVALIDATE_NOT_FOUND };
   }
   const normalized = normalizePageContent(page);
 
@@ -78,6 +71,5 @@ export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, loca
       html: normalized.html,
       locale: currentLocale,
     },
-    revalidate: REVALIDATE_HIGH,
   };
 };
