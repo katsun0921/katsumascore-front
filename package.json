@@ -81,9 +81,16 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "typescript": "^6",
+    "vite": "^7.3.7",
     "vitest": "^5.0.0"
   },
   "overrides": {
-    "typescript": "^6"
+    "typescript": "^6",
+    "@node-minify/core": {
+      "glob": "10.5.0"
+    },
+    "miniflare": {
+      "undici": "7.30.1"
+    }
   }
 }

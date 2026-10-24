@@ -164,3 +164,18 @@ Node 24.22.1 + npm 11.11.0で `npm run typecheck`、`npm run lint`、`npm run te
 - 同条件で `npx opennextjs-cloudflare build` が成功し、`.open-next/worker.js` を出力。警告は `compatibility_date: 2026-03-30` の更新推奨のみ。
 
 モックデータでのビルドであり、実WPでのビルド、R2/DO/WAF/Secrets準備後のActions実行、Cloudflareへのデプロイは未実施。
+
+## 2026-10-24 npm auditの脆弱性修正
+
+`npm audit` で21件（low 2 / moderate 5 / high 14）を再現した。通常の `npm audit fix --ignore-scripts` で7件まで減少したが、OpenNextの間接依存に残るglobとundiciについては `--force` がOpenNext 1.20.9へのダウングレードを提案した。この提案は適用せず、依存先を限定したoverridesで修正版を指定した。
+
+- `@node-minify/core` の固定依存glob 10.3.3を10.5.0へ変更。[GHSA-5j98-mcp5-4vw2](https://github.com/advisories/GHSA-5j98-mcp5-4vw2)の修正版で、同じ10系を維持する。OpenNext側の利用はglobSyncだが、CLIを含む脆弱な依存自体を置き換えた。10.5.0にもnpmの旧系列廃止警告は出るため、上流の依存更新後にoverrideの撤去を検討する。
+- `miniflare` の固定依存undici 7.29.1を7.30.1へ変更。同じ7系の修正版に限定する。
+- lockfile上のOpenNext Cloudflareは1.20.12から1.20.13、AWSは4.1.11から4.1.12、Wranglerは4.151.0から4.152.0、Miniflareは5.20261012.0-betaから5.20261019.2-betaへ更新。Next 16.4.2とReact 19.3.1は維持した。
+- 通常の監査修正でViteが7.3.2から8.3.5へ更新された際、StorybookのCSS最小化で既存の `@media (min-width: var(--breakpoint-lg))` に対する `Invalid media query` が発生した。不要なメジャー更新を避け、devDependenciesにVite `^7.3.7` を明記して修正済み7系へ揃えた。
+
+型チェックと初回のNextビルドは、古い `.next/dev/types/validator.ts` に残る削除済みAPI `src/pages/api/vod-related.js` への参照で失敗した。生成済みのdev用型ディレクトリを `/tmp` へ退避すると型チェックは成功した。ソースやtsconfigを変更する必要はなかった。
+
+Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、Lintが成功。`USE_WP_MOCK=true` でCloudflare向けビルドも成功し、詳細33件と `.open-next/worker.js` を生成した。監査は0件となった。実WPによる全件ビルド、Cloudflareへのデプロイ、実R2/DO上の検証は未実施。
+
+最終lockfileで `npm ci --engine-strict` とVite 7.3.7によるStorybookビルドも成功し、クリーンインストール後の監査も0件だった。CloudflareビルドはViteの7系への固定前に実施した（ViteはStorybook用の開発依存）。
