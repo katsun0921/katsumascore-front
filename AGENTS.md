@@ -437,7 +437,8 @@ Template → 画面（templates/）
 |-----------|----------------|------|
 | 固定ページ | SSG | `getStaticProps` / App Router: `generateStaticParams` |
 | LP / 特集 | SSG | 同上 |
-| 記事 | ISR | `revalidate` を設定する |
+| 記事・詳細ページ | SSG | 日次ビルドで全件事前生成 + `fallback: 'blocking'`。正常ページに `revalidate` を置かない（404のみ `REVALIDATE_NOT_FOUND`）。パスは `staticPaths.ts` で列挙 |
+| 一覧・アーカイブ | ISR | `revalidate` を設定する |
 | TOP | ISR + 動的取得 | ベースはISR、パーソナライズ等は client-side fetch |
 | VOD | SSR | `getServerSideProps` / App Router: `dynamic = 'force-dynamic'` |
 

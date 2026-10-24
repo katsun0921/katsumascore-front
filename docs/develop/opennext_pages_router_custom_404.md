@@ -154,3 +154,13 @@ Node.js 25系列のEOLとVitest 5のNode要件を踏まえ、`.node-version` と
 ローカルのHomebrew `node@24` は実体が25.8.1を指していたため、公式配布の24.22.1を `/tmp` に取得して検証した。システム全体のNodeのリンクは変更していない。ローカル開発でも24.22.1を有効にする必要がある。
 
 Node 24.22.1 + npm 11.11.0で `npm run typecheck`、`npm run lint`、`npm run test:ssg`（64件）、`npm run test:wp-schema`（2件）が成功した。SSGテストのモックサーバーはサンドボックス内でlocalhost待受が拒否されたため、制限外で再実行して成功を確認した。今回のNode変更後の本番ビルド・Cloudflareデプロイは未実施。
+
+### 2026-10-24 Node 24.22.1でのビルド検証
+
+公式配布のNode 24.22.1（SHASUMS256で照合）+ npm 11.11.0で `npm ci --engine-strict` が成功し、エンジン不適合はなかった。続けて以下を確認した。
+
+- `npm run test:ssg`（65件）、`npm run test:wp-schema`（2件）、`npm run typecheck`、`npm run lint`、`npm run lint:scss` が成功。
+- `USE_WP_MOCK=true` で `npm run build`（`scripts/build-ssg.mjs`）が成功。詳細33件を生成し、生成数レポートの検査（revalidateなし・blocking）を通過。`/[slug]` はjaのみ事前生成（3件）。
+- 同条件で `npx opennextjs-cloudflare build` が成功し、`.open-next/worker.js` を出力。警告は `compatibility_date: 2026-03-30` の更新推奨のみ。
+
+モックデータでのビルドであり、実WPでのビルド、R2/DO/WAF/Secrets準備後のActions実行、Cloudflareへのデプロイは未実施。

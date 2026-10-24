@@ -135,7 +135,7 @@ Cloudflare導入後、WordPress管理画面（wp-admin）のセッションが�
 |-----------|----------------|-----------------|
 | 固定ページ | SSG | `getStaticProps` |
 | LP / 特集 | SSG | `getStaticProps` |
-| 記事 | ISR | `getStaticProps` + `revalidate` |
+| 記事・詳細ページ | SSG | `getStaticProps`（`revalidate` なし）+ `getStaticPaths` 全件列挙・`fallback: 'blocking'`。日次ビルドで更新 |
 | TOP | ISR + 動的取得 | `getStaticProps` + `revalidate` + client-side fetch |
 | VOD | SSR | `getServerSideProps` |
 

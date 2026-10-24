@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド 機能一覧
 
-> v1.0 ― 2026年5月22日
+> v1.1 ― 2026年10月24日（詳細ページのSSG化を反映）
 
 ---
 
@@ -46,13 +46,16 @@
 
 ### 1.3 動的詳細ページ
 
+レンダリングが SSG の詳細ページは日次ビルドで全件を事前生成する。未生成のパスは `fallback: 'blocking'` で初回アクセス時に生成する。正常ページは `revalidate` なし、404 のみ `REVALIDATE_NOT_FOUND`（60秒）で再検証する。パス列挙は `src/libs/api/wordpress/staticPaths.ts`。
+
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
-| `/[slug]` | `pages/[slug].tsx` | ISR | 記事詳細（キャッチオール） |
+| `/movie/[slug]` / `/anime/[slug]` / `/drama/[slug]` | `pages/{movie,anime,drama}/[slug].tsx` | SSG | 記事詳細。正規カテゴリと ACF `lang` に一致するパスだけ事前生成。VOD関連記事と配信情報の基準日（JST）は生成時に確定 |
+| `/[slug]` | `pages/[slug].tsx` | SSG | WP 固定ページ（キャッチオール）。事前生成は ja のみ、en は blocking 生成 |
 | `/actor/[slug]` | `pages/actor/[slug].tsx` | ISR | 配役詳細 |
-| `/company/[slug]` | `pages/company/[slug].tsx` | ISR | 企業詳細 |
-| `/franchise/[slug]` | `pages/franchise/[slug].tsx` | ISR | フランチャイズ詳細 |
-| `/person/[slug]` | `pages/person/[slug].tsx` | ISR | 人物詳細（人物辞典。Person / FAQPage JSON-LD 出力） |
+| `/company/[slug]` | `pages/company/[slug].tsx` | SSG | 企業詳細 |
+| `/franchise/[slug]` | `pages/franchise/[slug].tsx` | SSG | フランチャイズ詳細 |
+| `/person/[slug]` | `pages/person/[slug].tsx` | SSG | 人物詳細（人物辞典。Person / FAQPage JSON-LD 出力） |
 
 ### 1.4 分類別ページ
 
@@ -68,9 +71,9 @@
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
 | `/seasonal-reviews` | `pages/seasonal-reviews/index.tsx` | ISR | 季節レビュー一覧（`seasonal_review` CPT 優先・固定ページへフォールバック。並び順は ACF `sort_key`） |
-| `/seasonal-reviews/[slug]` | `pages/seasonal-reviews/[slug].tsx` | ISR | 季節レビュー詳細（`seasonal_review` CPT 優先・固定ページへフォールバック。収録作品リストを描画） |
+| `/seasonal-reviews/[slug]` | `pages/seasonal-reviews/[slug].tsx` | SSG | 季節レビュー詳細（`seasonal_review` CPT 優先・固定ページへフォールバック。収録作品リストを描画） |
 | `/seasonal-anime-and-dramas-reviews` | `pages/seasonal-anime-and-dramas-reviews/index.tsx` | ISR | 季節アニメ＆ドラマレビュー一覧 |
-| `/seasonal-anime-and-dramas-reviews/[slug]` | `pages/seasonal-anime-and-dramas-reviews/[slug].tsx` | ISR | 季節アニメ＆ドラマレビュー詳細 |
+| `/seasonal-anime-and-dramas-reviews/[slug]` | `pages/seasonal-anime-and-dramas-reviews/[slug].tsx` | SSG | 季節アニメ＆ドラマレビュー詳細 |
 
 ### 1.6 VOD・劇場公開関連ページ
 
@@ -80,9 +83,9 @@
 | `/vod/[slug]` | `pages/vod/[slug]/index.tsx` | SSR | VOD サービス詳細（在庫リアルタイム取得） |
 | `/vod/[slug]/page/[page]` | `pages/vod/[slug]/page/[page].tsx` | SSR | VOD 配信記事ページング |
 | `/vod-release` | `pages/vod-release/index.tsx` | ISR | VOD配信情報（週次まとめ記事）アーカイブ |
-| `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | ISR | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
+| `/vod-release/[slug]` | `pages/vod-release/[slug].tsx` | SSG | VOD配信情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 | `/theater-release` | `pages/theater-release/index.tsx` | ISR | 劇場公開情報（週次まとめ記事）アーカイブ |
-| `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | ISR | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
+| `/theater-release/[slug]` | `pages/theater-release/[slug].tsx` | SSG | 劇場公開情報 詳細（Article / BreadcrumbList JSON-LD 出力） |
 | `/now-showing` | `pages/now-showing/index.tsx` | ISR | 劇場公開中の作品一覧（WP `/v1/theater-list` で全件取得し、ソート・絞り込み・ページングはクエリを見てクライアント側で実行）。劇場公開情報は**日本語のみ**の運用のため記事は常に `lang=ja`（TOP のセクションは ja のみ）。canonical は各ロケールの自己参照 |
 
 ### 1.7 Sitemap
@@ -248,7 +251,11 @@ hooks / state 使用可。データ取得・整形を担当。
 
 | ファイル | 内容 |
 |---------|------|
-| `client.ts` | openapi-fetch ベースの WP REST API クライアント |
+| `client.ts` | openapi-fetch ベースの WP REST API クライアント（fetch は `wpFetch` を使用） |
+| `transport.ts` | WP 通信の共通入口 `wpFetch`。ビルド中（`WP_SSG_BUILD=1`）だけ同時4件制限・30秒タイムアウト・最大3回再試行・同一URL応答の共有を行う。実行時は呼び出し元の `signal` に従う。`WP_BUILD_TOKEN` 設定時は WP の REST 配下にだけ `x-build-token` を付与。`isStrictWpBuild` はトークン登録済みビルドで取得失敗を致命的にする判定 |
+| `responseCache.ts` | ビルド中の WP 応答キャッシュ（既定 256MiB 上限・成功応答のみ・メモリのみ） |
+| `staticPaths.ts` | 詳細 SSG のパス列挙（`makeDetailStaticPaths` / `makePostStaticPaths` / `seasonalDetailStaticPaths`）。`X-WP-TotalPages` で全件取得し、件数不一致はトークン登録済みビルドで中止。`formatVodSnapshotDate` は生成時の JST 日付（YYYY-MM-DD） |
+| `vodServices.ts` | `toVodServices`。ACF フィールド名 → `VodService` の純粋変換（ブラウザからも参照するため通信モジュールから分離） |
 | `schema.ts` | API スキーマ定義 |
 | `transform.ts` | レスポンス変換・正規化 |
 | `lang.ts` | ACF `lang` フィールドによる言語判定ロジック |
@@ -258,7 +265,7 @@ hooks / state 使用可。データ取得・整形を担当。
 | ファイル | 主要関数 | 説明 |
 |---------|---------|------|
 | `posts.ts` | `getPosts`, `getPostBySlug`, `getRelatedPosts`, `searchPosts` | 投稿取得 |
-| `categoryList.ts` | `getCategoryList`, `toVodServices` | カテゴリ記事一覧専用カスタムエンドポイント（`/wp-json/v1/category-list`）。絞り込み・ソート・ページングをWP側のSQLで処理し1ページ分のみ取得する（従来の全件取得 約6.4秒 → 約0.5〜1.2秒） |
+| `categoryList.ts` | `getCategoryList` | カテゴリ記事一覧専用カスタムエンドポイント（`/wp-json/v1/category-list`）。絞り込み・ソート・ページングをWP側のSQLで処理し1ページ分のみ取得する（従来の全件取得 約6.4秒 → 約0.5〜1.2秒） |
 | `sitemapPosts.ts` | `getSitemapPosts` | サイトマップ専用の投稿取得。`_embed` を外し `_fields` を slug / categories / acf.lang 等に絞ることで、`per_page=100` でもタイムアウトしない（約7MB→約21KB）。取得失敗時は空配列ではなく `null` を返す |
 | `pages.ts` | `getPage`, `getPageBySlug` | 固定ページ取得 |
 | `categories.ts` | `getCategories`, `getCategoriesForArchiveResolve`, `getPostsByCategory` | カテゴリ取得 |
@@ -278,6 +285,7 @@ hooks / state 使用可。データ取得・整形を担当。
 
 **共通仕様:**
 - ベース URL: `process.env.WP_API_URL`
+- 通信はすべて `transport.ts` の `wpFetch` を経由する
 - 全リクエストに `_embed&acf_format=standard` を付与
 - エラー時は `null` を返す（`try/catch`）
 
@@ -348,6 +356,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | ファイル | 説明 |
 |---------|------|
 | `version.ts` | キャッシュバージョン管理 |
+| `prerenderedPagesCache.ts` | OpenNext R2 キャッシュの互換層。Next 16.3 以降の Pages 実行時キーで miss したとき、ビルド時のパスキーへフォールバックする（`open-next.config.ts` で使用） |
 
 ---
 
@@ -425,7 +434,13 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 
 ### ブレークポイント生成
 
-`scripts/generate-breakpoints.mjs` で `src/styles/generated/` に自動生成。
+`scripts/generate-breakpoints.mjs` で `src/styles/generated/` に自動生成（生成物は `.gitignore` 対象。`predev` / `prebuild` / `prestorybook` で作成）。
+
+### 詳細 SSG のビルドスクリプト
+
+- `scripts/build-ssg.mjs` — `npm run build` の実体。`WP_SSG_BUILD=1` を Next ビルド子プロセスだけに設定し、終了後に生成数を集計する
+- `scripts/report-detail-ssg.mjs` — `prerender-manifest.json` から詳細ページの種別×言語の生成数を `.next/ssg-detail-report.json` に出力。詳細ルートが ISR のまま・fallback が blocking でない場合はビルドを失敗させる
+- `scripts/generate-genres.mjs` — `src/data/genres.json`（`.gitignore` 対象）を生成。`--required` かつ `WP_BUILD_TOKEN` 設定時は取得失敗でビルドを中止
 
 ---
 

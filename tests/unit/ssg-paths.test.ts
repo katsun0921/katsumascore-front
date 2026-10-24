@@ -29,11 +29,10 @@ test('詳細SSGのパス列挙', async (t) => {
           { id: 4, slug: 'company-info' },
         ],
       });
-      const result = await makeDetailStaticPaths('pages')({ locales: ['default', 'ja', 'en'] });
+      const result = await makeDetailStaticPaths('pages', ['ja'])({ locales: ['default', 'ja', 'en'] });
       assert.equal(result.fallback, 'blocking');
       assert.deepEqual(result.paths, [
         { params: { slug: 'company-info' }, locale: 'ja' },
-        { params: { slug: 'company-info' }, locale: 'en' },
       ]);
     });
 

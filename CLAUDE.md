@@ -1,7 +1,7 @@
 # KatsumaScore フロントエンド設計・移行ガイド（CLAUDE.md）
 
-> v4.7 ― OpenNextトラブル記録の追記先を統一
-> 2026年9月10日
+> v4.8 ― 詳細ページのSSG化に合わせてレンダリング方式を更新
+> 2026年10月24日
 
 ## ■ 本ドキュメントの位置付け
 
@@ -154,7 +154,8 @@ OpenNext / Cloudflare Workersに関する障害、再現結果、原因、回避
 | ページ種別 | 方式 | 備考 |
 |-----------|------|------|
 | 固定ページ / LP | SSG | `getStaticProps` |
-| 記事 | ISR | `revalidate` を設定する |
+| 記事・詳細ページ | SSG | 日次ビルドで全件事前生成 + `fallback: 'blocking'`。正常ページに `revalidate` を置かない（404のみ `REVALIDATE_NOT_FOUND`）。パスは `staticPaths.ts` で列挙 |
+| 一覧・アーカイブ | ISR | `revalidate` を設定する |
 | TOP | ISR + client fetch | パーソナライズは client-side fetch |
 | VOD | ISR | `getVodList`（カスタムエンドポイント）で1リクエスト化。`revalidate` は `REVALIDATE_DAILY` |
 

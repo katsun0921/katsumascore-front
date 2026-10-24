@@ -1,4 +1,4 @@
-// SSG: WP固定ページ。日次ビルド + fallback blocking（正常ページはrevalidateなし。404のみ60秒で再検証）
+// SSG: WP固定ページ。日次ビルドで事前生成するのはjaのみ（enはfallback blocking）。正常ページはrevalidateなし。404のみ60秒で再検証
 import { REVALIDATE_NOT_FOUND } from '@/config/revalidate.config';
 import Head from 'next/head';
 import type { GetStaticPaths, GetStaticProps } from 'next';
@@ -35,7 +35,8 @@ const WPPage = ({ title, html, locale }: WPPageProps) => {
 
 export default WPPage;
 
-export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('pages');
+// 固定ページは日本語運用のため、事前生成はjaに限定してビルド件数を抑える。
+export const getStaticPaths: GetStaticPaths = makeDetailStaticPaths('pages', ['ja']);
 
 export const getStaticProps: GetStaticProps<WPPageProps> = async ({ params, locale }) => {
   const slug = params?.slug;

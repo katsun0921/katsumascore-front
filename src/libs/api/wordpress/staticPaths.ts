@@ -82,12 +82,16 @@ export const getAllStaticEntries = async (endpoint: string): Promise<StaticEntry
   }
 };
 
-/** 共通CPTは両言語へ展開する。固定ルートと衝突するWPページは除く。 */
-export const makeDetailStaticPaths = (endpoint: string): GetStaticPaths => async ({ locales }) => {
+/**
+ * 共通CPTは両言語へ展開する。固定ルートと衝突するWPページは除く。
+ * `onlyLocales` を指定すると、そのロケールだけ事前生成する（他ロケールはblocking生成に任せる）。
+ */
+export const makeDetailStaticPaths = (endpoint: string, onlyLocales?: string[]): GetStaticPaths => async ({ locales }) => {
   const entries = await getAllStaticEntries(endpoint);
   const fixedSlugs = new Set(['about', 'contact', 'privacy-policy', 'top', 'search', 'featured', 'seasonal-reviews', 'seasonal-anime-and-dramas-reviews']);
   const filtered = entries.filter((entry) => endpoint !== 'pages' || !fixedSlugs.has(entry.slug));
-  const paths = (locales ?? ['ja', 'en']).filter((locale) => locale !== 'default')
+  const paths = (locales ?? ['ja', 'en'])
+    .filter((locale) => locale !== 'default' && (!onlyLocales || onlyLocales.includes(locale)))
     .flatMap((locale) => filtered.map(({ slug }) => ({ params: { slug }, locale })));
   console.log(`[detail-ssg] ${endpoint}: ${entries.length} records / ${paths.length} paths`);
   return { paths, fallback: 'blocking' };
