@@ -5,7 +5,6 @@
 import { access, mkdir, writeFile } from 'node:fs/promises'
 import nextEnv from '@next/env'
 import { wpFetch } from '../src/libs/api/wordpress/transport.ts'
-import { getWpResponseDiagnostics } from './wp-response-diagnostics.mjs'
 nextEnv.loadEnvConfig(process.cwd())
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -43,10 +42,7 @@ let genres = []
 try {
   // ビルド子プロセス外のため wpFetch は再試行・タイムアウトを持たない。停止したWPでprebuildが止まらないよう上限を設ける。
   const res = await wpFetch(url.toString(), { signal: AbortSignal.timeout(30_000) })
-  if (!res.ok) {
-    console.error('[generate-genres] WP response diagnostics:', JSON.stringify(await getWpResponseDiagnostics(res)))
-    throw new Error(`HTTP ${res.status}`)
-  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const json = await res.json()
   if (!Array.isArray(json)) throw new Error('WP genre response is not an array')
   genres = json
