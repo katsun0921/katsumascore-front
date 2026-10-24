@@ -220,3 +220,10 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - `/ja/movie?page=2` と内部ルート `/ja/movie/page/2` の双方が404、応答はプレーンテキスト `This page could not be found`、`x-nextjs-cache: MISS`。rewriteだけの不具合ではない。
 - 実Workerの `wrangler tail` を読み、同内部ルートへのアクセスで `[loadCategoryListPage] カテゴリ一覧を取得できなかった（slug=movie）` を確認した。実行結果はexceptionなし・HTTP404。`getStaticPaths`が空の一覧ページは実行時にWPカテゴリを取得し、取得失敗を `notFound: true` として返すため404になる。ビルド時取得成功だけでは、実行時のWP疎通を保証しない。
 - ローカル回線から同じ `/wp-json/wp/v2/categories?per_page=100&_embed=1&acf_format=standard` は200。実Workerでの失敗ステータス/例外種別は既存endpointのcatchで記録されず、遮断元は未確定。Cloudflareの同時刻イベントと、必要なら実行時通信の安全な診断ログで追加調査する。WAF変更・Worker Secret変更・製品コードの修正はこの確認では実施していない。
+
+### 実行時WP取得失敗の原因：Workersが `redirect: 'error'` を拒否
+
+- 原因はWAFではなく、実行時transport（`src/libs/api/wordpress/transport.ts`）の `fetch(..., { redirect: 'error' })`。workerdは `Invalid redirect value, must be one of "follow" or "manual" ("error" won't be implemented since it does not make sense at the edge ...)` で例外を投げる。ローカルの `wrangler dev`（compatibility_date 2026-03-30・nodejs_compat）で再現し、`manual` と `follow` は200を返した。
+- Nodeで動くビルド時は `error` が有効なため、ビルドとActionsは成功し、未生成パスのblocking生成・一覧ページ・ISR再生成など実行時のWP取得だけがすべて失敗していた。各endpointのcatchが例外を握り、`notFound` として404になる。`/ja/person?page=2` などビルド済みキャッシュから返るページは影響を受けない。
+- 修正：実行時のみ `redirect: 'manual'` に変更した。3xxは非2xx応答として呼び出し元へ返り、`x-build-token` はリダイレクト先へ送られない。ビルド時（Node）は `error` のまま。単体テストで実行時の指定が `manual` であることを固定した。
+- XタイムラインはX側の429が原因で、この修正とは無関係。ウィジェット枠の `min-height` により `offsetHeight === 0` の失敗判定が働かず、空白のまま公式リンクだけが出る。

@@ -64,7 +64,12 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
     await t.test('実行時は呼び出し元のsignalに従い、再試行・同時実行制限・失敗の例外化をしない', async () => {
       delete process.env.WP_SSG_BUILD;
       let calls = 0;
-      globalThis.fetch = async () => { calls += 1; return new Response('', { status: 503 }); };
+      globalThis.fetch = async (_url, init) => {
+        calls += 1;
+        // Cloudflare Workers は redirect: 'error' で例外を投げるため、実行時は 'manual' に限る
+        assert.equal(init?.redirect, 'manual');
+        return new Response('', { status: 503 });
+      };
       const failed = await wpFetch('https://wp.example/wp-json/wp/v2/runtime-503');
       assert.equal(failed.status, 503);
       assert.equal(calls, 1);

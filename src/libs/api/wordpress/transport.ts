@@ -87,12 +87,14 @@ const toResponse = (response: BufferedWpResponse): Response => {
 /**
  * 実行時（blocking生成・ISR・APIルート）の取得。呼び出し元のsignalでタイムアウトし、
  * 再試行・同時実行制限・バッファリングは行わない。非2xxもそのまま返し、各endpointの従来の再試行に任せる。
+ * Cloudflare Workers は redirect: 'error' を受け付けず例外になるため 'manual' を使う。
+ * 3xx は非2xx応答として呼び出し元へ返り、秘密ヘッダーはリダイレクト先へ送られない。
  */
 const requestWordPressAtRuntime = (request: Request): Promise<Response> =>
   fetch(request.url, {
     method: request.method,
     headers: withBuildToken(request),
-    redirect: 'error',
+    redirect: 'manual',
     signal: request.signal,
   });
 
