@@ -17,6 +17,7 @@ import { PostDetailFranchises } from '@/components/ui-section/PostDetailFranchis
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
+import { formatDate } from '@/utils/formatDate';
 import { useHighScorePosts } from '@/hooks/useHighScorePosts';
 import { useSocialEmbedScripts } from '@/hooks/useSocialEmbedScripts';
 import { useExternalLinks } from '@/hooks/useExternalLinks';
@@ -31,6 +32,14 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId }: PostDetai
   const { posts: highScorePosts, loading: highScoreLoading } = useHighScorePosts(locale);
   useSocialEmbedScripts('js-content', post.content);
   useExternalLinks('js-content', post.content);
+
+  // 基準日はサイドバーに配信・レンタル情報が出るときだけ示す。VOD紹介があればその注記に日付を含めるため単独行は出さない。
+  const showsVodInfo = !post.isCinemaShowing && (
+    (post.streamingVods?.length ?? 0) > 0 || (locale === 'ja' && (post.rentalServices?.length ?? 0) > 0)
+  );
+  const vodSnapshotLabel = post.vodSnapshotDate && showsVodInfo && !post.vodIntroduction
+    ? `${t(messages, ['vod', 'snapshot', 'prefix'], locale)}${formatDate(post.vodSnapshotDate, locale).display}${t(messages, ['vod', 'snapshot', 'suffix'], locale)}`
+    : null;
 
   let vodIntroductionSection: ReactNode = null;
   if (post.vodIntroduction) {
@@ -136,10 +145,8 @@ export const PostDetail = ({ post, genres, actorTermEntries, postId }: PostDetai
             />
           )}
 
-          {post.vodSnapshotDate && (
-            <p className='mt-4 mb-4 text-ui text-color-secondary'>
-              {post.vodSnapshotDate}{t(messages, ['vod', 'snapshot'], locale)}
-            </p>
+          {vodSnapshotLabel && (
+            <p className='mt-4 mb-4 text-ui text-color-secondary'>{vodSnapshotLabel}</p>
           )}
           {vodIntroductionSection}
 

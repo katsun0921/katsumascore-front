@@ -101,7 +101,6 @@
 | `GET /api/hello` | `pages/api/hello.ts` | ヘルスチェック |
 | `GET /api/search` | `pages/api/search.ts` | 記事検索（WP REST プロキシ） |
 | `GET /api/actor-works` | `pages/api/actor-works.ts` | 配役関連作品取得 |
-| `GET /api/vod-related` | `pages/api/vod-related.ts` | VOD 関連情報取得 |
 | `GET /api/high-score` | `pages/api/high-score.ts` | 高スコア投稿取得 |
 | `GET /api/category-filter-posts` | `pages/api/category-filter-posts.ts` | カテゴリフィルタ投稿取得 |
 | `POST /api/revalidate` | `pages/api/revalidate.ts` | ISR Webhook（WordPress から呼び出し） |
@@ -357,7 +356,6 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | Hook | ファイル | 説明 |
 |------|---------|------|
 | `useHighScorePosts` | `src/hooks/useHighScorePosts.ts` | 高スコア投稿データ取得（Client fetch） |
-| `useVodRelatedPosts` | `src/hooks/useVodRelatedPosts.ts` | VOD 関連投稿データ取得（Client fetch） |
 | `useExternalLinks` | `src/hooks/useExternalLinks.ts` | 記事本文内の外部ドメインリンクへ `target="_blank"` / `rel="noopener"` と別窓アイコン（CSS）を自動付与 |
 | `useLayout` | `src/hooks/useLayout.ts` | レイアウト状態管理 |
 | `useCategoryFilterPosts` | `src/libs/useCategoryFilterPosts.ts` | カテゴリフィルタ投稿取得 |

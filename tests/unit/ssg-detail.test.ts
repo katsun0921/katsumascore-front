@@ -48,6 +48,7 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
     });
 
     await t.test('本文のないWP応答を再構築し、圧縮時の長さを引き継がない', async () => {
+      process.env.WP_SSG_BUILD = '1';
       globalThis.fetch = async () => new Response(null, { status: 204 });
       const empty = await wpFetch('https://wp.example/wp-json/wp/v2/no-content');
       assert.equal(empty.status, 204);
@@ -57,6 +58,36 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
       assert.deepEqual(await decoded.json(), []);
       assert.equal(decoded.headers.has('content-encoding'), false);
       assert.equal(decoded.headers.has('content-length'), false);
+      delete process.env.WP_SSG_BUILD;
+    });
+
+    await t.test('実行時は呼び出し元のsignalに従い、再試行・同時実行制限・失敗の例外化をしない', async () => {
+      delete process.env.WP_SSG_BUILD;
+      let calls = 0;
+      globalThis.fetch = async () => { calls += 1; return new Response('', { status: 503 }); };
+      const failed = await wpFetch('https://wp.example/wp-json/wp/v2/runtime-503');
+      assert.equal(failed.status, 503);
+      assert.equal(calls, 1);
+
+      let active = 0;
+      let peak = 0;
+      globalThis.fetch = async () => {
+        active += 1;
+        peak = Math.max(peak, active);
+        await new Promise((resolve) => setTimeout(resolve, 5));
+        active -= 1;
+        return Response.json([]);
+      };
+      await Promise.all(Array.from({ length: 6 }, (_, i) => wpFetch(`https://wp.example/wp-json/wp/v2/runtime?i=${i}`)));
+      assert.equal(peak, 6);
+
+      globalThis.fetch = (_url, init) => new Promise<Response>((_resolve, reject) => {
+        init?.signal?.addEventListener('abort', () => reject(init.signal?.reason));
+      });
+      const controller = new AbortController();
+      const pending = wpFetch('https://wp.example/wp-json/wp/v2/runtime-slow', { signal: controller.signal });
+      controller.abort();
+      await assert.rejects(pending, (error: unknown) => !(error instanceof WpRequestError));
     });
 
     await t.test('5xxは最大3回再試行し、失敗は空配列や404に変換しない', async () => {
@@ -170,8 +201,8 @@ const { getAllStaticEntries, makePostStaticPaths, formatVodSnapshotDate } = awai
     });
 
     await t.test('JST日付はUTCの日付境界をまたいで固定される', () => {
-      assert.equal(formatVodSnapshotDate(new Date('2026-10-21T14:59:59Z')), '2026/10/21');
-      assert.equal(formatVodSnapshotDate(new Date('2026-10-21T15:00:00Z')), '2026/10/22');
+      assert.equal(formatVodSnapshotDate(new Date('2026-10-21T14:59:59Z')), '2026-10-21');
+      assert.equal(formatVodSnapshotDate(new Date('2026-10-21T15:00:00Z')), '2026-10-22');
     });
 
     await t.test('全対象詳細は正常ページにrevalidateなし（404のみ短い再検証）・トップと一覧のISRは残る', async () => {

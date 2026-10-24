@@ -75,7 +75,7 @@ export type PostDetailData = Post & {
 
   // aside ブロック群
   isCinemaShowing?: boolean
-  /** getStaticProps生成時の日本時間。配信情報の基準日。 */
+  /** getStaticProps生成時の日本時間の日付（YYYY-MM-DD）。配信情報の基準日。 */
   vodSnapshotDate?: string
   streamingVods?: TStreamingVodEntry[]
   rentalServices?: TRentalService[]

@@ -1,7 +1,7 @@
 /** 詳細SSG用の公開コレクション全件列挙。途中ページの欠落・不正データはトークン登録済みビルドを中止する。 */
 import type { GetStaticPaths } from 'next';
 import { wpApiBaseUrl } from './client';
-import { wpFetch, isStrictWpBuild } from './transport';
+import { wpFetch, isStrictWpBuild, WpRequestError } from './transport';
 import { detectLang } from './lang';
 import { resolvePostType, type PostType } from '@/libs/route';
 import { isWpMockMode } from '@/libs/wpMockMode';
@@ -54,6 +54,8 @@ const fetchAllStaticEntries = async (endpoint: string): Promise<StaticEntry[]> =
       _fields: 'id,slug,parent,categories,link,acf.lang',
     }).toString();
     const response = await wpFetch(url);
+    // ビルド外（next dev等）では非2xxも返るため、ここで失敗として扱う。
+    if (!response.ok) throw new WpRequestError(response.status);
     const pagesHeader = response.headers.get('X-WP-TotalPages');
     const totalHeader = response.headers.get('X-WP-Total');
     if (!pagesHeader || !totalHeader) throw new Error(`WP pagination headers missing: ${endpoint}`);
@@ -120,6 +122,6 @@ export const seasonalDetailStaticPaths: GetStaticPaths = async ({ locales }) => 
   return { paths, fallback: 'blocking' };
 };
 
-/** サーバー生成時の時刻を日本時間の YYYY/MM/DD に固定する（blocking生成でも同じ処理）。 */
+/** サーバー生成時の時刻を日本時間の YYYY-MM-DD に固定する（blocking生成でも同じ処理）。表示書式はロケールごとにUIで決める。 */
 export const formatVodSnapshotDate = (date: Date = new Date()): string =>
-  new Intl.DateTimeFormat('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);
+  new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Tokyo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(date);

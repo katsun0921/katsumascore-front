@@ -2,6 +2,7 @@ import { PostCardListVertical } from '@/components/ui-section/PostCard';
 import { PostCardImgLeft } from '@/components/ui-section//PostCard/PostCardImgLeft';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
+import { formatDate } from '@/utils/formatDate';
 import type { Post } from '@/types/post';
 import { messages } from './i18n';
 
@@ -12,33 +13,12 @@ export type TVodIntroductionProps = {
   writtenFrom: TWrittenFrom
   publishedAt: string
   updatedAt?: string
-  /** 生成時のJST日付。未指定のStoryでは従来の公開日を使う。 */
+  /** 生成時のJST日付（YYYY-MM-DD）。未指定のStoryでは従来の公開日を使う。 */
   snapshotDate?: string
   relatedPosts?: Post[]
-  /** CSR フェッチ中は true。スケルトンを表示してレイアウトシフトを防ぐ */
-  relatedPostsLoading?: boolean
   /** ACF `streaming_vod_watched_vod_affiliate_code`（テーマでは生 HTML を出力） */
   affiliateHtml?: string
 }
-
-const SKELETON_COUNT = 3;
-
-const VodRelatedSkeleton = () => (
-  <div data-component='VodRelatedSkeleton' className='vod-related-skeleton' aria-hidden='true'>
-    <div className='vod-related-skeleton__heading' />
-    <div className='vod-related-skeleton__list'>
-      {Array.from({ length: SKELETON_COUNT }).map((_, i) => (
-        <div key={i} className='vod-related-skeleton__card'>
-          <div className='vod-related-skeleton__thumb' />
-          <div className='vod-related-skeleton__body'>
-            <div className='vod-related-skeleton__line vod-related-skeleton__line--long' />
-            <div className='vod-related-skeleton__line vod-related-skeleton__line--short' />
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
 
 export const VodIntroduction = ({
   title,
@@ -46,14 +26,13 @@ export const VodIntroduction = ({
   publishedAt,
   snapshotDate,
   relatedPosts = [],
-  relatedPostsLoading = false,
   affiliateHtml,
 }: TVodIntroductionProps) => {
   const locale = useLocale();
 
   const { vodName, vodUrl, vodImageUrl } = writtenFrom;
   const dateLocale = locale === 'en' ? 'en-US' : 'ja-JP';
-  const dateStr = snapshotDate ?? new Intl.DateTimeFormat(dateLocale, {
+  const dateStr = snapshotDate ? formatDate(snapshotDate, locale).display : new Intl.DateTimeFormat(dateLocale, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -118,9 +97,7 @@ export const VodIntroduction = ({
           publishedAt
         }} />
       )}
-      {relatedPostsLoading ? (
-        <VodRelatedSkeleton />
-      ) : relatedPosts.length > 0 ? (
+      {relatedPosts.length > 0 && (
         <div className='mt-6'>
           <h3 className='font-heading text-body font-bold mb-3'>
             {text(['vod', 'relatedHeading', 'prefix'])}
@@ -129,7 +106,7 @@ export const VodIntroduction = ({
           </h3>
           <PostCardListVertical posts={relatedPosts} />
         </div>
-      ) : null}
+      )}
       <p className='text-ui text-color-secondary mt-4 font-bold'>
         {text(['vod', 'note', 'prefix'])}
         {dateStr}

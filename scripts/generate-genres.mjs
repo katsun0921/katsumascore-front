@@ -40,7 +40,8 @@ url.searchParams.set('acf_format', 'standard')
 
 let genres = []
 try {
-  const res = await wpFetch(url.toString())
+  // ビルド子プロセス外のため wpFetch は再試行・タイムアウトを持たない。停止したWPでprebuildが止まらないよう上限を設ける。
+  const res = await wpFetch(url.toString(), { signal: AbortSignal.timeout(30_000) })
   if (!res.ok) throw new Error(`HTTP ${res.status}`)
   const json = await res.json()
   if (!Array.isArray(json)) throw new Error('WP genre response is not an array')
