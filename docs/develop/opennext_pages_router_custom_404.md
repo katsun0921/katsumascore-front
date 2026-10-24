@@ -227,3 +227,29 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - Nodeで動くビルド時は `error` が有効なため、ビルドとActionsは成功し、未生成パスのblocking生成・一覧ページ・ISR再生成など実行時のWP取得だけがすべて失敗していた。各endpointのcatchが例外を握り、`notFound` として404になる。`/ja/person?page=2` などビルド済みキャッシュから返るページは影響を受けない。
 - 修正：実行時のみ `redirect: 'manual'` に変更した。3xxは非2xx応答として呼び出し元へ返り、`x-build-token` はリダイレクト先へ送られない。ビルド時（Node）は `error` のまま。単体テストで実行時の指定が `manual` であることを固定した。
 - XタイムラインはX側の429が原因で、この修正とは無関係。ウィジェット枠の `min-height` により `offsetHeight === 0` の失敗判定が働かず、空白のまま公式リンクだけが出る。
+
+### 20:31:27の遮断イベントはURL Leak Checkのビルドと一致
+
+- ユーザー提供イベントはJST 20:31:27、AS8075/Nodeから `/wp-json/wp/v2/genre` へのGETが `Block Azure ASN to cms` により遮断されたもの。直前の映画一覧404の対象 `/categories` とは異なる。
+- [URL Leak Checkのジョブ](https://github.com/katsun0921/katsumascore-front/actions/runs/40090191572/job/120861111613) の同時刻20:31:27.337に、ジャンル取得の診断がHTTP403・CloudflareのHTML応答を記録した。`.github/workflows/url-leak-check.yml` のBuildは `WP_API_URL` を渡すが `WP_BUILD_TOKEN` を渡していない。Secretの登録だけではこのジョブの環境変数にはならず、トークン例外に一致しない。
+- 同ジョブは未設定時の互換処理で続行して成功したが、ジャンル空配列・詳細パス列挙スキップの警告がある。この成功は実WPデータを使った検証成功と同義ではない。今回のイベントはPR検査側の取得失敗を説明するが、本番Workerでのカテゴリ取得失敗の遮断証拠とはしない。ワークフロー修正は未実施。
+
+### PR #267マージ後のデプロイ結果
+
+- [Deploy Cloudflare Workers](https://github.com/katsun0921/katsumascore-front/actions/runs/40090465266) はコミット `3cf77cc28eee670f2e3b287d02179a916cd950ea` で成功し、Build and deployおよびレポート保存が完了した。
+- 完了後に公開URL `/ja/movie?page=2` をHTTPで再確認したが404が継続した。今回の変更はビルド前のジャンル取得の診断追加であり、実行時カテゴリ取得失敗を解消する変更は含まれていない。
+
+### PR #268反映後：TOPと映画2ページ目の応答を確認
+
+- [デプロイ実行](https://github.com/katsun0921/katsumascore-front/actions/runs/40092688703) は成功。JST 21:26:55にWorker Version `f846ef6b-589f-453f-90ea-39fef27e65ac` を反映した。Nextビルドは詳細3,337件・934秒、ビルドとデプロイ全体は1,091秒。
+- 反映後の公開HTTP確認では `/ja` は200（HIT）で、ページデータにランキング10件・最新レビュー8件・アニメ8件・高評価8件・劇場公開中5件が含まれる。ChromeでもTOPのヒーロー画像・ランキング・最新レビューの実表示を確認した。`/` から `/ja` への遷移も200。
+- `/ja/movie?page=2` は200になり、`/movie/page/[page]` のページデータに記事13件が含まれる。前回確認時の404から改善した。
+- `wrangler tail` で新Versionの配信を確認した。画像リクエストには `env.IMAGES binding is not defined` の警告が出るが、画像表示自体はChromeで確認できた。画像最適化bindingの警告と、TOPの投稿データ取得を混同しない。
+- ユーザーがプライベートウィンドウでTOP表示を確認した。通常ウィンドウ側のキャッシュが影響した可能性はあるが、原因を確定したものではない。全地域・全端末やISR再生成の継続動作まで正常と断定するものではない。
+
+### 調査用の応答診断コードを撤去
+
+- 原因調査に使用した `scripts/wp-response-diagnostics.mjs` と、`generate-genres.mjs` の応答分類ログを削除した。診断専用の3テストと、そのログを捕捉する補助処理も削除した。
+- 通常のHTTPステータス付きエラー、トークン設定時のビルド停止、未設定時の復旧処理は維持する。PR #268の実行時 `redirect: 'manual'` と、その回帰テストは維持する。上記の診断追加に関する記録は調査履歴として残す。
+- X非表示についてはユーザーが単体投稿の埋め込みコード未設定を確認した。未設定時にプロフィールタイムラインへ切り替わり、その配信先の429も観測された。今回の撤去でSNS設定や描画コードは変更しない。
+- 撤去後の検証：`npm run test:ssg` は65件成功、`npm run typecheck`、変更したスクリプトとテストのESLint、`git diff --check` は成功。SSG検査はlocalhost待受を使うためサンドボックス外で実行した。
