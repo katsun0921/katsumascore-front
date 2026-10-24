@@ -194,3 +194,29 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - 本文は最大16KiBまで読み、URL・Cookie・任意のヘッダー値・本文の生値は出さない。秘密値が応答に反射されてもログへ出さず、固定の分類値と真偽値だけを記録する。厳格モードによるビルド停止は維持する。
 - 次回、修正を含むActions実行の `[generate-genres] WP response diagnostics:` を確認する。従来の失敗ジョブを再実行するだけでは古いコミットを使うため、この診断は追加されない。今回の変更は診断追加であり、403解消や本番反映を確認したものではない。
 - ローカル検証：`npm run test:ssg` は68件成功（localhost待受制限のためサンドボックス外で実行）、`npm run typecheck` 成功。反射された秘密値の非出力、本文読み取り上限、子プロセスの実ログと403時の異常終了維持を確認した。
+
+### CloudflareのAzure ASN遮断ルールを確認
+
+- ユーザー提供のCloudflareイベント（JST 19:27:40）に、`cms.katsumascore.blog` の `GET /wp-json/wp/v2/genre?per_page=100&acf_format=standard` がCustom rulesでBlockされた記録がある。User-Agentはnode、ASNはAS8075 Microsoft Corporation。該当ルール名は `Block Azure ASN to cms`、条件は `(http.host eq "cms.katsumascore.blog" and ip.src.asnum eq 8075)`。
+- このイベントの遮断元はCloudflareのカスタムルールと確認できた。最初の失敗時刻19:03とは異なるイベントだが、ジャンルAPIの同じリクエスト条件を遮断するルールが判明した。ConoHa WAF原因説はこの記録に基づいて見直す。
+- 対応案：既存Block条件へ、GET・`/wp-json/`配下・`x-build-token`の値一致をすべて満たす場合だけ除外する条件を追加する。照合値はActions Secret `WP_BUILD_TOKEN` と同じ値をCloudflare側で設定し、リポジトリやチャットへ記載しない。ルール全体の無効化や全WAFのSkipは行わず、このBlockルールの適用範囲だけを調整する。設定変更・再実行・403解消確認は未実施。
+
+### トークン更新後の5回目：WP取得成功、R2有効化で停止
+
+- ユーザーがトークンを更新して実行した [5回目のdeployジョブ](https://github.com/katsun0921/katsumascore-front/actions/runs/40084378670/job/120852476049) を確認。WP取得を通過し、Nextの3,566ページ生成とOpenNextのWorkerバンドル生成が成功した。詳細SSGレポートは3,337件、Nextビルド所要時間808秒。固定ページはjaのみ15件で、過去の両言語生成時の件数と単純比較しない。
+- 停止箇所は `Populating remote R2 incremental cache...`。バケット `katsumascore-incremental-cache` の存在確認がCloudflare APIの403、code 10042、`Please enable R2 through the Cloudflare Dashboard.` で失敗した。今回の403はWP取得とは別で、デプロイ先アカウントのR2有効化を確認する必要がある。R2キャッシュ投入とWorker更新の完了は確認できていない。
+- 次の対応：Workerと同じCloudflareアカウントのR2を有効化し、設定名のバケット作成・デプロイトークンのR2権限を確認して再実行する。既に別アカウントでR2を使用している場合は、デプロイ先アカウントの相違も確認する。アカウントIDはActionsログでは未設定だった。
+- 別途 `DOQueueHandler` がWorkerからexportされていないというローカルworkerdの警告も出た。今回の致命的エラーはR2有効化だが、この警告は実際のバンドルexportと本番DO動作で継続確認する。R2未確認のままDOも正常と判断しない。
+
+### 6回目の実行：R2投入とWorkerデプロイ成功
+
+- [6回目のdeployジョブ](https://github.com/katsun0921/katsumascore-front/actions/runs/40084378670/job/120856410831) は成功した。JST 20:20:25に `Successfully populated cache with 3550 entries`、20:20:37に `Deployed katsumascore triggers` を確認。ビルド・デプロイ合計802秒（13分22秒）。
+- Worker `katsumascore` のVersion IDは `7167afdd-e5ed-4dba-a447-5ac01e904052`。R2バケット `katsumascore-incremental-cache`、Durable Object `DOQueueHandler`、自己参照Workerのバインディングがデプロイ結果へ表示された。生成数レポートのartifact保存も成功した。
+- これはWP取得・実ビルド・実R2へのキャッシュ投入・Worker更新までの成功確認。カスタムドメインでの実表示、R2キャッシュ読み出し、一覧ISR・DO再生成キュー、未生成パスのblocking生成の本番動作は、このActions成功だけでは検証済みとしない。
+
+### デプロイ後の表示確認：Xタイムラインと映画2ページ目
+
+- `/ja/movie/biohazard-2026` の公式SNSでXタイムラインの表示失敗をChromeで再現した。`widgets.js` は読み込まれ、プロフィール `biomovieJP` のタイムラインiframeが生成されたが、表示完了せず「公式 X を開く」へフォールバックした。公開タイムライン配信URLへの別途HTTP確認でも429 `Rate limit exceeded` が返った。記事データに単体投稿embedはなく、プロフィールタイムラインを使う状態。SSGキャッシュ欠落とは区別する。
+- `/ja/movie?page=2` と内部ルート `/ja/movie/page/2` の双方が404、応答はプレーンテキスト `This page could not be found`、`x-nextjs-cache: MISS`。rewriteだけの不具合ではない。
+- 実Workerの `wrangler tail` を読み、同内部ルートへのアクセスで `[loadCategoryListPage] カテゴリ一覧を取得できなかった（slug=movie）` を確認した。実行結果はexceptionなし・HTTP404。`getStaticPaths`が空の一覧ページは実行時にWPカテゴリを取得し、取得失敗を `notFound: true` として返すため404になる。ビルド時取得成功だけでは、実行時のWP疎通を保証しない。
+- ローカル回線から同じ `/wp-json/wp/v2/categories?per_page=100&_embed=1&acf_format=standard` は200。実Workerでの失敗ステータス/例外種別は既存endpointのcatchで記録されず、遮断元は未確定。Cloudflareの同時刻イベントと、必要なら実行時通信の安全な診断ログで追加調査する。WAF変更・Worker Secret変更・製品コードの修正はこの確認では実施していない。
