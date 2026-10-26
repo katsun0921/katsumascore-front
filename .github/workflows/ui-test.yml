@@ -71,3 +71,25 @@ jobs:
           fi
 
           npm run chromatic -- --project-token="$CHROMATIC_PROJECT_TOKEN" --exit-zero-on-changes
+
+  # Dependabot の PR は、上の test が通りメジャー更新でなければ自動でマージする。
+  auto-merge:
+    needs: test
+    if: github.event.pull_request.user.login == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Dependabot のメタデータを取得
+        id: meta
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: パッチ・マイナー更新ならマージ
+        if: steps.meta.outputs.update-type != 'version-update:semver-major'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: gh pr merge "$PR_URL" --merge --delete-branch
