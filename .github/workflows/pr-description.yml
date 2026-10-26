@@ -37,7 +37,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Update PR body with template
-        uses: actions/github-script@v7
+        uses: actions/github-script@v9
         with:
           script: |
             const { owner, repo } = context.repo;
