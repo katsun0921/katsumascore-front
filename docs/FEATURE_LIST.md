@@ -107,6 +107,7 @@
 | `GET /api/high-score` | `pages/api/high-score.ts` | 高スコア投稿取得 |
 | `GET /api/category-filter-posts` | `pages/api/category-filter-posts.ts` | カテゴリフィルタ投稿取得 |
 | `POST /api/revalidate` | `pages/api/revalidate.ts` | ISR Webhook（WordPress から呼び出し） |
+| `GET /media/*`（rewrite 先 `/api/media/*`） | `pages/api/media/[...path].ts` | WP の画像（`/wp-content/uploads/`）を `X-Origin-Secret` 付きで取得して返す。cms のホスト名を公開側へ出さない。画像拡張子・安全なパスのみ許可 |
 
 ---
 
@@ -252,7 +253,9 @@ hooks / state 使用可。データ取得・整形を担当。
 | ファイル | 内容 |
 |---------|------|
 | `client.ts` | openapi-fetch ベースの WP REST API クライアント（fetch は `wpFetch` を使用） |
-| `transport.ts` | WP 通信の共通入口 `wpFetch`。ビルド中（`WP_SSG_BUILD=1`）だけ同時4件制限・30秒タイムアウト・最大3回再試行・同一URL応答の共有を行う。実行時は呼び出し元の `signal` に従う。`WP_BUILD_TOKEN` 設定時は WP の REST 配下にだけ `x-build-token` を付与。`isStrictWpBuild` はトークン登録済みビルドで取得失敗を致命的にする判定 |
+| `transport.ts` | WP 通信の共通入口 `wpFetch`。ビルド中（`WP_SSG_BUILD=1`）だけ同時4件制限・30秒タイムアウト・最大3回再試行・同一URL応答の共有を行う。実行時は呼び出し元の `signal` に従う。`WP_BUILD_TOKEN` 設定時は WP の REST 配下にだけ `x-build-token` を付与。`isStrictWpBuild` はトークン登録済みビルドで取得失敗を致命的にする判定。`WP_ORIGIN_SECRET` 設定時は `X-Origin-Secret` も付与し、JSON応答中の画像URLを `/media/` へ書き換える |
+| `originSecret.ts` | `withOriginSecret`。`WP_ORIGIN_SECRET`（Workers の secret）がある環境だけ `X-Origin-Secret` を付ける。Worker から同一ゾーンの cms を取る通信には Cloudflare の Transform Rule が効かないため、アプリ側から送る |
+| `mediaUrl.ts` | `rewriteMediaUrls`（WP応答JSON中の画像URLを `{NEXT_PUBLIC_SITE_URL}/media/` へ書き換え。`\/` エスケープ形も対応）、`toUploadsPath`（`/media/*` のパス検証）、`getMediaBaseUrl` |
 | `responseCache.ts` | ビルド中の WP 応答キャッシュ（既定 256MiB 上限・成功応答のみ・メモリのみ） |
 | `staticPaths.ts` | 詳細 SSG のパス列挙（`makeDetailStaticPaths` / `makePostStaticPaths` / `seasonalDetailStaticPaths`）。`X-WP-TotalPages` で全件取得し、件数不一致はトークン登録済みビルドで中止。`formatVodSnapshotDate` は生成時の JST 日付（YYYY-MM-DD） |
 | `vodServices.ts` | `toVodServices`。ACF フィールド名 → `VodService` の純粋変換（ブラウザからも参照するため通信モジュールから分離） |

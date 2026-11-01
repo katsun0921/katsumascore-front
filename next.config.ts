@@ -7,19 +7,14 @@ const nextConfig: NextConfig = {
   // 全SSGを1ワーカーに集約し、WP共通通信の同時4件制限とキャッシュを共有する。
   experimental: { cpus: 1, staticGenerationMaxConcurrency: 4 },
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'cms.katsumascore.blog',
-        pathname: '/wp-content/uploads/**',
-      },
-    ],
-    formats: ['image/avif', 'image/webp'],
-    // ローカル開発環境では cms.katsumascore.blog が NAT64 プライベートIPに解決されるため
-    // Next.js の画像最適化をバイパスして直接 URL を使用する
-    unoptimized: process.env.NODE_ENV === 'development',
-    // CDN / ISR と整合しやすい TTL（秒）。要件に合わせて調整可
-    minimumCacheTTL: 60,
+    // 画像は `/media/*`（api/media）経由で配信し、cms のホスト名を公開側へ出さない。
+    // OpenNext は env.IMAGES 未設定だと原画像をそのまま返すだけで、相対URLは静的アセットからしか取れないため、
+    // `/_next/image` を通さず src をそのまま使う。
+    unoptimized: true,
+  },
+  async rewrites() {
+    // `/media/<path>` → `pages/api/media/[...path].ts`（i18n の接頭辞は付けない）
+    return [{ source: '/media/:path*', destination: '/api/media/:path*', locale: false }];
   },
   i18n: {
     locales: ['default', 'ja', 'en'],

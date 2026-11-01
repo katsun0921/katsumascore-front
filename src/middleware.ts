@@ -179,6 +179,6 @@ export const middleware = (request: NextRequest) => {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|server-sitemap\\.xml|feed|api/).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|sitemap\\.xml|server-sitemap\\.xml|feed|media/|api/).*)',
   ],
 };
