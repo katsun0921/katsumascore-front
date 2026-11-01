@@ -253,3 +253,13 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - 通常のHTTPステータス付きエラー、トークン設定時のビルド停止、未設定時の復旧処理は維持する。PR #268の実行時 `redirect: 'manual'` と、その回帰テストは維持する。上記の診断追加に関する記録は調査履歴として残す。
 - X非表示についてはユーザーが単体投稿の埋め込みコード未設定を確認した。未設定時にプロフィールタイムラインへ切り替わり、その配信先の429も観測された。今回の撤去でSNS設定や描画コードは変更しない。
 - 撤去後の検証：`npm run test:ssg` は65件成功、`npm run typecheck`、変更したスクリプトとテストのESLint、`git diff --check` は成功。SSG検査はlocalhost待受を使うためサンドボックス外で実行した。
+
+### 2026-11-01 画像が403になる障害と、`/media/` 経由への変更
+
+- 現象：TOPのサムネイルで `/_next/image` が403（本文 `"url" parameter is valid but upstream response is invalid`）。Xserverのアクセスログでは、UAが `-` のWorker由来の `/wp-content/uploads/` と `/wp-json/` が、2026-10-31 20:27 JST以降に403（1,354バイト）になっていた。20:27は `.htaccess` の `X-Origin-Secret` 確認を有効にした時刻。
+- 原因：Cloudflare経由のcurlやブラウザにはTransform Ruleで秘密ヘッダーが付く。一方、Workerから同一ゾーンの `cms` を取る通信にはTransform Ruleが効かず、キャッシュに無い応答だけが `.htaccess` の確認で403になった（直接GETで温めると次のWorker取得はキャッシュで成功する）。
+- 暫定対応：`.htaccess` から `RewriteRule ^ - [F,L]` を一時的に外して復旧した。
+- 恒久対応：`wpFetch` と `/media/*` で `X-Origin-Secret`（`WP_ORIGIN_SECRET`）を付ける。WP応答の画像URLは `/media/` へ書き換える。
+- OpenNext（`@opennextjs/cloudflare` 1.20.13）の `images.js` は、`/` で始まるURLを `env.ASSETS`（静的アセット）からしか取らない。このため `/media/` をWorkerのルートとして `/_next/image` に渡す方式は使えない。`env.IMAGES` も未設定で最適化は行われていない（原画像を返すだけ）ため、`images.unoptimized: true` とし、`/media/` を直接配信する。
+- PR #286のレビューで、画像本文の取得中に切断すると、502応答に成功用の `max-age=3600, s-maxage=86400` が残ることをモックで再現した。画像APIは初期値を `Cache-Control: no-store` とし、GETの本文取得完了後にだけ成功用のヘッダーへ切り替える。HEADの成功時は従来のキャッシュ設定を維持する。本文取得失敗・取得開始時の例外・403・非画像・404と、GET/HEAD成功時を回帰テストで確認する。
+

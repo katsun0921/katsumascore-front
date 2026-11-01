@@ -1,6 +1,8 @@
 /** WordPress 専用の通信入口。ビルド中だけ再試行・同時実行制限・成功レスポンスの共有を行い、実行時は呼び出し元の設定に従う。 */
 import { createWpResponseCache } from './responseCache';
 import type { BufferedWpResponse } from './responseCache';
+import { rewriteMediaUrls } from './mediaUrl';
+import { withOriginSecret } from './originSecret';
 
 let activeRequests = 0;
 const waiting: (() => void)[] = [];
@@ -19,12 +21,39 @@ export class WpRequestError extends Error {
 export const isStrictWpBuild = (): boolean =>
   process.env.WP_SSG_BUILD === '1' && Boolean(process.env.WP_BUILD_TOKEN?.trim());
 
-/** 指定済みWPへ送るヘッダー。トークンがある環境だけ秘密ヘッダーを付ける。 */
+/** 指定済みWPへ送るヘッダー。トークン・オリジン秘密ヘッダーがある環境だけ付ける。 */
 const withBuildToken = (request: Request): Headers => {
   const headers = new Headers(request.headers);
   const token = process.env.WP_BUILD_TOKEN?.trim();
   if (token) headers.set('x-build-token', token);
-  return headers;
+  return withOriginSecret(headers);
+};
+
+/** JSON応答だけを書き換え対象にする。 */
+const isJsonResponse = (headers: Headers): boolean => (headers.get('content-type') ?? '').includes('json');
+
+/** WP のオリジン（例: `https://cms.katsumascore.blog`）。`WP_API_URL` 未設定時は空文字。 */
+const wpOrigin = (): string => {
+  const base = process.env.WP_API_URL;
+  return base ? new URL(base).origin : '';
+};
+
+/** バッファ済み本文の画像URLを `/media/` へ書き換える。JSON以外・オリジン不明は何もしない。 */
+const rewriteBufferedBody = (body: ArrayBuffer, headers: Headers): ArrayBuffer => {
+  const origin = wpOrigin();
+  if (!origin || !isJsonResponse(headers)) return body;
+  return new TextEncoder().encode(rewriteMediaUrls(new TextDecoder().decode(body), origin)).buffer as ArrayBuffer;
+};
+
+/** 実行時応答の画像URLを書き換えた新しいResponseを返す。JSON以外はそのまま返す。 */
+const rewriteRuntimeResponse = async (response: Response): Promise<Response> => {
+  const origin = wpOrigin();
+  if (!origin || !isJsonResponse(response.headers)) return response;
+  const headers = new Headers(response.headers);
+  headers.delete('content-encoding');
+  headers.delete('content-length');
+  const text = rewriteMediaUrls(await response.text(), origin);
+  return new Response(text, { status: response.status, statusText: response.statusText, headers });
 };
 
 /** 待機中リクエストへ実行権を渡す。実行中はプロセスあたり最大4件。 */
@@ -56,7 +85,7 @@ const requestWordPress = async (request: Request): Promise<BufferedWpResponse> =
         signal: AbortSignal.timeout(30_000),
       });
       // 本文を読み終えるまでスロットを保持する。キャッシュ/利用者間でbodyを共有しない。
-      const body = await response.arrayBuffer();
+      const body = rewriteBufferedBody(await response.arrayBuffer(), response.headers);
       retry = response.status === 429 || response.status >= 500;
       if (!retry) {
         if (!response.ok) throw new WpRequestError(response.status);
@@ -90,13 +119,15 @@ const toResponse = (response: BufferedWpResponse): Response => {
  * Cloudflare Workers は redirect: 'error' を受け付けず例外になるため 'manual' を使う。
  * 3xx は非2xx応答として呼び出し元へ返り、秘密ヘッダーはリダイレクト先へ送られない。
  */
-const requestWordPressAtRuntime = (request: Request): Promise<Response> =>
-  fetch(request.url, {
-    method: request.method,
-    headers: withBuildToken(request),
-    redirect: 'manual',
-    signal: request.signal,
-  });
+const requestWordPressAtRuntime = async (request: Request): Promise<Response> =>
+  rewriteRuntimeResponse(
+    await fetch(request.url, {
+      method: request.method,
+      headers: withBuildToken(request),
+      redirect: 'manual',
+      signal: request.signal,
+    }),
+  );
 
 /**
  * WP REST のGET専用入口。指定済みWPの同一origin・REST配下だけに秘密ヘッダーを送る。
