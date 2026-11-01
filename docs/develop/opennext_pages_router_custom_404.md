@@ -261,4 +261,5 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - 暫定対応：`.htaccess` から `RewriteRule ^ - [F,L]` を一時的に外して復旧した。
 - 恒久対応：`wpFetch` と `/media/*` で `X-Origin-Secret`（`WP_ORIGIN_SECRET`）を付ける。WP応答の画像URLは `/media/` へ書き換える。
 - OpenNext（`@opennextjs/cloudflare` 1.20.13）の `images.js` は、`/` で始まるURLを `env.ASSETS`（静的アセット）からしか取らない。このため `/media/` をWorkerのルートとして `/_next/image` に渡す方式は使えない。`env.IMAGES` も未設定で最適化は行われていない（原画像を返すだけ）ため、`images.unoptimized: true` とし、`/media/` を直接配信する。
+- PR #286のレビューで、画像本文の取得中に切断すると、502応答に成功用の `max-age=3600, s-maxage=86400` が残ることをモックで再現した。画像APIは初期値を `Cache-Control: no-store` とし、GETの本文取得完了後にだけ成功用のヘッダーへ切り替える。HEADの成功時は従来のキャッシュ設定を維持する。本文取得失敗・取得開始時の例外・403・非画像・404と、GET/HEAD成功時を回帰テストで確認する。
 

@@ -6,6 +6,8 @@ import { withOriginSecret } from '@/libs/api/wordpress/originSecret';
 const CACHE_CONTROL = 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=86400';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void> => {
+  // 成功が確定するまでは、404・502を含む応答をキャッシュしない。
+  res.setHeader('Cache-Control', 'no-store');
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     res.setHeader('Allow', 'GET, HEAD');
     res.status(405).end();
@@ -36,6 +38,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       res.status(502).end();
       return;
     }
+    // GETは本文を最後まで取得してから、成功時のキャッシュ設定を付ける。
+    const body = req.method === 'HEAD' ? null : Buffer.from(await upstream.arrayBuffer());
     res.setHeader('Content-Type', contentType);
     res.setHeader('Cache-Control', CACHE_CONTROL);
     res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -43,7 +47,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse): Promise<void>
       res.status(200).end();
       return;
     }
-    res.status(200).send(Buffer.from(await upstream.arrayBuffer()));
+    res.status(200).send(body);
   } catch {
     res.status(502).end();
   }
