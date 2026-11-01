@@ -62,7 +62,7 @@ jobs:
 
       - name: Setup Node.js
         if: steps.eligibility.outputs.should_deploy == 'true'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version-file: package.json
           cache: npm
@@ -91,7 +91,7 @@ jobs:
 
       - name: 生成数と所要時間を保存
         if: always() && steps.eligibility.outputs.should_deploy == 'true'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: ssg-detail-report
           path: .next/ssg-detail-report.json
