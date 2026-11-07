@@ -270,3 +270,14 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - 全ワークフローの該当Actionをそれぞれ `actions/setup-node@v6` と `actions/upload-artifact@v6` へ更新した。`node-version-file: package.json`、npmキャッシュ指定、artifactの保存条件・パスは維持する。
 - 公式のAction定義で両方の `runs.using: node24` を確認した（[setup-node v6](https://github.com/actions/setup-node/blob/v6/action.yml)、[upload-artifact v6](https://github.com/actions/upload-artifact/blob/v6/action.yml)）。[GitHubの移行案内](https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/)に沿った対応。
 - ローカルでは全7ワークフローのYAML解析、変更した5ワークフローが対象Actionのバージョン変更のみであること、`git diff --check` の成功を確認した。実際のActions実行・警告解消は次回実行時に確認する。
+
+## 2026-11-07 npm auditのmoderate 17件を解消
+
+- `npm audit --json` でmoderate 17件（high / criticalは0件）を確認。主な起点はglobとminimatchの2つのアドバイザリで、OpenNext・Storybook・ESLintなど依存元も影響対象として数えられていた。
+- [globのAbortSignal問題（GHSA-3g3m-2fjr-6pw4）](https://github.com/advisories/GHSA-3g3m-2fjr-6pw4)は14.0.2で修正。[minimatchのパターン増幅問題（GHSA-g3hv-75wg-m249）](https://github.com/advisories/GHSA-g3hv-75wg-m249)は11.0.1で修正。どちらもNode.js 24.22.1で利用可能。
+- `npm audit fix --force` はOpenNext Cloudflare 0.3.0、Storybook 8.5.3、ESLint 9.39.5などへの変更を提案したため適用しなかった。
+- `overrides.glob` を14.0.2にし、従来の `@node-minify/core` 限定の10.5.0指定を置き換えた。OpenNextとStorybookが使用するglobも修正対象に含める。
+- `overrides["minimatch@>=7 <11.0.1"]` を11.0.1にした。対象外の3系・5系は維持し、旧APIを使うESLintプラグインやOpenAPIツールには一律のメジャー更新をかけない。
+- 使用箇所のglob / globSync / Minimatch APIを確認し、Lint、型チェック、SSGテスト69件、WPスキーマテスト2件、Storybookビルドが成功。`USE_WP_MOCK=true` によるOpenNextビルドも成功し、詳細31件と `.open-next/worker.js` を生成した。
+- 更新後の監査は0件。`npm ci --ignore-scripts` によるロックファイルからの再インストールも成功し、監査0件を再現した。実WPでの全件ビルドとCloudflareへのデプロイは未実施。
+- インストール時の `ERESOLVE overriding peer dependency` は別件。ESLint 10に対し一部プラグインのpeer指定が9系までとなっているため出る警告で、今回の脆弱性17件とは区別する。Lintは成功しているが、peer指定の不一致そのものは未解消。

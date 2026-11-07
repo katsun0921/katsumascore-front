@@ -88,6 +88,15 @@ components/
 ❌ 禁止: post.title.rendered  
 ✅ 必須: normalizedPost.title
 
+### 固定ページの親子URL（必須）
+
+- WordPress固定ページの親子関係は公開URLにも反映する。子ページをルート直下のslugだけで表示しない。
+- 正規URLは `/{locale}/{親slug}/{子slug}`。祖先が複数ある場合も階層を保持する。
+- 例: `featured-article` の子ページは `/ja/featured-article/the-lord-of-the-rings-trilogy`。
+- 旧フラットURLから正規URLへは **301** で転送する。Next.jsの `permanent: true`（308）で代用しない。
+- canonical・OG URL・サイト内リンクも正規URLにそろえる。
+- 季節レビューなど専用ルートが既にあるページは、その既存の正規化ルールを優先する。
+
 ### 4. WordPress REST スキーマの欠損値チェック（必須）
 
 - `src/libs/api/wordpress/schema.ts` の ACF フィールドを追加・変更するときは、実際の REST 応答で未設定値が `undefined` / `null` / `false` / `""` / `[]` のどれになるか確認する。型の想像だけで `z.string().optional()` などを指定しない。

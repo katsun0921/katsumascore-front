@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { getWpPagePath } from '../../src/libs/wpPagePath';
 
 process.env.WP_API_URL = 'https://wp.example/wp-json/wp/v2';
 process.env.USE_WP_MOCK = 'false';
@@ -16,10 +17,28 @@ const mockCollections = (collections: Record<string, unknown[]>): typeof fetch =
 
 // グローバルfetchを置換する検証は直列に実行し、最後に必ず戻す。
 test('詳細SSGのパス列挙', async (t) => {
-  const { makeDetailStaticPaths, makePostStaticPaths, seasonalDetailStaticPaths } =
+  const { makeDetailStaticPaths, makePostStaticPaths, seasonalDetailStaticPaths, nestedPageStaticPaths } =
     await import('../../src/libs/api/wordpress/staticPaths');
 
   try {
+    await t.test('子固定ページの正規パスは親・祖先の階層を保持し、専用の季節ルートとは重複しない', async () => {
+      const pages = [
+        { id: 1, slug: 'featured-article', parent: 0 },
+        { id: 2, slug: 'lotr', parent: 1 },
+        { id: 3, slug: 'detail', parent: 2 },
+        { id: 4, slug: 'seasonal-anime-and-dramas-reviews', parent: 0 },
+        { id: 5, slug: 'summer', parent: 4 },
+      ];
+      globalThis.fetch = mockCollections({ pages });
+      const result = await nestedPageStaticPaths({ locales: ['default', 'ja', 'en'] });
+      assert.equal(result.fallback, 'blocking');
+      assert.deepEqual(result.paths, [
+        { params: { pagePath: ['featured-article', 'lotr'] }, locale: 'ja' },
+        { params: { pagePath: ['featured-article', 'lotr', 'detail'] }, locale: 'ja' },
+      ]);
+      assert.throws(() => getWpPagePath({ id: 6, slug: 'missing', parent: 99 }, pages), /parent missing/);
+      assert.throws(() => getWpPagePath({ id: 1, slug: 'cycle', parent: 1 }, pages), /parent cycle/);
+    });
     await t.test('固定ページは固定ルートと衝突するslugを除き、defaultを除く全ロケールへ展開する', async () => {
       globalThis.fetch = mockCollections({
         pages: [
@@ -27,6 +46,7 @@ test('詳細SSGのパス列挙', async (t) => {
           { id: 2, slug: 'privacy-policy' },
           { id: 3, slug: 'seasonal-reviews' },
           { id: 4, slug: 'company-info' },
+          { id: 5, slug: 'child-page', parent: 4 },
         ],
       });
       const result = await makeDetailStaticPaths('pages', ['ja'])({ locales: ['default', 'ja', 'en'] });

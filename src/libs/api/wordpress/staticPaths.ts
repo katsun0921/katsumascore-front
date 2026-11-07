@@ -6,6 +6,7 @@ import { detectLang } from './lang';
 import { resolvePostType, type PostType } from '@/libs/route';
 import { isWpMockMode } from '@/libs/wpMockMode';
 import { mockWpPostsList, mockWpFetchPages, mockWpGetCategories } from '@/mocks/wp/mockWpQueries';
+import { getWpPagePath } from '@/libs/wpPagePath';
 
 export type StaticEntry = {
   id: number;
@@ -89,11 +90,24 @@ export const getAllStaticEntries = async (endpoint: string): Promise<StaticEntry
 export const makeDetailStaticPaths = (endpoint: string, onlyLocales?: string[]): GetStaticPaths => async ({ locales }) => {
   const entries = await getAllStaticEntries(endpoint);
   const fixedSlugs = new Set(['about', 'contact', 'privacy-policy', 'top', 'search', 'featured', 'seasonal-reviews', 'seasonal-anime-and-dramas-reviews']);
-  const filtered = entries.filter((entry) => endpoint !== 'pages' || !fixedSlugs.has(entry.slug));
+  // 子ページの旧フラットURLはblocking時に301を返す。ビルド時のgetStaticPropsではredirectを返せないため列挙しない。
+  const filtered = entries.filter((entry) => endpoint !== 'pages' || (!entry.parent && !fixedSlugs.has(entry.slug)));
   const paths = (locales ?? ['ja', 'en'])
     .filter((locale) => locale !== 'default' && (!onlyLocales || onlyLocales.includes(locale)))
     .flatMap((locale) => filtered.map(({ slug }) => ({ params: { slug }, locale })));
   console.log(`[detail-ssg] ${endpoint}: ${entries.length} records / ${paths.length} paths`);
+  return { paths, fallback: 'blocking' };
+};
+
+/** 親を持つ固定ページを親子階層のパスでjaに事前生成する。旧フラットURLは単一slugルートのblocking生成で301を返す。 */
+export const nestedPageStaticPaths: GetStaticPaths = async ({ locales }) => {
+  const entries = await getAllStaticEntries('pages');
+  const paths = (locales ?? ['ja']).filter((locale) => locale === 'ja')
+    .flatMap((locale) => entries.filter((entry) => entry.parent)
+      .filter((entry) => !getWpPagePath(entry, entries).startsWith('/seasonal-anime-and-dramas-reviews/'))
+      .map((entry) => ({
+      params: { pagePath: getWpPagePath(entry, entries).slice(1).split('/').map(decodeURIComponent) }, locale,
+    })));
   return { paths, fallback: 'blocking' };
 };
 

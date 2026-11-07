@@ -85,9 +85,8 @@
   },
   "overrides": {
     "typescript": "^6",
-    "@node-minify/core": {
-      "glob": "10.5.0"
-    },
+    "glob": "14.0.2",
+    "minimatch@>=7 <11.0.1": "11.0.1",
     "miniflare": {
       "undici": "7.30.1"
     }

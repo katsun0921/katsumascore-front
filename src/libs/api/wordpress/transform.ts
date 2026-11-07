@@ -11,11 +11,14 @@ import { extractYoutubeVideoId } from "@/libs/buildPostDetailFromWp/youtube";
 type WPPageLike = {
   title: { rendered: string };
   content?: { rendered?: string };
+  excerpt?: { rendered?: string };
+  acf?: unknown;
 };
 
 export type NormalizedPageContent = {
   title: string;
   html: string | null;
+  description: string;
 };
 
 /** 簡易的なタグ除去と主要エンティティのデコード、前後トリム。 */
@@ -29,11 +32,22 @@ export const stripHtml = (html: string): string =>
     .replace(/&#039;/g, "'")
     .trim();
 
-/** 固定ページのタイトル文字列と本文 HTML を正規化する。 */
-export const normalizePageContent = (page: WPPageLike): NormalizedPageContent => ({
-  title: stripHtml(page.title.rendered),
-  html: page.content?.rendered ?? null,
-});
+/** 固定ページを正規化する。説明はACF、抜粋、本文、タイトルの順に補完し、自動生成時は160文字に収める。 */
+export const normalizePageContent = (page: WPPageLike): NormalizedPageContent => {
+  const title = stripHtml(page.title.rendered);
+  const acf = page.acf;
+  const rawDescription = acf && typeof acf === 'object' && 'description' in acf ? acf.description : undefined;
+  const description = typeof rawDescription === 'string' ? stripHtml(rawDescription).trim() : '';
+  const fallback = [page.excerpt?.rendered, page.content?.rendered, title]
+    .filter((value): value is string => typeof value === 'string')
+    .map((value) => stripHtml(value).replace(/\s+/g, ' ').trim())
+    .find((value) => value.length > 0) ?? title;
+  return {
+    title,
+    html: page.content?.rendered ?? null,
+    description: description || Array.from(fallback).slice(0, 160).join(''),
+  };
+};
 
 /** 検索のタイトル次元: WP `title.rendered` のみ */
 export const titleSearchBlobFromParsedWp = (wp: ParsedWPPost): string =>
