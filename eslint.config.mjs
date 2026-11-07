@@ -2,15 +2,56 @@
 import storybook from "eslint-plugin-storybook";
 
 import { defineConfig, globalIgnores } from 'eslint/config'
-import nextVitals from 'eslint-config-next/core-web-vitals'
-import nextTs from 'eslint-config-next/typescript'
+import { fixupPluginRules } from '@eslint/compat'
+import nextPlugin from '@next/eslint-plugin-next'
+import tseslint from 'typescript-eslint'
+import react from 'eslint-plugin-react'
+import reactHooks from 'eslint-plugin-react-hooks'
+import jsxA11y from 'eslint-plugin-jsx-a11y'
+import globals from 'globals'
 import uiPlugin from './eslint-rules/index.mjs'
 import unusedImports from 'eslint-plugin-unused-imports'
 
 const eslintConfig = defineConfig([
-  ...nextVitals,
-  ...nextTs,
-  // Override default ignores of eslint-config-next.
+  // importプラグインを含むNextプリセットを使わず、必要な検査を直接構成する。
+  {
+    files: ['**/*.{js,jsx,mjs,ts,tsx,mts,cts}'],
+    plugins: {
+      '@next/next': nextPlugin,
+      react: fixupPluginRules(react),
+      'react-hooks': reactHooks,
+      'jsx-a11y': fixupPluginRules(jsxA11y),
+    },
+    languageOptions: {
+      parser: tseslint.parser,
+      parserOptions: { ecmaFeatures: { jsx: true } },
+      globals: { ...globals.browser, ...globals.node },
+    },
+    settings: { react: { version: 'detect' } },
+    rules: {
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
+      'react/no-unknown-property': 'off',
+      'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off',
+      'react/jsx-no-target-blank': 'off',
+      'jsx-a11y/alt-text': ['warn', { elements: ['img'], img: ['Image'] }],
+      'jsx-a11y/aria-props': 'warn',
+      'jsx-a11y/aria-proptypes': 'warn',
+      'jsx-a11y/aria-unsupported-elements': 'warn',
+      'jsx-a11y/role-has-required-aria-props': 'warn',
+      'jsx-a11y/role-supports-aria-props': 'warn',
+    },
+  },
+  ...tseslint.configs.recommended,
+  {
+    rules: {
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-unused-expressions': 'warn',
+    },
+  },
   globalIgnores([
     '.next/**',
     'out/**',
@@ -109,10 +150,8 @@ const eslintConfig = defineConfig([
     },
   },
   // ─────────────────────────────────────────────────────────────────────────────
-  // ESLint v10 compatibility: eslint-plugin-react@7.x uses the removed
-  // getFilename() API throughout its shared version.js utility, breaking all
-  // react/* rules. Disable them all until the plugin supports ESLint v10.
-  // Most rules are redundant with TypeScript + React 19's new JSX transform.
+  // Reactルールの有効化範囲は既存設定を維持する。
+  // ESLint 10のAPI互換性は上記の@eslint/compatで補完する。
   // ─────────────────────────────────────────────────────────────────────────────
   {
     rules: {

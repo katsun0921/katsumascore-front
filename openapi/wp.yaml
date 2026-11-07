@@ -218,6 +218,12 @@ components:
           $ref: "#/components/schemas/RenderedBlock"
         content:
           $ref: "#/components/schemas/RenderedBlock"
+        excerpt:
+          $ref: "#/components/schemas/RenderedBlock"
+        acf:
+          description: 固定ページのACF。未設定値を受け入れ、正規化時に文字列のみ採用する。
+          properties:
+            description: {}
         date:
           type: string
           format: date-time

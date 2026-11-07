@@ -33,6 +33,8 @@ import { getNowShowingArchivePath, getPostTypeArchivePath, getTaxonomyUrl, getTh
 import { theaterListItemToPost } from "@/utils/theaterListItemToPost";
 import { resolveSeasonalReviewParentId } from "@/libs/seasonalReviewParent";
 import { buildSeasonalIndexProps, SEASONAL_REVIEWS_BASE_PATH } from "@/libs/seasonalReviewIndex";
+import { getAllStaticEntries, type StaticEntry } from '@/libs/api/wordpress/staticPaths';
+import { getWpPagePath } from '@/libs/wpPagePath';
 
 /**
  * TOP の「こちらもおすすめ」に出すランダムタグの数。
@@ -219,11 +221,11 @@ const toSeasonalFeaturedItem = (items: Post[]): FeaturedItem | undefined => {
  * TOP の特集枠に固定ページを出す際のリンク先を決める。
  * 季節レビュー親ページの子は通常固定ページ直下ではなく `/seasonal-reviews/{slug}` に正規化する。
  */
-const getFeaturedPageHref = (page: { slug: string; parent?: number }, seasonalParentId: number | null): string => {
+const getFeaturedPageHref = (page: { id: number; slug: string; parent?: number }, seasonalParentId: number | null, entries: StaticEntry[]): string => {
   if (seasonalParentId && page.parent === seasonalParentId) {
     return `${SEASONAL_REVIEWS_BASE_PATH}/${page.slug}`;
   }
-  return `/${page.slug}`;
+  return getWpPagePath(page, entries);
 };
 
 /**
@@ -340,12 +342,14 @@ export const loadHomeTemplateProps = async (locale: string): Promise<HomeTemplat
   const recommendBlocks = recommendBlockRows.filter((b) => b.posts.length > 0);
 
   const seasonalFeaturedItem = toSeasonalFeaturedItem(seasonalIndex.items);
+  const pageEntries = featuredPages.some((page) => page.parent && page.parent !== seasonalParentId)
+    ? await getAllStaticEntries('pages') : [];
 
   const featuredItemsFromPages: FeaturedItem[] = featuredPages.map((p) => ({
     label: "FEATURED",
     title: stripHtml(p.title.rendered),
     description: stripHtml(p.title.rendered),
-    href: getFeaturedPageHref(p, seasonalParentId),
+    href: getFeaturedPageHref(p, seasonalParentId, pageEntries),
   }));
 
   const movieRaw = featuredItemsFromPages.length === 0 && movieCategory

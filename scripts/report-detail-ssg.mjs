@@ -2,7 +2,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const detailRoutes = new Set([
-  '/[slug]', '/movie/[slug]', '/anime/[slug]', '/drama/[slug]', '/person/[slug]',
+  '/[slug]', '/[...pagePath]', '/movie/[slug]', '/anime/[slug]', '/drama/[slug]', '/person/[slug]',
   '/company/[slug]', '/franchise/[slug]', '/seasonal-reviews/[slug]',
   '/seasonal-anime-and-dramas-reviews/[slug]', '/theater-release/[slug]', '/vod-release/[slug]',
 ]);

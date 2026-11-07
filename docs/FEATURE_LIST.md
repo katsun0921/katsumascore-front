@@ -1,6 +1,6 @@
 # KatsumaScore フロントエンド 機能一覧
 
-> v1.1 ― 2026年10月24日（詳細ページのSSG化を反映）
+> v1.2 ― 2026年11月7日（固定ページの親子URLとSEO情報を反映）
 
 ---
 
@@ -51,7 +51,8 @@
 | ルート | ファイル | レンダリング | 説明 |
 |--------|----------|------------|------|
 | `/movie/[slug]` / `/anime/[slug]` / `/drama/[slug]` | `pages/{movie,anime,drama}/[slug].tsx` | SSG | 記事詳細。正規カテゴリと ACF `lang` に一致するパスだけ事前生成。VOD関連記事と配信情報の基準日（JST）は生成時に確定 |
-| `/[slug]` | `pages/[slug].tsx` | SSG | WP 固定ページ（キャッチオール）。事前生成は ja のみ、en は blocking 生成 |
+| `/[slug]` | `pages/[slug].tsx` | SSG | WP固定ページ。ACF description優先のSEO情報を出力。子ページの旧フラットURLはblocking時に親子URLへ301転送 |
+| `/[...pagePath]` | `pages/[...pagePath].tsx` | SSG | WP固定ページの親子階層を保持する正規URL（例: `/ja/featured-article/{slug}`）。事前生成はjaのみ、enはblocking生成。既存の専用季節レビュールートを優先 |
 | `/actor/[slug]` | `pages/actor/[slug].tsx` | ISR | 配役詳細 |
 | `/company/[slug]` | `pages/company/[slug].tsx` | SSG | 企業詳細 |
 | `/franchise/[slug]` | `pages/franchise/[slug].tsx` | SSG | フランチャイズ詳細 |
@@ -318,6 +319,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | 関数 | ファイル | 説明 |
 |------|---------|------|
 | `loadPostDetailPage` | `loadPostDetailPage.ts` | 記事詳細ページのデータロード |
+| `getWpPagePath` | `wpPagePath.ts` | WP固定ページの祖先をたどって公開パスを生成。親の欠落・循環時は失敗させる |
 | `loadGenreListPage` | `loadGenreListPage.ts` | ジャンル一覧ページのデータロード |
 | `loadTagListPage` | `loadTagListPage.ts` | タグ一覧ページのデータロード |
 | `loadCategoryListPage` | `loadCategoryListPage.ts` | カテゴリ一覧ページのデータロード |

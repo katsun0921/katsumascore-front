@@ -24,6 +24,8 @@ WordPress をデータソースとし、Next.js (Pages Router) で再設計さ�
 npm install
 ```
 
+Gitフックは `npx lint-staged` を実行する。GUIからのコミットでNode.jsがPATHにない場合は、`~/.config/husky/init.sh` で利用中のNode.jsのbinディレクトリをPATHに追加する（例: `export PATH="$HOME/.local/share/node/v24.22.1/bin:$PATH"`）。Node.jsのバージョンは `.node-version` に合わせる。依存パッケージがない場合は `npm ci` を実行する。
+
 ### 開発サーバー起動
 
 ```bash

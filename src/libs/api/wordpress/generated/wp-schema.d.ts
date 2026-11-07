@@ -150,6 +150,11 @@ export interface components {
             slug: string;
             title: components["schemas"]["RenderedBlock"];
             content: components["schemas"]["RenderedBlock"];
+            excerpt?: components["schemas"]["RenderedBlock"];
+            /** @description 固定ページのACF。未設定値を受け入れ、正規化時に文字列のみ採用する。 */
+            acf?: {
+                description?: unknown;
+            };
             /** Format: date-time */
             date: string;
             /** Format: date-time */
