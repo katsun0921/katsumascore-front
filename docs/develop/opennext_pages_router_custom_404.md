@@ -281,3 +281,46 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - 使用箇所のglob / globSync / Minimatch APIを確認し、Lint、型チェック、SSGテスト69件、WPスキーマテスト2件、Storybookビルドが成功。`USE_WP_MOCK=true` によるOpenNextビルドも成功し、詳細31件と `.open-next/worker.js` を生成した。
 - 更新後の監査は0件。`npm ci --ignore-scripts` によるロックファイルからの再インストールも成功し、監査0件を再現した。実WPでの全件ビルドとCloudflareへのデプロイは未実施。
 - インストール時の `ERESOLVE overriding peer dependency` は別件。ESLint 10に対し一部プラグインのpeer指定が9系までとなっているため出る警告で、今回の脆弱性17件とは区別する。Lintは成功しているが、peer指定の不一致そのものは未解消。
+
+### 同日のoverrides適用範囲の見直し
+
+全体へ一律に固定する指定を減らし、必要な依存元・脆弱なバージョン範囲だけに適用する。
+
+| 指定 | 判断・理由 | 撤去の条件 |
+| --- | --- | --- |
+| `openapi-typescript.typescript: "$typescript"` | 全体の `typescript: "^6"` を撤去し、このツールだけに限定。7.13.0のpeer指定は `^5.x` のため、指定を完全に外した一時環境ではERESOLVEで依存解決に失敗した。`$typescript` でプロジェクトのdevDependenciesを参照し、バージョン指定の二重管理を避ける。正式なTS6対応を示す指定ではなく、生成結果を検証した暫定措置。 | openapi-typescriptがTS6をpeer指定に含めた後、overrideなしでインストール・型生成が成功すること。 |
+| `glob@>=9 <14.0.2: "14.0.2"` | 全体固定を、アドバイザリの影響範囲に限定。将来、依存元が安全な新バージョンへ更新しても14.0.2へ戻さない。 | OpenNext・node-minify・Storybookの依存解決で影響範囲のglobがなくなること。 |
+| `minimatch@>=7 <11.0.1: "11.0.1"` | 既に脆弱な範囲に限定されているため維持。3系・5系を巻き込まない。 | ESLint・typescript-eslint等が安全なバージョンを指定し、overrideなしでも監査0件になること。 |
+| `miniflare["undici@>=7 <7.30.1"]: "^7.30.1"` | Miniflare内の古い7系だけに限定。安全な将来バージョンを上書きせず、修正済み7系の更新を許可。現在のMiniflare 5.20261012.0-betaはundici 7.29.1を固定指定するため撤去できない。 | Miniflare側の固定指定が修正済みバージョンに更新され、overrideなしでも監査0件になること。 |
+
+限定した構成は一時ディレクトリで依存解決と監査0件を確認してから適用した。解決済みのパッケージバージョンとlockfileに変更はなく、引き続きglob 14.0.2 / minimatch 11.0.1 / undici 7.30.1 / TypeScript 6.0.3を使用する。依存元自体のメジャー更新や `--force` は行っていない。
+
+適用後の `npm install --ignore-scripts` は成功し、監査0件を維持。`npm run lint`、`npm run typecheck`、`npm run wp:gen-types` も成功し、生成型の差分はなかった。同じ解決バージョンで実施済みのStorybook / OpenNextビルド結果は上記を参照。
+
+### 同日のESLint peer依存・非推奨警告の追加調査
+
+- `eslint-plugin-import` 2.32.0、`eslint-plugin-jsx-a11y` 6.10.2、`eslint-plugin-react` 7.37.5は公開最新版でもpeer指定がESLint 9系まで。ESLint 10.13.0との `ERESOLVE overriding peer dependency` は監査の脆弱性とは別の互換性警告。
+- ESLint 9.39.5へそろえる試験ではpeer警告が消え、Reactルールの無効化を外してもLintは成功した。ただし9.39.5自体が非推奨で、[公式サポート情報](https://eslint.org/version-support/)では9系は2026-08-06にEOLとなっているため、採用せず元の10系と既存設定に戻した。
+- 警告を隠すためのpeer指定の強制overrideや `--legacy-peer-deps` は追加しない。10系を正式サポートする上流更新、またはプラグイン構成の別途移行が必要。
+- `node-domexception@1.0.0` は `@opennextjs/cloudflare@1.20.16 → cloudflare@4.5.0 → formdata-node@4.4.1` 経由の間接依存。ブラウザコードでの直接使用ではなく、npm上の非推奨通知。Cloudflare SDK最新7系は当該依存を持たないが、OpenNextが使う4系からのメジャー強制変更は今回行わない。
+
+### 同日の依存元更新とundici override撤去
+
+公開版の依存指定をnpmレジストリで確認し、互換性のある更新を適用した。
+
+| パッケージ | 変更前 | 変更後 |
+| --- | --- | --- |
+| Next.js | 16.4.3 | 16.4.5 |
+| eslint-config-next / @next/eslint-plugin-next | 16.4.3 | 16.4.5 |
+| Wrangler | 4.151.0 | 4.158.0 |
+| Miniflare | 5.20261012.0-beta | 5.20261104.0-beta |
+| workerd | 1.20261012.1 | 1.20261104.1 |
+
+- OpenNext Cloudflareの解決済みバージョンは最新版1.20.16を維持し、package.jsonの下限指定も `^1.20.16` に更新した。Next.js 16.4.5はこの版のpeer要件 `>=15.5.29 <16 || >=16.4.5` を満たす。
+- 新しいMiniflareはundici 7.30.1を固定指定するため、`miniflare` 配下のundici overrideを削除した。強制指定なしで修正済みバージョンを解決できる。
+- 残すoverrideはopenapi-typescript内のTypeScript、脆弱範囲のglob・minimatchの3つ。これらの依存元には撤去できる対応版がなかった。
+- 最新eslint-config-next 16.4.5も同じ3プラグインの旧peer指定に依存するため、ESLint 10との警告は残る。OpenNext 1.20.16もCloudflare SDK `^4.4.1` を指定し、最新4系4.5.0がnode-domexceptionを間接使用するため、非推奨警告も残る。SDK 7系やnode-minify 11系を上流の指定を無視して強制適用しない。
+- `npm update next eslint-config-next @opennextjs/cloudflare wrangler --ignore-scripts` は成功し、監査0件を維持した。型チェック、Lint、SSGテスト69件、WPスキーマテスト2件、Storybookビルドは成功。
+- `USE_WP_MOCK=true` のOpenNextビルドも成功し、詳細31件と `.open-next/worker.js` を生成した。実WPでの全件ビルド、Workersへのデプロイ、実環境での配信確認は未実施。
+
+同日、ユーザー指示でeslint-plugin-importを依存ツリーから削除した。eslint-config-nextは個別のプラグイン構成へ置き換えている。セキュリティ評価・構成変更・互換性措置の詳細は[ESLintプラグイン調査ログ](../log/2026-11-07-eslint-plugin-security-review.md)を参照。
