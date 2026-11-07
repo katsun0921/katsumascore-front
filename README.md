@@ -24,7 +24,7 @@ WordPress をデータソースとし、Next.js (Pages Router) で再設計さ�
 npm install
 ```
 
-Gitフックはローカルの `lint-staged` を実行する。GUIからのコミットでNode.jsがPATHにない場合は、`.node-version` に対応する `~/.local/share/node/v{version}/bin`、`~/.nvm/versions/node/v{version}/bin`、Homebrewの標準パスを順に確認する。それ以外の配置では `~/.config/husky/init.sh` でNode.jsのPATHを設定する。依存パッケージがない場合は `npm ci` を実行する。
+Gitフックは `npx lint-staged` を実行する。GUIからのコミットでNode.jsがPATHにない場合は、`~/.config/husky/init.sh` で利用中のNode.jsのbinディレクトリをPATHに追加する（例: `export PATH="$HOME/.local/share/node/v24.22.1/bin:$PATH"`）。Node.jsのバージョンは `.node-version` に合わせる。依存パッケージがない場合は `npm ci` を実行する。
 
 ### 開発サーバー起動
 
