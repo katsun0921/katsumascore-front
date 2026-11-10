@@ -494,3 +494,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | Entity 実装仕様 | `docs/ENTITY_IMPLEMENTATION_SPEC.md` | Entity 設計 |
 | TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_movie.youtube` の抽出・モーダル再生仕様 |
 | TOP 劇場公開・VOD配信ハイライト | `docs/features/home_release_highlight.md` | 週次まとめ記事の本文からの作品リスト抽出・リンク解決仕様 |
+| URLマップ(ディレクター管理用) | `docs/features/url_map.csv` | 全公開URL・レンダリング方式・revalidate・sitemap掲載・リダイレクトの一覧(CSV)。ルート追加・変更時に更新 |
