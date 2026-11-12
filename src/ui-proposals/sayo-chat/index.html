@@ -56,6 +56,19 @@
     .note { font-size: 13px; color: var(--color-text-sub); }
     code { font-size: 12px; background: var(--color-bg); padding: 0 4px; border-radius: 4px; }
     ol { padding-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .pages td:first-child { white-space: nowrap; font-weight: 700; }
+    .pages a { color: var(--color-secondary); font-weight: 700; }
+    .pages h3 { font-size: 15px; margin: 16px 0 8px; }
+    /* SP：表を行ごとのカードに積む */
+    @media (max-width: 767px) {
+      .pages thead { display: none; }
+      .pages table, .pages tbody, .pages tr, .pages td { display: block; }
+      .pages tr { padding: 10px 12px; border-bottom: 1px solid var(--color-line); }
+      .pages td { padding: 0; border: 0; }
+      .pages td:first-child { display: inline; margin-right: 8px; }
+      .pages td:nth-child(2) { display: inline; }
+      .pages td + td + td { margin-top: 4px; font-size: 12px; }
+    }
   </style>
 </head>
 <body>
@@ -67,6 +80,27 @@
   </header>
 
   <main class="main">
+    <section class="pages" aria-labelledby="pagesTitle">
+      <h2 id="pagesTitle">モックのページ一覧</h2>
+      <p class="note">迷ったら、置き場所を並べて比べる <a href="placements.html">placements.html</a>（案A〜E）と、通して試す <a href="f-journey.html">f-journey.html</a>（案F）から開いてください。</p>
+      <h3>案ごとのページ</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>案</th><th>ページ</th><th>内容</th><th>URLパラメータ</th></tr></thead>
+        <tbody><tr><td>A</td><td><a href="a-shop-page.html">a-shop-page.html</a></td><td>専用の会話ページ「サヨの映画店」（合言葉の入力から）</td><td><code>?key=</code> 合言葉を渡して入力を飛ばす／<code>?q=</code> 最初の質問を送る／<code>?scope=</code> カテゴリ（挨拶が変わる）</td></tr><tr><td>A</td><td><a href="place-a.html?view=top">place-a.html</a></td><td>TOP・リストに置いた入口（バナー／帯）</td><td><code>?view=top|list</code></td></tr><tr><td>B</td><td><a href="b-floating-widget.html">b-floating-widget.html</a></td><td>記事ページに重ねたフローティングウィジェット</td><td>なし</td></tr><tr><td>B</td><td><a href="place-b.html?view=top">place-b.html</a></td><td>TOP・リストに置いたウィジェット（吹き出しと挨拶がページで変わる）</td><td><code>?view=top|list</code></td></tr><tr><td>C</td><td><a href="c-novel-stage.html">c-novel-stage.html</a></td><td>全画面のノベル風の画面</td><td>なし</td></tr><tr><td>C</td><td><a href="place-c.html?view=top">place-c.html</a></td><td>TOP・リストに埋め込んだ舞台</td><td><code>?view=top|list</code></td></tr><tr><td>D・E</td><td><a href="d-card-summary.html">d-card-summary.html</a></td><td>入口ボックスとカードの「要約」。押した後をモーダル（D）／専用ページ（E）で切替</td><td><code>?view=top|list</code>／<code>?mode=modal|page</code>／<code>?open={記事ID}</code> 要約を開いた状態</td></tr><tr><td>E</td><td><a href="e-summary-page.html?id=1201">e-summary-page.html</a></td><td>要約の専用ページ／探した結果のページ</td><td><code>?id={記事ID}</code> 要約／<code>?q=</code>＋<code>?scope=</code> 探した結果／<code>?from=top|list</code> 戻り先</td></tr><tr><td>F</td><td><a href="f-journey.html">f-journey.html</a></td><td>作品探し → 結果 → 要約 → 質問またはレビューまでを1ページで通して試す。TOP／映画リスト、モーダル／専用ページは画面上で切替</td><td>画面上で操作（内部で <code>?view=summary|article&amp;id=</code> を使う）</td></tr></tbody>
+      </table></div>
+      <p class="note" style="margin-top:8px"><code>place-*.html</code> と <code>d-card-summary.html</code> は <code>&amp;embed=1</code> で上部の切替帯を消します（placements.html の中で使用）。</p>
+      <h3>共通ファイル（ページではない）</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>ファイル</th><th>内容</th><th>使うページ</th></tr></thead>
+        <tbody>
+          <tr><td><code>mock.js</code></td><td>会話APIの架空応答（<code>/session</code>・<code>/message</code> と同じ形）</td><td>A・B・C、place-*</td></tr>
+          <tr><td><code>card-mock.js</code></td><td>架空の記事6件・要約・気分タグ検索</td><td>C〜F、place-*</td></tr>
+          <tr><td><code>host.js</code></td><td>置き場所モック用のTOP・リストの土台</td><td>place-*</td></tr>
+          <tr><td><code>b-widget.js</code></td><td>案Bのウィジェットを任意のページに置く</td><td>place-b.html</td></tr>
+          <tr><td><code>img/</code></td><td>立ち絵（ai-chat の仮画像を縮小したもの）</td><td>すべて</td></tr>
+        </tbody>
+      </table></div>
+    </section>
     <section>
       <h2>新案 F：作品探しから記事を読むまで</h2>
       <div class="card">

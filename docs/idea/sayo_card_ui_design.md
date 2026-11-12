@@ -323,23 +323,44 @@ ai-chat の規約では、公開JSONの変更は **Schema を先に更新**す�
 
 作品名・スコア・配信先・要約はすべて架空。APIは呼ばず、`card-mock.js` が同じ形の応答を返す。
 
-### 11.2 ファイル
+### 11.2 ページ一覧
 
-| ファイル | 内容 |
-|---|---|
-| `index.html` | 全案の比較 |
-| `placements.html` | 案A〜EをTOP・リストに置いた見え方を、PC／SPの幅で並べて比べる一覧 |
-| `place-a.html` / `place-b.html` / `place-c.html` | 案A〜CをTOP・リストに置いたモック（`?view=top` / `?view=list`） |
-| `host.js` | 置き場所モック用のTOP・リストの土台 |
-| `b-widget.js` | 案Bのウィジェットを任意のページに置くスクリプト |
-| `d-card-summary.html` | 本書の案（TOP・リスト、案Dのモーダル） |
-| `e-summary-page.html` | 本書の案（案Eの専用ページ。`?id=` で要約、`?q=` で探した結果） |
-| `card-mock.js` | 架空の記事・要約・検索 |
-| `mock.js` | 共通の架空API（会話） |
-| `a-shop-page.html` | 別案A：専用の会話ページ「サヨの映画店」 |
-| `b-floating-widget.html` | 別案B：全ページ共通のフローティングウィジェット |
-| `c-novel-stage.html` | 別案C：ノベルゲーム風の画面 |
-| `img/` | 立ち絵（ai-chat の仮画像を縮小したもの） |
+`src/ui-proposals/sayo-chat/` 配下。`index.html` の「モックのページ一覧」にも同じ表がある。
+
+**入口（まず開くページ）**
+
+| ページ | 内容 | URLパラメータ |
+|---|---|---|
+| `index.html` | 全案の説明と比較、ページ一覧 | なし |
+| `placements.html` | 案A〜EをTOP・リストに置いた見え方を、PC／SPの幅で並べて比べる | なし（PC／SPは画面上で切替） |
+
+**案ごとのページ**
+
+| 案 | ページ | 内容 | URLパラメータ |
+|---|---|---|---|
+| A | `a-shop-page.html` | 専用の会話ページ「サヨの映画店」（合言葉の入力から） | `?key=`（合言葉を渡して入力を飛ばす）・`?q=`（最初の質問を送る）・`?scope=`（カテゴリ。挨拶が変わる） |
+| A | `place-a.html` | TOP・リストに置いた入口（バナー／帯） | `?view=top\|list` |
+| B | `b-floating-widget.html` | 記事ページに重ねたフローティングウィジェット | なし |
+| B | `place-b.html` | TOP・リストに置いたウィジェット（吹き出しと挨拶がページで変わる） | `?view=top\|list` |
+| C | `c-novel-stage.html` | 全画面のノベル風の画面 | なし |
+| C | `place-c.html` | TOP・リストに埋め込んだ舞台 | `?view=top\|list` |
+| D・E | `d-card-summary.html` | TOP・リストの入口ボックスとカードの「要約」。押した後をモーダル（D）／専用ページ（E）で切替 | `?view=top\|list`・`?mode=modal\|page`・`?open={記事ID}`（要約を開いた状態） |
+| E | `e-summary-page.html` | 要約の専用ページ／探した結果のページ | `?id={記事ID}`（要約）・`?q=`＋`?scope=`（探した結果）・`?from=top\|list`（戻り先） |
+| F | `f-journey.html` | 作品探し → 結果 → 要約 → 質問またはレビューまでを1ページで通して試す。TOP／映画リスト、モーダル／専用ページを画面上で切替 | 内部で `?view=summary\|article&id={記事ID}` を使う（直接開くより画面上の操作で試す） |
+
+`place-*.html` と `d-card-summary.html` は `&embed=1` を付けると上部の切替帯を消す（`placements.html` の中で使う）。
+
+**共通ファイル（ページではない）**
+
+| ファイル | 内容 | 使うページ |
+|---|---|---|
+| `mock.js` | 会話APIの架空応答（`/session`・`/message` と同じ形） | A・B・C、`place-*` |
+| `card-mock.js` | 架空の記事6件・要約・気分タグ検索 | C〜F、`place-*` |
+| `host.js` | 置き場所モック用のTOP・リストの土台 | `place-*` |
+| `b-widget.js` | 案Bのウィジェットを任意のページに置く | `place-b.html` |
+| `img/` | 立ち絵（ai-chat の仮画像を縮小したもの） | すべて |
+
+モックのファイル構成のルールは `src/ui-proposals/AGENTS.md`（画面ごとにHTML、固有のCSS・JSはHTML内、共通部分のみ別ファイル）。
 
 ### 11.3 別案（A〜C）との関係
 
@@ -347,7 +368,7 @@ A〜Cは「サヨと会話する場所」を作る案で、本書の案は「既
 
 ### 11.4 案A〜EをTOP・リストに置いたとき
 
-`placements.html` で並べて比べられる（PC 1280px／SP 390px を切り替え）。
+`placements.html` で並べて比べられる（PC 1280px／SP 390px を切り替え）。案Fは `f-journey.html` の中でTOP／映画リストを切り替えて確かめる。
 
 | 案 | TOPページ | リストページ | 押した後 |
 |---|---|---|---|

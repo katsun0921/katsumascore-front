@@ -47,3 +47,7 @@ export const CardSummaryModal: Story = {
 export const CardSummaryPage: Story = {
   args: { src: '/ui-proposals/sayo-chat/e-summary-page.html' },
 };
+
+export const JourneyF: Story = {
+  args: { src: '/ui-proposals/sayo-chat/f-journey.html' },
+};
