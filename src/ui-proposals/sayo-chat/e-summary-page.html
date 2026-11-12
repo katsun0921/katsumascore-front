@@ -13,6 +13,7 @@
     - 末尾に「同じ一覧のほかの作品」を並べ、ページ内で次々に要約を聞ける。
     - 要約は承認済みデータなので SSG にできる。ただし記事本体と内容が重なるため noindex を想定。
     - 遷移元（TOP／リスト）へ戻るリンクを置く（?from=top|list）。
+    - ?q= のときはパターン1「おすすめを探す」の結果ページになる（各作品から要約＝パターン2へ進める）。
   -->
   <style>
     :root {
@@ -114,6 +115,19 @@
     .other__title { font-weight: 700; display: block; line-height: 1.4; }
     .other__cta { color: var(--color-shop-amber); font-size: 11px; font-weight: 700; }
 
+    /* パターン1：探した結果 */
+    .source { font-size: 11px; color: var(--color-shop-sub); }
+    .source b { padding: 0 8px; border-radius: 999px; background: var(--color-shop-amber-soft); color: var(--color-shop-wood); margin-right: 6px; }
+    .results { display: grid; grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    @media (min-width: 768px) { .results { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .result { display: flex; flex-direction: column; background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 12px; overflow: hidden; }
+    .result__thumb { aspect-ratio: 16/9; }
+    .result__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
+    .result__title { font-weight: 700; font-size: 15px; }
+    .result__meta { font-size: 11px; color: var(--color-shop-sub); }
+    .result__acts { display: flex; gap: 8px; margin-top: auto; padding-top: 6px; }
+    .result__sum { flex: 1; text-align: center; text-decoration: none; font-size: 12px; font-weight: 700; background: var(--color-shop-wood); color: var(--color-text-inverse); padding: 6px; border-radius: 999px; }
+    .result__read { flex: 1; text-align: center; text-decoration: none; font-size: 12px; font-weight: 700; color: var(--color-accent); border: 1px solid var(--color-accent); padding: 5px; border-radius: 999px; }
     .urlTag { font-size: 11px; color: var(--color-shop-sub); background: var(--color-shop-paper); border: 1px dashed var(--color-shop-line); border-radius: 6px; padding: 2px 8px; align-self: flex-start; }
     .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   </style>
@@ -162,13 +176,49 @@
       const M = window.SayoMock;
       const $ = (s) => document.querySelector(s);
       const params = new URLSearchParams(location.search);
+      const from0 = params.get('from') === 'list' ? 'list' : 'top';
+      const back = $('[data-back]');
+      back.href = `d-card-summary.html?view=${from0}&mode=page`;
+      back.textContent = from0 === 'list' ? '← 映画の一覧に戻る' : '← TOPに戻る';
+
+      /* パターン1：?q= のときは「探した結果」のページにする（想定URL：/ja/sayo/search?q=） */
+      if (params.has('q')) {
+        const q = params.get('q');
+        const scope = params.get('scope') || null;
+        document.title = `サヨと探す：${q}`;
+        document.querySelector('.crumb span:last-child').textContent = 'サヨと探す';
+        const main = document.querySelector('.layout > .main');
+        main.innerHTML = `
+          <span class="urlTag">想定URL：/ja/sayo/search?q=${M.escapeHtml(q)}${scope ? `&category=${scope}` : ''}</span>
+          <h1 class="h2">サヨと探す：「${M.escapeHtml(q)}」</h1>
+          <p class="src">${scope ? `${scope}の記事から探しています` : 'すべての記事から探しています'}</p>
+          <div data-reply aria-live="polite"><div class="say"><img class="say__face" src="img/sayo-face.webp" alt="サヨ"><div class="say__bubble"><span class="typing"><i></i><i></i><i></i></span></div></div></div>
+          <div class="results" data-results></div>
+          <section class="chat"><h2 class="h2">ほかの気分で探す</h2><div class="chips">${C.SEARCH_CHIPS.filter((c) => c.label !== q).map((c) => `<a class="chip" href="e-summary-page.html?q=${encodeURIComponent(c.label)}&scope=${encodeURIComponent(scope || '')}&from=${from0}">${c.label}</a>`).join('')}</div></section>`;
+        $('.stage').dataset.expression = 'thinking';
+        C.search(q, scope).then((r) => {
+          $('[data-reply]').innerHTML = `<div class="say"><img class="say__face" src="img/sayo-face.webp" alt="サヨ"><div class="say__bubble">${M.escapeHtml(r.reply)}</div></div>
+            <p class="source">${r.source === 'tags' ? '<b>記事のタグから</b>回数は減りません' : '<b>AIが記事から</b>1回使いました'}</p>`;
+          $('[data-results]').innerHTML = r.posts.map((x) => `
+            <div class="result">
+              <span class="result__thumb" style="background:linear-gradient(135deg,hsl(${x.hue} 45% 28%),hsl(${x.hue + 30} 55% 55%))"></span>
+              <div class="result__body">
+                <span class="result__title">${x.title}</span>
+                <span class="result__meta">${x.category} ・ ${x.score.toFixed(1)} ${C.scoreRank(x.score)} ・ ${x.vodLabel}</span>
+                <div class="tags">${x.moodTags.map((t) => `<span>${t}</span>`).join('')}</div>
+                <div class="result__acts"><a class="result__sum" href="e-summary-page.html?id=${x.id}&from=${from0}">要約を聞く</a><a class="result__read" href="${x.slug}">レビューへ</a></div>
+              </div>
+            </div>`).join('');
+          $('.stage').dataset.expression = r.posts.length ? 'recommend' : 'sorry';
+        });
+        return;
+      }
+
       const id = Number(params.get('id')) || C.POSTS[0].id;
       const from = params.get('from') === 'list' ? 'list' : 'top';
       const p = C.POSTS.find((x) => x.id === id) || C.POSTS[0];
       let remaining = 30;
 
-      $('[data-back]').href = `d-card-summary.html?view=${from}&mode=page`;
-      $('[data-back]').textContent = from === 'list' ? '← 映画の一覧に戻る' : '← TOPに戻る';
       $('[data-url]').textContent = `想定URL：/ja/sayo/{記事slug}（いま表示中：記事ID ${p.id}）`;
       document.title = `サヨの要約：${p.title}`;
 

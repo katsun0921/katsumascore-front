@@ -15,6 +15,10 @@
         モーダル     … その場で開く。前後の作品へ送れる。PCは中央、SPは下からのシート。
         専用ページ   … e-summary-page.html?id= へ遷移（案E）。
     - 要約はai-chatの承認済み要約（summarySafe等）を返す想定。LLMを使うのは「もっと聞く」から。
+    - サヨへの問いかけは2パターン：
+        1. おすすめを探す（検索）… 「何を観ようか迷ったら」の入口。候補ボタンは気分タグで絞り込み（LLMなし）、自由入力はLLM。
+           リストページではそのカテゴリの中だけを探す。結果の各作品から2へ進める。
+        2. 記事を要約する … カードの「要約」ボタン。タイトルや説明文だけでは開かない人に、記事への誘導をする。
   -->
   <style>
     :root {
@@ -137,6 +141,29 @@
     @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
     @media (max-width: 767px) { .grid .postCard__excerpt { display: none; } .grid .sayoBtn span { display: none; } .grid .sayoBtn { padding-right: 2px; } }
 
+    /* ── パターン1：迷ったらサヨに（検索の入口） ── */
+    .askBox {
+      display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 16px;
+      background: var(--color-surface-dark); border: 1px solid var(--color-border-dark); color: var(--color-text-inverse);
+    }
+    .top .askBox { margin: 0 16px 8px; }
+    .askBox__face { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: none; box-shadow: 0 0 0 2px var(--color-accent-strong); }
+    .askBox__main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+    .askBox__q { font-weight: 700; font-size: 15px; line-height: 1.5; }
+    .askBox__q small { display: block; font-weight: 400; font-size: 11px; color: var(--color-text-dim); }
+    .askBox__chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+    .askBox__chip {
+      all: unset; cursor: pointer; white-space: nowrap; font-size: 13px; padding: 4px 12px; border-radius: 999px;
+      background: var(--color-surface-dark-2); border: 1px solid var(--color-accent-soft);
+    }
+    .askBox__chip:hover, .askBox__chip:focus-visible { background: var(--color-accent); border-color: var(--color-accent); }
+    .askBox__form { display: flex; gap: 6px; }
+    .askBox__form input { flex: 1; min-width: 0; border: 1px solid var(--color-border-dark); border-radius: 999px; padding: 6px 14px; background: var(--color-bg-dark); color: var(--color-text-inverse); font-size: 16px; }
+    .askBox__form input::placeholder { color: var(--color-text-dim); }
+    .askBox__form input:focus { outline: 2px solid var(--color-accent-soft); }
+    .askBox__form button { all: unset; cursor: pointer; padding: 6px 14px; border-radius: 999px; background: var(--color-accent-strong); color: var(--color-bg-dark); font-weight: 700; font-size: 13px; }
+    .askBox__hint { font-size: 10px; color: var(--color-text-dim); }
+
     /* ── モーダル ── */
     .modal { position: fixed; inset: 0; z-index: 70; display: grid; align-items: end; }
     .modal[hidden] { display: none; }
@@ -208,6 +235,29 @@
     .read { margin-left: auto; text-decoration: none; background: var(--color-accent); color: var(--color-text-inverse); font-weight: 700; font-size: 14px; padding: 10px 18px; border-radius: 12px; }
     .read:focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 2px; }
     .note { font-size: 10px; color: var(--color-sayo-sub); text-align: center; padding: 0 16px 8px; background: var(--color-sayo-paper); }
+    .nav[hidden], .read[hidden] { display: none; }
+    .nav, .back, .read { white-space: nowrap; }
+    .pcOnly { display: none; }
+    @media (min-width: 768px) { .pcOnly { display: inline; } }
+
+    /* 検索結果（パターン1） */
+    .source { margin-left: 50px; font-size: 11px; color: var(--color-sayo-sub); display: inline-flex; gap: 6px; align-items: center; }
+    .source b { font-weight: 700; padding: 0 8px; border-radius: 999px; background: var(--color-sayo-amber-soft); color: var(--color-sayo-wood); }
+    .results { margin-left: 50px; display: flex; flex-direction: column; gap: 8px; }
+    .result { display: flex; gap: 10px; align-items: center; background: var(--color-bg); border: 1px solid var(--color-sayo-line); border-radius: 12px; padding: 8px; }
+    .result__thumb { width: 48px; aspect-ratio: 2/3; border-radius: 4px; flex: none; }
+    .result__body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+    .result__title { font-weight: 700; font-size: 14px; line-height: 1.4; }
+    .result__meta { font-size: 11px; color: var(--color-sayo-sub); }
+    .result__tags { display: flex; gap: 4px; flex-wrap: wrap; }
+    .result__tags span { font-size: 10px; padding: 0 6px; border-radius: 999px; background: var(--color-sayo-amber-soft); color: var(--color-sayo-wood); }
+    .result__acts { display: flex; flex-direction: column; gap: 4px; flex: none; }
+    .result__sum { all: unset; cursor: pointer; font-size: 12px; font-weight: 700; color: var(--color-text-inverse); background: var(--color-sayo-wood); padding: 4px 10px; border-radius: 999px; text-align: center; }
+    .result__sum:focus-visible { outline: 2px solid var(--color-sayo-amber); }
+    .result__read { font-size: 11px; color: var(--color-accent); text-align: center; text-decoration: none; font-weight: 700; }
+    .back { all: unset; cursor: pointer; font-size: 12px; color: var(--color-sayo-wood); font-weight: 700; padding: 8px; border-radius: 8px; }
+    .back[hidden] { display: none; }
+    .back:hover, .back:focus-visible { background: var(--color-sayo-amber-soft); }
     .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   </style>
 </head>
@@ -242,8 +292,9 @@
       </header>
       <div class="modal__scroll" data-m-scroll aria-live="polite"></div>
       <footer class="modal__foot">
-        <button type="button" class="nav" data-prev>← 前の作品</button>
-        <button type="button" class="nav" data-next>次の作品 →</button>
+        <button type="button" class="back" data-back hidden>← 結果<span class="pcOnly">に戻る</span></button>
+        <button type="button" class="nav" data-prev aria-label="前の作品">←<span class="pcOnly"> 前の作品</span></button>
+        <button type="button" class="nav" data-next aria-label="次の作品"><span class="pcOnly">次の作品 </span>→</button>
         <a class="read" data-m-read href="#">レビューを読む</a>
       </footer>
       <p class="note">AIの回答です。要約はKatsumaScoreの記事をもとに作成し、編集部が確認しています。個人情報は入力しないでください。</p>
@@ -295,12 +346,24 @@
           ${sayoBtn(p, lead ? 'サヨに要約してもらう' : '要約')}
         </${lead ? 'div' : 'li'}>`;
 
+      /** パターン1の入口。scope はカテゴリ名（リスト）か null（TOP） */
+      const askBox = (scope) => `
+        <div class="askBox" data-askbox data-scope="${scope || ''}">
+          <img class="askBox__face" src="img/sayo-face.webp" alt="サヨ">
+          <div class="askBox__main">
+            <p class="askBox__q">${scope ? `${scope}の中から、何を観ようか迷ったら` : '何を観ようか迷ったら'}<small>サヨ ／ AI映画店主が、KatsumaScoreの記事から探します</small></p>
+            <div class="askBox__chips">${C.SEARCH_CHIPS.map((c) => `<button type="button" class="askBox__chip" data-q="${c.label}">${c.label}</button>`).join('')}</div>
+            <form class="askBox__form" data-askform><label class="srOnly" for="ask-${scope || 'top'}">サヨに探してほしい作品</label><input id="ask-${scope || 'top'}" maxlength="200" placeholder="気分や好みを自由に（例：雨の日に観たい）"><button type="submit">探す</button></form>
+            <span class="askBox__hint">候補ボタンは記事のタグから探します（回数は減りません）。自由入力はAIが探します（1回ずつ数えます）。カード右上の「要約」からは、作品ごとの要約を聞けます。</span>
+          </div>
+        </div>`;
+
       const renderTop = () => {
         const latest = C.POSTS;
         const high = [...C.POSTS].sort((a, b) => b.score - a.score);
         root.innerHTML = `
           <div class="top">
-            <div class="top__intro"><img src="img/sayo-face.webp" alt=""><span><strong>サヨの要約</strong>　気になる作品の右上を押すと、AI映画店主のサヨが記事を短くご案内します。</span></div>
+            ${askBox(null)}
             <section class="top__section" data-group="latest">
               <div class="top__head"><h2 class="top__title"><small>LATEST</small>最新レビュー</h2><span class="top__more">すべて見る →</span></div>
               <ul class="scroll" style="list-style:none">${latest.map(homeCard).join('')}</ul>
@@ -316,6 +379,7 @@
         root.innerHTML = `
           <section class="list__hero"><p class="list__eyebrow">MOVIE</p><h1 class="list__h1">映画</h1></section>
           <div class="list__body" data-group="list">
+            ${askBox('映画')}
             ${postCard(lead, true)}
             <ol class="grid">${rest.map((p) => postCard(p)).join('')}</ol>
           </div>`;
@@ -359,6 +423,8 @@
         $('[data-m-title]').textContent = p.title;
         $('[data-m-info]').innerHTML = `<span class="modal__score">${p.score.toFixed(1)}<b>${C.scoreRank(p.score)}</b></span><span>${p.vodLabel}（${p.vodCheckedAt}時点）</span>`;
         $('[data-m-read]').setAttribute('href', p.slug);
+        [$('[data-prev]'), $('[data-next]'), $('[data-m-read]')].forEach((el) => { el.hidden = false; });
+        $('[data-back]').hidden = !searchCtx;
         $('[data-prev]').disabled = current <= 0;
         $('[data-next]').disabled = current >= order.length - 1;
         scroll.innerHTML = '';
@@ -377,7 +443,56 @@
         scroll.scrollTop = 0;
       };
 
+      /* ── パターン1：探す ── */
+      let searchCtx = null;
+      const resultHtml = (p) => `
+        <div class="result">
+          <span class="result__thumb" style="${thumbStyle(p)}"></span>
+          <div class="result__body">
+            <span class="result__title">${p.title}</span>
+            <span class="result__meta">${p.category} ・ ${p.score.toFixed(1)} ${C.scoreRank(p.score)} ・ ${p.vodLabel}</span>
+            <span class="result__tags">${p.moodTags.map((t) => `<span>${t}</span>`).join('')}</span>
+          </div>
+          <div class="result__acts">
+            <button type="button" class="result__sum" data-sum="${p.id}">要約を聞く</button>
+            <a class="result__read" href="${p.slug}">レビューへ</a>
+          </div>
+        </div>`;
+
+      const showSearch = () => {
+        const { q, scope, result } = searchCtx;
+        $('[data-m-thumb]').setAttribute('style', 'background:url(img/sayo-face.webp) center/cover');
+        $('[data-m-cat]').textContent = `サヨと探す ・ ${scope ? `${scope}の記事から` : 'すべての記事から'}`;
+        $('[data-m-title]').textContent = `「${q}」`;
+        $('[data-m-info]').innerHTML = '';
+        [$('[data-prev]'), $('[data-next]'), $('[data-m-read]'), $('[data-back]')].forEach((el) => { el.hidden = true; });
+        scroll.innerHTML = '';
+        add(`<div class="say__bubble">${M.escapeHtml(q)}</div>`, 'say say--user');
+        if (!result) return add(sayoHtml('<span class="typing"><i></i><i></i><i></i></span>'));
+        add(sayoHtml(M.escapeHtml(result.reply)));
+        add(result.source === 'tags' ? '<b>記事のタグから</b>回数は減りません' : `<b>AIが記事から</b>1回使いました（今日あと ${remaining} 回）`, 'source');
+        if (result.posts.length) add(result.posts.map(resultHtml).join(''), 'results');
+        const others = C.SEARCH_CHIPS.filter((c) => c.label !== q);
+        add(`<div class="more__head"><span>ほかの気分で探す</span></div><div class="chips">${others.map((c) => `<button type="button" class="chip" data-q="${c.label}">${c.label}</button>`).join('')}</div>`, 'more');
+        scroll.scrollTop = 0;
+        return null;
+      };
+
+      const openSearch = async (q, scope, trigger) => {
+        if (!q) return;
+        if (mode === 'page') { location.href = `e-summary-page.html?q=${encodeURIComponent(q)}&scope=${encodeURIComponent(scope || '')}&from=${view}`; return; }
+        searchCtx = { q, scope, result: null };
+        lastTrigger = trigger;
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        showSearch();
+        const result = await C.search(q, scope);
+        if (result.source === 'llm') remaining -= 1;
+        if (searchCtx && searchCtx.q === q) { searchCtx.result = result; showSearch(); }
+      };
+
       const openFor = (id, trigger) => {
+        searchCtx = null;
         if (mode === 'page') { location.href = `e-summary-page.html?id=${id}&from=${view}`; return; }
         const group = trigger.closest('[data-group]');
         order = [...new Set([...group.querySelectorAll('[data-sayo]')].map((b) => Number(b.dataset.sayo)))];
@@ -389,6 +504,7 @@
         setTimeout(() => $('.modal__close').focus(), 50);
       };
       const close = () => {
+        searchCtx = null;
         modal.hidden = true;
         document.body.style.overflow = '';
         if (lastTrigger) lastTrigger.focus();
@@ -401,21 +517,42 @@
       };
 
       root.addEventListener('click', (e) => {
+        const chip = e.target.closest('[data-askbox] [data-q]');
+        if (chip) { openSearch(chip.dataset.q, chip.closest('[data-askbox]').dataset.scope || null, chip); return; }
         const b = e.target.closest('[data-sayo]');
         if (!b) return;
         e.preventDefault();
         openFor(b.dataset.sayo, b);
       });
+      root.addEventListener('submit', (e) => {
+        const f = e.target.closest('[data-askform]');
+        if (!f) return;
+        e.preventDefault();
+        const i = f.querySelector('input');
+        openSearch(i.value.trim(), f.closest('[data-askbox]').dataset.scope || null, i);
+        i.value = '';
+      });
       scroll.addEventListener('click', (e) => {
+        const sum = e.target.closest('[data-sum]');
+        if (sum) {
+          order = searchCtx.result.posts.map((p) => p.id);
+          current = order.indexOf(Number(sum.dataset.sum));
+          fillModal(C.POSTS.find((p) => p.id === Number(sum.dataset.sum)));
+          return;
+        }
+        const again = e.target.closest('[data-q]');
+        if (again && searchCtx) { openSearch(again.dataset.q, searchCtx.scope, again); return; }
         const a = e.target.closest('[data-jump]');
         if (!a) return;
         e.preventDefault();
+        searchCtx = null;
         const id = Number(a.dataset.jump);
         if (!order.includes(id)) order.push(id);
         current = order.indexOf(id);
         fillModal(C.POSTS.find((p) => p.id === id));
       });
       modal.querySelectorAll('[data-close]').forEach((el) => el.addEventListener('click', close));
+      $('[data-back]').addEventListener('click', showSearch);
       $('[data-prev]').addEventListener('click', () => step(-1));
       $('[data-next]').addEventListener('click', () => step(1));
       document.addEventListener('keydown', (e) => {

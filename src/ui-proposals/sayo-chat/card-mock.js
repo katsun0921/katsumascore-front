@@ -105,5 +105,49 @@
     return { reply: `あっ、それなら……記事でいちばん熱を込めて書かれているのは、${p.moodTags[0]}空気を作る演出の部分です。${p.recommendFor.replace(/に$/, '')}には、きっと刺さると思います。`, articles: [] };
   };
 
-  window.CardMock = { POSTS, VOD_COLOR, scoreRank, fetchSummary, followUps, followUpReply };
+  /*
+   * パターン1「おすすめを探す（検索）」
+   *   - 候補ボタン（chips）：承認済み要約の moodTags（気分タグ）で絞り込む。LLMを使わない＝即時・費用0・回数を減らさない。
+   *     → ai-chat に「気分タグ・カテゴリで記事を返すAPI」の追加が必要（facets.json の moodTags が元データ）。
+   *   - 自由入力：従来の /api/chat/message（LLM＋ベクトル検索、回数を1消費）。
+   *   - リストページでは、そのカテゴリ（例：映画）の中だけで探す。
+   */
+  const SEARCH_CHIPS = [
+    { label: '怖すぎないホラー', tags: ['じわじわ怖い', 'ちょっと怖い'], reply: '怖すぎないホラーでしたら、こちらはいかがでしょう。大きな音で驚かせるより、空気でじわじわ来るタイプです。' },
+    { label: '泣ける作品', tags: ['泣ける', '切ない'], reply: '泣ける作品なら、こちらを。どれも観たあとに余韻が長く残るタイプです。' },
+    { label: '少しずつ観たい', tags: ['一話完結', '会話劇'], reply: '短い時間で区切って観られる作品を選びました。寝る前の一話にも向いています。' },
+    { label: 'ワクワクしたい', tags: ['ワクワク', '家族向け'], reply: 'ワクワクしたい日には、こちらはいかがでしょう。' },
+  ];
+
+  /** 自由入力の架空の検索（本番はLLM＋ベクトル検索） */
+  const FREE_WORDS = [
+    { re: /ホラー|怖/, ids: [1201, 1203] },
+    { re: /泣|恋愛|手紙|切な/, ids: [1204] },
+    { re: /アニメ/, ids: [1203] },
+    { re: /ドラマ|短い|会話/, ids: [1206] },
+    { re: /ロボ|特撮|メカ/, ids: [1205] },
+    { re: /映画館|名画座|撮影/, ids: [1202] },
+  ];
+
+  const NO_MATCH = 'ごめんなさい、今ある記事からは、ぴったりの作品が見つかりませんでした。気分やジャンルを、別の言い方で教えていただけますか？';
+
+  /**
+   * パターン1のモック。scope はカテゴリ名（リストページ）か null（TOP）。
+   * 戻り値の source：'tags'＝候補ボタン（回数を減らさない）／'llm'＝自由入力（回数を1消費）
+   */
+  const search = (q, scope) => new Promise((resolve) => {
+    const pool = scope ? POSTS.filter((p) => p.category === scope) : POSTS;
+    const chip = SEARCH_CHIPS.find((c) => c.label === q);
+    if (chip) {
+      const posts = pool.filter((p) => p.moodTags.some((t) => chip.tags.includes(t))).slice(0, 3);
+      setTimeout(() => resolve({ source: 'tags', reply: posts.length ? chip.reply : NO_MATCH, posts }), 300);
+      return;
+    }
+    const ids = [...new Set(FREE_WORDS.filter((w) => w.re.test(q)).flatMap((w) => w.ids))];
+    const posts = pool.filter((p) => ids.includes(p.id)).slice(0, 3);
+    const reply = posts.length ? `「${q}」でしたら、記事の中からこちらを選びました。気になる作品があれば、要約もお話しできますよ。` : NO_MATCH;
+    setTimeout(() => resolve({ source: 'llm', reply, posts }), 1400);
+  });
+
+  window.CardMock = { POSTS, VOD_COLOR, scoreRank, fetchSummary, followUps, followUpReply, SEARCH_CHIPS, search };
 })();

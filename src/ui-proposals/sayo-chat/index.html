@@ -109,7 +109,7 @@
 
     <section>
       <h2>カードから要約する案（TOPページ・リストページ限定）</h2>
-      <p class="note" style="margin-bottom:12px">TOP（HomeCard）とリスト（PostCardImgLeft／ImgTop）のカードに「サヨの要約」ボタンを置き、押すとサヨが作品を要約する。押した後をモーダルにするか（案D）、専用ページにするか（案E）を、同じカードから切り替えて比べられます。</p>
+      <p class="note" style="margin-bottom:12px">TOPページとリストページに限って置く。上部の「何を観ようか迷ったら」で作品を探し（パターン1）、カード（HomeCard／PostCardImgLeft／ImgTop）の「要約」ボタンでサヨが作品を要約する（パターン2）。押した後をモーダルにするか（案D）、専用ページにするか（案E）を、同じカードから切り替えて比べられます。</p>
       <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
         <article class="card card--b">
           <div class="card__frame"><iframe src="d-card-summary.html?open=1203" title="案Dのプレビュー" tabindex="-1"></iframe></div>
@@ -133,6 +133,20 @@
             <a class="card__open" href="d-card-summary.html?mode=page">案Eを開く（カードから） →</a>
           </div>
         </article>
+      </div>
+      <h3 style="font-size:15px;margin:20px 0 8px">サヨへの問いかけは2パターン</h3>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th></th><th>1. おすすめを探す（検索）</th><th>2. 記事を要約する</th></tr></thead>
+          <tbody>
+            <tr><td>役割</td><td>たくさんの記事から、気分や好みに合う作品を探す</td><td>タイトルや説明文だけでは開かない人に、記事の中身を短く伝えて記事へ誘導する</td></tr>
+            <tr><td>入口</td><td>TOP・リストの上部「何を観ようか迷ったら」。候補ボタン（怖すぎないホラー等）と自由入力</td><td>各カード右上の「要約」ボタン</td></tr>
+            <tr><td>探す範囲</td><td>TOPはすべての記事、リストはそのカテゴリ（例：映画）の記事だけ</td><td>押したカードの1記事</td></tr>
+            <tr><td>データと費用</td><td>候補ボタン：承認済み要約の気分タグ（moodTags）で絞り込む＝LLMなし・回数を減らさない<br>自由入力：<code>/message</code>（LLM＋検索）＝1回ずつ数える</td><td>承認済み要約（summarySafe・recommendFor・moodTags）＝LLMなし・回数を減らさない<br>「もっと聞く」から先だけLLM</td></tr>
+            <tr><td>つながり</td><td>結果の各作品の「要約を聞く」→ 2へ</td><td>「似た作品は？」→ 他作品の要約へ。モーダルでは「← 結果に戻る」で1へ戻れる</td></tr>
+            <tr><td>必要なAPI追加</td><td>気分タグ・カテゴリで記事を返すAPI（元データは facets.json の moodTags）。自由入力のカテゴリ絞り込みも要検討</td><td><code>GET /api/chat/articles/{id}/summary</code></td></tr>
+          </tbody>
+        </table>
       </div>
       <div class="tableWrap" style="margin-top:16px">
         <table>
