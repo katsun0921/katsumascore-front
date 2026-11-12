@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 案A 専用ページ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Old+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <!--
+    案A：専用ページ「サヨの映画店」（/chat を想定）
+    - PC：左に立ち絵のカウンター（sticky）、右に会話。SP：上に立ち絵の帯、下に会話、入力欄は下端固定。
+    - サイト本体（紺・紫）とは別に、木目と紙の暖色で「店」の空気を出す。
+    - 限定公開の入口（合言葉）をページ内に持つ。
+  -->
+  <style>
+    :root {
+      --color-site-header: #1e1b4b;
+      --color-text-inverse: #ffffff;
+      --color-shop-bg: #f4ece0;
+      --color-shop-paper: #fffaf2;
+      --color-shop-wood: #5b3a24;
+      --color-shop-wood-dark: #3a2416;
+      --color-shop-amber: #c8862e;
+      --color-shop-amber-soft: #f3dfc1;
+      --color-shop-navy: #262b4f;
+      --color-shop-text: #2f2219;
+      --color-shop-text-sub: #7a6656;
+      --color-shop-line: #e3d4bf;
+      --color-user-bubble: #262b4f;
+      --color-spoiler: #9b2c4a;
+      --color-spoiler-soft: #fbe8ee;
+      --color-alert: #8a4b0f;
+      --color-alert-soft: #fdf0dc;
+      --color-score-bg: #14082e;
+      --color-score-accent: #ff2dfc;
+      --color-black-rgb: 0, 0, 0;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-shop: 'Zen Old Mincho', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: var(--font-body);
+      background: var(--color-shop-bg);
+      color: var(--color-shop-text);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    button, input, textarea { font: inherit; color: inherit; }
+
+    /* サイト共通ヘッダー（簡略） */
+    .siteHeader {
+      background: var(--color-site-header);
+      color: var(--color-text-inverse);
+      padding: 12px 16px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .siteHeader__logo { font-weight: 700; letter-spacing: .04em; }
+    .siteHeader__nav { font-size: 13px; opacity: .8; display: none; gap: 20px; }
+    @media (min-width: 768px) { .siteHeader__nav { display: flex; } }
+
+    .page {
+      max-width: 1120px; margin: 0 auto; padding: 0 0 0;
+      display: grid; grid-template-columns: minmax(0, 1fr);
+    }
+    .page > * { min-width: 0; }
+    @media (min-width: 768px) {
+      .page { grid-template-columns: 360px minmax(0, 1fr); gap: 32px; padding: 32px 24px; }
+    }
+
+    /* ── カウンター（立ち絵） ── */
+    .counter { position: relative; }
+    @media (min-width: 768px) { .counter__inner { position: sticky; top: 24px; } }
+    .counter__stage {
+      position: relative; overflow: hidden;
+      aspect-ratio: 16 / 9;
+      background: var(--color-shop-wood-dark);
+    }
+    @media (min-width: 768px) {
+      .counter__stage { aspect-ratio: 1 / 1; border-radius: 16px; box-shadow: 0 12px 32px rgba(var(--color-black-rgb), .18); }
+    }
+    .counter__img {
+      width: 100%; height: 100%; object-fit: cover; object-position: 30% 22%;
+      display: block; transition: transform .6s ease, filter .4s ease;
+    }
+    .counter[data-expression="thinking"] .counter__img { transform: scale(1.04); filter: saturate(.85); }
+    .counter[data-expression="recommend"] .counter__img { transform: scale(1.06) translateY(-1%); }
+    .counter[data-expression="sorry"] .counter__img { filter: saturate(.7) brightness(.92); }
+    .counter[data-expression="secret"] .counter__img { filter: sepia(.25) hue-rotate(-12deg); }
+    .counter__plate {
+      position: absolute; left: 12px; bottom: 12px;
+      background: var(--color-shop-paper); color: var(--color-shop-wood-dark);
+      border-radius: 10px; padding: 6px 14px 6px 12px;
+      box-shadow: 0 4px 12px rgba(var(--color-black-rgb), .25);
+    }
+    .counter__name { font-family: var(--font-shop); font-size: 22px; line-height: 1.2; }
+    .counter__label { font-size: 11px; color: var(--color-shop-text-sub); letter-spacing: .08em; }
+    .counter__expr {
+      position: absolute; right: 10px; top: 10px;
+      font-size: 11px; background: rgba(var(--color-black-rgb), .55); color: var(--color-text-inverse);
+      padding: 2px 8px; border-radius: 999px;
+    }
+    .counter__info { display: none; }
+    @media (min-width: 768px) {
+      .counter__info { display: block; padding: 20px 4px 0; }
+    }
+    .counter__intro { font-size: 14px; color: var(--color-shop-text-sub); }
+    .meter { margin-top: 16px; }
+    .meter__head { display: flex; justify-content: space-between; font-size: 13px; }
+    .meter__num { font-weight: 700; color: var(--color-shop-wood); }
+    .meter__bar { margin-top: 6px; height: 6px; background: var(--color-shop-line); border-radius: 999px; overflow: hidden; }
+    .meter__fill { height: 100%; background: var(--color-shop-amber); transition: width .4s ease; }
+    .notice { margin-top: 16px; font-size: 12px; color: var(--color-shop-text-sub); border-top: 1px solid var(--color-shop-line); padding-top: 12px; }
+
+    /* ── 会話 ── */
+    .chat {
+      background: var(--color-shop-paper);
+      display: flex; flex-direction: column;
+      min-height: calc(100vh - 48px - 56.25vw);
+    }
+    @media (min-width: 768px) {
+      .chat { border-radius: 16px; min-height: 0; height: calc(100vh - 112px); box-shadow: 0 2px 12px rgba(var(--color-black-rgb), .06); border: 1px solid var(--color-shop-line); }
+    }
+    .chat__head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px; border-bottom: 1px solid var(--color-shop-line);
+      font-size: 13px; color: var(--color-shop-text-sub);
+    }
+    .chat__title { font-family: var(--font-shop); font-size: 17px; color: var(--color-shop-wood-dark); }
+    .chat__remainingSp { font-size: 12px; }
+    @media (min-width: 768px) { .chat__remainingSp { display: none; } }
+    .chat__log {
+      flex: 1; overflow-y: auto; padding: 20px 16px 8px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+
+    .msg { display: flex; gap: 10px; max-width: 100%; animation: rise .3s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    .msg__face { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid var(--color-shop-amber-soft); }
+    .msg__body { flex: 1; min-width: 0; max-width: 640px; }
+    .msg__bubble {
+      background: var(--color-shop-amber-soft); border-radius: 4px 16px 16px 16px;
+      padding: 10px 14px; font-size: 15px; white-space: pre-wrap; word-break: break-word;
+    }
+    .msg--user { justify-content: flex-end; }
+    .msg--user .msg__bubble {
+      background: var(--color-user-bubble); color: var(--color-text-inverse);
+      border-radius: 16px 4px 16px 16px; max-width: 80%; margin-left: auto;
+    }
+    .msg--user .msg__body { display: flex; justify-content: flex-end; }
+
+    .typing { display: inline-flex; gap: 8px; align-items: center; font-size: 13px; color: var(--color-shop-text-sub); }
+    .typing__dots { display: inline-flex; gap: 4px; }
+    .typing__dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--color-shop-amber); animation: blink 1s infinite; }
+    .typing__dots i:nth-child(2) { animation-delay: .15s; }
+    .typing__dots i:nth-child(3) { animation-delay: .3s; }
+    @keyframes blink { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+
+    /* ネタバレ：サーバーが spoiler:true を返したら、本文を伏せて開く操作を挟む */
+    .spoiler { border: 1px solid var(--color-spoiler); border-radius: 4px 16px 16px 16px; overflow: hidden; }
+    .spoiler__head {
+      background: var(--color-spoiler-soft); color: var(--color-spoiler);
+      font-size: 12px; font-weight: 700; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    }
+    .spoiler__btn { all: unset; cursor: pointer; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: var(--color-spoiler); color: var(--color-text-inverse); }
+    .spoiler__btn:focus-visible { outline: 2px solid var(--color-shop-navy); outline-offset: 2px; }
+    .spoiler .msg__bubble { border-radius: 0; filter: blur(6px); user-select: none; transition: filter .3s; }
+    .spoiler.is-open .msg__bubble { filter: none; user-select: auto; }
+
+    /* 記事カード */
+    .cards { margin-top: 10px; display: flex; gap: 10px; overflow-x: auto; padding-bottom: 4px; scroll-snap-type: x mandatory; }
+    .card {
+      flex: 0 0 200px; scroll-snap-align: start;
+      background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 12px; overflow: hidden;
+      text-decoration: none; color: inherit; display: flex; flex-direction: column;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .card:hover, .card:focus-visible { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(var(--color-black-rgb), .12); outline: none; }
+    .card__thumb { aspect-ratio: 16 / 9; position: relative; }
+    .card__cat { position: absolute; left: 8px; top: 8px; font-size: 10px; background: rgba(var(--color-black-rgb), .6); color: var(--color-text-inverse); padding: 1px 8px; border-radius: 999px; }
+    .card__score {
+      position: absolute; right: 8px; bottom: -14px; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--color-score-bg); color: var(--color-text-inverse); border: 2px solid var(--color-score-accent);
+      display: grid; place-items: center; font-size: 12px; font-weight: 700; line-height: 1;
+    }
+    .card__score small { display: block; font-size: 8px; color: var(--color-score-accent); }
+    .card__body { padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .card__title { font-weight: 700; font-size: 14px; line-height: 1.4; padding-right: 40px; }
+    .card__vod { display: flex; flex-wrap: wrap; gap: 4px; }
+    .card__vod span { font-size: 10px; border: 1px solid var(--color-shop-line); border-radius: 4px; padding: 0 6px; color: var(--color-shop-text-sub); }
+    .card__date { font-size: 10px; color: var(--color-shop-text-sub); margin-top: auto; }
+    .card__cta { font-size: 12px; color: var(--color-shop-amber); font-weight: 700; }
+
+    /* 状態のお知らせ（サヨの発言ではなく、システムの表示として区別する） */
+    .alert {
+      align-self: center; max-width: 520px; width: 100%;
+      background: var(--color-alert-soft); color: var(--color-alert);
+      border: 1px solid var(--color-shop-amber); border-radius: 12px; padding: 12px 16px; font-size: 13px;
+    }
+    .alert strong { display: block; font-size: 14px; }
+    .alert__btn { margin-top: 8px; all: unset; cursor: pointer; font-weight: 700; text-decoration: underline; }
+    .alert__btn:focus-visible { outline: 2px solid var(--color-alert); }
+
+    /* 入力 */
+    .composer {
+      position: sticky; bottom: 0; background: var(--color-shop-paper);
+      border-top: 1px solid var(--color-shop-line); padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+    }
+    .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; }
+    .chip {
+      all: unset; cursor: pointer; white-space: nowrap; font-size: 12px;
+      border: 1px solid var(--color-shop-amber); color: var(--color-shop-wood); border-radius: 999px; padding: 4px 12px;
+    }
+    .chip:hover, .chip:focus-visible { background: var(--color-shop-amber-soft); }
+    .composer__row { display: flex; gap: 8px; align-items: flex-end; }
+    .composer__field { flex: 1; position: relative; }
+    .composer__input {
+      width: 100%; resize: none; border: 1px solid var(--color-shop-line); border-radius: 12px;
+      padding: 10px 12px; background: var(--color-shop-bg); font-size: 16px; line-height: 1.5; max-height: 120px;
+    }
+    .composer__input:focus { outline: 2px solid var(--color-shop-amber); border-color: transparent; }
+    .composer__count { position: absolute; right: 10px; bottom: -18px; font-size: 11px; color: var(--color-shop-text-sub); }
+    .composer__count.is-over { color: var(--color-spoiler); font-weight: 700; }
+    .composer__send {
+      all: unset; cursor: pointer; background: var(--color-shop-wood); color: var(--color-text-inverse);
+      border-radius: 12px; padding: 10px 16px; font-weight: 700; font-size: 14px;
+    }
+    .composer__send:disabled { opacity: .4; cursor: not-allowed; }
+    .composer__send:focus-visible { outline: 2px solid var(--color-shop-amber); outline-offset: 2px; }
+    .composer__note { font-size: 11px; color: var(--color-shop-text-sub); margin-top: 14px; }
+
+    /* 入店（合言葉）ゲート */
+    .gate {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(var(--color-black-rgb), .55); backdrop-filter: blur(6px);
+      display: grid; place-items: center; padding: 16px;
+    }
+    .gate[hidden] { display: none; }
+    .gate__card {
+      width: 100%; max-width: 400px; background: var(--color-shop-paper); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 20px 48px rgba(var(--color-black-rgb), .35);
+    }
+    .gate__img { width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: 30% 22%; display: block; }
+    .gate__body { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+    .gate__title { font-family: var(--font-shop); font-size: 20px; color: var(--color-shop-wood-dark); }
+    .gate__text { font-size: 13px; color: var(--color-shop-text-sub); }
+    .gate__input { border: 1px solid var(--color-shop-line); border-radius: 10px; padding: 10px 12px; font-size: 16px; background: var(--color-shop-bg); }
+    .gate__error { font-size: 12px; color: var(--color-spoiler); min-height: 1em; }
+    .gate__btn { all: unset; cursor: pointer; text-align: center; background: var(--color-shop-wood); color: var(--color-text-inverse); border-radius: 10px; padding: 10px; font-weight: 700; }
+    .gate__btn:focus-visible { outline: 2px solid var(--color-shop-amber); outline-offset: 2px; }
+    .gate__hint { font-size: 11px; color: var(--color-shop-text-sub); }
+
+    .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <header class="siteHeader">
+    <span class="siteHeader__logo">KatsumaScore</span>
+    <nav class="siteHeader__nav"><span>映画</span><span>アニメ</span><span>ドラマ</span><span>VOD</span><span>サヨの映画店</span></nav>
+  </header>
+
+  <main class="page">
+    <aside class="counter" data-expression="default" aria-label="案内役">
+      <div class="counter__inner">
+        <div class="counter__stage">
+          <img class="counter__img" src="img/sayo-full.webp" alt="映画店のカウンターで頬杖をつくサヨ">
+          <div class="counter__plate">
+            <div class="counter__name">サヨ</div>
+            <div class="counter__label">AI映画店主</div>
+          </div>
+          <span class="counter__expr" data-expr-label>default（通常）</span>
+        </div>
+        <div class="counter__info">
+          <p class="counter__intro">気分や好みを伺って、KatsumaScoreの記事から作品をご案内します。</p>
+          <div class="meter">
+            <div class="meter__head"><span>今日お話しできる回数</span><span class="meter__num"><span data-remaining>30</span> / 30</span></div>
+            <div class="meter__bar"><div class="meter__fill" data-meter style="width:100%"></div></div>
+          </div>
+          <p class="notice" data-disclaimer></p>
+        </div>
+      </div>
+    </aside>
+
+    <section class="chat" aria-label="サヨとの会話">
+      <div class="chat__head">
+        <span class="chat__title">サヨの映画店</span>
+        <span class="chat__remainingSp">あと <strong data-remaining>30</strong> 回</span>
+      </div>
+      <div class="chat__log" data-log role="log" aria-live="polite"></div>
+      <form class="composer" data-form>
+        <div class="chips" data-chips></div>
+        <div class="composer__row">
+          <div class="composer__field">
+            <label class="srOnly" for="msg">サヨへのメッセージ</label>
+            <textarea id="msg" class="composer__input" rows="1" placeholder="観たい気分や作品名を教えてください" data-input></textarea>
+            <span class="composer__count" data-count>0 / 200</span>
+          </div>
+          <button class="composer__send" type="submit" data-send>送る</button>
+        </div>
+        <p class="composer__note" data-disclaimer></p>
+      </form>
+    </section>
+  </main>
+
+  <div class="gate" data-gate role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+    <div class="gate__card">
+      <img class="gate__img" src="img/sayo-full.webp" alt="">
+      <form class="gate__body" data-gate-form>
+        <h1 class="gate__title" id="gateTitle">サヨの映画店（限定公開中）</h1>
+        <p class="gate__text">ただいまテスターの方だけにご案内しています。お知らせした合言葉を入力してください。参加URLから来た場合は自動で入店します。</p>
+        <label class="srOnly" for="betaKey">合言葉</label>
+        <input id="betaKey" class="gate__input" type="password" autocomplete="off" placeholder="合言葉" data-gate-input>
+        <p class="gate__error" data-gate-error aria-live="assertive"></p>
+        <button class="gate__btn" type="submit">入店する</button>
+        <p class="gate__hint">モックでは何を入力しても入店できます（空欄のみエラー）。</p>
+      </form>
+    </div>
+  </div>
+
+  <script src="mock.js"></script>
+  <script>
+    (() => {
+      const M = window.SayoMock;
+      const $ = (s) => document.querySelector(s);
+      const log = $('[data-log]');
+      const input = $('[data-input]');
+      const send = $('[data-send]');
+      const count = $('[data-count]');
+      const counter = $('.counter');
+      let busy = false;
+      let locked = false;
+      let lastMessage = '';
+
+      document.querySelectorAll('[data-disclaimer]').forEach((el) => { el.textContent = M.DISCLAIMER; });
+
+      const setExpression = (key) => {
+        counter.dataset.expression = key;
+        $('[data-expr-label]').textContent = M.EXPRESSION_LABEL[key];
+      };
+      const setRemaining = (n) => {
+        document.querySelectorAll('[data-remaining]').forEach((el) => { el.textContent = n; });
+        $('[data-meter]').style.width = `${(n / 30) * 100}%`;
+      };
+      const scrollBottom = () => { log.scrollTop = log.scrollHeight; window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' }); };
+
+      const cardHtml = (a) => `
+        <a class="card" href="${a.url}">
+          <div class="card__thumb" style="background:linear-gradient(135deg,hsl(${a.hue} 45% 32%),hsl(${a.hue + 30} 55% 55%))">
+            <span class="card__cat">${a.category}</span>
+            <span class="card__score"><span>${a.katsumaScore.toFixed(1)}<small>${M.scoreRank(a.katsumaScore)}</small></span></span>
+          </div>
+          <div class="card__body">
+            <span class="card__title">${M.escapeHtml(a.title)}</span>
+            <span class="card__vod">${a.vod.map((v) => `<span>${v}</span>`).join('')}</span>
+            <span class="card__date">配信情報は${a.vodCheckedAt}時点</span>
+            <span class="card__cta">レビューを読む →</span>
+          </div>
+        </a>`;
+
+      const addSayo = (text, opts = {}) => {
+        const el = document.createElement('div');
+        el.className = 'msg';
+        const bubble = `<div class="msg__bubble">${M.escapeHtml(text)}</div>`;
+        const body = opts.spoiler
+          ? `<div class="spoiler"><div class="spoiler__head"><span>ネタバレを含む返事です</span><button type="button" class="spoiler__btn" aria-expanded="false">表示する</button></div>${bubble}</div>`
+          : bubble;
+        const cards = opts.articles && opts.articles.length ? `<div class="cards">${opts.articles.map(cardHtml).join('')}</div>` : '';
+        el.innerHTML = `<img class="msg__face" src="${M.IMG.face}" alt="サヨ"><div class="msg__body">${body}${cards}</div>`;
+        const btn = el.querySelector('.spoiler__btn');
+        if (btn) {
+          btn.addEventListener('click', () => {
+            const box = el.querySelector('.spoiler');
+            const open = box.classList.toggle('is-open');
+            btn.textContent = open ? '隠す' : '表示する';
+            btn.setAttribute('aria-expanded', String(open));
+          });
+        }
+        log.appendChild(el);
+        scrollBottom();
+      };
+      const addUser = (text) => {
+        const el = document.createElement('div');
+        el.className = 'msg msg--user';
+        el.innerHTML = `<div class="msg__body"><div class="msg__bubble">${M.escapeHtml(text)}</div></div>`;
+        log.appendChild(el);
+        scrollBottom();
+      };
+      const addTyping = () => {
+        const el = document.createElement('div');
+        el.className = 'msg';
+        el.innerHTML = `<img class="msg__face" src="${M.IMG.face}" alt=""><div class="msg__body"><div class="msg__bubble"><span class="typing">棚を探しています<span class="typing__dots"><i></i><i></i><i></i></span></span></div></div>`;
+        log.appendChild(el);
+        scrollBottom();
+        return el;
+      };
+      const addAlert = (status) => {
+        const info = M.STATUS_MESSAGE[status];
+        const el = document.createElement('div');
+        el.className = 'alert';
+        el.setAttribute('role', 'status');
+        el.innerHTML = `<strong>${info.title}</strong>${info.body ? `<span>${info.body}</span>` : ''}${info.action ? `<br><button type="button" class="alert__btn">${info.action}</button>` : ''}`;
+        const btn = el.querySelector('.alert__btn');
+        if (btn) btn.addEventListener('click', () => {
+          el.remove();
+          if (status === 'session_expired') { $('[data-gate]').hidden = false; return; }
+          submit(lastMessage, { retry: true });
+        });
+        log.appendChild(el);
+        scrollBottom();
+      };
+
+      const syncComposer = () => {
+        const n = input.value.length;
+        count.textContent = `${n} / ${M.maxChars}`;
+        count.classList.toggle('is-over', n > M.maxChars);
+        send.disabled = busy || locked || n === 0 || n > M.maxChars;
+        input.disabled = locked;
+        input.style.height = 'auto';
+        input.style.height = `${input.scrollHeight}px`;
+      };
+      const lock = (placeholder) => { locked = true; input.value = ''; input.placeholder = placeholder; syncComposer(); };
+
+      const submit = async (text, opts = {}) => {
+        if (!text || busy || locked) return;
+        busy = true;
+        lastMessage = text;
+        if (!opts.retry) addUser(text);
+        input.value = '';
+        syncComposer();
+        setExpression('thinking');
+        const typing = addTyping();
+        const { body } = await M.send(text);
+        typing.remove();
+        busy = false;
+        setRemaining(body.remaining);
+        setExpression(M.expressionFor(body));
+        if (body.status === 'ok' || body.status === 'no_match') {
+          addSayo(body.reply, body);
+        } else {
+          addAlert(body.status);
+          if (body.status === 'limit_user' || body.status === 'limit_global') lock('今日はここまでです。また明日お越しください');
+          if (body.status === 'disabled') lock('ただいま準備中です');
+        }
+        if (body.remaining === 0 && body.status === 'ok') lock('今日はここまでです。また明日お越しください');
+        syncComposer();
+      };
+
+      M.QUICK_REPLIES.forEach((q) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.textContent = q;
+        b.addEventListener('click', () => submit(q));
+        $('[data-chips]').appendChild(b);
+      });
+      input.addEventListener('input', syncComposer);
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) { e.preventDefault(); submit(input.value.trim()); }
+      });
+      $('[data-form]').addEventListener('submit', (e) => { e.preventDefault(); submit(input.value.trim()); });
+
+      $('[data-gate-form]').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const v = $('[data-gate-input]').value.trim();
+        if (!v) { $('[data-gate-error]').textContent = '合言葉を入力してください'; return; }
+        $('[data-gate]').hidden = true;
+        locked = false;
+        input.placeholder = '観たい気分や作品名を教えてください';
+        if (!log.children.length) addSayo(M.greeting());
+        syncComposer();
+        input.focus();
+      });
+
+      syncComposer();
+      M.mountDebug();
+    })();
+  </script>
+</body>
+</html>

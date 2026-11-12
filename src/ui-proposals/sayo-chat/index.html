@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 比較</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- サヨ会話UIの3案を並べて比較する入口ページ（ui-proposals専用） -->
+  <style>
+    :root {
+      --color-bg: #f7f5f2;
+      --color-surface: #ffffff;
+      --color-text: #1f2430;
+      --color-text-sub: #5f6675;
+      --color-line: #e3e0da;
+      --color-secondary: #1e1b4b;
+      --color-a: #c8862e;
+      --color-b: #6d28d9;
+      --color-c: #9b2c4a;
+      --color-good: #0f766e;
+      --color-bad: #b45309;
+      --color-text-inverse: #ffffff;
+      --color-black-rgb: 0, 0, 0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.8; }
+    .head { background: var(--color-secondary); color: var(--color-text-inverse); padding: 32px 16px; }
+    .head__inner, .main { max-width: 1120px; margin: 0 auto; }
+    .head h1 { font-size: 24px; line-height: 1.4; }
+    .head p { opacity: .8; font-size: 14px; margin-top: 6px; }
+    .main { padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 40px; }
+    h2 { font-size: 18px; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .card__frame { position: relative; aspect-ratio: 4/3; overflow: hidden; border-bottom: 1px solid var(--color-line); background: var(--color-bg); }
+    .card__frame iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 960px; border: 0; transform: scale(.28); transform-origin: 0 0; pointer-events: none; }
+    @media (max-width: 767px) { .card__frame iframe { transform: scale(.27); } }
+    .card__body { padding: 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card__tag { align-self: flex-start; font-size: 11px; font-weight: 700; color: var(--color-text-inverse); padding: 1px 10px; border-radius: 999px; }
+    .card--a .card__tag { background: var(--color-a); }
+    .card--b .card__tag { background: var(--color-b); }
+    .card--c .card__tag { background: var(--color-c); }
+    .card__title { font-size: 17px; line-height: 1.5; }
+    .card__lead { font-size: 13px; color: var(--color-text-sub); }
+    .card ul { list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+    .card li::before { margin-right: 6px; font-weight: 700; }
+    .good li::before { content: '＋'; color: var(--color-good); }
+    .bad li::before { content: '－'; color: var(--color-bad); }
+    .card__open { margin-top: auto; align-self: flex-start; font-size: 13px; font-weight: 700; color: var(--color-secondary); }
+    table { width: 100%; border-collapse: collapse; background: var(--color-surface); border-radius: 12px; overflow: hidden; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--color-line); vertical-align: top; }
+    th { background: var(--color-bg); font-weight: 700; white-space: nowrap; }
+    .tableWrap { overflow-x: auto; border: 1px solid var(--color-line); border-radius: 12px; }
+    .note { font-size: 13px; color: var(--color-text-sub); }
+    code { font-size: 12px; background: var(--color-bg); padding: 0 4px; border-radius: 4px; }
+    ol { padding-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+  </style>
+</head>
+<body>
+  <header class="head">
+    <div class="head__inner">
+      <h1>サヨ会話UI　3案の比較（モック）</h1>
+      <p>katsumascore-ai-chat の API（/session・/message）と同じ形の架空応答で動きます。作品名・スコア・配信先はすべて架空です。立ち絵は「仮」画像1枚を全表情に流用しています。</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <section>
+      <h2>3つの案</h2>
+      <div class="grid">
+        <article class="card card--a">
+          <div class="card__frame"><iframe src="a-shop-page.html" title="案Aのプレビュー" loading="lazy" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案A</span>
+            <h3 class="card__title">専用ページ「サヨの映画店」</h3>
+            <p class="card__lead">/chat に専用ページを置く。PCは左に立ち絵のカウンター、右に会話。SPは上に立ち絵の帯、下に会話。木目と紙の暖色で、サイト本体と空気を変える。</p>
+            <ul class="good"><li>立ち絵と会話を同時に大きく見せられる</li><li>記事カードを横並びで広く出せる</li><li>合言葉の入口・注意書き・残り回数を1画面にまとめやすい</li></ul>
+            <ul class="bad"><li>専用ページへ来てもらう導線が別に必要</li><li>記事を読みながらは使えない</li></ul>
+            <a class="card__open" href="a-shop-page.html">案Aを開く →</a>
+          </div>
+        </article>
+        <article class="card card--b">
+          <div class="card__frame"><iframe src="b-floating-widget.html" title="案Bのプレビュー" loading="lazy" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案B</span>
+            <h3 class="card__title">全ページのフローティングウィジェット</h3>
+            <p class="card__lead">右下の顔アイコンから開くパネル。PCは右下に400px、SPは全画面のシート。記事詳細では「この作品についてサヨに聞く」から質問を差し込める。</p>
+            <ul class="good"><li>どのページからでも話しかけられ、利用が増えやすい</li><li>記事の文脈から質問を始められる</li><li>サイト本体の配色に溶け込む</li></ul>
+            <ul class="bad"><li>立ち絵が小さく、キャラクターの魅力が出にくい</li><li>全ページのJSが増える（読み込みは開いた時に遅らせたい）</li><li>ページを移ると画面の会話が途切れる（保持の仕組みが要る）</li></ul>
+            <a class="card__open" href="b-floating-widget.html">案Bを開く →</a>
+          </div>
+        </article>
+        <article class="card card--c">
+          <div class="card__frame"><iframe src="c-novel-stage.html" title="案Cのプレビュー" loading="lazy" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案C</span>
+            <h3 class="card__title">ノベル風の舞台</h3>
+            <p class="card__lead">立ち絵を画面いっぱいに置き、名前札つきのウィンドウで返事を1文字ずつ表示。記事カードは「棚から出した作品」として浮かび上がる。過去の会話は履歴ドロワーで読む。</p>
+            <ul class="good"><li>キャラクターの存在感がいちばん強い</li><li>正式な立ち絵（5表情）が届くと表情の変化が最も活きる</li><li>1往復ずつ見せるので、返事が短い人格と相性がよい</li></ul>
+            <ul class="bad"><li>過去の返事や記事カードを見返しにくい</li><li>1文字表示は読む速さの合わない人もいる（クリックで全文、動きを減らす設定に対応）</li><li>全画面の絵の容量が大きい</li></ul>
+            <a class="card__open" href="c-novel-stage.html">案Cを開く →</a>
+          </div>
+        </article>
+      </div>
+      <p class="note" style="margin-top:12px">各案の左下（または右上）の「モック操作」で、次の送信を上限・エラー・セッション切れなどに切り替えられます。入力に「ホラー」「泣ける」「裏話」「ネタバレ」「AI」を含めると、それぞれの架空の応答を返します。それ以外は「該当なし」になります。</p>
+    </section>
+
+    <section>
+      <h2>3案に共通する作り（API に合わせた決めごと）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>項目</th><th>画面の扱い</th><th>根拠</th></tr></thead>
+          <tbody>
+            <tr><td>挨拶</td><td>最初の返事は <code>/session</code> の <code>greetings.sayo</code> を表示（時刻で「おはようございます」等が変わる）</td><td>SessionResponse</td></tr>
+            <tr><td>待ち時間</td><td>送信中は表情を thinking にし、「棚を探しています」等を表示。応答は一括（最大30秒）</td><td>非ストリーミング、LLM_TIMEOUT_MS=30000</td></tr>
+            <tr><td>入力</td><td>200字まで。文字数を表示し、超えたら送信不可</td><td>MAX_INPUT_CHARS=200</td></tr>
+            <tr><td>残り回数</td><td>応答の <code>remaining</code> を毎回反映。0で入力欄を止める</td><td>sid 30往復/日（限定公開）</td></tr>
+            <tr><td>記事カード</td><td>最大3件。題名・カテゴリ・スコア・配信先と「〇〇時点」を表示し、記事へ遷移</td><td>ArticleCard（vodCheckedAt）</td></tr>
+            <tr><td>ネタバレ</td><td><code>spoiler: true</code> のとき本文を伏せ、利用者が開く操作を挟む（案ごとに見せ方が違う）</td><td>サーバーが判定した結果をそのまま使う</td></tr>
+            <tr><td>失敗</td><td>サヨの発言ではなく、システムの表示として出す（上限・停止・セッション切れ・通信エラー）</td><td>status の列挙</td></tr>
+            <tr><td>注意書き</td><td>「AIの回答」「個人情報を入力しない」を常に表示</td><td>Phase 1b の公開条件</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>表情の切り替え（フロントで決める案）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>表情</th><th>出す場面</th></tr></thead>
+          <tbody>
+            <tr><td>default</td><td>挨拶、記事カードのない返事</td></tr>
+            <tr><td>thinking</td><td>送信してから応答が来るまで</td></tr>
+            <tr><td>recommend</td><td>記事カードが1件以上ある返事</td></tr>
+            <tr><td>sorry</td><td>no_match、上限、エラーなど ok 以外</td></tr>
+            <tr><td>secret</td><td>spoiler: true の返事</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:8px">API は表情を返さないため、上の対応をフロントに置く想定です。モックでは画像が1枚なので、拡大・色味の変化と右上の表情名で切り替えを示しています。</p>
+    </section>
+
+    <section>
+      <h2>決めてほしいこと</h2>
+      <ol>
+        <li>どの案を軸にするか（例：B のウィジェットから A の専用ページへ「大きく開く」組み合わせも可能）</li>
+        <li>ページを移ったり再読み込みしたりしたとき、画面の会話を残すか（API に履歴取得はなく、残すならブラウザ側で保持する）</li>
+        <li>限定公開の入口：参加URLのクエリで合言葉を渡すか、入力欄を出すか（案Aに入力欄の例あり）</li>
+        <li>ネタバレの見せ方：伏せて「表示する」（A）／確認してから出す（B）／ラベルだけ（C）</li>
+      </ol>
+    </section>
+  </main>
+</body>
+</html>
