@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 案E 要約ページ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Old+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <!--
+    案E：Postカードの「サヨの要約」から遷移する専用ページ（/{locale}/sayo/{記事slug} などを想定）
+    - 上：サヨの立ち絵と作品。中：サヨの要約（承認済みの summarySafe 等）。下：続けて会話（LLM）。
+    - 末尾に「同じ一覧のほかの作品」を並べ、ページ内で次々に要約を聞ける。
+    - 要約は承認済みデータなので SSG にできる。ただし記事本体と内容が重なるため noindex を想定。
+    - 遷移元（TOP／リスト）へ戻るリンクを置く（?from=top|list）。
+  -->
+  <style>
+    :root {
+      --color-secondary: #1e1b4b;
+      --color-accent: #6d28d9;
+      --color-accent-strong: #ff2dfc;
+      --color-bg: #ffffff;
+      --color-score-bg: #14082e;
+      --color-text-inverse: #ffffff;
+      --color-shop-bg: #f4ece0;
+      --color-shop-paper: #fffaf2;
+      --color-shop-wood: #5b3a24;
+      --color-shop-wood-dark: #3a2416;
+      --color-shop-amber: #c8862e;
+      --color-shop-amber-soft: #f3dfc1;
+      --color-shop-text: #2f2219;
+      --color-shop-sub: #7a6656;
+      --color-shop-line: #e3d4bf;
+      --color-black-rgb: 0, 0, 0;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-shop: 'Zen Old Mincho', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--color-shop-bg); color: var(--color-shop-text); line-height: 1.8; }
+    button, input { font: inherit; color: inherit; }
+    .siteHeader { background: var(--color-secondary); color: var(--color-text-inverse); padding: 12px 16px; font-weight: 700; }
+
+    .crumb { max-width: 1080px; margin: 0 auto; padding: 12px 16px; font-size: 12px; color: var(--color-shop-sub); display: flex; gap: 8px; flex-wrap: wrap; }
+    .crumb a { color: var(--color-shop-wood); font-weight: 700; text-decoration: none; }
+    .crumb a:hover { text-decoration: underline; }
+
+    .layout { max-width: 1080px; margin: 0 auto; padding: 0 16px 64px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    @media (min-width: 768px) { .layout { grid-template-columns: 320px minmax(0, 1fr); gap: 32px; align-items: start; } }
+
+    /* 立ち絵（SPは帯、PCは左に固定） */
+    .stage { position: relative; border-radius: 16px; overflow: hidden; aspect-ratio: 16/9; box-shadow: 0 10px 28px rgba(var(--color-black-rgb), .15); }
+    @media (min-width: 768px) { .stage { aspect-ratio: 4/5; position: sticky; top: 16px; } }
+    .stage img { width: 100%; height: 100%; object-fit: cover; object-position: 32% 18%; display: block; transition: transform .6s ease; }
+    .stage[data-expression="recommend"] img { transform: scale(1.05); }
+    .stage[data-expression="thinking"] img { transform: scale(1.02); filter: saturate(.85); }
+    .stage__plate { position: absolute; left: 12px; bottom: 12px; background: var(--color-shop-paper); border-radius: 10px; padding: 4px 14px; box-shadow: 0 4px 12px rgba(var(--color-black-rgb), .25); }
+    .stage__name { font-family: var(--font-shop); font-size: 20px; color: var(--color-shop-wood-dark); line-height: 1.3; }
+    .stage__label { font-size: 10px; color: var(--color-shop-sub); }
+
+    .main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+
+    .work { display: flex; gap: 14px; background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 16px; padding: 14px; }
+    .work__thumb { width: 84px; aspect-ratio: 2/3; border-radius: 8px; flex: none; }
+    .work__meta { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+    .work__cat { font-size: 12px; color: var(--color-shop-sub); }
+    .work__title { font-size: 22px; line-height: 1.35; }
+    .work__info { font-size: 12px; color: var(--color-shop-sub); display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .work__score { background: var(--color-score-bg); color: var(--color-text-inverse); font-weight: 700; padding: 0 8px; border-radius: 4px; }
+    .work__score b { color: var(--color-accent-strong); margin-left: 2px; }
+    .work__read { align-self: flex-start; margin-top: 6px; text-decoration: none; background: var(--color-accent); color: var(--color-text-inverse); font-weight: 700; font-size: 13px; padding: 6px 16px; border-radius: 999px; }
+
+    .h2 { font-family: var(--font-shop); font-size: 18px; color: var(--color-shop-wood-dark); display: flex; align-items: center; gap: 8px; }
+    .h2::before { content: ''; width: 4px; height: 18px; border-radius: 2px; background: var(--color-shop-amber); }
+
+    .say { display: flex; gap: 10px; animation: rise .3s ease; }
+    @keyframes rise { from { opacity: 0; transform: translateY(6px); } }
+    .say__face { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid var(--color-shop-amber-soft); }
+    .say__bubble { flex: 1; min-width: 0; background: var(--color-shop-amber-soft); border-radius: 4px 16px 16px 16px; padding: 12px 16px; font-size: 15px; }
+    .say__lead { display: block; font-weight: 700; margin-bottom: 4px; }
+    .say--user { justify-content: flex-end; }
+    .say--user .say__bubble { flex: none; max-width: 80%; background: var(--color-secondary); color: var(--color-text-inverse); border-radius: 16px 4px 16px 16px; }
+    .typing { display: inline-flex; gap: 4px; }
+    .typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--color-shop-amber); animation: blink 1s infinite; }
+    .typing i:nth-child(2) { animation-delay: .15s; } .typing i:nth-child(3) { animation-delay: .3s; }
+    @keyframes blink { 50% { opacity: .2; } }
+
+    .facts { display: grid; grid-template-columns: 1fr; gap: 10px; }
+    @media (min-width: 768px) { .facts { grid-template-columns: 1fr 1fr; } }
+    .fact { background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+    .fact__label { display: block; font-size: 11px; font-weight: 700; color: var(--color-shop-amber); }
+    .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+    .tags span { font-size: 12px; padding: 1px 10px; border-radius: 999px; background: var(--color-shop-amber-soft); color: var(--color-shop-wood); }
+    .src { font-size: 11px; color: var(--color-shop-sub); }
+
+    .chat { background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+    .chat__head { display: flex; justify-content: space-between; font-size: 12px; color: var(--color-shop-sub); }
+    .chat__log { display: flex; flex-direction: column; gap: 12px; }
+    .chat__log:empty { display: none; }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip { all: unset; cursor: pointer; font-size: 12px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--color-shop-amber); color: var(--color-shop-wood); }
+    .chip:hover, .chip:focus-visible { background: var(--color-shop-amber-soft); }
+    .ask { display: flex; gap: 6px; }
+    .ask input { flex: 1; min-width: 0; border: 1px solid var(--color-shop-line); border-radius: 10px; padding: 10px 12px; font-size: 16px; background: var(--color-shop-bg); }
+    .ask input:focus { outline: 2px solid var(--color-shop-amber); border-color: transparent; }
+    .ask button { all: unset; cursor: pointer; padding: 10px 16px; border-radius: 10px; background: var(--color-shop-wood); color: var(--color-text-inverse); font-weight: 700; font-size: 14px; }
+    .chat__note { font-size: 11px; color: var(--color-shop-sub); }
+
+    .others { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 6px; }
+    .other { display: block; flex: 0 0 150px; text-decoration: none; color: inherit; background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); border-radius: 12px; overflow: hidden; transition: transform .2s ease; }
+    .other:hover, .other:focus-visible { transform: translateY(-2px); outline: 2px solid var(--color-shop-amber); }
+    .other__thumb { aspect-ratio: 16/10; position: relative; }
+    .other__face { position: absolute; right: 6px; bottom: 6px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--color-shop-paper); object-fit: cover; }
+    .other__body { display: block; padding: 8px 10px; font-size: 12px; }
+    .other__title { font-weight: 700; display: block; line-height: 1.4; }
+    .other__cta { color: var(--color-shop-amber); font-size: 11px; font-weight: 700; }
+
+    .urlTag { font-size: 11px; color: var(--color-shop-sub); background: var(--color-shop-paper); border: 1px dashed var(--color-shop-line); border-radius: 6px; padding: 2px 8px; align-self: flex-start; }
+    .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <header class="siteHeader">KatsumaScore</header>
+  <nav class="crumb" aria-label="パンくず"><a data-back href="d-card-summary.html">← 一覧に戻る</a><span>／</span><span>サヨの要約</span></nav>
+
+  <div class="layout">
+    <aside class="stage" data-expression="default">
+      <img src="img/sayo-full.webp" alt="映画店のカウンターで頬杖をつくサヨ">
+      <div class="stage__plate"><div class="stage__name">サヨ</div><div class="stage__label">AI映画店主</div></div>
+    </aside>
+
+    <main class="main">
+      <span class="urlTag" data-url>/ja/sayo/…</span>
+      <section class="work" data-work></section>
+
+      <section class="main" style="gap:12px" aria-labelledby="sumTitle">
+        <h2 class="h2" id="sumTitle">サヨの要約</h2>
+        <div data-summary aria-live="polite"></div>
+        <div class="facts" data-facts></div>
+        <p class="src">要約はKatsumaScoreの記事をもとに作成し、編集部が確認しています（ネタバレなし）。</p>
+      </section>
+
+      <section class="chat" aria-labelledby="chatTitle">
+        <div class="chat__head"><h2 class="h2" id="chatTitle">この作品について聞く</h2><span>今日あと <strong data-remaining>30</strong> 回</span></div>
+        <div class="chat__log" data-log aria-live="polite"></div>
+        <div class="chips" data-chips></div>
+        <form class="ask" data-ask><label class="srOnly" for="askInput">サヨへの質問</label><input id="askInput" maxlength="200" placeholder="結末、似た作品、見どころなど"><button type="submit">聞く</button></form>
+        <p class="chat__note">ここから先はAIとの会話です（1回ずつ数えます）。個人情報は入力しないでください。</p>
+      </section>
+
+      <section class="main" style="gap:12px" aria-labelledby="othersTitle">
+        <h2 class="h2" id="othersTitle">同じ一覧のほかの作品</h2>
+        <div class="others" data-others></div>
+      </section>
+    </main>
+  </div>
+
+  <script src="mock.js"></script>
+  <script src="card-mock.js"></script>
+  <script>
+    (() => {
+      const C = window.CardMock;
+      const M = window.SayoMock;
+      const $ = (s) => document.querySelector(s);
+      const params = new URLSearchParams(location.search);
+      const id = Number(params.get('id')) || C.POSTS[0].id;
+      const from = params.get('from') === 'list' ? 'list' : 'top';
+      const p = C.POSTS.find((x) => x.id === id) || C.POSTS[0];
+      let remaining = 30;
+
+      $('[data-back]').href = `d-card-summary.html?view=${from}&mode=page`;
+      $('[data-back]').textContent = from === 'list' ? '← 映画の一覧に戻る' : '← TOPに戻る';
+      $('[data-url]').textContent = `想定URL：/ja/sayo/{記事slug}（いま表示中：記事ID ${p.id}）`;
+      document.title = `サヨの要約：${p.title}`;
+
+      const thumb = (deg) => `background:linear-gradient(${deg}deg,hsl(${p.hue} 45% 28%),hsl(${p.hue + 30} 55% 55%))`;
+      $('[data-work]').innerHTML = `
+        <span class="work__thumb" style="${thumb(160)}"></span>
+        <div class="work__meta">
+          <span class="work__cat">${p.category} ・ ${p.date}</span>
+          <h1 class="work__title">${p.title}</h1>
+          <span class="work__info"><span class="work__score">${p.score.toFixed(1)}<b>${C.scoreRank(p.score)}</b></span><span>${p.vodLabel}（${p.vodCheckedAt}時点）</span></span>
+          <a class="work__read" href="${p.slug}">レビューを読む →</a>
+        </div>`;
+
+      const sayo = (inner) => `<img class="say__face" src="img/sayo-face.webp" alt="サヨ"><div class="say__bubble">${inner}</div>`;
+      const node = (cls, html) => { const el = document.createElement('div'); el.className = cls; el.innerHTML = html; return el; };
+
+      $('[data-summary]').appendChild(node('say', sayo('<span class="typing"><i></i><i></i><i></i></span>')));
+      C.fetchSummary(p.id).then((s) => {
+        $('[data-summary]').innerHTML = '';
+        $('[data-summary]').appendChild(node('say', sayo(`<span class="say__lead">${s.lead}</span>${M.escapeHtml(s.summary)}`)));
+        $('[data-facts]').innerHTML = `<div class="fact"><span class="fact__label">こんな方に</span>${s.recommendFor}</div><div class="fact"><span class="fact__label">気分</span><div class="tags">${s.moodTags.map((m) => `<span>${m}</span>`).join('')}</div></div>`;
+        $('.stage').dataset.expression = 'recommend';
+      });
+
+      const log = $('[data-log]');
+      const ask = async (q) => {
+        if (!q || remaining <= 0) return;
+        log.appendChild(node('say say--user', `<div class="say__bubble">${M.escapeHtml(q)}</div>`));
+        const t = node('say', sayo('<span class="typing"><i></i><i></i><i></i></span>'));
+        log.appendChild(t);
+        $('.stage').dataset.expression = 'thinking';
+        await new Promise((r) => setTimeout(r, 1200));
+        t.remove();
+        remaining -= 1;
+        $('[data-remaining]').textContent = remaining;
+        const r = C.followUpReply(p, q);
+        const links = r.articles.map((a) => `<br><a href="e-summary-page.html?id=${a.id}&from=${from}" style="color:var(--color-accent);font-weight:700">→ 『${a.title}』の要約を見る</a>`).join('');
+        log.appendChild(node('say', sayo(M.escapeHtml(r.reply) + links)));
+        $('.stage').dataset.expression = r.articles.length ? 'recommend' : 'default';
+      };
+      C.followUps(p).concat([`『${p.title}』の結末を教えて（ネタバレ）`]).forEach((q) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.textContent = q;
+        b.addEventListener('click', () => ask(q));
+        $('[data-chips]').appendChild(b);
+      });
+      $('[data-ask]').addEventListener('submit', (e) => { e.preventDefault(); const i = $('#askInput'); ask(i.value.trim()); i.value = ''; });
+
+      $('[data-others]').innerHTML = C.POSTS.filter((x) => x.id !== p.id).map((x) => `
+        <a class="other" href="e-summary-page.html?id=${x.id}&from=${from}">
+          <span class="other__thumb" style="display:block;background:linear-gradient(135deg,hsl(${x.hue} 45% 28%),hsl(${x.hue + 30} 55% 55%))"><img class="other__face" src="img/sayo-face.webp" alt=""></span>
+          <span class="other__body"><span class="other__title">${x.title}</span><span class="other__cta">要約を聞く →</span></span>
+        </a>`).join('');
+    })();
+  </script>
+</body>
+</html>

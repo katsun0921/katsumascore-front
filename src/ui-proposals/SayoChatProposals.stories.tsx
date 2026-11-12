@@ -35,3 +35,11 @@ export const FloatingWidget: Story = {
 export const NovelStage: Story = {
   args: { src: '/ui-proposals/sayo-chat/c-novel-stage.html' },
 };
+
+export const CardSummaryModal: Story = {
+  args: { src: '/ui-proposals/sayo-chat/d-card-summary.html' },
+};
+
+export const CardSummaryPage: Story = {
+  args: { src: '/ui-proposals/sayo-chat/e-summary-page.html' },
+};
