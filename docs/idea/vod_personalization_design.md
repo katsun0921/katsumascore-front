@@ -1,5 +1,7 @@
 # KatsumaScore VODパーソナライズ & 通知機能設計
 
+> 関連: PWA化・お気に入り・Web Push の技術調査は [`pwa_favorite_push_design.md`](pwa_favorite_push_design.md) を参照
+
 ## ■ 概要
 
 本ドキュメントは以下の機能を既存アーキテクチャに統合する設計を定義する。
