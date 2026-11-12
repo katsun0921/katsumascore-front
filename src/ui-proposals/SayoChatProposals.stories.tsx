@@ -24,6 +24,10 @@ export const Overview: Story = {
   args: { src: '/ui-proposals/sayo-chat/index.html' },
 };
 
+export const Placements: Story = {
+  args: { src: '/ui-proposals/sayo-chat/placements.html' },
+};
+
 export const ShopPage: Story = {
   args: { src: '/ui-proposals/sayo-chat/a-shop-page.html' },
 };

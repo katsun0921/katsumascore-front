@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨの置き場所 比較</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- 案A〜Eを「TOPページ」「リストページ」に置いた見え方を、PC／SPで並べて比べる一覧（ui-proposals専用） -->
+  <style>
+    :root {
+      --color-bg: #f7f5f2; --color-surface: #ffffff; --color-text: #1f2430; --color-text-sub: #5f6675; --color-line: #e3e0da;
+      --color-secondary: #1e1b4b; --color-text-inverse: #ffffff;
+      --color-a: #c8862e; --color-b: #6d28d9; --color-c: #9b2c4a; --color-d: #0f766e; --color-e: #b45309;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
+    .head { background: var(--color-secondary); color: var(--color-text-inverse); padding: 24px 16px; }
+    .head__inner, .main { max-width: 1280px; margin: 0 auto; }
+    .head h1 { font-size: 22px; }
+    .head p { font-size: 13px; opacity: .8; }
+    .toolbar { position: sticky; top: 0; z-index: 10; background: var(--color-bg); border-bottom: 1px solid var(--color-line); }
+    .toolbar__inner { max-width: 1280px; margin: 0 auto; padding: 8px 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+    .toolbar button { all: unset; cursor: pointer; padding: 3px 14px; border-radius: 999px; border: 1px solid var(--color-secondary); font-size: 13px; }
+    .toolbar button[aria-pressed="true"] { background: var(--color-secondary); color: var(--color-text-inverse); }
+    .toolbar button:focus-visible { outline: 2px solid var(--color-b); outline-offset: 2px; }
+    .toolbar a { margin-left: auto; color: var(--color-secondary); font-weight: 700; }
+    .main { padding: 24px 16px 64px; display: flex; flex-direction: column; gap: 40px; }
+    .row__head { display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; margin-bottom: 4px; }
+    .tag { font-size: 12px; font-weight: 700; color: var(--color-text-inverse); padding: 1px 10px; border-radius: 999px; }
+    .row h2 { font-size: 18px; }
+    .row__lead { font-size: 13px; color: var(--color-text-sub); margin-bottom: 12px; }
+    .pair { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    @media (min-width: 900px) { .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .is-sp .pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    @media (min-width: 900px) { .is-sp .pair { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    .shot { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 12px; overflow: hidden; }
+    .shot__label { display: flex; justify-content: space-between; font-size: 12px; padding: 6px 10px; border-bottom: 1px solid var(--color-line); }
+    .shot__label a { color: var(--color-secondary); font-weight: 700; }
+    .shot__frame { position: relative; overflow: hidden; background: var(--color-bg); }
+    .shot__frame iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; }
+    .points { margin-top: 10px; font-size: 13px; display: grid; gap: 4px 24px; grid-template-columns: minmax(0, 1fr); }
+    @media (min-width: 900px) { .points { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .points dt { font-weight: 700; font-size: 12px; color: var(--color-text-sub); }
+    .points dd { margin: 0 0 6px; }
+  </style>
+</head>
+<body>
+  <header class="head"><div class="head__inner">
+    <h1>サヨの置き場所：案A〜EをTOP・リストに置いたとき</h1>
+    <p>どの案も「TOPページとリストページだけに置く」前提です。各画面は実際に操作できます（右上の「開く」で単独表示）。作品・要約はすべて架空です。</p>
+  </div></header>
+
+  <div class="toolbar"><div class="toolbar__inner">
+    表示幅：<button type="button" data-w="pc" aria-pressed="true">PC（1280px）</button><button type="button" data-w="sp" aria-pressed="false">SP（390px）</button>
+    <a href="index.html">案の比較（説明）へ →</a>
+  </div></div>
+
+  <main class="main" data-main></main>
+
+  <script>
+    (() => {
+      /* 各案：TOP・リストそれぞれの表示URLと、置き方の説明 */
+      const ROWS = [
+        {
+          id: 'A', color: 'var(--color-a)', title: '専用ページへの入口（サヨの映画店）',
+          lead: 'TOP・リストには「入口」だけを置き、会話は専用ページで行う。',
+          top: 'place-a.html?view=top&embed=1', list: 'place-a.html?view=list&embed=1',
+          points: [['TOP', 'ヒーロー直下に、立ち絵つきの大きな「お店の入口」バナー。候補ボタンを押すと、その質問を持って専用ページへ'], ['リスト', '絞り込みの下に細い帯「映画選びに迷ったら」。押すと映画の中から探す前提で専用ページへ'], ['良い点', '一覧の邪魔をしない。会話は広い画面で落ち着いてできる'], ['気になる点', 'ページを移る。入口バナーがTOPの縦の長さを使う']],
+        },
+        {
+          id: 'B', color: 'var(--color-b)', title: 'フローティングウィジェット',
+          lead: 'ページの中身は変えず、右下にサヨのボタンを重ねる。TOP・リスト以外には出さない。',
+          top: 'place-b.html?view=top&embed=1', list: 'place-b.html?view=list&embed=1',
+          points: [['TOP', '右下のボタンと吹き出し「何を観ようか迷ったら、どうぞ」'], ['リスト', '吹き出しと最初の挨拶を「映画の中から…」に変える'], ['良い点', '既存のレイアウトを一切変えずに足せる。スクロールしても常に呼べる'], ['気になる点', '存在に気づかれにくい。立ち絵が小さい。SPでは画面の右下を占める']],
+        },
+        {
+          id: 'C', color: 'var(--color-c)', title: 'ノベル風の舞台（ページ内）',
+          lead: 'ページの中に立ち絵の「舞台」を埋め込み、選択肢を選ぶとその場で作品が出てくる。',
+          top: 'place-c.html?view=top&embed=1', list: 'place-c.html?view=list&embed=1',
+          points: [['TOP', 'ヒーロー直下に大きな舞台。選択肢 → 1文字ずつの返事 → 作品が「棚から」浮かぶ'], ['リスト', '高さを抑えた横長の舞台（PCは右半分にウィンドウ）'], ['良い点', 'サヨの存在感がいちばん強い。選択肢はLLMなしで回数も減らない'], ['気になる点', 'TOPの縦の長さを大きく使う。自由に話すには全画面ページへ移る']],
+        },
+        {
+          id: 'D', color: 'var(--color-d)', title: '入口＋カードの「要約」→ モーダル',
+          lead: '上部の「何を観ようか迷ったら」で探し、各カードの「要約」で作品ごとに聞く。結果はモーダルで開く。',
+          top: 'd-card-summary.html?view=top&mode=modal&open=1203&embed=1', list: 'd-card-summary.html?view=list&mode=modal&embed=1',
+          topLabel: 'TOP（要約モーダルを開いた状態）',
+          points: [['TOP', '入口ボックス＋HomeCard右上の「要約」'], ['リスト', '入口ボックス（映画の中から）＋カード右上の「要約」'], ['良い点', '一覧を離れずに次々と見比べられる。要約・候補ボタンはLLMなし'], ['気になる点', 'カードの構造変更が要る。立ち絵は顔だけ']],
+        },
+        {
+          id: 'E', color: 'var(--color-e)', title: '入口＋カードの「要約」→ 専用ページ',
+          lead: 'TOP・リストの見た目は案Dと同じ。押すと専用ページ（/ja/sayo/{記事slug}）へ移る。',
+          top: 'd-card-summary.html?view=top&mode=page&embed=1', list: 'e-summary-page.html?id=1201&from=list',
+          listLabel: '遷移先：要約の専用ページ',
+          points: [['TOP・リスト', '案Dと同じ入口ボックスとカードの「要約」'], ['遷移先', '立ち絵・要約・続けての会話・同じ一覧のほかの作品'], ['良い点', '立ち絵を大きく出せる。URLで共有・戻るができる'], ['気になる点', '一覧との行き来が増える。noindex などの検討が要る']],
+        },
+      ];
+
+      const main = document.querySelector('[data-main]');
+      let width = 'pc';
+      const SIZE = { pc: { w: 1280, h: 860 }, sp: { w: 390, h: 844 } };
+
+      const shot = (label, src) => `
+        <div class="shot"><div class="shot__label"><span>${label}</span><a href="${src.replace(/&embed=1/, '')}" target="_blank" rel="noopener">開く ↗</a></div>
+          <div class="shot__frame"><iframe src="${src}" title="${label}"></iframe></div></div>`;
+
+      const render = () => {
+        document.body.classList.toggle('is-sp', width === 'sp');
+        main.innerHTML = ROWS.map((r) => `
+          <section class="row" aria-labelledby="row${r.id}">
+            <div class="row__head"><span class="tag" style="background:${r.color}">案${r.id}</span><h2 id="row${r.id}">${r.title}</h2></div>
+            <p class="row__lead">${r.lead}</p>
+            <div class="pair">${shot(r.topLabel || 'TOPページ', r.top)}${shot(r.listLabel || 'リストページ（映画）', r.list)}</div>
+            <dl class="points">${r.points.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
+          </section>`).join('');
+        fit();
+      };
+
+      /** iframe を実寸（PC 1280px／SP 390px）で描き、枠の幅に合わせて縮小する */
+      const fit = () => {
+        const { w, h } = SIZE[width];
+        document.querySelectorAll('.shot__frame').forEach((f) => {
+          const s = f.clientWidth / w;
+          const i = f.querySelector('iframe');
+          i.style.width = `${w}px`;
+          i.style.height = `${h}px`;
+          i.style.transform = `scale(${s})`;
+          f.style.height = `${h * s}px`;
+        });
+      };
+
+      document.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => {
+        width = b.dataset.w;
+        document.querySelectorAll('[data-w]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+        render();
+      }));
+      window.addEventListener('resize', fit);
+      render();
+    })();
+  </script>
+</body>
+</html>

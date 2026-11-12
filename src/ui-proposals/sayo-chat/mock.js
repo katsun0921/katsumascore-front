@@ -89,6 +89,13 @@
       },
     },
     {
+      match: /少しずつ|一話|短い/,
+      response: {
+        status: 'ok', spoiler: false, articles: [ARTICLES.lantern], suggestAvatar: null,
+        reply: '少しずつ観たいときは、一話完結の『提灯坂の怪談帖』はいかがでしょう。記事では、一話ごとに後味の違う短い怪談が楽しめると書かれています。',
+      },
+    },
+    {
       match: /AI|人間|あなたは/,
       response: {
         status: 'ok', spoiler: false, articles: [], suggestAvatar: null,

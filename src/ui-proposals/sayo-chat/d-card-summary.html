@@ -564,6 +564,8 @@
       document.querySelectorAll('[data-view]').forEach((b) => b.addEventListener('click', () => { view = b.dataset.view; render(); }));
       document.querySelectorAll('[data-mode]').forEach((b) => b.addEventListener('click', () => { mode = b.dataset.mode; render(); }));
 
+      // 一覧ギャラリー（placements.html）に埋め込むときは切替バーを隠す
+      if (params.get('embed')) document.querySelector('.mockBar').remove();
       render();
       const openId = params.get('open');
       if (openId) {

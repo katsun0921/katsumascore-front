@@ -457,20 +457,36 @@
       });
       $('[data-form]').addEventListener('submit', (e) => { e.preventDefault(); submit(input.value.trim()); });
 
+      /*
+       * 入店。TOP・リストの入口から来たときは URL で受け取る（置き場所モック place-a.html 用）：
+       *   ?key=  参加URLの合言葉（あれば入力画面を飛ばす）
+       *   ?q=    入口で押した候補ボタンの質問（入店後にそのまま送る）
+       *   ?scope= リストページから来たときのカテゴリ（例：映画）
+       */
+      const params = new URLSearchParams(location.search);
+      const enter = () => {
+        $('[data-gate]').hidden = true;
+        locked = false;
+        input.placeholder = '観たい気分や作品名を教えてください';
+        if (!log.children.length) {
+          const scope = params.get('scope');
+          addSayo(scope ? `${M.greeting().replace('今日はどんな映画が気になっていますか？', '')}${scope}の中から、どんな作品をお探しですか？` : M.greeting());
+        }
+        syncComposer();
+        const q = params.get('q');
+        if (q) submit(q);
+        else input.focus();
+      };
       $('[data-gate-form]').addEventListener('submit', (e) => {
         e.preventDefault();
         const v = $('[data-gate-input]').value.trim();
         if (!v) { $('[data-gate-error]').textContent = '合言葉を入力してください'; return; }
-        $('[data-gate]').hidden = true;
-        locked = false;
-        input.placeholder = '観たい気分や作品名を教えてください';
-        if (!log.children.length) addSayo(M.greeting());
-        syncComposer();
-        input.focus();
+        enter();
       });
 
       syncComposer();
       M.mountDebug();
+      if (params.get('key')) enter();
     })();
   </script>
 </body>

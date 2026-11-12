@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>置き場所 案B ウィジェット</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!--
+    案B（フローティングウィジェット）をTOP・リストだけに置いた見え方
+    - ページの中身は変えず、右下にサヨの顔のボタンを重ねる。押すとPCは右下のパネル、SPは全画面。
+    - 吹き出しの一言と最初の挨拶をページごとに変える（TOP：全体から／リスト：そのカテゴリから）。
+    - 候補ボタンを押すと、パネルを開いてそのまま質問を送る。
+  -->
+  <style>body { margin: 0; }</style>
+</head>
+<body>
+  <div data-root></div>
+  <script src="mock.js"></script>
+  <script src="card-mock.js"></script>
+  <script src="host.js"></script>
+  <script src="b-widget.js"></script>
+  <script>
+    (() => {
+      const H = window.SayoHost;
+      const M = window.SayoMock;
+      const view = H.viewFromUrl();
+      H.mountSwitch(view, (v) => { location.search = `?view=${v}`; });
+      H.render(document.querySelector('[data-root]'), { view });
+      const isList = view === 'list';
+      const hello = M.greeting().replace('今日はどんな映画が気になっていますか？', '');
+      window.SayoWidget.mount({
+        teaser: isList ? '映画の中から、気分に合う一本を探しましょうか？' : '何を観ようか迷ったら、どうぞ',
+        greeting: isList ? `${hello}映画の記事の中から、どんな作品をお探しですか？` : M.greeting(),
+        chips: M.QUICK_REPLIES,
+      });
+    })();
+  </script>
+</body>
+</html>
