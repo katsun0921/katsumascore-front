@@ -217,6 +217,9 @@ API の `status` と画面の対応。失敗はサヨのせりふではなく、
 | `disabled` | 「ただいま準備中です」 |
 | `error` | 「返事を受け取れませんでした」と「もう一度送る」 |
 | `spoiler: true` | 本文を伏せ、「ネタバレを含む返事です／表示する」を挟む |
+| WordPress の停止フラグ `paused: true` | **送る前に**止める。入力欄と送信を出さず、WordPress の案内文（空なら「サヨはいま席を外しています」など既定文）と再開予定を出す。候補ボタンと要約は使い続けられる |
+
+**送る前に止める（停止フラグ）：** AI API の月の上限・クレジット切れなど ai-chat から見えない上限に届いたときは、管理者が WordPress の「サヨ（AIチャット）」で会話を止める。フロントは会話の入口を出すときに `GET /wp-json/v1/sayo-chat-status?lang=ja`（`{paused, message, resumeAt}`、Edge 60秒キャッシュ）をクライアントで読み、`paused: true` なら `/message` を呼ばない。ai-chat の `/api/chat/health` が `enabled: false`（1日の予算切れ・`CHAT_ENABLED=false`）のときも同じ見た目で送る前に止める。どちらも取得に失敗したら止めず、上限の判定は ai-chat 本体に任せる。仕様は `katsumascore_wordpress_theme/docs/feature/SAYO_CHAT_STATUS_API_SPEC.md`。
 
 ### 7.1 表情の切り替え
 
