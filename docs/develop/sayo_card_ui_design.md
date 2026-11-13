@@ -1,6 +1,6 @@
 # サヨ会話UI設計：TOP・リストページのカードから「探す」「要約する」
 
-> ステータス: アイデア（未着手）。HTMLモックで検討中
+> ステータス: 検討の記録。**2026-11-14 に案Gを採用**し、実装仕様は [`sayo_chat_spec.md`](sayo_chat_spec.md) に移した（本書の案D・案E・別案A〜Cは比較の記録として残す）
 > 作成: 2026-11-12
 >
 > モック: [`src/ui-proposals/sayo-chat/`](../../src/ui-proposals/sayo-chat/)（入口は `index.html`、Storybook は `ui-proposals/SayoChat`）
@@ -219,7 +219,7 @@ API の `status` と画面の対応。失敗はサヨのせりふではなく、
 | `spoiler: true` | 本文を伏せ、「ネタバレを含む返事です／表示する」を挟む |
 | WordPress の停止フラグ `paused: true` | **送る前に**止める。入力欄と送信を出さず、WordPress の案内文（空なら「サヨはいま席を外しています」など既定文）と再開予定を出す。候補ボタンと要約は使い続けられる |
 
-**送る前に止める（停止フラグ）：** AI API の月の上限・クレジット切れなど ai-chat から見えない上限に届いたときは、管理者が WordPress の「サヨ（AIチャット）」で会話を止める。フロントは会話の入口を出すときに `GET /wp-json/v1/sayo-chat-status?lang=ja`（`{paused, message, resumeAt}`、Edge 60秒キャッシュ）をクライアントで読み、`paused: true` なら `/message` を呼ばない。ai-chat の `/api/chat/health` が `enabled: false`（1日の予算切れ・`CHAT_ENABLED=false`）のときも同じ見た目で送る前に止める。どちらも取得に失敗したら止めず、上限の判定は ai-chat 本体に任せる。仕様は `katsumascore_wordpress_theme/docs/feature/SAYO_CHAT_STATUS_API_SPEC.md`。
+**送る前に止める（停止フラグ）：** AI API の月の上限・クレジット切れなど ai-chat から見えない上限に届いたときは、管理者が WordPress の「サヨ（AIチャット）」で会話を止める。フロントは会話の入口を出すときに `GET /wp-json/v1/sayo-chat-status?lang=ja`（`{paused, message, resumeAt}`、Edge 60秒キャッシュ）をクライアントで読み、`paused: true` なら `/message` を呼ばない。ai-chat の `/api/chat/health` が `enabled: false`（1日の予算切れ・`CHAT_ENABLED=false`）のときも同じ見た目で送る前に止める。停止フラグ・health の取得に失敗したら会話は止めず、上限の判定は ai-chat 本体に任せる。※2026-11-14：WordPress に「サヨを表示する」フラグを追加。表示フラグの取得に失敗したときはサヨのUIを出さない（[`sayo_chat_spec.md`](sayo_chat_spec.md) §4）。仕様は `katsumascore_wordpress_theme/docs/feature/SAYO_CHAT_STATUS_API_SPEC.md`。
 
 ### 7.1 表情の切り替え
 
@@ -293,6 +293,8 @@ ai-chat の規約では、公開JSONの変更は **Schema を先に更新**す�
 ---
 
 ## 10. 未決事項
+
+> 2026-11-14：1（見せ方）は案G（モーダル＋ノベル画面）に決定。2（専用ページ）は不要になった。7（配色）はモックの暖色を採る。8（英語版）は初期は `ja` のみ。残りは [`sayo_chat_spec.md`](sayo_chat_spec.md) §10 で引き継ぐ。
 
 | # | 内容 |
 |---|---|
