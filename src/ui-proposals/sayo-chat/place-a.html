@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>置き場所 案A 専用ページへの入口</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Old+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <!--
+    案A（専用ページ「サヨの映画店」）をTOP・リストに置いた見え方
+    - TOP：ヒーロー直下に「お店の入口」の大きなバナー。立ち絵・ひとこと・候補ボタン・「お店に入る」。
+    - リスト：絞り込みの下に細い帯。「映画選びに迷ったら、サヨに相談」。
+    - どちらも押すと専用ページ a-shop-page.html へ遷移し、候補ボタンの質問をそのまま送る。
+    - グローバルナビにも「サヨの映画店」を足す。
+  -->
+  <style>
+    :root {
+      --color-shop-bg: #f4ece0; --color-shop-paper: #fffaf2; --color-shop-wood: #5b3a24; --color-shop-wood-dark: #3a2416;
+      --color-shop-amber: #c8862e; --color-shop-amber-soft: #f3dfc1; --color-shop-text: #2f2219; --color-shop-sub: #7a6656; --color-shop-line: #e3d4bf;
+    }
+    body { margin: 0; }
+    /* TOP：お店の入口 */
+    .aDoor { padding: 8px 16px 16px; }
+    .aDoor__card {
+      max-width: 1120px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden;
+      border-radius: 20px; background: var(--color-shop-paper); color: var(--color-shop-text);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .35); border: 1px solid var(--color-shop-line);
+    }
+    @media (min-width: 768px) { .aDoor__card { grid-template-columns: 360px minmax(0, 1fr); } }
+    .aDoor__img { width: 100%; height: 200px; object-fit: cover; object-position: 32% 20%; display: block; }
+    @media (min-width: 768px) { .aDoor__img { height: 100%; min-height: 280px; } }
+    .aDoor__body { padding: 20px; display: flex; flex-direction: column; gap: 10px; justify-content: center; }
+    @media (min-width: 768px) { .aDoor__body { padding: 28px 32px; } }
+    .aDoor__eyebrow { font-size: 11px; letter-spacing: .16em; color: var(--color-shop-amber); font-weight: 700; }
+    .aDoor__title { font-family: 'Zen Old Mincho', serif; font-size: 24px; line-height: 1.4; color: var(--color-shop-wood-dark); margin: 0; }
+    .aDoor__say { position: relative; background: var(--color-shop-amber-soft); border-radius: 4px 16px 16px 16px; padding: 10px 14px; font-size: 14px; }
+    .aDoor__say small { display: block; font-size: 11px; color: var(--color-shop-sub); }
+    .aDoor__chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .aDoor__chip { font-size: 13px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--color-shop-amber); color: var(--color-shop-wood); }
+    .aDoor__chip:hover, .aDoor__chip:focus-visible { background: var(--color-shop-amber-soft); }
+    .aDoor__foot { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .aDoor__enter { background: var(--color-shop-wood); color: var(--color-text-inverse); font-weight: 700; padding: 10px 20px; border-radius: 12px; }
+    .aDoor__enter:focus-visible { outline: 2px solid var(--color-shop-amber); outline-offset: 2px; }
+    .aDoor__note { font-size: 11px; color: var(--color-shop-sub); }
+
+    /* リスト：細い帯 */
+    .aStrip {
+      display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 14px;
+      background: var(--color-shop-paper); border: 1px solid var(--color-shop-line); color: var(--color-shop-text);
+    }
+    .aStrip__face { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; flex: none; border: 2px solid var(--color-shop-amber); }
+    .aStrip__text { flex: 1; min-width: 0; font-size: 13px; }
+    .aStrip__text strong { display: block; font-family: 'Zen Old Mincho', serif; font-size: 16px; color: var(--color-shop-wood-dark); }
+    .aStrip__btn { flex: none; background: var(--color-shop-wood); color: var(--color-text-inverse); font-weight: 700; font-size: 13px; padding: 8px 14px; border-radius: 999px; white-space: nowrap; }
+    .aPc { display: none; }
+    .aStrip__text strong { white-space: nowrap; }
+    @media (min-width: 768px) { .aPc { display: inline; } }
+    @media (max-width: 767px) { .aStrip__text span { display: none; } .aStrip__text strong { font-size: 15px; } }
+  </style>
+</head>
+<body>
+  <div data-root></div>
+  <script src="card-mock.js"></script>
+  <script src="host.js"></script>
+  <script>
+    (() => {
+      const H = window.SayoHost;
+      const C = window.CardMock;
+      const view = H.viewFromUrl();
+      const link = (q, scope) => `a-shop-page.html?key=demo${q ? `&q=${encodeURIComponent(q)}` : ''}${scope ? `&scope=${encodeURIComponent(scope)}` : ''}`;
+      const door = `
+        <section class="aDoor" aria-labelledby="aDoorTitle"><div class="aDoor__card">
+          <img class="aDoor__img" src="img/sayo-full.webp" alt="映画店のカウンターで頬杖をつくサヨ">
+          <div class="aDoor__body">
+            <span class="aDoor__eyebrow">AI映画店主のお店</span>
+            <h2 class="aDoor__title" id="aDoorTitle">何を観ようか迷ったら、サヨの映画店へ</h2>
+            <p class="aDoor__say"><small>サヨ</small>気分や好みを伺って、KatsumaScoreの記事から一本ずつご案内します。</p>
+            <div class="aDoor__chips">${C.SEARCH_CHIPS.map((c) => `<a class="aDoor__chip" href="${link(c.label)}">${c.label}</a>`).join('')}</div>
+            <div class="aDoor__foot"><a class="aDoor__enter" href="${link()}">お店に入る →</a><span class="aDoor__note">AIの回答です。今日は30回までお話しできます。</span></div>
+          </div>
+        </div></section>`;
+      const strip = `
+        <aside class="aStrip">
+          <img class="aStrip__face" src="img/sayo-face.webp" alt="サヨ">
+          <p class="aStrip__text" style="margin:0"><strong>映画選びに迷ったら</strong><span>サヨが映画の記事の中から、気分に合う一本をご案内します。</span></p>
+          <a class="aStrip__btn" href="${link(null, '映画')}"><span class="aPc">サヨに</span>相談する →</a>
+        </aside>`;
+      const draw = (v) => H.render(document.querySelector('[data-root]'), { view: v, slots: { afterHero: door, listTop: strip }, nav: '<b>サヨの映画店</b>' });
+      H.mountSwitch(view, (v) => { location.search = `?view=${v}`; });
+      draw(view);
+    })();
+  </script>
+</body>
+</html>

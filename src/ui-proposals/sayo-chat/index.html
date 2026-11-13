@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 比較</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- サヨ会話UIの3案を並べて比較する入口ページ（ui-proposals専用） -->
+  <style>
+    :root {
+      --color-bg: #f7f5f2;
+      --color-surface: #ffffff;
+      --color-text: #1f2430;
+      --color-text-sub: #5f6675;
+      --color-line: #e3e0da;
+      --color-secondary: #1e1b4b;
+      --color-a: #c8862e;
+      --color-b: #6d28d9;
+      --color-c: #9b2c4a;
+      --color-good: #0f766e;
+      --color-bad: #b45309;
+      --color-text-inverse: #ffffff;
+      --color-black-rgb: 0, 0, 0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.8; }
+    .head { background: var(--color-secondary); color: var(--color-text-inverse); padding: 32px 16px; }
+    .head__inner, .main { max-width: 1120px; margin: 0 auto; }
+    .head h1 { font-size: 24px; line-height: 1.4; }
+    .head p { opacity: .8; font-size: 14px; margin-top: 6px; }
+    .main { padding: 32px 16px 64px; display: flex; flex-direction: column; gap: 40px; }
+    h2 { font-size: 18px; margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 768px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+    .card { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+    .card__frame { position: relative; overflow: hidden; border-bottom: 1px solid var(--color-line); background: var(--color-bg); }
+    .card__frame iframe { position: absolute; left: 0; top: 0; width: 1280px; height: 960px; border: 0; transform: scale(.28); transform-origin: 0 0; pointer-events: none; }
+    .card__body { padding: 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+    .card__tag { align-self: flex-start; font-size: 11px; font-weight: 700; color: var(--color-text-inverse); padding: 1px 10px; border-radius: 999px; }
+    .card--a .card__tag { background: var(--color-a); }
+    .card--b .card__tag { background: var(--color-b); }
+    .card--c .card__tag { background: var(--color-c); }
+    .card__title { font-size: 17px; line-height: 1.5; }
+    .card__lead { font-size: 13px; color: var(--color-text-sub); }
+    .card ul { list-style: none; font-size: 13px; display: flex; flex-direction: column; gap: 2px; }
+    .card li::before { margin-right: 6px; font-weight: 700; }
+    .good li::before { content: '＋'; color: var(--color-good); }
+    .bad li::before { content: '－'; color: var(--color-bad); }
+    .card__open { margin-top: auto; align-self: flex-start; font-size: 13px; font-weight: 700; color: var(--color-secondary); }
+    table { width: 100%; border-collapse: collapse; background: var(--color-surface); border-radius: 12px; overflow: hidden; font-size: 13px; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--color-line); vertical-align: top; }
+    th { background: var(--color-bg); font-weight: 700; white-space: nowrap; }
+    .tableWrap { overflow-x: auto; border: 1px solid var(--color-line); border-radius: 12px; }
+    .note { font-size: 13px; color: var(--color-text-sub); }
+    code { font-size: 12px; background: var(--color-bg); padding: 0 4px; border-radius: 4px; }
+    ol { padding-left: 20px; font-size: 14px; display: flex; flex-direction: column; gap: 6px; }
+    .pages td:first-child { white-space: nowrap; font-weight: 700; }
+    .pages a { color: var(--color-secondary); font-weight: 700; }
+    .pages h3 { font-size: 15px; margin: 16px 0 8px; }
+    /* SP：表を行ごとのカードに積む */
+    @media (max-width: 767px) {
+      .pages thead { display: none; }
+      .pages table, .pages tbody, .pages tr, .pages td { display: block; }
+      .pages tr { padding: 10px 12px; border-bottom: 1px solid var(--color-line); }
+      .pages td { padding: 0; border: 0; }
+      .pages td:first-child { display: inline; margin-right: 8px; }
+      .pages td:nth-child(2) { display: inline; }
+      .pages td + td + td { margin-top: 4px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="head">
+    <div class="head__inner">
+      <h1>サヨ会話UI　案の比較（モック）</h1>
+      <p>katsumascore-ai-chat の API（/session・/message）と同じ形の架空応答で動きます。作品名・スコア・配信先はすべて架空です。立ち絵は「仮」画像1枚を全表情に流用しています。</p>
+    </div>
+  </header>
+
+  <main class="main">
+    <section class="pages" aria-labelledby="pagesTitle">
+      <h2 id="pagesTitle">モックのページ一覧</h2>
+      <p class="note">迷ったら、置き場所を並べて比べる <a href="placements.html">placements.html</a>（案A〜E）と、通して試す <a href="f-journey.html">f-journey.html</a>（案F）から開いてください。</p>
+      <h3>案ごとのページ</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>案</th><th>ページ</th><th>内容</th><th>URLパラメータ</th></tr></thead>
+        <tbody><tr><td>A</td><td><a href="a-shop-page.html">a-shop-page.html</a></td><td>専用の会話ページ「サヨの映画店」（合言葉の入力から）</td><td><code>?key=</code> 合言葉を渡して入力を飛ばす／<code>?q=</code> 最初の質問を送る／<code>?scope=</code> カテゴリ（挨拶が変わる）</td></tr><tr><td>A</td><td><a href="place-a.html?view=top">place-a.html</a></td><td>TOP・リストに置いた入口（バナー／帯）</td><td><code>?view=top|list</code></td></tr><tr><td>B</td><td><a href="b-floating-widget.html">b-floating-widget.html</a></td><td>記事ページに重ねたフローティングウィジェット</td><td>なし</td></tr><tr><td>B</td><td><a href="place-b.html?view=top">place-b.html</a></td><td>TOP・リストに置いたウィジェット（吹き出しと挨拶がページで変わる）</td><td><code>?view=top|list</code></td></tr><tr><td>C</td><td><a href="c-novel-stage.html">c-novel-stage.html</a></td><td>全画面のノベル風の画面</td><td>なし</td></tr><tr><td>C</td><td><a href="place-c.html?view=top">place-c.html</a></td><td>TOP・リストに埋め込んだ舞台</td><td><code>?view=top|list</code></td></tr><tr><td>D・E</td><td><a href="d-card-summary.html">d-card-summary.html</a></td><td>入口ボックスとカードの「要約」。押した後をモーダル（D）／専用ページ（E）で切替</td><td><code>?view=top|list</code>／<code>?mode=modal|page</code>／<code>?open={記事ID}</code> 要約を開いた状態</td></tr><tr><td>E</td><td><a href="e-summary-page.html?id=1201">e-summary-page.html</a></td><td>要約の専用ページ／探した結果のページ</td><td><code>?id={記事ID}</code> 要約／<code>?q=</code>＋<code>?scope=</code> 探した結果／<code>?from=top|list</code> 戻り先</td></tr><tr><td>F</td><td><a href="f-journey.html">f-journey.html</a></td><td>作品探し → 結果 → 要約 → 質問またはレビューまでを1ページで通して試す。TOP／映画リスト、モーダル／専用ページは画面上で切替</td><td>画面上で操作（内部で <code>?view=summary|article&amp;id=</code> を使う）</td></tr><tr><td>G</td><td><a href="g-summary-novel.html">g-summary-novel.html</a></td><td>案Dの一覧・要約モーダルに「詳しく知りたい」を足し、押すと案Cのノベル風の全画面で話の続きを聞く</td><td><code>?view=top|list</code>／<code>?open={記事ID}</code> 要約モーダル／<code>?novel={記事ID}</code> ノベル画面</td></tr></tbody>
+      </table></div>
+      <p class="note" style="margin-top:8px"><code>place-*.html</code> と <code>d-card-summary.html</code> は <code>&amp;embed=1</code> で上部の切替帯を消します（placements.html の中で使用）。</p>
+      <h3>共通ファイル（ページではない）</h3>
+      <div class="tableWrap"><table>
+        <thead><tr><th>ファイル</th><th>内容</th><th>使うページ</th></tr></thead>
+        <tbody>
+          <tr><td><code>mock.js</code></td><td>会話APIの架空応答（<code>/session</code>・<code>/message</code> と同じ形）</td><td>A・B・C・G、place-*</td></tr>
+          <tr><td><code>card-mock.js</code></td><td>架空の記事6件・要約・気分タグ検索</td><td>C〜G、place-*</td></tr>
+          <tr><td><code>host.js</code></td><td>置き場所モック用のTOP・リストの土台</td><td>place-*</td></tr>
+          <tr><td><code>b-widget.js</code></td><td>案Bのウィジェットを任意のページに置く</td><td>place-b.html</td></tr>
+          <tr><td><code>img/</code></td><td>立ち絵（ai-chat の仮画像を縮小したもの）</td><td>すべて</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+    <section>
+      <h2>新案 G：案D ＋「詳しく知りたい」で案Cのノベル風へ</h2>
+      <div class="card">
+        <div class="card__body">
+          <span class="card__tag" style="background:var(--color-c)">案G · D＋C</span>
+          <h3 class="card__title">ふだんは案Dの要約モーダル。もっと知りたい人だけ、サヨの映画店へ</h3>
+          <p class="card__lead">TOP・リスト・カードの「要約」・迷ったら探す入口は案Dと同じです。要約モーダルと探した結果に「詳しく知りたい」を置き、押すと立ち絵が全面に出るノベル風の画面に切り替わります。見どころ・惜しいところ・似た作品・結末（ネタバレは確認してから表示）を、選択肢か自由入力で聞けます。</p>
+          <ul class="good"><li>モーダルは読むことに絞れる（承認済み要約・LLMなし）</li><li>サヨの存在感は、話したい人にだけ大きく出せる</li><li>「← 要約に戻る／結果に戻る」で元のモーダルへ戻れる</li></ul>
+          <ul class="bad"><li>画面が2種類になり、作る量が増える</li><li>ノベル画面で回数を使うことが伝わるよう、表示を工夫する必要がある</li></ul>
+          <a class="card__open" href="g-summary-novel.html">案Gを開く →</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>新案 F：作品探しから記事を読むまで</h2>
+      <div class="card">
+        <div class="card__body">
+          <span class="card__tag" style="background:var(--color-b)">案F · 体験比較</span>
+          <h3 class="card__title">一覧に置く相談窓口と、2つの要約表示</h3>
+          <p class="card__lead">TOP／映画リストと、要約のモーダル／専用ページを切り替えて比較できます。候補を選ぶ → 検索結果 → 要約 → 質問またはレビューへ、同じ流れを試せます。作品と回答は架空です。</p>
+          <ul class="good"><li>モーダルは検索結果を残したまま要約できる</li><li>専用ページは会話を広く見せ、戻る操作で元の一覧へ復帰する</li><li>カード右上と検索結果の両方から要約を開ける</li></ul>
+          <a class="card__open" href="f-journey.html">案Fを開く →</a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>会話の場所を作る案（A〜C）</h2>
+      <p class="note" style="margin-bottom:12px">案A〜EをTOPページ・リストページに置いたときの見え方は <a href="placements.html" style="color:var(--color-secondary);font-weight:700">置き場所の比較（placements.html）</a> で並べて確認できます。</p>
+      <div class="grid">
+        <article class="card card--a">
+          <div class="card__frame"><iframe src="a-shop-page.html" title="案Aのプレビュー" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案A</span>
+            <h3 class="card__title">専用ページ「サヨの映画店」</h3>
+            <p class="card__lead">/chat に専用ページを置く。PCは左に立ち絵のカウンター、右に会話。SPは上に立ち絵の帯、下に会話。木目と紙の暖色で、サイト本体と空気を変える。</p>
+            <ul class="good"><li>立ち絵と会話を同時に大きく見せられる</li><li>記事カードを横並びで広く出せる</li><li>合言葉の入口・注意書き・残り回数を1画面にまとめやすい</li></ul>
+            <ul class="bad"><li>専用ページへ来てもらう導線が別に必要</li><li>記事を読みながらは使えない</li></ul>
+            <a class="card__open" href="a-shop-page.html">案Aを開く →</a>
+          </div>
+        </article>
+        <article class="card card--b">
+          <div class="card__frame"><iframe src="b-floating-widget.html" title="案Bのプレビュー" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案B</span>
+            <h3 class="card__title">全ページのフローティングウィジェット</h3>
+            <p class="card__lead">右下の顔アイコンから開くパネル。PCは右下に400px、SPは全画面のシート。記事詳細では「この作品についてサヨに聞く」から質問を差し込める。</p>
+            <ul class="good"><li>どのページからでも話しかけられ、利用が増えやすい</li><li>記事の文脈から質問を始められる</li><li>サイト本体の配色に溶け込む</li></ul>
+            <ul class="bad"><li>立ち絵が小さく、キャラクターの魅力が出にくい</li><li>全ページのJSが増える（読み込みは開いた時に遅らせたい）</li><li>ページを移ると画面の会話が途切れる（保持の仕組みが要る）</li></ul>
+            <a class="card__open" href="b-floating-widget.html">案Bを開く →</a>
+          </div>
+        </article>
+        <article class="card card--c">
+          <div class="card__frame"><iframe src="c-novel-stage.html" title="案Cのプレビュー" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案C</span>
+            <h3 class="card__title">ノベル風の舞台</h3>
+            <p class="card__lead">立ち絵を画面いっぱいに置き、名前札つきのウィンドウで返事を1文字ずつ表示。記事カードは「棚から出した作品」として浮かび上がる。過去の会話は履歴ドロワーで読む。</p>
+            <ul class="good"><li>キャラクターの存在感がいちばん強い</li><li>正式な立ち絵（5表情）が届くと表情の変化が最も活きる</li><li>1往復ずつ見せるので、返事が短い人格と相性がよい</li></ul>
+            <ul class="bad"><li>過去の返事や記事カードを見返しにくい</li><li>1文字表示は読む速さの合わない人もいる（クリックで全文、動きを減らす設定に対応）</li><li>全画面の絵の容量が大きい</li></ul>
+            <a class="card__open" href="c-novel-stage.html">案Cを開く →</a>
+          </div>
+        </article>
+      </div>
+      <p class="note" style="margin-top:12px">各案の左下（または右上）の「モック操作」で、次の送信を上限・エラー・セッション切れなどに切り替えられます。入力に「ホラー」「泣ける」「裏話」「ネタバレ」「AI」を含めると、それぞれの架空の応答を返します。それ以外は「該当なし」になります。</p>
+    </section>
+
+    <section>
+      <h2>カードから要約する案（TOPページ・リストページ限定）</h2>
+      <p class="note" style="margin-bottom:12px">TOPページとリストページに限って置く。上部の「何を観ようか迷ったら」で作品を探し（パターン1）、カード（HomeCard／PostCardImgLeft／ImgTop）の「要約」ボタンでサヨが作品を要約する（パターン2）。押した後をモーダルにするか（案D）、専用ページにするか（案E）を、同じカードから切り替えて比べられます。</p>
+      <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+        <article class="card card--b">
+          <div class="card__frame"><iframe src="d-card-summary.html?open=1203" title="案Dのプレビュー" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案D</span>
+            <h3 class="card__title">カード → モーダル</h3>
+            <p class="card__lead">その場で開く。PCは中央、SPは下からのシート。「前の作品／次の作品」で同じ並びの作品を続けて要約できる。下に「サヨにもっと聞く」。</p>
+            <ul class="good"><li>一覧を離れずに次々と見比べられる</li><li>ページを増やさずに済む（ルーティング・SEOの検討が要らない）</li><li>閉じれば元のスクロール位置に戻る</li></ul>
+            <ul class="bad"><li>立ち絵は小さい顔アイコンだけ</li><li>会話を続けるには狭い（長くなると要約が上に流れる）</li><li>URLが無いので共有・戻るボタンで開き直せない</li></ul>
+            <a class="card__open" href="d-card-summary.html">案Dを開く →</a>
+          </div>
+        </article>
+        <article class="card card--a">
+          <div class="card__frame"><iframe src="e-summary-page.html?id=1201" title="案Eのプレビュー" tabindex="-1"></iframe></div>
+          <div class="card__body">
+            <span class="card__tag">案E</span>
+            <h3 class="card__title">カード → 専用ページ</h3>
+            <p class="card__lead">/ja/sayo/{記事slug} のようなページへ遷移。立ち絵・作品・要約・続けての会話・同じ一覧のほかの作品を1ページにまとめる。</p>
+            <ul class="good"><li>立ち絵を大きく出せ、サヨの魅力が伝わる</li><li>会話を続けても窮屈にならない</li><li>URLがあるので共有・戻るができる。要約は承認済みなのでSSGにできる</li></ul>
+            <ul class="bad"><li>一覧との行き来が増える（「戻る」でスクロール位置の復元が要る）</li><li>記事ページと内容が重なるため noindex などの検討が要る</li><li>ページとテンプレートが1つ増える</li></ul>
+            <a class="card__open" href="d-card-summary.html?mode=page">案Eを開く（カードから） →</a>
+          </div>
+        </article>
+      </div>
+      <h3 style="font-size:15px;margin:20px 0 8px">サヨへの問いかけは2パターン</h3>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th></th><th>1. おすすめを探す（検索）</th><th>2. 記事を要約する</th></tr></thead>
+          <tbody>
+            <tr><td>役割</td><td>たくさんの記事から、気分や好みに合う作品を探す</td><td>タイトルや説明文だけでは開かない人に、記事の中身を短く伝えて記事へ誘導する</td></tr>
+            <tr><td>入口</td><td>TOP・リストの上部「何を観ようか迷ったら」。候補ボタン（怖すぎないホラー等）と自由入力</td><td>各カード右上の「要約」ボタン</td></tr>
+            <tr><td>探す範囲</td><td>TOPはすべての記事、リストはそのカテゴリ（例：映画）の記事だけ</td><td>押したカードの1記事</td></tr>
+            <tr><td>データと費用</td><td>候補ボタン：承認済み要約の気分タグ（moodTags）で絞り込む＝LLMなし・回数を減らさない<br>自由入力：<code>/message</code>（LLM＋検索）＝1回ずつ数える</td><td>承認済み要約（summarySafe・recommendFor・moodTags）＝LLMなし・回数を減らさない<br>「もっと聞く」から先だけLLM</td></tr>
+            <tr><td>つながり</td><td>結果の各作品の「要約を聞く」→ 2へ</td><td>「似た作品は？」→ 他作品の要約へ。モーダルでは「← 結果に戻る」で1へ戻れる</td></tr>
+            <tr><td>必要なAPI追加</td><td>気分タグ・カテゴリで記事を返すAPI（元データは facets.json の moodTags）。自由入力のカテゴリ絞り込みも要検討</td><td><code>GET /api/chat/articles/{id}/summary</code></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tableWrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th>項目</th><th>案D・案E 共通の考え方</th></tr></thead>
+          <tbody>
+            <tr><td>要約の出どころ</td><td>ai-chat の索引構築が記事ごとに作り、人が承認した <code>summarySafe</code>（ネタバレなし・300字以内）・<code>moodTags</code>・<code>recommendFor</code> をそのまま出す。LLMを呼ばないので即時・費用0・回数を消費しない</td></tr>
+            <tr><td>必要なAPI追加</td><td>ai-chat に <code>GET /api/chat/articles/{id}/summary</code>（記事IDで要約を返す）を追加。いまの <code>/message</code> は自由文だけで、作品名で頼んでも検索に外れる可能性がある。Schemaを先に更新する</td></tr>
+            <tr><td>もっと聞く</td><td>ここから従来の <code>/message</code>（LLM・1回ずつ数える）。記事を指定して聞けるよう <code>MessageRequest</code> に <code>articleId</code> を足す案も検討</td></tr>
+            <tr><td>ボタンの置き方</td><td>カードは全体がリンクなので、ボタンはリンクの「中」ではなく「隣」に置き、画像の上に重ねる（<code>&lt;a&gt;</code> の中に <code>&lt;button&gt;</code> は置けない）。HomeCard／PostCardImgTop の構造変更が要る</td></tr>
+            <tr><td>ボタンの位置</td><td>TOPのHomeCardは右上（左上はスコア、右下はVOD）。リストは右上、先頭のリード記事だけ「サヨに要約してもらう」と文字を長く。SPのグリッドは顔アイコンのみ</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>3案に共通する作り（API に合わせた決めごと）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>項目</th><th>画面の扱い</th><th>根拠</th></tr></thead>
+          <tbody>
+            <tr><td>挨拶</td><td>最初の返事は <code>/session</code> の <code>greetings.sayo</code> を表示（時刻で「おはようございます」等が変わる）</td><td>SessionResponse</td></tr>
+            <tr><td>待ち時間</td><td>送信中は表情を thinking にし、「棚を探しています」等を表示。応答は一括（最大30秒）</td><td>非ストリーミング、LLM_TIMEOUT_MS=30000</td></tr>
+            <tr><td>入力</td><td>200字まで。文字数を表示し、超えたら送信不可</td><td>MAX_INPUT_CHARS=200</td></tr>
+            <tr><td>残り回数</td><td>応答の <code>remaining</code> を毎回反映。0で入力欄を止める</td><td>sid 30往復/日（限定公開）</td></tr>
+            <tr><td>記事カード</td><td>最大3件。題名・カテゴリ・スコア・配信先と「〇〇時点」を表示し、記事へ遷移</td><td>ArticleCard（vodCheckedAt）</td></tr>
+            <tr><td>ネタバレ</td><td><code>spoiler: true</code> のとき本文を伏せ、利用者が開く操作を挟む（案ごとに見せ方が違う）</td><td>サーバーが判定した結果をそのまま使う</td></tr>
+            <tr><td>失敗</td><td>サヨの発言ではなく、システムの表示として出す（上限・停止・セッション切れ・通信エラー）</td><td>status の列挙</td></tr>
+            <tr><td>注意書き</td><td>「AIの回答」「個人情報を入力しない」を常に表示</td><td>Phase 1b の公開条件</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>表情の切り替え（フロントで決める案）</h2>
+      <div class="tableWrap">
+        <table>
+          <thead><tr><th>表情</th><th>出す場面</th></tr></thead>
+          <tbody>
+            <tr><td>default</td><td>挨拶、記事カードのない返事</td></tr>
+            <tr><td>thinking</td><td>送信してから応答が来るまで</td></tr>
+            <tr><td>recommend</td><td>記事カードが1件以上ある返事</td></tr>
+            <tr><td>sorry</td><td>no_match、上限、エラーなど ok 以外</td></tr>
+            <tr><td>secret</td><td>spoiler: true の返事</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note" style="margin-top:8px">API は表情を返さないため、上の対応をフロントに置く想定です。モックでは画像が1枚なので、拡大・色味の変化と右上の表情名で切り替えを示しています。</p>
+    </section>
+
+    <section>
+      <h2>決めてほしいこと</h2>
+      <ol>
+        <li>どの案を軸にするか（例：B のウィジェットから A の専用ページへ「大きく開く」組み合わせも可能）</li>
+        <li>ページを移ったり再読み込みしたりしたとき、画面の会話を残すか（API に履歴取得はなく、残すならブラウザ側で保持する）</li>
+        <li>限定公開の入口：参加URLのクエリで合言葉を渡すか、入力欄を出すか（案Aに入力欄の例あり）</li>
+        <li>ネタバレの見せ方：伏せて「表示する」（A）／確認してから出す（B）／ラベルだけ（C）</li>
+      </ol>
+    </section>
+  </main>
+  <script>
+    // プレビューのiframe（1280px幅）を枠の幅に合わせて縮小する
+    const fit = () => document.querySelectorAll('.card__frame').forEach((f) => {
+      const scale = f.clientWidth / 1280;
+      const i = f.querySelector('iframe');
+      i.style.transform = `scale(${scale})`;
+      f.style.height = `${960 * scale}px`;
+    });
+    window.addEventListener('resize', fit);
+    fit();
+  </script>
+</body>
+</html>

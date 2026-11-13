@@ -1,0 +1,1 @@
+export { SayoNovelStage } from './SayoNovelStage';

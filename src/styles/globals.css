@@ -116,6 +116,23 @@
   --color-line: #06c755;
   --color-rss: #ec7c1c;
 
+  /* Sayo（AI映画店主）— 店の暖色とノベル画面。docs/develop/sayo_chat_spec.md §7.3 */
+  --color-sayo-paper: #fffaf2;
+  --color-sayo-amber: #c8862e;
+  --color-sayo-amber-soft: #f3dfc1;
+  --color-sayo-wood: #5b3a24;
+  --color-sayo-text: #2f2219;
+  --color-sayo-sub: #7a6656;
+  --color-sayo-line: #e3d4bf;
+  --color-sayo-plate-text: #1a0f06;
+  --color-sayo-stage: #0d0907;
+  --color-sayo-stage-text: #f5efe6;
+  --color-sayo-stage-dim: #c9bda9;
+  --color-sayo-spoiler: #fb7185;
+  --color-sayo-surface-dark-2: #241843;
+  --color-sayo-border-dark: #34285a;
+  --color-sayo-text-dim: #b7aed1;
+
   /* RGB channel variables for alpha color compositions */
   --color-primary-rgb: 37, 99, 235;
   --color-bg-dark-rgb: 10, 6, 24;
@@ -126,6 +143,10 @@
   --color-text-secondary-rgb: 107, 114, 128;
   --color-bg-muted-rgb: 243, 244, 246;
   --color-surface-rgb: 247, 247, 247;
+  --color-sayo-window-rgb: 18, 12, 30;
+  --color-sayo-amber-rgb: 200, 134, 46;
+  --color-accent-strong-rgb: 255, 45, 252;
+  --color-sayo-card-rgb: 255, 250, 242;
   --font-weight-medium: 500;
   --font-weight-bold: 700;
 

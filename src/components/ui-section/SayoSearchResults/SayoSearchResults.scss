@@ -1,0 +1,119 @@
+.sayoSearchResults {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  margin-left: 52px;
+
+  &__source {
+    display: inline-flex;
+    gap: var(--space-8);
+    align-items: center;
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-caption);
+
+    b {
+      padding: 0 var(--space-8);
+      border-radius: 999px;
+      background: var(--color-sayo-amber-soft);
+      color: var(--color-sayo-wood);
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    gap: var(--space-12);
+    align-items: center;
+    padding: var(--space-8);
+    border: 1px solid var(--color-sayo-line);
+    border-radius: 12px;
+    background: var(--color-bg);
+    color: var(--color-sayo-text);
+  }
+
+  &__thumb {
+    flex: none;
+    width: 48px;
+    height: 72px;
+    border-radius: 4px;
+    object-fit: cover;
+
+    &--empty {
+      display: block;
+      background: var(--color-secondary);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+  }
+
+  &__meta {
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-caption);
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+
+    span {
+      padding: 0 var(--space-8);
+      border-radius: 999px;
+      background: var(--color-sayo-amber-soft);
+      color: var(--color-sayo-wood);
+      font-size: var(--font-size-caption);
+    }
+  }
+
+  &__acts {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: var(--space-4);
+    text-align: center;
+
+    button {
+      padding: var(--space-4) var(--space-12);
+      border: 0;
+      border-radius: 999px;
+      background: var(--color-sayo-wood);
+      color: var(--color-text-inverse);
+      font-size: var(--font-size-fixed-12);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    a {
+      color: var(--color-accent);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-sayo-amber);
+      outline-offset: 2px;
+    }
+  }
+}

@@ -1,0 +1,56 @@
+.sayoSummary {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+
+  &__lead {
+    display: block;
+    margin-bottom: var(--space-4);
+  }
+
+  &__facts {
+    display: grid;
+    gap: var(--space-8);
+    margin: 0 0 0 52px;
+  }
+
+  &__fact {
+    padding: var(--space-8) var(--space-12);
+    border: 1px solid var(--color-sayo-line);
+    border-radius: 12px;
+    background: var(--color-bg);
+    color: var(--color-sayo-text);
+    font-size: var(--font-size-fixed-14);
+
+    dt {
+      color: var(--color-sayo-amber);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+    }
+
+    dd {
+      margin: 0;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    margin-top: var(--space-4);
+
+    span {
+      padding: 0 var(--space-8);
+      border-radius: 999px;
+      background: var(--color-sayo-amber-soft);
+      color: var(--color-sayo-wood);
+      font-size: var(--font-size-fixed-12);
+    }
+  }
+
+  &__note {
+    margin-left: 52px;
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-caption);
+  }
+}

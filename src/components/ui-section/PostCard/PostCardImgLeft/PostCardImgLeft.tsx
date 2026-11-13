@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import { PostCardContainer } from '@/components/ui-parts/PostCard/PostCardContainer';
@@ -12,10 +13,12 @@ type Props = {
   className?: string;
   highlightKeyword?: string;
   priority?: boolean;
+  /** カードの右上に重ねる操作（例：サヨの「要約」ボタン）。リンクの「隣」に置く */
+  action?: ReactNode;
 };
 
-export const PostCardImgLeft = ({ post, rank, className, highlightKeyword, priority }: Props) => (
-  <PostCardContainer className={className} dataComponent='PostCardImgLeft'>
+export const PostCardImgLeft = ({ post, rank, className, highlightKeyword, priority, action }: Props) => (
+  <PostCardContainer className={['relative', className].filter(Boolean).join(' ')} dataComponent='PostCardImgLeft'>
     <Link
       href={post.slug}
       locale={linkLocaleForHref(post.slug)}
@@ -31,5 +34,6 @@ export const PostCardImgLeft = ({ post, rank, className, highlightKeyword, prior
         highlightKeyword={highlightKeyword}
       />
     </Link>
+    {action && <div className='absolute right-2 top-2 z-10'>{action}</div>}
   </PostCardContainer>
 );
