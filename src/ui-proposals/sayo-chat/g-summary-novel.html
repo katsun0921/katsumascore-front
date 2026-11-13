@@ -357,6 +357,7 @@
     .nv__logBody { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; line-height: 1.8; }
     .nv__logWho { display: block; font-size: 11px; font-weight: 700; color: var(--nv-plate); }
     .nv__logWho--user { color: var(--nv-dim); }
+    .nv__logHidden { color: var(--nv-spoiler); font-size: 13px; }
 
     .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   </style>
@@ -504,12 +505,15 @@
             </section>
           </div>`;
       };
+      /** 映画リストに出す範囲（TOPは全カテゴリ） */
+      const LIST_SCOPE = '映画';
+      const listPosts = () => C.POSTS.filter((p) => p.category === LIST_SCOPE);
       const renderList = () => {
-        const [lead, ...rest] = C.POSTS;
+        const [lead, ...rest] = listPosts();
         root.innerHTML = `
           <section class="list__hero"><p class="list__eyebrow">MOVIE</p><h1 class="list__h1">映画</h1></section>
           <div class="list__body" data-group="list">
-            ${askBox('映画')}
+            ${askBox(LIST_SCOPE)}
             ${postCard(lead, true)}
             <ol class="grid">${rest.map((p) => postCard(p)).join('')}</ol>
           </div>`;
@@ -535,7 +539,10 @@
       /** 「詳しく知りたい」ボタン。押すとノベル風の画面へ切り替える */
       const deepBtn = (title, sub) => `<button type="button" class="deep" data-deep><img class="deep__img" src="img/sayo-full.webp" alt=""><span class="deep__body"><strong>${title}</strong><small>${sub}</small></span><span class="deep__arrow" aria-hidden="true">▶</span></button>`;
 
+      /** 要約の取得番号。モーダルの表示を変えるたびに増やし、古い応答を捨てる */
+      let summaryReq = 0;
       const fillModal = async (p) => {
+        const req = ++summaryReq;
         $('[data-m-thumb]').setAttribute('style', thumbStyle(p));
         $('[data-m-cat]').textContent = `${p.category} ・ ${p.date}`;
         $('[data-m-title]').textContent = p.title;
@@ -548,6 +555,7 @@
         scroll.innerHTML = '';
         const t = add(sayoHtml('<span class="typing"><i></i><i></i><i></i></span>'));
         const s = await C.fetchSummary(p.id);
+        if (req !== summaryReq || modal.hidden) return; // 別の作品・結果・閉じたあとに届いた応答は描かない
         t.remove();
         add(sayoHtml(`<span class="say__lead">${s.lead}</span>${M.escapeHtml(s.summary)}`));
         add(`<div class="fact"><span class="fact__label">こんな方に</span>${s.recommendFor}</div><div class="fact"><span class="fact__label">気分</span><div class="tags">${s.moodTags.map((m) => `<span>${m}</span>`).join('')}</div></div>`, 'facts');
@@ -566,6 +574,8 @@
       let nvCtx = null; // { type: 'post', p } または { type: 'search', q, scope, posts }
       let nvBusy = false;
       let nvTimer = null;
+      /** ノベル画面の取得番号（作品の切り替え・戻る・閉じるで増やす） */
+      let nvReq = 0;
 
       const nvExpr = (k) => { nvStage.dataset.expression = k; };
       const nvPlate = (who) => {
@@ -573,9 +583,21 @@
         pl.classList.toggle('nv__plate--user', who === 'user');
         pl.innerHTML = who === 'user' ? 'あなた' : 'サヨ<small>AI映画店主</small>';
       };
-      const nvPush = (who, str) => {
-        nvLog.push({ who, str });
-        $('[data-nv-logbody]').innerHTML = nvLog.map((h) => `<div><span class="nv__logWho${h.who === 'user' ? ' nv__logWho--user' : ''}">${h.who === 'user' ? 'あなた' : 'サヨ'}</span>${M.escapeHtml(h.str)}</div>`).join('');
+      /** 履歴を描き直す。hidden の行（開示前のネタバレ）は本文を出さない */
+      const nvRenderLog = () => {
+        $('[data-nv-logbody]').innerHTML = nvLog.map((h) => {
+          const body = h.hidden
+            ? '<span class="nv__logHidden">ネタバレを含む返事です（画面の「表示する」を押すと読めます）</span>'
+            : M.escapeHtml(h.str);
+          return `<div><span class="nv__logWho${h.who === 'user' ? ' nv__logWho--user' : ''}">${h.who === 'user' ? 'あなた' : 'サヨ'}</span>${body}</div>`;
+        }).join('');
+      };
+      /** 履歴に1行足す。hidden: true は開示されるまで本文を伏せる。足した行を返す */
+      const nvPush = (who, str, hidden = false) => {
+        const entry = { who, str, hidden };
+        nvLog.push(entry);
+        nvRenderLog();
+        return entry;
       };
       /** 1文字ずつ表示。ウィンドウを押すと全文を出す（動きを減らす設定では一度に表示） */
       const nvType = (str) => new Promise((resolve) => {
@@ -612,8 +634,18 @@
         nvSync();
       };
 
+      /** 「もっと聞く」の返事。映画リストでは、ほかのカテゴリの作品を出さない */
+      const followUp = (p, q) => {
+        const r = C.followUpReply(p, q);
+        if (view !== 'list' || r.articles.every((a) => a.category === LIST_SCOPE)) return r;
+        const alt = listPosts().find((x) => x.id !== p.id);
+        if (!alt) return { reply: r.reply, articles: [] };
+        return { reply: r.articles.reduce((txt, a) => txt.replace(a.title, alt.title), r.reply), articles: [alt] };
+      };
+
       /** 作品について話す：承認済み要約から始め、選択肢・自由入力はLLM（1回ずつ） */
       const nvTalkAbout = async (p) => {
+        const req = ++nvReq;
         nvCtx = { type: 'post', p };
         $('[data-nv-title]').textContent = `『${p.title}』について`;
         $('[data-nv-back]').textContent = '← 要約に戻る';
@@ -623,6 +655,7 @@
         nvExpr('recommend');
         nvChoices([...C.followUps(p).map((q) => ({ q, label: q.replace(`『${p.title}』`, '').replace(/^[のに]/, ''), cost: 'llm' })), { q: `『${p.title}』の結末を教えて（ネタバレ）`, label: '結末を教えて（ネタバレ）', cost: 'llm' }]);
         const s = await C.fetchSummary(p.id);
+        if (req !== nvReq || nv.hidden) return; // 別の作品に移った・閉じたあとの応答は描かない
         const open = `『${p.title}』ですね。……少しだけ、詳しくお話しします。\n${s.summary}\n気になるところを選んでください。`;
         nvPush('sayo', open);
         await nvType(open);
@@ -663,16 +696,22 @@
         await new Promise((r) => setTimeout(r, 1100));
         remaining -= 1;
         const { p } = nvCtx;
-        const r = C.followUpReply(p, q);
+        const r = followUp(p, q);
         nvBusy = false; nvSync();
-        nvPush('sayo', r.reply);
+        const isSpoiler = r.reply.startsWith('【ネタバレあり】');
+        const replyText = r.reply.replace('【ネタバレあり】', '');
+        const entry = nvPush('sayo', replyText, isSpoiler);
         nvShelf.innerHTML = [nvItem(p, true), ...r.articles.map((a) => nvItem(a, false))].join('');
-        if (r.reply.startsWith('【ネタバレあり】')) {
+        if (isSpoiler) {
           nvExpr('secret');
           $('[data-nv-badge]').innerHTML = '<span class="nv__badge">ネタバレあり</span>';
           clearInterval(nvTimer); $('[data-nv-next]').hidden = true;
           nvText.innerHTML = '結末に触れる返事です。<button type="button" data-nv-reveal>表示する</button>';
-          $('[data-nv-reveal]').addEventListener('click', () => nvType(r.reply.replace('【ネタバレあり】', '')));
+          $('[data-nv-reveal]').addEventListener('click', () => {
+            entry.hidden = false; // 開示したら履歴でも読めるようにする
+            nvRenderLog();
+            nvType(replyText);
+          });
           return;
         }
         nvExpr(r.articles.length ? 'recommend' : 'default');
@@ -691,6 +730,7 @@
       };
       /** ノベル画面からモーダルへ戻る（作品の話なら要約、探した結果なら結果） */
       const backFromNovel = () => {
+        nvReq += 1;
         clearInterval(nvTimer);
         nv.hidden = true;
         $('[data-nv-log]').classList.remove('is-open');
@@ -702,6 +742,7 @@
         fillModal(nvCtx.p);
       };
       const closeNovel = () => {
+        nvReq += 1;
         clearInterval(nvTimer);
         nv.hidden = true;
         $('[data-nv-log]').classList.remove('is-open');
@@ -742,6 +783,7 @@
         </div>`;
 
       const showSearch = () => {
+        summaryReq += 1; // 取得中の要約を無効にする
         const { q, scope, result } = searchCtx;
         $('[data-m-thumb]').setAttribute('style', 'background:url(img/sayo-face.webp) center/cover');
         $('[data-m-cat]').textContent = `サヨと探す ・ ${scope ? `${scope}の記事から` : 'すべての記事から'}`;
@@ -763,14 +805,17 @@
 
       const openSearch = async (q, scope, trigger) => {
         if (!q) return;
-        searchCtx = { q, scope, result: null };
+        const ctx = { q, scope, result: null };
+        searchCtx = ctx;
         lastTrigger = trigger;
         modal.hidden = false;
         document.body.style.overflow = 'hidden';
         showSearch();
         const result = await C.search(q, scope);
+        if (searchCtx !== ctx) return; // 閉じた・別の検索に変わったあとの応答は捨てる
         if (result.source === 'llm') remaining -= 1;
-        if (searchCtx && searchCtx.q === q) { searchCtx.result = result; showSearch(); }
+        ctx.result = result;
+        showSearch();
       };
 
       const openFor = (id, trigger) => {
@@ -785,6 +830,8 @@
         setTimeout(() => $('.modal__close').focus(), 50);
       };
       const close = () => {
+        summaryReq += 1;
+        nvReq += 1;
         searchCtx = null;
         modal.hidden = true;
         document.body.style.overflow = '';
