@@ -1,0 +1,80 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.sayoNovelWindow {
+  position: relative;
+  padding: var(--space-20) var(--space-16) var(--space-12);
+  border: 1px solid rgba(var(--color-white-rgb), 0.18);
+  border-radius: 14px;
+  background: rgba(var(--color-sayo-window-rgb), 0.86);
+  box-shadow: 0 12px 40px rgba(var(--color-black-rgb), 0.45);
+  color: var(--color-sayo-stage-text);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+
+  &__plate {
+    position: absolute;
+    top: -14px;
+    left: var(--space-16);
+    padding: 2px var(--space-16);
+    border-radius: 6px;
+    background: var(--color-sayo-amber);
+    color: var(--color-sayo-plate-text);
+    font-family: var(--font-heading);
+    font-size: var(--font-size-body);
+    line-height: 1.6;
+
+    small {
+      margin-left: var(--space-8);
+      font-family: var(--font-body);
+      font-size: var(--font-size-caption);
+    }
+
+    &--user {
+      background: rgba(var(--color-white-rgb), 0.9);
+    }
+  }
+
+  &__badge {
+    display: inline-block;
+    margin-bottom: var(--space-8);
+    padding: 0 var(--space-8);
+    border: 1px solid var(--color-sayo-spoiler);
+    border-radius: 4px;
+    color: var(--color-sayo-spoiler);
+    font-size: var(--font-size-caption);
+  }
+
+  &__text {
+    min-height: 3.6em;
+    max-height: 7.2em;
+    overflow-y: auto;
+    font-size: var(--font-size-fixed-14);
+    line-height: 1.8;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    @include layout-md {
+      max-height: 11em;
+      font-size: 17px;
+    }
+  }
+
+  &__next {
+    position: absolute;
+    right: var(--space-16);
+    bottom: var(--space-8);
+    color: var(--color-sayo-amber);
+    font-size: var(--font-size-fixed-12);
+    animation: sayo-novel-nudge 1s infinite;
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+}
+
+@keyframes sayo-novel-nudge {
+  50% {
+    transform: translateY(3px);
+  }
+}

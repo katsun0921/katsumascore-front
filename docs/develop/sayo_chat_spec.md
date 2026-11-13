@@ -226,6 +226,19 @@ Story に必ず含めるもの（AGENTS.md の Storybook 原則）：
 
 この段階では本番の API は呼ばない。ページ（`pages/`）にも組み込まない。
 
+### 9.1 進み具合（2026-11-14）
+
+| 手順 | 状態 | Storybook |
+|---|---|---|
+| 1. トークン・仮画像 | 済 | `Styles/Typography`（Sayo の色） |
+| 2. ui-parts | 済 | `UI-Parts/Sayo/*` |
+| 3. ui-section | 済 | `UI-Section/Sayo/*` |
+| 4. features/sayo | 済（架空の `SayoClient`） | `Features/Sayo/*`。`SayoProvider` の Story で TOP／リストを通しで操作できる |
+| 5. カードのスロット | 済（`HomeCard`・`PostCardImgTop`・`PostCardImgLeft` に `action`） | 各カードの `WithAction` |
+| 5. テンプレートへの組み込み | 未 | — |
+
+残り：`HomeTemplate` / `ListTemplate` への組み込み、`src/libs/api/sayoChat.ts`（本番の `SayoClient`）、`/api/sayo-chat-status` の API ルート、ai-chat 側の API 追加（§8）。
+
 ---
 
 ## 10. 未決事項

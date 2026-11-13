@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { linkLocaleForHref } from '@/libs/nextLinkLocale';
 import { PostCardContainer } from '@/components/ui-parts/PostCard/PostCardContainer';
@@ -11,12 +12,14 @@ type Props = {
   rank?: number;
   className?: string;
   priority?: boolean;
+  /** カードの右上に重ねる操作（例：サヨの「要約」ボタン）。リンクの「隣」に置く */
+  action?: ReactNode;
   /** タイトル直下に添える補足キャプション（例: Person詳細ページの出演役名） */
   caption?: string;
 };
 
-export const PostCardImgTop = ({ post, rank, className, priority, caption }: Props) => (
-  <PostCardContainer className={className} dataComponent='PostCardImgTop'>
+export const PostCardImgTop = ({ post, rank, className, priority, caption, action }: Props) => (
+  <PostCardContainer className={['relative', className].filter(Boolean).join(' ')} dataComponent='PostCardImgTop'>
     <Link href={post.slug} locale={linkLocaleForHref(post.slug)} className='relative grid text-inherit'>
       {rank !== undefined && <PostCardRankBadge rank={rank} />}
       <PostCardMedia image={post.image} title={post.title} className='aspect-video w-full' priority={priority} />
@@ -27,5 +30,6 @@ export const PostCardImgTop = ({ post, rank, className, priority, caption }: Pro
         caption={caption}
       />
     </Link>
+    {action && <div className='absolute right-2 top-2 z-10'>{action}</div>}
   </PostCardContainer>
 );

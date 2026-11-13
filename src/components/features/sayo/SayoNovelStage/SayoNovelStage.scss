@@ -1,0 +1,328 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.sayoNovelStage {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  overflow: hidden;
+  background: var(--color-sayo-stage);
+  color: var(--color-sayo-stage-text);
+  animation: sayo-novel-in 0.45s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  &__stage {
+    position: absolute;
+    inset: 0;
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(var(--color-black-rgb), 0.45) 0%, transparent 16%, transparent 40%, rgba(var(--color-black-rgb), 0.8) 100%);
+      content: "";
+      pointer-events: none;
+    }
+  }
+
+  // SP：立ち絵は画面の上56%。PC：絵全体を中央に収め、左右はぼかした同じ絵で埋める
+  &__blur {
+    display: none;
+
+    @include layout-md {
+      position: absolute;
+      inset: -40px;
+      display: block;
+      width: calc(100% + 80px);
+      height: calc(100% + 80px);
+      object-fit: cover;
+      filter: blur(28px) brightness(0.45);
+    }
+  }
+
+  &__bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 56vh;
+    object-fit: cover;
+    object-position: 32% 12%;
+    transform-origin: 40% 30%;
+    transition: transform 1.2s ease, filter 0.6s ease;
+
+    @include layout-md {
+      height: 100%;
+      object-fit: contain;
+      object-position: center top;
+    }
+  }
+
+  &__stage[data-expression="thinking"] &__bg {
+    filter: brightness(0.9);
+    transform: scale(1.03);
+  }
+
+  &__stage[data-expression="recommend"] &__bg {
+    transform: scale(1.06) translate(1%, -1%);
+  }
+
+  &__stage[data-expression="sorry"] &__bg {
+    filter: saturate(0.6) brightness(0.85);
+  }
+
+  &__stage[data-expression="secret"] &__bg {
+    filter: sepia(0.35) brightness(0.8);
+    transform: scale(1.04);
+  }
+
+  &__hud {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 3;
+    display: flex;
+    gap: var(--space-8);
+    align-items: center;
+    justify-content: flex-end;
+    padding: var(--space-12);
+
+    @include layout-md {
+      justify-content: flex-start;
+    }
+  }
+
+  &__back {
+    margin-right: auto;
+
+    @include layout-md {
+      margin-right: 0;
+    }
+  }
+
+  // SP では題は読み上げ用にだけ残す（狭いため）
+  &__title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+
+    @include layout-md {
+      position: static;
+      flex: 1;
+      width: auto;
+      height: auto;
+      overflow: hidden;
+      clip-path: none;
+      font-family: var(--font-heading);
+      font-size: var(--font-size-fixed-14);
+      text-overflow: ellipsis;
+      text-shadow: 0 1px 4px rgba(var(--color-black-rgb), 0.7);
+      white-space: nowrap;
+    }
+  }
+
+  &__pill {
+    flex: none;
+    padding: var(--space-4) var(--space-12);
+    border: 1px solid rgba(var(--color-white-rgb), 0.18);
+    border-radius: 999px;
+    background: rgba(var(--color-black-rgb), 0.5);
+    color: inherit;
+    font-size: var(--font-size-fixed-12);
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+
+    strong {
+      font-size: var(--font-size-fixed-14);
+    }
+  }
+
+  button.sayoNovelStage__pill {
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid var(--color-sayo-amber);
+    }
+  }
+
+  &__bottom {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+    padding: 0 var(--space-12) calc(var(--space-12) + env(safe-area-inset-bottom));
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    max-width: 880px;
+    margin: 0 auto;
+  }
+
+  &__thinking {
+    color: var(--color-sayo-stage-dim);
+    font-style: italic;
+  }
+
+  &__reveal {
+    margin-left: var(--space-8);
+    padding: 2px var(--space-12);
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-sayo-amber);
+    color: var(--color-sayo-plate-text);
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  &__system {
+    color: var(--color-sayo-amber-soft);
+    font-size: var(--font-size-fixed-12);
+
+    button {
+      margin-left: var(--space-8);
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-weight: 700;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+  }
+
+  // SP：選択肢は1行の横スクロール（立ち絵の顔を隠さない）。PC：折り返す
+  &__choices {
+    display: flex;
+    gap: var(--space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+
+    @include layout-md {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
+  }
+
+  &__reply {
+    display: flex;
+    gap: var(--space-8);
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: var(--space-8) var(--space-12);
+      border: 1px solid rgba(var(--color-white-rgb), 0.18);
+      border-radius: 12px;
+      background: rgba(var(--color-black-rgb), 0.55);
+      color: var(--color-sayo-stage-text);
+
+      // iOS の自動拡大を防ぐため 16px 以上
+      font-size: 16px;
+
+      &::placeholder {
+        color: var(--color-sayo-stage-dim);
+      }
+
+      &:focus {
+        border-color: var(--color-sayo-amber);
+        outline: none;
+      }
+    }
+
+    button {
+      flex: none;
+      padding: var(--space-8) var(--space-16);
+      border: 0;
+      border-radius: 12px;
+      background: var(--color-sayo-amber);
+      color: var(--color-sayo-plate-text);
+      font-weight: 700;
+      cursor: pointer;
+
+      &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__note {
+    color: var(--color-sayo-stage-dim);
+    font-size: 10px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(var(--color-black-rgb), 0.8);
+  }
+
+  &__log {
+    position: absolute;
+    inset: 0 0 0 auto;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    width: min(420px, 100%);
+    border-left: 1px solid rgba(var(--color-white-rgb), 0.18);
+    background: rgba(var(--color-sayo-window-rgb), 0.96);
+    transform: translateX(100%);
+    transition: transform 0.3s ease;
+    visibility: hidden;
+
+    &.is-open {
+      transform: none;
+      visibility: visible;
+    }
+  }
+
+  &__logHead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-12) var(--space-16);
+    border-bottom: 1px solid rgba(var(--color-white-rgb), 0.18);
+    font-family: var(--font-heading);
+  }
+
+  &__logBody {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-12);
+    padding: var(--space-16);
+    overflow-y: auto;
+    font-size: var(--font-size-fixed-14);
+    line-height: 1.8;
+    white-space: pre-wrap;
+  }
+
+  &__logWho {
+    display: block;
+    color: var(--color-sayo-amber);
+    font-size: var(--font-size-caption);
+    font-weight: 700;
+
+    &--user {
+      color: var(--color-sayo-stage-dim);
+    }
+  }
+
+  &__srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+
+@keyframes sayo-novel-in {
+  from {
+    opacity: 0;
+  }
+}
