@@ -12,7 +12,7 @@
     :root {
       --color-bg: #f7f5f2; --color-surface: #ffffff; --color-text: #1f2430; --color-text-sub: #5f6675; --color-line: #e3e0da;
       --color-secondary: #1e1b4b; --color-text-inverse: #ffffff;
-      --color-a: #c8862e; --color-b: #6d28d9; --color-c: #9b2c4a; --color-d: #0f766e; --color-e: #b45309;
+      --color-a: #c8862e; --color-b: #6d28d9; --color-c: #9b2c4a; --color-d: #0f766e; --color-e: #b45309; --color-g: #7c2d12;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Noto Sans JP', sans-serif; background: var(--color-bg); color: var(--color-text); line-height: 1.7; }
@@ -94,6 +94,13 @@
           top: 'd-card-summary.html?view=top&mode=page&embed=1', list: 'e-summary-page.html?id=1201&from=list',
           listLabel: '遷移先：要約の専用ページ',
           points: [['TOP・リスト', '案Dと同じ入口ボックスとカードの「要約」'], ['遷移先', '立ち絵・要約・続けての会話・同じ一覧のほかの作品'], ['良い点', '立ち絵を大きく出せる。URLで共有・戻るができる'], ['気になる点', '一覧との行き来が増える。noindex などの検討が要る']],
+        },
+        {
+          id: 'G', color: 'var(--color-g)', title: '案D ＋「詳しく知りたい」→ ノベル風（案C）',
+          lead: '置き方は案Dと同じ。要約モーダル・探した結果の「詳しく知りたい」を押すと、ノベル風の全画面に切り替わる。',
+          top: 'g-summary-novel.html?view=top&open=1203&embed=1', list: 'g-summary-novel.html?view=list&novel=1201&embed=1',
+          topLabel: 'TOP（要約モーダル）', listLabel: 'リスト（「詳しく知りたい」を押した後）',
+          points: [['TOP・リスト', '案Dと同じ入口ボックスとカードの「要約」'], ['詳しく知りたい', '立ち絵・1文字ずつの返事・棚の作品・選択肢と自由入力。ネタバレは確認してから表示'], ['良い点', 'モーダルは軽いまま、話したい人にだけサヨの存在感を大きく出せる'], ['気になる点', '画面が2種類になる。ノベル画面で回数を使うことを伝える必要がある']],
         },
       ];
 

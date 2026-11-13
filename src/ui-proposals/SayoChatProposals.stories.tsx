@@ -51,3 +51,7 @@ export const CardSummaryPage: Story = {
 export const JourneyF: Story = {
   args: { src: '/ui-proposals/sayo-chat/f-journey.html' },
 };
+
+export const SummaryNovelG: Story = {
+  args: { src: '/ui-proposals/sayo-chat/g-summary-novel.html' },
+};

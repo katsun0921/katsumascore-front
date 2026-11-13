@@ -86,21 +86,35 @@
       <h3>案ごとのページ</h3>
       <div class="tableWrap"><table>
         <thead><tr><th>案</th><th>ページ</th><th>内容</th><th>URLパラメータ</th></tr></thead>
-        <tbody><tr><td>A</td><td><a href="a-shop-page.html">a-shop-page.html</a></td><td>専用の会話ページ「サヨの映画店」（合言葉の入力から）</td><td><code>?key=</code> 合言葉を渡して入力を飛ばす／<code>?q=</code> 最初の質問を送る／<code>?scope=</code> カテゴリ（挨拶が変わる）</td></tr><tr><td>A</td><td><a href="place-a.html?view=top">place-a.html</a></td><td>TOP・リストに置いた入口（バナー／帯）</td><td><code>?view=top|list</code></td></tr><tr><td>B</td><td><a href="b-floating-widget.html">b-floating-widget.html</a></td><td>記事ページに重ねたフローティングウィジェット</td><td>なし</td></tr><tr><td>B</td><td><a href="place-b.html?view=top">place-b.html</a></td><td>TOP・リストに置いたウィジェット（吹き出しと挨拶がページで変わる）</td><td><code>?view=top|list</code></td></tr><tr><td>C</td><td><a href="c-novel-stage.html">c-novel-stage.html</a></td><td>全画面のノベル風の画面</td><td>なし</td></tr><tr><td>C</td><td><a href="place-c.html?view=top">place-c.html</a></td><td>TOP・リストに埋め込んだ舞台</td><td><code>?view=top|list</code></td></tr><tr><td>D・E</td><td><a href="d-card-summary.html">d-card-summary.html</a></td><td>入口ボックスとカードの「要約」。押した後をモーダル（D）／専用ページ（E）で切替</td><td><code>?view=top|list</code>／<code>?mode=modal|page</code>／<code>?open={記事ID}</code> 要約を開いた状態</td></tr><tr><td>E</td><td><a href="e-summary-page.html?id=1201">e-summary-page.html</a></td><td>要約の専用ページ／探した結果のページ</td><td><code>?id={記事ID}</code> 要約／<code>?q=</code>＋<code>?scope=</code> 探した結果／<code>?from=top|list</code> 戻り先</td></tr><tr><td>F</td><td><a href="f-journey.html">f-journey.html</a></td><td>作品探し → 結果 → 要約 → 質問またはレビューまでを1ページで通して試す。TOP／映画リスト、モーダル／専用ページは画面上で切替</td><td>画面上で操作（内部で <code>?view=summary|article&amp;id=</code> を使う）</td></tr></tbody>
+        <tbody><tr><td>A</td><td><a href="a-shop-page.html">a-shop-page.html</a></td><td>専用の会話ページ「サヨの映画店」（合言葉の入力から）</td><td><code>?key=</code> 合言葉を渡して入力を飛ばす／<code>?q=</code> 最初の質問を送る／<code>?scope=</code> カテゴリ（挨拶が変わる）</td></tr><tr><td>A</td><td><a href="place-a.html?view=top">place-a.html</a></td><td>TOP・リストに置いた入口（バナー／帯）</td><td><code>?view=top|list</code></td></tr><tr><td>B</td><td><a href="b-floating-widget.html">b-floating-widget.html</a></td><td>記事ページに重ねたフローティングウィジェット</td><td>なし</td></tr><tr><td>B</td><td><a href="place-b.html?view=top">place-b.html</a></td><td>TOP・リストに置いたウィジェット（吹き出しと挨拶がページで変わる）</td><td><code>?view=top|list</code></td></tr><tr><td>C</td><td><a href="c-novel-stage.html">c-novel-stage.html</a></td><td>全画面のノベル風の画面</td><td>なし</td></tr><tr><td>C</td><td><a href="place-c.html?view=top">place-c.html</a></td><td>TOP・リストに埋め込んだ舞台</td><td><code>?view=top|list</code></td></tr><tr><td>D・E</td><td><a href="d-card-summary.html">d-card-summary.html</a></td><td>入口ボックスとカードの「要約」。押した後をモーダル（D）／専用ページ（E）で切替</td><td><code>?view=top|list</code>／<code>?mode=modal|page</code>／<code>?open={記事ID}</code> 要約を開いた状態</td></tr><tr><td>E</td><td><a href="e-summary-page.html?id=1201">e-summary-page.html</a></td><td>要約の専用ページ／探した結果のページ</td><td><code>?id={記事ID}</code> 要約／<code>?q=</code>＋<code>?scope=</code> 探した結果／<code>?from=top|list</code> 戻り先</td></tr><tr><td>F</td><td><a href="f-journey.html">f-journey.html</a></td><td>作品探し → 結果 → 要約 → 質問またはレビューまでを1ページで通して試す。TOP／映画リスト、モーダル／専用ページは画面上で切替</td><td>画面上で操作（内部で <code>?view=summary|article&amp;id=</code> を使う）</td></tr><tr><td>G</td><td><a href="g-summary-novel.html">g-summary-novel.html</a></td><td>案Dの一覧・要約モーダルに「詳しく知りたい」を足し、押すと案Cのノベル風の全画面で話の続きを聞く</td><td><code>?view=top|list</code>／<code>?open={記事ID}</code> 要約モーダル／<code>?novel={記事ID}</code> ノベル画面</td></tr></tbody>
       </table></div>
       <p class="note" style="margin-top:8px"><code>place-*.html</code> と <code>d-card-summary.html</code> は <code>&amp;embed=1</code> で上部の切替帯を消します（placements.html の中で使用）。</p>
       <h3>共通ファイル（ページではない）</h3>
       <div class="tableWrap"><table>
         <thead><tr><th>ファイル</th><th>内容</th><th>使うページ</th></tr></thead>
         <tbody>
-          <tr><td><code>mock.js</code></td><td>会話APIの架空応答（<code>/session</code>・<code>/message</code> と同じ形）</td><td>A・B・C、place-*</td></tr>
-          <tr><td><code>card-mock.js</code></td><td>架空の記事6件・要約・気分タグ検索</td><td>C〜F、place-*</td></tr>
+          <tr><td><code>mock.js</code></td><td>会話APIの架空応答（<code>/session</code>・<code>/message</code> と同じ形）</td><td>A・B・C・G、place-*</td></tr>
+          <tr><td><code>card-mock.js</code></td><td>架空の記事6件・要約・気分タグ検索</td><td>C〜G、place-*</td></tr>
           <tr><td><code>host.js</code></td><td>置き場所モック用のTOP・リストの土台</td><td>place-*</td></tr>
           <tr><td><code>b-widget.js</code></td><td>案Bのウィジェットを任意のページに置く</td><td>place-b.html</td></tr>
           <tr><td><code>img/</code></td><td>立ち絵（ai-chat の仮画像を縮小したもの）</td><td>すべて</td></tr>
         </tbody>
       </table></div>
     </section>
+    <section>
+      <h2>新案 G：案D ＋「詳しく知りたい」で案Cのノベル風へ</h2>
+      <div class="card">
+        <div class="card__body">
+          <span class="card__tag" style="background:var(--color-c)">案G · D＋C</span>
+          <h3 class="card__title">ふだんは案Dの要約モーダル。もっと知りたい人だけ、サヨの映画店へ</h3>
+          <p class="card__lead">TOP・リスト・カードの「要約」・迷ったら探す入口は案Dと同じです。要約モーダルと探した結果に「詳しく知りたい」を置き、押すと立ち絵が全面に出るノベル風の画面に切り替わります。見どころ・惜しいところ・似た作品・結末（ネタバレは確認してから表示）を、選択肢か自由入力で聞けます。</p>
+          <ul class="good"><li>モーダルは読むことに絞れる（承認済み要約・LLMなし）</li><li>サヨの存在感は、話したい人にだけ大きく出せる</li><li>「← 要約に戻る／結果に戻る」で元のモーダルへ戻れる</li></ul>
+          <ul class="bad"><li>画面が2種類になり、作る量が増える</li><li>ノベル画面で回数を使うことが伝わるよう、表示を工夫する必要がある</li></ul>
+          <a class="card__open" href="g-summary-novel.html">案Gを開く →</a>
+        </div>
+      </div>
+    </section>
+
     <section>
       <h2>新案 F：作品探しから記事を読むまで</h2>
       <div class="card">
