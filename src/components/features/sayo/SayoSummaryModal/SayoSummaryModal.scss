@@ -8,8 +8,7 @@
   align-items: end;
 
   @include layout-md {
-    align-items: center;
-    justify-items: center;
+    place-items: center center;
     padding: var(--space-24);
   }
 
