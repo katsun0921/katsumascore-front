@@ -165,13 +165,17 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
 
   // 確認用の初期状態（表示できると分かってから一度だけ）
   useEffect(() => {
-    if (!visible || !initial || initialized.current) return;
-    initialized.current = true;
-    if (initial.searchChip) { openSearch(initial.searchChip, 'chip'); return; }
-    if (initial.summaryId === undefined) return;
-    const ids = initial.ids ?? [initial.summaryId];
-    setModal({ kind: 'summary', ids, index: Math.max(0, ids.indexOf(initial.summaryId)), search: null });
-    if (initial.novel) setNovel({ kind: 'post', id: initial.summaryId, search: null });
+    if (!visible || !initial || initialized.current) return undefined;
+    // 非同期にして、エフェクト内で同期的に setState しない（StrictModeの再実行でも一度だけ動くよう、実行時にフラグを立てる）
+    const id = setTimeout(() => {
+      initialized.current = true;
+      if (initial.searchChip) { openSearch(initial.searchChip, 'chip'); return; }
+      if (initial.summaryId === undefined) return;
+      const ids = initial.ids ?? [initial.summaryId];
+      setModal({ kind: 'summary', ids, index: Math.max(0, ids.indexOf(initial.summaryId)), search: null });
+      if (initial.novel) setNovel({ kind: 'post', id: initial.summaryId, search: null });
+    }, 0);
+    return () => clearTimeout(id);
   }, [visible, initial, openSearch]);
 
   const value = useMemo<SayoContextValue>(() => ({

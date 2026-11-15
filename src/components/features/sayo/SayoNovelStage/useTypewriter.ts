@@ -13,7 +13,9 @@ export type TypewriterState = {
  * @param speedMs 1文字あたりの間隔
  */
 export const useTypewriter = (text: string, speedMs = 28): TypewriterState => {
-  const [count, setCount] = useState(0);
+  // 進み具合は「どの文の分か」と一緒に持つ。文が変わると自動的に最初からになる
+  const [progress, setProgress] = useState({ text: '', count: 0 });
+  const count = progress.text === text ? progress.count : 0;
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const stop = () => {
@@ -24,18 +26,19 @@ export const useTypewriter = (text: string, speedMs = 28): TypewriterState => {
   useEffect(() => {
     stop();
     const reduce = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce || !text) { setCount(text.length); return stop; }
-    setCount(0);
+    if (!text) return stop;
+    const step = reduce ? text.length : 1;
     timer.current = setInterval(() => {
-      setCount((c) => {
-        if (c + 1 >= text.length) stop();
-        return c + 1;
+      setProgress((p) => {
+        const next = Math.min((p.text === text ? p.count : 0) + step, text.length);
+        if (next >= text.length) stop();
+        return { text, count: next };
       });
     }, speedMs);
     return stop;
   }, [text, speedMs]);
 
-  const skip = useCallback(() => { stop(); setCount(text.length); }, [text]);
+  const skip = useCallback(() => { stop(); setProgress({ text, count: text.length }); }, [text]);
 
   return { shown: text.slice(0, count), done: count >= text.length, skip };
 };

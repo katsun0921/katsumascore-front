@@ -13,15 +13,16 @@ export type ArticleSummaryState = {
  * @param id 記事ID。null なら読まない
  */
 export const useArticleSummary = (client: SayoClient, id: number | null): ArticleSummaryState => {
-  const [state, setState] = useState<ArticleSummaryState>({ summary: null, loading: false, failed: false });
+  // 取得結果は「どの記事IDの結果か」と一緒に持つ。id が変わった直後は結果が合わないので読み込み中として扱う
+  const [result, setResult] = useState<{ id: number; summary: SayoSummary | null; failed: boolean } | null>(null);
   useEffect(() => {
     if (id === null) return undefined;
     let alive = true;
-    setState({ summary: null, loading: true, failed: false });
     client.getSummary(id)
-      .then((summary) => { if (alive) setState({ summary, loading: false, failed: false }); })
-      .catch(() => { if (alive) setState({ summary: null, loading: false, failed: true }); });
+      .then((summary) => { if (alive) setResult({ id, summary, failed: false }); })
+      .catch(() => { if (alive) setResult({ id, summary: null, failed: true }); });
     return () => { alive = false; };
   }, [client, id]);
-  return state;
+  const current = id !== null && result?.id === id ? result : null;
+  return { summary: current?.summary ?? null, loading: id !== null && current === null, failed: current?.failed ?? false };
 };

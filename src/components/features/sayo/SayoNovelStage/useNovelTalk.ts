@@ -83,11 +83,17 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   const postId = novel.kind === 'post' ? novel.id : null;
 
+  // 作品が切り替わったら表示を考え中に戻す（エフェクト内で同期的に setState しないよう描画中に行う）
+  const [prevPostId, setPrevPostId] = useState(postId);
+  if (prevPostId !== postId) {
+    setPrevPostId(postId);
+    if (postId !== null) { setThinking(true); setSpoiler(false); setSpoilerText(null); setSystem(null); }
+  }
+
   // 作品の話：承認済み要約から始める
   useEffect(() => {
     if (postId === null) return undefined;
     let alive = true;
-    setThinking(true); setSpoiler(false); setSpoilerText(null); setSystem(null);
     client.getSummary(postId).then((s) => {
       if (!alive) return;
       setTitle(s.article.title);
@@ -101,10 +107,14 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   // 探した結果の話：結果を棚に並べる
   useEffect(() => {
-    if (novel.kind !== 'search' || !novel.search.result) return;
-    setTitle(novel.search.query);
-    setShelf(novel.search.result.articles);
-    sayoSays(texts.openSearch(novel.search.result.reply), novel.search.result.articles.length ? 'recommend' : 'sorry');
+    if (novel.kind !== 'search' || !novel.search.result) return undefined;
+    const { query, result } = novel.search;
+    const id = setTimeout(() => {
+      setTitle(query);
+      setShelf(result.articles);
+      sayoSays(texts.openSearch(result.reply), result.articles.length ? 'recommend' : 'sorry');
+    }, 0);
+    return () => clearTimeout(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [novel.kind]);
 
