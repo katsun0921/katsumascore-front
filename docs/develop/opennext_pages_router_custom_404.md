@@ -324,3 +324,11 @@ Node 24.22.1 / npm 11.11.0でSSGテスト65件、WPスキーマテスト2件、L
 - `USE_WP_MOCK=true` のOpenNextビルドも成功し、詳細31件と `.open-next/worker.js` を生成した。実WPでの全件ビルド、Workersへのデプロイ、実環境での配信確認は未実施。
 
 同日、ユーザー指示でeslint-plugin-importを依存ツリーから削除した。eslint-config-nextは個別のプラグイン構成へ置き換えている。セキュリティ評価・構成変更・互換性措置の詳細は[ESLintプラグイン調査ログ](../log/2026-11-07-eslint-plugin-security-review.md)を参照。
+
+## 2026-11-18 Node.js 24.22.3へのセキュリティ更新
+
+- [2026-11-11のNode.jsセキュリティリリース](https://nodejs.org/en/blog/vulnerability/november-2026-security-releases/)で24系の修正版24.22.3が公開された。従来の24.22.1には今回修正された脆弱性が残るため、[24.22.3の公式リリース](https://nodejs.org/ja/blog/release/v24.22.3)へ更新した。
+- `.node-version`、`package.json` の `engines.node`、lockfileのルートエンジン指定、READMEのローカルPATH例を24.22.3へ統一した。GitHub Actionsは既存の `node-version-file: package.json` を通じて同じ版を使用する。npmは11.11.0を維持し、依存パッケージの解決バージョンは変更していない。
+- ローカルのmacOS arm64環境には公式バイナリをSHASUMS256で照合して追加し、シェルとHuskyのPATHを新しいインストール先へ更新した。既存セッションでは旧PATHが引き継がれるため、検証コマンドには新しいPATHを明示した。新しい対話ログインシェルでNode.js 24.22.3 / npm 11.11.0を確認した。
+- Node.js 24.22.3 / npm 11.11.0で `npm ci --engine-strict`、型チェック、Lint、SSGテスト69件、WPスキーマテスト2件が成功した。SSGテストはサンドボックス内のlocalhost待受制限（`listen EPERM`）により一度失敗し、制限外での再実行で全件成功した。
+- インストール時のnpm監査は0件。既存の間接依存 `node-domexception@1.0.0` の非推奨警告は残る。本番ビルド、GitHub Actionsの実行、Cloudflareへのデプロイは未実施。
