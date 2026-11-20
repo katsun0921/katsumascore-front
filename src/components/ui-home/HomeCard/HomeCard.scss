@@ -1,8 +1,22 @@
 .homeCard {
+  position: relative;
   display: block;
   flex-shrink: 0;
   width: 160px;
   cursor: pointer;
+
+  &__link {
+    display: block;
+    color: inherit;
+  }
+
+  // 画像の右上（左上はスコア、右下はVOD）
+  &__action {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+  }
 
   &__media {
     width: 160px;

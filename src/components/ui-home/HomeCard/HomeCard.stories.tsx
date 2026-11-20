@@ -71,3 +71,15 @@ export const MinimalPost: Story = {
     },
   },
 };
+
+/** action スロット（サヨの「要約」ボタンなど）を画像の右上に重ねる */
+export const WithAction: Story = {
+  args: {
+    post: basePost,
+    action: (
+      <button type='button' className='rounded-full bg-[var(--color-bg-dark)] px-2 text-[length:var(--font-size-caption)] text-[color:var(--color-text-inverse)]'>
+        要約
+      </button>
+    ),
+  },
+};

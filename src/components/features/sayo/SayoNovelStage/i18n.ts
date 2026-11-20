@@ -1,0 +1,51 @@
+export const messages = {
+  back: {
+    post: { ja: '← 要約に戻る', en: '← Back to summary' },
+    search: { ja: '← 結果に戻る', en: '← Back to results' },
+  },
+  title: {
+    postPrefix: { ja: '『', en: '“' },
+    postSuffix: { ja: '』について', en: '”' },
+    searchSuffix: { ja: '」で探す', en: '”' },
+    searchPrefix: { ja: '「', en: 'Search: “' },
+  },
+  remaining: { ja: '今日あと', en: 'Left today' },
+  log: { ja: '履歴', en: 'Log' },
+  logTitle: { ja: 'これまでの会話', en: 'Conversation' },
+  close: { ja: '閉じて一覧に戻る', en: 'Close' },
+  closeLog: { ja: '履歴を閉じる', en: 'Close log' },
+  you: { ja: 'あなた', en: 'You' },
+  sayo: { ja: 'サヨ', en: 'Sayo' },
+  thinking: { ja: '（棚の前で、少し考えています……）', en: '(Thinking in front of the shelf…)' },
+  open: {
+    post: { ja: 'ですね。……少しだけ、詳しくお話しします。', en: '— let me tell you a little more.' },
+    postEnd: { ja: '気になるところを選んでください。', en: 'Pick what you’d like to know.' },
+    searchAll: { ja: 'すべての記事から選びました。気になる作品があれば「この作品の話を聞く」を押してください。', en: 'Picked from all reviews. Tap “Talk about this” on any title.' },
+    searchScoped: { ja: 'の記事から選びました。気になる作品があれば「この作品の話を聞く」を押してください。', en: ' reviews only. Tap “Talk about this” on any title.' },
+  },
+  choice: {
+    highlight: { ja: '見どころをもう少し', en: 'More highlights' },
+    similar: { ja: '似た作品は？', en: 'Similar titles?' },
+    weak: { ja: '惜しいところは？', en: 'Any weak points?' },
+    ending: { ja: '結末を教えて（ネタバレ）', en: 'The ending (spoilers)' },
+    searchSuffix: { ja: '」で探す', en: '”' },
+    searchPrefix: { ja: '「', en: 'Try “' },
+  },
+  input: {
+    label: { ja: 'サヨへのメッセージ', en: 'Message to Sayo' },
+    placeholder: { ja: 'サヨに話しかける', en: 'Talk to Sayo' },
+    send: { ja: '話す', en: 'Send' },
+  },
+  spoiler: {
+    hidden: { ja: '結末に触れる返事です。', en: 'This reply contains spoilers.' },
+    reveal: { ja: '表示する', en: 'Show' },
+  },
+  system: {
+    error: { ja: '返事を受け取れませんでした。', en: 'Could not get a reply.' },
+    retry: { ja: 'もう一度送る', en: 'Retry' },
+    session: { ja: '時間が経ったため、会話をやり直します。もう一度送ってください。', en: 'Your session expired. Please send again.' },
+    tooLong: { ja: '200文字までで入力してください。', en: 'Please keep it under 200 characters.' },
+  },
+  note: { ja: 'AIの回答です。ここから先の質問は1回ずつ数えます。個人情報は入力しないでください。', en: 'AI-generated. Each question counts once. Do not enter personal information.' },
+  stageAlt: { ja: '映画店のカウンターで頬杖をつくサヨ', en: 'Sayo resting her chin on the shop counter' },
+} as const;

@@ -1,0 +1,116 @@
+.sayoAskBox {
+  display: flex;
+  gap: var(--space-12);
+  align-items: flex-start;
+  padding: var(--space-12) var(--space-16);
+  border: 1px solid var(--color-sayo-border-dark);
+  border-radius: 16px;
+  background: var(--color-surface-dark);
+  color: var(--color-text-inverse);
+
+  &__face {
+    flex: none;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 0 0 2px var(--color-accent-strong);
+  }
+
+  &__main {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: var(--space-8);
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    line-height: 1.5;
+
+    small {
+      display: block;
+      color: var(--color-sayo-text-dim);
+      font-size: var(--font-size-caption);
+      font-weight: 400;
+    }
+  }
+
+  &__chips {
+    display: flex;
+    gap: var(--space-8);
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  &__chip {
+    flex: none;
+    padding: var(--space-4) var(--space-12);
+    border: 1px solid var(--color-accent-soft);
+    border-radius: 999px;
+    background: var(--color-sayo-surface-dark-2);
+    color: inherit;
+    font-size: var(--font-size-fixed-14);
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover,
+    &:focus-visible {
+      border-color: var(--color-accent);
+      background: var(--color-accent);
+    }
+  }
+
+  &__form {
+    display: flex;
+    gap: var(--space-8);
+
+    input {
+      flex: 1;
+      min-width: 0;
+      padding: var(--space-8) var(--space-16);
+      border: 1px solid var(--color-sayo-border-dark);
+      border-radius: 999px;
+      background: var(--color-bg-dark);
+      color: var(--color-text-inverse);
+
+      // iOS の自動拡大を防ぐため 16px 以上
+      font-size: 16px;
+
+      &::placeholder {
+        color: var(--color-sayo-text-dim);
+      }
+
+      &:focus {
+        outline: 2px solid var(--color-accent-soft);
+      }
+    }
+
+    button {
+      flex: none;
+      padding: var(--space-8) var(--space-16);
+      border: 0;
+      border-radius: 999px;
+      background: var(--color-accent-strong);
+      color: var(--color-bg-dark);
+      font-size: var(--font-size-fixed-14);
+      font-weight: 700;
+      cursor: pointer;
+    }
+  }
+
+  &__hint {
+    color: var(--color-sayo-text-dim);
+    font-size: var(--font-size-caption);
+  }
+
+  &__srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}

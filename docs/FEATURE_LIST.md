@@ -114,7 +114,7 @@
 
 ## 3. コンポーネント一覧
 
-### 3.1 ui-parts（純粋 UI・17 コンポーネント）
+### 3.1 ui-parts（純粋 UI・21 コンポーネント）
 
 ロジック禁止。props の値を表示するのみ。
 
@@ -137,6 +137,10 @@
 | `VodLink` | `components/ui-parts/VodLink` | VOD 配信リンク |
 | `VodMenuItem` | `components/ui-parts/VodMenuItem` | VOD メニューアイテム |
 | `Affiliate` | `components/ui-parts/Affiliate` | アフィリエイト広告（Admax / Geo / Tsutaya / Accesstrade[Hulu・Wowow]） |
+| `SayoFaceButton` | `components/ui-parts/SayoFaceButton` | サヨ：カードに重ねる顔つきの「要約」ボタン |
+| `SayoBubble` | `components/ui-parts/SayoBubble` | サヨ：吹き出し（サヨ／利用者） |
+| `SayoChoice` | `components/ui-parts/SayoChoice` | サヨ：ノベル画面の選択肢 |
+| `SayoDeepButton` | `components/ui-parts/SayoDeepButton` | サヨ：「詳しく知りたい」ボタン |
 
 ### 3.2 ui-layout（構造・4 コンポーネント）
 
@@ -165,7 +169,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 | `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
 
-### 3.4 ui-section（意味のある UI・25 コンポーネント）
+### 3.4 ui-section（意味のある UI・31 コンポーネント）
 
 props でデータを受け取る。読み取り専用 hooks（`useLocale` など）のみ許可。
 
@@ -194,8 +198,14 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `VodItem` | `components/ui-section/VodItem` | VOD アイテム |
 | `VodLegend` | `components/ui-section/VodLegend` | VOD バッジ凡例（頭文字の意味を説明） |
 | `VodPanel` | `components/ui-section/VodPanel` | VOD パネル |
+| `SayoAskBox` | `components/ui-section/SayoAskBox` | サヨ：「何を観ようか迷ったら」の入口（候補ボタン・自由入力） |
+| `SayoSummary` | `components/ui-section/SayoSummary` | サヨ：承認済み要約の表示 |
+| `SayoSearchResults` | `components/ui-section/SayoSearchResults` | サヨ：探した結果の作品一覧 |
+| `SayoPausedNotice` | `components/ui-section/SayoPausedNotice` | サヨ：停止中・上限の案内 |
+| `SayoNovelWindow` | `components/ui-section/SayoNovelWindow` | サヨ：ノベル画面のメッセージウィンドウ |
+| `SayoShelf` | `components/ui-section/SayoShelf` | サヨ：ノベル画面の「棚」（作品カード列） |
 
-### 3.5 features（ロジック・20 コンポーネント）
+### 3.5 features（ロジック・26 コンポーネント）
 
 hooks / state 使用可。データ取得・整形を担当。
 
@@ -225,6 +235,12 @@ hooks / state 使用可。データ取得・整形を担当。
 | `StreamingVod` | `components/features/StreamingVod` | ストリーミング配信（ロジック） |
 | `VodMenu` | `components/features/VodMenu` | VOD メニュー |
 | `SeoHead` | `components/features/seo/SeoHead` | SEO 用 `<head>` メタタグ |
+| `SayoProvider` | `components/features/sayo/SayoProvider` | サヨ：フラグ・残り回数・モーダル／ノベル画面の状態（Storybook で実装中。ページ未組み込み） |
+| `SayoGate` | `components/features/sayo/SayoGate` | サヨ：表示してよいときだけ children を描く |
+| `SayoCardAction` | `components/features/sayo/SayoCardAction` | サヨ：カードの action スロットに渡す「要約」ボタン |
+| `SayoEntry` | `components/features/sayo/SayoEntry` | サヨ：入口（SayoAskBox を Provider につなぐ） |
+| `SayoSummaryModal` | `components/features/sayo/SayoSummaryModal` | サヨ：要約・探した結果のモーダル |
+| `SayoNovelStage` | `components/features/sayo/SayoNovelStage` | サヨ：「詳しく知りたい」で開くノベル風の画面 |
 
 ### 3.6 templates（画面構造・12 テンプレート）
 
@@ -331,6 +347,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | 関数 / ファイル | 説明 |
 |---------------|------|
 | `homeStaticProps.ts` | ホームページ静的 props 生成 |
+| `sayoAssets.ts` | サヨの立ち絵・顔アイコンの場所 |
 | `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
@@ -386,6 +403,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `wordpress.ts` | WordPress REST API・ACF フィールド型 |
 | `franchise.ts` | `Franchise` 関連型 |
 | `search.ts` | `SearchResult`, `SearchDimension` |
+| `sayo.ts` | `SayoStatus`, `SayoSummary`, `SayoArticle`, `SayoClient` など（サヨUI） |
 | `css.d.ts` | CSS Module 型定義 |
 
 ---
@@ -494,3 +512,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | Entity 実装仕様 | `docs/ENTITY_IMPLEMENTATION_SPEC.md` | Entity 設計 |
 | TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_movie.youtube` の抽出・モーダル再生仕様 |
 | TOP 劇場公開・VOD配信ハイライト | `docs/features/home_release_highlight.md` | 週次まとめ記事の本文からの作品リスト抽出・リンク解決仕様 |
+| サヨ（AI映画店主）UI | `docs/develop/sayo_chat_spec.md` | 案Gの実装仕様（CSR・WordPressの表示／停止フラグ・コンポーネント配置）。開発中 |

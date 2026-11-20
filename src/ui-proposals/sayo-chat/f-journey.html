@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>サヨと作品を探す｜体験比較モック</title>
+  <style>
+:root{--ink:#201b30;--muted:#756e80;--purple:#291b4c;--violet:#6e42aa;--pink:#ed52c6;--paper:#fbf9f6;--line:#e9e3eb;--warm:#fff9f2;--white:#fff;--shadow:0 18px 55px rgba(34,21,47,.12)}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:'Noto Sans JP',sans-serif;line-height:1.7}button,input{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer}a{color:inherit}button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #c88be8;outline-offset:3px}.lab{display:flex;gap:8px 12px;align-items:center;flex-wrap:wrap;padding:9px 22px;background:#fff3cc;color:#4e3b1c;font-size:11px}.lab a{font-weight:700;margin-right:8px}.lab__label{font-weight:700}.lab__note{margin-left:auto}.switch{display:inline-flex;border:1px solid #c6a86e;border-radius:6px;overflow:hidden}.switch button{border:0;background:transparent;padding:3px 10px;font-size:11px}.switch button[aria-pressed=true]{background:#563f22;color:white}.site-header{background:#17112d;color:white}.site-header__inner{max-width:1120px;margin:auto;height:70px;padding:0 24px;display:flex;align-items:center;gap:55px}.logo{text-decoration:none;font-weight:900;letter-spacing:.09em;font-size:19px;line-height:1}.logo span{color:var(--pink)}.logo small{display:block;font-weight:400;font-size:9px;letter-spacing:.08em;margin-top:7px;color:#bcb2cd}.site-header nav{display:flex;gap:28px;font-size:12px;font-weight:700}.header-search{margin-left:auto;font-size:25px}.wrap{max-width:1120px;padding:0 24px;margin:auto}.hero{background:linear-gradient(120deg,#1d1538,#3f2858);color:white;padding:45px 0 87px}.eyebrow{font-size:10px;font-weight:900;letter-spacing:.19em;color:var(--pink);text-transform:uppercase}.hero h1{font-size:clamp(25px,3.5vw,40px);line-height:1.35;margin:8px 0}.hero p{color:#d6cde1;font-size:13px;margin:0}.entry{margin-top:-54px;background:white;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:24px 28px;display:grid;grid-template-columns:auto 1fr;gap:18px;position:relative}.avatar{width:58px;height:58px;object-fit:cover;border-radius:50%;border:3px solid #f0ddf1}.entry__top{display:flex;justify-content:space-between;align-items:start;gap:12px}.entry h2{font-size:19px;margin:0}.entry p{font-size:12px;color:var(--muted);margin:3px 0 14px}.entry__tag{font-size:10px;white-space:nowrap;color:var(--violet);background:#f3edf9;border-radius:30px;padding:4px 10px;font-weight:700}.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{border:1px solid #dfd1e8;border-radius:30px;background:white;color:#573573;padding:8px 14px;font-size:12px;font-weight:700}.chip:hover{background:#f7f0fa}.search-form{display:flex;gap:8px;margin-top:12px}.search-form input,.chat-form input{min-width:0;flex:1;border:1px solid #ded7e3;border-radius:10px;background:white;padding:10px 13px;font-size:14px}.primary,.secondary{border-radius:10px;padding:10px 16px;font-size:12px;font-weight:700;text-decoration:none;text-align:center;display:inline-flex;justify-content:center;align-items:center;gap:6px}.primary{background:var(--purple);color:white;border:1px solid var(--purple)}.primary:hover{background:var(--violet)}.secondary{background:white;color:var(--purple);border:1px solid #d8cddd}.secondary:hover{background:#f8f2fa}.help{font-size:10px;color:var(--muted);margin-top:8px}.results{margin:20px 0 0;padding:24px;border:1px solid #e4d7eb;border-radius:16px;background:#f9f4fb}.results[hidden]{display:none}.results__heading{display:flex;align-items:start;gap:12px}.results__heading img{width:38px;height:38px}.results__heading p{font-size:13px;margin:2px 0}.results__heading strong{font-size:11px;color:var(--violet)}.query{font-size:11px;color:#776486;margin:0 0 14px}.result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:15px}.result-card{border:1px solid var(--line);background:white;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:9px}.result-card h3{font-size:14px;margin:0}.result-card p{font-size:11px;color:var(--muted);margin:0}.result-card__actions{display:flex;gap:6px;margin-top:auto}.result-card__actions>*{flex:1;padding:8px 6px;font-size:11px}.section{padding:54px 0 76px}.section-heading{display:flex;justify-content:space-between;align-items:end;margin-bottom:19px}.section-heading h2{margin:3px 0 0;font-size:23px}.section-heading p{font-size:12px;color:var(--muted);margin:0}.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}.post{position:relative;min-width:0}.post__link{text-decoration:none;display:block}.poster{aspect-ratio:4/3;border-radius:10px;position:relative;overflow:hidden;background:linear-gradient(150deg,hsl(var(--hue) 25% 43%),hsl(var(--hue) 33% 15%));color:white;display:flex;align-items:end;padding:15px}.poster:before{content:'';position:absolute;inset:15% 22% -35%;border:1px solid rgba(255,255,255,.25);border-radius:50%;transform:rotate(-24deg)}.poster__name{position:relative;font-size:15px;font-weight:700;letter-spacing:.08em;text-shadow:0 2px 10px #000}.score{position:absolute;top:10px;left:10px;background:#1a1230;color:white;border-radius:6px;padding:3px 8px;font-size:12px;font-weight:700}.summary-button{position:absolute;top:9px;right:9px;display:flex;align-items:center;gap:5px;border:1px solid #dcb3e7;border-radius:30px;background:#fff;color:#4c2864;padding:3px 9px 3px 3px;font-size:10px;font-weight:700;box-shadow:0 3px 12px #20152a33}.summary-button img{width:23px;height:23px;object-fit:cover;border-radius:50%}.post__meta{font-size:10px;color:var(--muted);margin-top:11px}.post h3{font-size:14px;line-height:1.5;margin:4px 0}.post__excerpt{font-size:11px;color:var(--muted);margin:0}.summary-shell{background:var(--warm);color:var(--ink)}dialog{border:0;border-radius:18px;padding:0;width:min(650px,calc(100% - 32px));max-height:min(90vh,850px);box-shadow:0 20px 80px #10071c55}dialog::backdrop{background:#160d25aa}dialog .summary-shell{min-height:0}.summary-head{padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid #ece0d4;background:white}.summary-head__identity{display:flex;align-items:center;gap:10px}.summary-head img{width:38px;height:38px}.summary-head strong{font-size:13px}.summary-head small{display:block;color:var(--muted);font-size:10px}.close{background:transparent;border:0;font-size:25px;line-height:1;color:#716875}.summary-body{padding:25px 28px 30px}.summary-label{font-size:10px;letter-spacing:.13em;color:#9c714c;font-weight:900}.summary-body h1,.summary-body h2{font-size:22px;line-height:1.4;margin:4px 0 6px}.summary-meta{font-size:11px;color:var(--muted)}.summary-copy{margin:20px 0 14px;font-size:14px;line-height:1.95}.recommend{background:#f2e9df;border-radius:10px;padding:12px 15px;font-size:12px}.recommend strong{display:block;color:#926849;font-size:10px;letter-spacing:.08em;margin-bottom:3px}.summary-actions{display:flex;gap:9px;margin-top:20px}.summary-actions>*{flex:1}.chat-area{margin-top:26px;padding-top:22px;border-top:1px solid #e9ddd0}.chat-area h3{font-size:14px;margin:0 0 5px}.chat-area>p{font-size:11px;color:var(--muted);margin:0 0 13px}.chat-log{display:flex;flex-direction:column;gap:8px;margin:12px 0}.message{max-width:90%;padding:10px 13px;border-radius:12px;font-size:12px}.message--user{align-self:end;background:#e9dff0}.message--sayo{align-self:start;background:white;border:1px solid #ece4dc}.chat-form{display:flex;gap:8px;margin-top:12px}.summary-page{max-width:850px;margin:0 auto;padding:28px 24px 80px}.back{display:inline-block;color:#6d5d78;font-size:12px;font-weight:700;margin-bottom:18px}.page-card{border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow)}.page-card .summary-body{padding:32px 42px 38px}.article-demo{max-width:750px;margin:50px auto;padding:0 24px}.article-demo h1{font-size:32px}.article-demo p{line-height:2}.empty{font-size:12px;color:var(--muted)}
+@media(max-width:700px){.lab{padding:8px 12px}.lab__note{width:100%;margin:0}.site-header__inner{height:58px;padding:0 16px}.site-header nav{display:none}.wrap{padding:0 16px}.hero{padding:32px 0 75px}.entry{padding:18px 16px;gap:10px}.entry>.avatar{width:44px;height:44px}.entry h2{font-size:16px}.entry__tag{display:none}.entry p{margin-bottom:10px}.chip{padding:7px 10px;font-size:11px}.search-form{flex-wrap:wrap}.search-form input{width:100%}.search-form button{padding:8px 12px}.results{padding:16px}.result-grid{grid-template-columns:1fr}.result-card{gap:6px}.section{padding-top:40px}.cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 12px}.post__excerpt{display:none}.summary-button{font-size:10px}.summary-body{padding:20px}.summary-actions{flex-direction:column}.page-card .summary-body{padding:23px}.summary-page{padding:20px 16px 50px}dialog{width:100%;max-width:none;max-height:90dvh;margin:auto 0 0;border-radius:18px 18px 0 0}.summary-head{padding:14px 18px}}
+  </style>
+</head>
+<body>
+  <div class="lab" aria-label="モックの表示設定">
+    <a href="index.html">← 案の比較へ</a>
+    <span class="lab__label">表示場所</span>
+    <div class="switch" role="group" aria-label="表示場所"><button data-scope="top" aria-pressed="true">TOP</button><button data-scope="list" aria-pressed="false">映画リスト</button></div>
+    <span class="lab__label">要約の表示</span>
+    <div class="switch" role="group" aria-label="要約の表示方法"><button data-mode="modal" aria-pressed="true">モーダル</button><button data-mode="page" aria-pressed="false">専用ページ</button></div>
+    <span class="lab__note">比較用の切替 · 架空の作品と回答です</span>
+  </div>
+  <header class="site-header"><div class="site-header__inner"><a class="logo" href="f-journey.html">KATSUMA<span>SCORE</span><small>映画と、もう少し仲良く。</small></a><nav aria-label="サイトメニュー"><span>映画</span><span>ドラマ</span><span>アニメ</span><span>特集</span></nav><span class="header-search" aria-hidden="true">⌕</span></div></header>
+  <main id="main"></main>
+  <dialog id="summary-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div></dialog>
+  <script src="card-mock.js"></script>
+  <script>
+/* 比較用モック。通信せず、card-mock.js の架空データを使用する。 */
+(() => {
+  const { POSTS, SEARCH_CHIPS, search, followUpReply } = window.CardMock;
+  const main = document.querySelector('#main');
+  const dialog = document.querySelector('#summary-dialog');
+  const dialogContent = document.querySelector('#dialog-content');
+  const state = { scope: 'top', mode: 'modal', query: '', result: null, chat: [], searchVersion: 0, returnFocus: null };
+  const escape = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
+  const face = '<img class="avatar" src="img/sayo-face.webp" alt="">';
+  const getPost = (id) => POSTS.find((post) => post.id === Number(id));
+  const scopeLabel = () => state.scope === 'top' ? 'すべての記事から' : '映画の記事から';
+  const card = (post) => `<article class="post"><a class="post__link" href="?view=article&id=${post.id}" data-article="${post.id}" aria-label="${escape(post.title)}のレビューを読む"><div class="poster" style="--hue:${post.hue}"><span class="score">★ ${post.score.toFixed(1)}</span><span class="poster__name">${escape(post.title)}</span></div><div class="post__meta">${escape(post.category)}　 ·　 ${escape(post.date)}</div><h3>${escape(post.title)}</h3><p class="post__excerpt">${escape(post.excerpt)}</p></a><button class="summary-button" data-summary="${post.id}" aria-label="${escape(post.title)}の記事をサヨに要約してもらう"><img src="img/sayo-face.webp" alt="">要約</button></article>`;
+  const resultCard = (post) => `<article class="result-card"><div><h3>${escape(post.title)} <span class="summary-meta">★ ${post.score.toFixed(1)} · ${escape(post.category)}</span></h3><p>${escape(post.excerpt)}</p></div><div class="result-card__actions"><button class="secondary" data-summary="${post.id}">サヨの要約</button><a class="primary" href="?view=article&id=${post.id}" data-article="${post.id}">レビューを読む →</a></div></article>`;
+  const renderResults = () => {
+    const container = document.querySelector('#results');
+    if (!container) return;
+    if (!state.result) { container.hidden = true; container.innerHTML = ''; return; }
+    container.hidden = false;
+    const content = state.result.loading ? '<p class="empty" role="status">記事を探しています…</p>' : `<div class="results__heading">${face}<div><strong>サヨからのおすすめ</strong><p>${escape(state.result.reply)}</p></div></div><div class="result-grid">${state.result.posts.map(resultCard).join('')}</div>`;
+    container.innerHTML = `<p class="query">あなたの希望：${escape(state.query)}　／　${scopeLabel()}</p>${content}`;
+  };
+  const renderHome = () => {
+    const isTop = state.scope === 'top';
+    const posts = isTop ? POSTS : POSTS.filter((post) => post.category === '映画');
+    main.innerHTML = `<div class="hero"><div class="wrap"><div class="eyebrow">${isTop ? 'Discover your next favorite' : 'Movie reviews'}</div><h1>${isTop ? '次に観る一本を、見つけよう。' : '映画のレビュー'}</h1><p>${isTop ? '作品との出会いも、観たあとの余韻も。' : '気になる映画のレビューを探す。'}</p></div></div><div class="wrap"><section class="entry" aria-labelledby="entry-title">${face}<div><div class="entry__top"><div><h2 id="entry-title">何を観ようか迷ったら、サヨに相談</h2><p>今の気分から、${scopeLabel()}ぴったりの作品を探します。</p></div><span class="entry__tag">AIと作品を探す ✦</span></div><div class="chips">${SEARCH_CHIPS.map((chip) => `<button class="chip" data-search="${escape(chip.label)}">${escape(chip.label)} ↗</button>`).join('')}</div><form class="search-form" id="search-form"><input name="query" maxlength="200" aria-label="作品の希望" placeholder="気分や観たい作品を自由に入力"><button class="primary" type="submit">サヨに相談 →</button></form><div class="help">AIの回答です。個人情報は入力しないでください。</div></div></section><section class="results" id="results" aria-label="サヨの検索結果" aria-live="polite" hidden></section><section class="section"><div class="section-heading"><div><div class="eyebrow">${isTop ? 'Latest reviews' : 'Movie reviews'}</div><h2>${isTop ? '新着レビュー' : '映画の記事一覧'}</h2></div><p>気になる作品をチェック</p></div><div class="cards">${posts.map(card).join('')}</div></section></div>`;
+    renderResults();
+  };
+  const summaryMarkup = (post, page) => `<div class="summary-shell"><div class="summary-head"><div class="summary-head__identity">${face}<div><strong>サヨの記事案内</strong><small>この記事の要約 · ネタバレなし</small></div></div>${page ? '<span class="summary-meta">SAYO’S GUIDE</span>' : '<button class="close" data-close aria-label="要約を閉じる">×</button>'}</div><div class="summary-body"><div class="summary-label">REVIEW SUMMARY</div><${page ? 'h1' : 'h2'} id="${page ? 'page-title' : 'dialog-title'}">${escape(post.title)}</${page ? 'h1' : 'h2'}><div class="summary-meta">${escape(post.category)}　 ·　 ★ ${post.score.toFixed(1)}　 ·　 ${escape(post.date)}</div><p class="summary-copy">${escape(post.summary)}</p><div class="recommend"><strong>こんな人におすすめ</strong>${escape(post.recommendFor)}</div><div class="summary-actions"><a class="primary" href="?view=article&id=${post.id}" data-article="${post.id}">レビューを読む →</a><button class="secondary" data-ask>サヨにもっと聞く ↓</button></div><section class="chat-area" id="chat-area"><h3>この記事について、サヨに聞く</h3><p>気になることをもう少し。回答は記事の内容に基づく想定です。</p><div class="chips"><button class="chip" data-follow="見どころをもう少し">見どころをもう少し</button><button class="chip" data-follow="惜しいところは？">惜しいところは？</button><button class="chip" data-follow="似た作品は？">似た作品は？</button></div><div class="chat-log" aria-live="polite">${state.chat.map((message) => `<div class="message message--${message.role}">${escape(message.text)}${message.posts ? `<div class="result-grid">${message.posts.map(resultCard).join('')}</div>` : ''}</div>`).join('')}</div><form class="chat-form"><input name="question" maxlength="200" aria-label="この記事について質問する" placeholder="この記事について質問する"><button class="primary" type="submit">送信</button></form><div class="help">AIの回答です。個人情報は入力しないでください。</div></section></div></div>`;
+  const renderPage = (post) => { main.innerHTML = `<div class="summary-page"><a href="f-journey.html" class="back" data-back>← ${state.result && !state.result.loading ? '検索結果・一覧に戻る' : '一覧に戻る'}</a><div class="page-card">${summaryMarkup(post, true)}</div></div>`; };
+  const renderArticle = (post) => { main.innerHTML = `<article class="article-demo"><a class="back" href="f-journey.html" data-back>← 前の画面に戻る</a><div class="eyebrow">Review · 架空の記事</div><h1>${escape(post.title)}</h1><p>${escape(post.excerpt)}</p><p>ここはレビュー記事への遷移を確認するための仮画面です。</p></article>`; };
+  const syncControls = () => {
+    document.querySelectorAll('[data-scope]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.scope === state.scope)));
+    document.querySelectorAll('[data-mode]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.mode === state.mode)));
+  };
+  const route = () => {
+    const params = new URLSearchParams(location.search);
+    const post = getPost(params.get('id'));
+    if (params.get('view') === 'summary' && post) renderPage(post);
+    else if (params.get('view') === 'article' && post) renderArticle(post);
+    else renderHome();
+    syncControls();
+  };
+  const navigate = (view, post) => {
+    history.replaceState({ ...(history.state || {}), scrollY: window.scrollY }, '');
+    history.pushState({ fromMock: true }, '', `?view=${view}&id=${post.id}`);
+    route(); window.scrollTo(0, 0);
+  };
+  const openSummary = (post, trigger) => {
+    state.chat = [];
+    if (state.mode === 'page') { if (dialog.open) dialog.close(); navigate('summary', post); return; }
+    state.returnFocus = trigger;
+    dialogContent.dataset.postId = post.id;
+    dialogContent.innerHTML = summaryMarkup(post, false);
+    if (!dialog.open) dialog.showModal();
+  };
+  const performSearch = async (query) => {
+    const request = ++state.searchVersion;
+    state.query = query; state.result = { loading: true }; renderResults();
+    document.querySelector('#results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    const result = await search(query, state.scope === 'list' ? '映画' : null);
+    if (request !== state.searchVersion) return;
+    state.result = result; renderResults();
+  };
+  const sendFollow = (question, root) => {
+    const post = getPost(dialog.open ? dialogContent.dataset.postId : new URLSearchParams(location.search).get('id'));
+    if (!post) return;
+    const reply = followUpReply(post, question);
+    state.chat.push({ role: 'user', text: question }, { role: 'sayo', text: reply.reply, posts: reply.articles.length ? reply.articles : null });
+    if (dialog.open) dialogContent.innerHTML = summaryMarkup(post, false);
+    else renderPage(post);
+    const active = dialog.open ? dialogContent : main;
+    active.querySelector('.chat-log').scrollIntoView({ block: 'nearest' });
+  };
+  document.addEventListener('click', (event) => {
+    const scope = event.target.closest('[data-scope]');
+    const mode = event.target.closest('[data-mode]');
+    const searchButton = event.target.closest('[data-search]');
+    const summaryButton = event.target.closest('[data-summary]');
+    const article = event.target.closest('[data-article]');
+    const back = event.target.closest('[data-back]');
+    const follow = event.target.closest('[data-follow]');
+    if (scope) { state.scope = scope.dataset.scope; state.result = null; state.searchVersion++; if (dialog.open) dialog.close(); history.replaceState({}, '', location.pathname); route(); window.scrollTo(0, 0); return; }
+    if (mode) { state.mode = mode.dataset.mode; syncControls(); return; }
+    if (searchButton) { performSearch(searchButton.dataset.search); return; }
+    if (summaryButton) { openSummary(getPost(summaryButton.dataset.summary), summaryButton); return; }
+    if (article) { event.preventDefault(); if (dialog.open) dialog.close(); navigate('article', getPost(article.dataset.article)); return; }
+    if (back) { event.preventDefault(); if (history.state && history.state.fromMock) history.back(); else { history.replaceState({}, '', location.pathname); route(); } return; }
+    if (event.target.closest('[data-close]')) { dialog.close(); return; }
+    if (event.target.closest('[data-ask]')) { const root = dialog.open ? dialog : main; root.querySelector('.chat-form input').focus(); root.querySelector('.chat-area').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); return; }
+    if (follow) sendFollow(follow.dataset.follow, follow.closest('.summary-shell'));
+  });
+  document.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (event.target.id === 'search-form') { const query = event.target.elements.query.value.trim(); if (query) performSearch(query); }
+    if (event.target.matches('.chat-form')) { const question = event.target.elements.question.value.trim(); if (question) sendFollow(question, event.target.closest('.summary-shell')); }
+  });
+  dialog.addEventListener('close', () => { if (state.returnFocus && state.returnFocus.isConnected) state.returnFocus.focus(); });
+  dialog.addEventListener('click', (event) => { if (event.target === dialog) dialog.close(); });
+  window.addEventListener('popstate', (event) => { if (dialog.open) dialog.close(); route(); window.scrollTo(0, event.state?.scrollY || 0); });
+  route();
+})();
+  </script>
+</body>
+</html>
