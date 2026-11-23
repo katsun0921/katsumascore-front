@@ -10,7 +10,7 @@ export const messages = {
     submit: { ja: '探す', en: 'Search' },
   },
   hint: {
-    ja: '候補ボタンは記事のタグから探します（回数は減りません）。自由入力はAIが探します（1回ずつ数えます）。カード右上の「要約」からは、作品ごとの要約を聞けます。',
-    en: 'Mood buttons search by review tags (free). Free text is searched by AI (counts once each). Use “Summary” on each card for a quick summary.',
+    ja: '候補ボタンは記事のタグから、自由入力はAIが探します（どちらも1回ずつ数えます）。カード右上の「要約」からは、作品ごとの要約を聞けます（これも1回数えます）。',
+    en: 'Mood buttons search by review tags and free text is searched by AI (each counts once). Use “Summary” on each card for a quick summary (also counts once).',
   },
 } as const;

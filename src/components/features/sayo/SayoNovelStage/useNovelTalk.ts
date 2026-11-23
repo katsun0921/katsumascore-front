@@ -51,12 +51,6 @@ const SYSTEM_BY_STATUS: Partial<Record<SayoMessageStatus, NovelSystem>> = {
   too_long: 'tooLong',
 };
 
-/** 返事の内容から表情を決める（作品あり→recommend、見つからない→sorry） */
-const expressionFor = (r: SayoMessageResult): SayoExpression => {
-  if (r.articles.length) return 'recommend';
-  return r.status === 'no_match' ? 'sorry' : 'default';
-};
-
 /**
  * ノベル画面の会話の状態と操作。作品の話は承認済み要約から始め、質問は /message（LLM）へ。
  * 探した結果の話は棚に作品を並べ、候補ボタンで探し直せる（LLMなし）。
@@ -171,7 +165,7 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     if (r.status.startsWith('limit') || r.status === 'disabled') { setThinking(false); setExpression('sorry'); setText(''); return; }
     setShelf([...(current ? [current] : []), ...r.articles]);
     if (r.spoiler) {
-      setThinking(false); setSpoiler(true); setSpoilerText(r.reply); setExpression('secret'); setText('');
+      setThinking(false); setSpoiler(true); setSpoilerText(r.reply); setExpression(r.expression); setText('');
       // 履歴にも本文を出さない。「表示する」を押したとき（reveal）に、この返事の行だけ開示する
       logSeq.current += 1;
       const id = logSeq.current;
@@ -179,7 +173,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
       setLog((l) => [...l, { who: 'sayo', text: r.reply, hidden: true, id }]);
       return;
     }
-    sayoSays(r.reply, expressionFor(r));
+    // 表情はサーバーが決める（画面では推測しない）。待ちの thinking だけ画面で決める
+    sayoSays(r.reply, r.expression);
   };
 
   /** 選択肢・入力を1つ処理する。早期 return で分岐する */

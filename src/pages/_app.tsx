@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 import '@/styles/_app-component-styles.scss';
 import type { AppProps } from 'next/app';
+import dynamic from 'next/dynamic';
 import { Noto_Sans_JP, Shippori_Mincho } from 'next/font/google';
 import Script from 'next/script';
 import { useRouter } from 'next/router';
@@ -22,6 +23,14 @@ const GA_MEASUREMENT_ID = 'G-NE4K3EM3VB';
 /** AdSense のパブリッシャー ID（`adsbygoogle.js` の client）。 */
 const ADSENSE_PUBLISHER_ID = 'ca-pub-6583700677059660';
 const isProd = process.env.NODE_ENV === 'production';
+
+/**
+ * 開発者ツール（ローカル確認用。UI確認のmock／API疎通確認の切り替え）。開発サーバーのときだけ読み込み、本番ビルドには含めない。
+ * 描画はクライアントのみ（保存した設定は localStorage にあるため）
+ */
+const DevToolsBox = process.env.NODE_ENV === 'development'
+  ? dynamic(() => import('@/components/features/devtools/DevToolsBox').then((m) => m.DevToolsBox), { ssr: false })
+  : null;
 
 const App = ({ Component, pageProps }: AppProps) => {
   const { locale } = useRouter();
@@ -49,6 +58,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </>
       )}
       <Component {...pageProps} />
+      {DevToolsBox && <DevToolsBox />}
     </main>
   );
 };

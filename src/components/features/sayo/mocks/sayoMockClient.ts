@@ -2,7 +2,7 @@
  * Storybook 用の架空 SayoClient。通信せず、src/mocks/sayo.ts の架空データで応答する。
  * 本番の実装は src/libs/api/sayoChat.ts（未実装）。
  */
-import type { SayoClient, SayoMessageResult, SayoMessageStatus, SayoStatus } from '@/types/sayo';
+import type { SayoClient, SayoMessageResult, SayoMessageStatus, SayoReplyExpression, SayoStatus } from '@/types/sayo';
 import { sayoMockArticles, sayoMockChips, sayoMockEntries, sayoMockSummary } from '@/mocks/sayo';
 
 export type SayoMockOptions = {
@@ -11,6 +11,10 @@ export type SayoMockOptions = {
   statusFails?: boolean;
   /** false で ai-chat の health が受付終了を返す */
   healthEnabled?: boolean;
+  /** false で参加していない（GET /session が joined: false）。既定は参加済み */
+  joined?: boolean;
+  /** true で参加確認に失敗する（通信失敗・503）。参加していない扱いになる */
+  sessionFails?: boolean;
   /** 最初の残り回数 */
   remaining?: number;
   /** 会話の返事を強制する（limit_user・error など） */
@@ -32,6 +36,16 @@ const FREE_WORDS: { re: RegExp; ids: number[] }[] = [
   { re: /ロボ|特撮|メカ/, ids: [1205] },
   { re: /映画館|名画座|撮影/, ids: [1202] },
 ];
+
+/**
+ * 返事の内容から、サーバーが返す表情を決める（本番は ai-chat が決める。画面では推測しない）
+ * @param r 返事（表情を除く）
+ */
+const expressionOf = (r: Pick<SayoMessageResult, 'status' | 'articles' | 'spoiler'>): SayoReplyExpression => {
+  if (r.spoiler) return 'secret';
+  if (r.articles.length) return 'recommend';
+  return r.status === 'ok' ? 'default' : 'sorry';
+};
 
 /**
  * 記事の話への架空の返事
@@ -66,6 +80,11 @@ export const createSayoMockClient = (opts: SayoMockOptions = {}): SayoClient => 
       await wait(delay / 4);
       return { enabled: opts.healthEnabled ?? true };
     },
+    getSession: async () => {
+      await wait(delay / 4);
+      if (opts.sessionFails) throw new Error('session fetch failed');
+      return opts.joined === false ? { joined: false } : { joined: true, remaining };
+    },
     getSummary: async (id) => {
       await wait(delay);
       // 要約も1日の利用回数に数える（本番の仕様）。0回なら取れない
@@ -95,11 +114,12 @@ export const createSayoMockClient = (opts: SayoMockOptions = {}): SayoClient => 
     sendMessage: async ({ message, articleId }) => {
       await wait(delay * 3);
       if (opts.forceMessageStatus && opts.forceMessageStatus !== 'ok') {
-        return { status: opts.forceMessageStatus, reply: '', articles: [], spoiler: false, remaining: opts.forceMessageStatus.startsWith('limit') ? 0 : remaining };
+        return { status: opts.forceMessageStatus, reply: '', articles: [], spoiler: false, expression: 'sorry', remaining: opts.forceMessageStatus.startsWith('limit') ? 0 : remaining };
       }
-      if (remaining <= 0) return { status: 'limit_user', reply: '', articles: [], spoiler: false, remaining: 0 };
+      if (remaining <= 0) return { status: 'limit_user', reply: '', articles: [], spoiler: false, expression: 'sorry', remaining: 0 };
       remaining -= 1;
-      return { status: 'ok', ...replyAbout(articleId, message), remaining };
+      const body = replyAbout(articleId, message);
+      return { status: 'ok', ...body, expression: expressionOf({ status: 'ok', ...body }), remaining };
     },
   };
 };

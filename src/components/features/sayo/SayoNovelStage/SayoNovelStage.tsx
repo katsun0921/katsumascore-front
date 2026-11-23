@@ -6,7 +6,7 @@ import { SayoChoice } from '@/components/ui-parts/SayoChoice';
 import { SayoNovelWindow } from '@/components/ui-section/SayoNovelWindow';
 import { SayoShelf } from '@/components/ui-section/SayoShelf';
 import { SayoPausedNotice } from '@/components/ui-section/SayoPausedNotice';
-import { useSayo } from '@/components/features/sayo/useSayo';
+import { blocksCountedActions, useSayo } from '@/components/features/sayo/useSayo';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { useNovelTalk } from './useNovelTalk';
@@ -123,8 +123,8 @@ export const SayoNovelStage = () => {
             />
           )}
           <div className='sayoNovelStage__choices'>
-            {/* 残り0回では候補ボタンも止める（回数に数えるため）。停止中・受付終了のときは候補ボタンだけ使える */}
-            {talk.choices.filter((c) => sayo.block !== 'limit' && (c.kind === 'mood' || !llmBlocked)).map((c) => (
+            {/* 残り0回・未参加では候補ボタンも止める（回数に数えるため）。停止中・受付終了のときは候補ボタンだけ使える */}
+            {talk.choices.filter((c) => !blocksCountedActions(sayo.block) && (c.kind === 'mood' || !llmBlocked)).map((c) => (
               <SayoChoice key={c.message} label={c.label} onClick={() => void talk.send(c)} disabled={talk.busy} />
             ))}
           </div>

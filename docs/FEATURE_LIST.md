@@ -201,11 +201,11 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `SayoAskBox` | `components/ui-section/SayoAskBox` | サヨ：「何を観ようか迷ったら」の入口（候補ボタン・自由入力） |
 | `SayoSummary` | `components/ui-section/SayoSummary` | サヨ：承認済み要約の表示 |
 | `SayoSearchResults` | `components/ui-section/SayoSearchResults` | サヨ：探した結果の作品一覧 |
-| `SayoPausedNotice` | `components/ui-section/SayoPausedNotice` | サヨ：停止中・上限の案内 |
+| `SayoPausedNotice` | `components/ui-section/SayoPausedNotice` | サヨ：停止中・上限・未参加の案内 |
 | `SayoNovelWindow` | `components/ui-section/SayoNovelWindow` | サヨ：ノベル画面のメッセージウィンドウ |
 | `SayoShelf` | `components/ui-section/SayoShelf` | サヨ：ノベル画面の「棚」（作品カード列） |
 
-### 3.5 features（ロジック・26 コンポーネント）
+### 3.5 features（ロジック・29 コンポーネント）
 
 hooks / state 使用可。データ取得・整形を担当。
 
@@ -241,6 +241,9 @@ hooks / state 使用可。データ取得・整形を担当。
 | `SayoEntry` | `components/features/sayo/SayoEntry` | サヨ：入口（SayoAskBox を Provider につなぐ） |
 | `SayoSummaryModal` | `components/features/sayo/SayoSummaryModal` | サヨ：要約・探した結果のモーダル |
 | `SayoNovelStage` | `components/features/sayo/SayoNovelStage` | サヨ：「詳しく知りたい」で開くノベル風の画面 |
+| `DevToolsBox` | `components/features/devtools/DevToolsBox` | 開発者ツール（ローカル確認用。開発サーバーのときだけ `_app` から読み込む）。DEV ボタンとパネルのタブ。パネルの一覧は `DevToolsBox.config.ts` |
+| `DevToolsChoice` | `components/features/devtools/DevToolsChoice` | 開発者ツール：選択肢から1つ選ぶ部品（ラジオ／プルダウン） |
+| `SayoDevPanel` | `components/features/devtools/SayoDevPanel` | 開発者ツールのサヨ用パネル：データ源（UI確認のmock／API疎通確認）とUI確認シナリオを選ぶ |
 
 ### 3.6 templates（画面構造・12 テンプレート）
 
@@ -348,6 +351,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 |---------------|------|
 | `homeStaticProps.ts` | ホームページ静的 props 生成 |
 | `sayoAssets.ts` | サヨの立ち絵・顔アイコンの場所 |
+| `devtools/devToolsStore.ts` | 開発者ツールの設定ストア（`localStorage`）。開発サーバー以外では保存値を読み書きせず、常に既定値を返す |
 | `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
@@ -392,6 +396,8 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `useCategoryFilterPosts` | `src/libs/useCategoryFilterPosts.ts` | カテゴリフィルタ投稿取得 |
 | `useCategoryPagedPosts` | `src/libs/useCategoryPagedPosts.ts` | カテゴリページド投稿取得 |
 | `useLocale` | `src/i18n/provider.tsx` | 現在のロケール取得 |
+| `useDevChoice` | `src/hooks/useDevChoice.ts` | 開発者ツールの「選択肢から1つ選ぶ設定」の読み書き。本番では常に既定値 |
+| `useSayoClient` | `src/components/features/sayo/useSayoClient/` | `SayoProvider` に渡す `SayoClient` を選ぶ（本番＝本番のクライアント／開発＝開発者ツールの設定。G8 で使う） |
 
 ---
 
@@ -403,7 +409,8 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `wordpress.ts` | WordPress REST API・ACF フィールド型 |
 | `franchise.ts` | `Franchise` 関連型 |
 | `search.ts` | `SearchResult`, `SearchDimension` |
-| `sayo.ts` | `SayoStatus`, `SayoSummary`, `SayoArticle`, `SayoClient` など（サヨUI） |
+| `sayo.ts` | `SayoStatus`, `SayoSummary`, `SayoArticle`, `SayoSession`, `SayoClient` など（サヨUI） |
+| `devtools.ts` | `DevToolsPanelDef`（開発者ツールのパネル） |
 | `css.d.ts` | CSS Module 型定義 |
 
 ---
@@ -514,3 +521,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | TOP 劇場公開・VOD配信ハイライト | `docs/features/home_release_highlight.md` | 週次まとめ記事の本文からの作品リスト抽出・リンク解決仕様 |
 | サヨ（AI映画店主）UI | `docs/develop/sayo_chat_spec.md` | 案Gの実装仕様（CSR・WordPressの表示／停止フラグ・コンポーネント配置）。開発中 |
 | サヨ（AI映画店主）UI Todo | `docs/develop/sayo_chat_todo.md` | 案GのTodo（G1〜G10）と未決事項 |
+| 開発者ツール（ローカル確認用 Box） | `docs/develop/dev_tools_box.md` | UI確認（mock）／API疎通確認の切り替え、サヨのUI確認シナリオ、パネルの足し方（ABテスト等）、未決事項 |

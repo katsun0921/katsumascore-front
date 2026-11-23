@@ -26,6 +26,12 @@ export const Paused: Story = {
   args: { options: { status: { paused: true, message: '今月の会話の上限に達したため、サヨはお休み中です。12月1日から再開します。', resumeAt: '2026-12-01T00:00:00+09:00' } } },
 };
 
+/** 参加していない：入口の候補ボタンとカードの「要約」が無効。案内文を出し、通信しない */
+export const NotJoined: Story = { args: { options: { joined: false } } };
+
+/** 参加確認に失敗：参加していない扱いで同じ表示 */
+export const SessionError: Story = { args: { options: { sessionFails: true } } };
+
 /** 今日の回数を使い切った */
 export const LimitReached: Story = { args: { options: { remaining: 0 } } };
 

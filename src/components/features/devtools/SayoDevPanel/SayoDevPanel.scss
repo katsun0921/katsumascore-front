@@ -1,0 +1,51 @@
+.sayoDevPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-12);
+
+  &__status {
+    margin: 0;
+    padding: var(--space-8) var(--space-12);
+    border-radius: 8px;
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+    line-height: 1.5;
+
+    &--mock {
+      background: rgba(var(--color-black-rgb), 0.35);
+      color: var(--color-sayo-stage-text);
+    }
+
+    &--api {
+      background: var(--color-sayo-spoiler);
+      color: var(--color-sayo-plate-text);
+    }
+  }
+
+  &__warn {
+    margin: 0;
+    padding: var(--space-8) var(--space-12);
+    border: 1px dashed var(--color-sayo-spoiler);
+    border-radius: 8px;
+    color: var(--color-sayo-spoiler);
+    font-size: var(--font-size-fixed-12);
+    line-height: 1.6;
+  }
+
+  &__note {
+    margin: 0;
+    color: var(--color-sayo-text-dim);
+    font-size: var(--font-size-fixed-12);
+  }
+
+  &__reset {
+    align-self: flex-start;
+    padding: var(--space-4) var(--space-12);
+    border: 1px solid var(--color-sayo-border-dark);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-sayo-stage-text);
+    font-size: var(--font-size-fixed-12);
+    cursor: pointer;
+  }
+}

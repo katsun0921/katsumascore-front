@@ -24,6 +24,9 @@ export const Default: Story = {};
 export const Lead: Story = { args: { label: 'サヨに要約してもらう' } };
 
 /** SPのグリッド（顔だけ） */
+/** 参加していない間：押せない（理由は title で案内） */
+export const Disabled: Story = { args: { disabled: true, title: '参加URLを開くと使えます' } };
+
 export const Compact: Story = { args: { compact: true } };
 
 /** 異常系：想定より長い文言でも1行に収める */
