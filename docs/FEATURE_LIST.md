@@ -513,3 +513,4 @@ Storybook toolbar（globe アイコン）で `ja` / `en` のリアルタイム�
 | TOP ショート動画紹介 | `docs/features/home_shorts_intro_video.md` | ACF `short_movie.youtube` の抽出・モーダル再生仕様 |
 | TOP 劇場公開・VOD配信ハイライト | `docs/features/home_release_highlight.md` | 週次まとめ記事の本文からの作品リスト抽出・リンク解決仕様 |
 | サヨ（AI映画店主）UI | `docs/develop/sayo_chat_spec.md` | 案Gの実装仕様（CSR・WordPressの表示／停止フラグ・コンポーネント配置）。開発中 |
+| サヨ（AI映画店主）UI Todo | `docs/develop/sayo_chat_todo.md` | 案GのTodo（G1〜G10）と未決事項 |

@@ -237,7 +237,7 @@ Story に必ず含めるもの（AGENTS.md の Storybook 原則）：
 | 5. カードのスロット | 済（`HomeCard`・`PostCardImgTop`・`PostCardImgLeft` に `action`） | 各カードの `WithAction` |
 | 5. テンプレートへの組み込み | 未 | — |
 
-残り：`HomeTemplate` / `ListTemplate` への組み込み、`src/libs/api/sayoChat.ts`（本番の `SayoClient`）、`/api/sayo-chat-status` の API ルート、ai-chat 側の API 追加（§8）。
+残りのTodoは [`sayo_chat_todo.md`](sayo_chat_todo.md)（2026-11-23）。以下は2026-11-14時点の残り：`HomeTemplate` / `ListTemplate` への組み込み、`src/libs/api/sayoChat.ts`（本番の `SayoClient`）、`/api/sayo-chat-status` の API ルート、ai-chat 側の API 追加（§8）。
 
 ---
 
