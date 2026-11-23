@@ -40,3 +40,11 @@
 @use "../components/ui-section/PostSection/PostSection";
 @use "../components/ui-section/PostDetailFranchises/PostDetailFranchises";
 @use "../components/ui-section/VodLegend/VodLegend";
+@use "../components/ui-section/SayoAskBox/SayoAskBox";
+@use "../components/ui-section/SayoNovelWindow/SayoNovelWindow";
+@use "../components/ui-section/SayoPausedNotice/SayoPausedNotice";
+@use "../components/ui-section/SayoSearchResults/SayoSearchResults";
+@use "../components/ui-section/SayoShelf/SayoShelf";
+@use "../components/ui-section/SayoSummary/SayoSummary";
+@use "../components/features/sayo/SayoNovelStage/SayoNovelStage";
+@use "../components/features/sayo/SayoSummaryModal/SayoSummaryModal";

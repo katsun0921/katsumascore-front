@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>置き場所 案C ノベル風の舞台</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Old+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <!--
+    案C（ノベル風）をTOP・リストに置いた見え方
+    - TOP：ヒーロー直下に「舞台」のセクション。立ち絵を背景に、名前札つきのウィンドウと選択肢。
+      選択肢を選ぶと、サヨの返事が1文字ずつ出て、選んだ作品が「棚から」浮かび上がる。
+    - リスト：高さを抑えた横長の舞台。選択肢はそのカテゴリの中から探す。
+    - 選択肢は記事の気分タグで探す（LLMなし・回数を減らさない）。自由に話したい人は「全画面で話す」で c-novel-stage.html へ。
+  -->
+  <style>
+    :root {
+      --color-window: rgba(18, 12, 30, .88); --color-window-line: rgba(255, 255, 255, .18); --color-plate: #c8862e; --color-plate-text: #1a0f06;
+      --color-stage-bg: #0d0907; --color-stage-text: #f5efe6; --color-stage-dim: #c9bda9; --color-card: rgba(255, 250, 242, .97); --color-card-text: #2f2219; --color-card-sub: #7a6656;
+    }
+    body { margin: 0; }
+    /* 舞台：SPは「絵」→「ウィンドウ・選択肢」の縦積み、PCは左に絵・右にウィンドウ */
+    .cStage { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); overflow: hidden; border-radius: 20px; color: var(--color-stage-text); background: var(--color-stage-bg); }
+    .cStage--wide { margin: 8px 16px 16px; }
+    @media (min-width: 768px) {
+      .cStage--wide { grid-template-columns: 42% minmax(0, 1fr); min-height: 380px; }
+      .cStage--compact { grid-template-columns: 30% minmax(0, 1fr); min-height: 240px; border-radius: 16px; }
+    }
+    .cStage__visual { position: relative; height: 220px; overflow: hidden; }
+    .cStage--compact .cStage__visual { height: 150px; }
+    @media (min-width: 768px) { .cStage__visual, .cStage--compact .cStage__visual { height: auto; } }
+    .cStage__visual::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to bottom, transparent 55%, var(--color-stage-bg)); }
+    @media (min-width: 768px) { .cStage__visual::after { background: linear-gradient(90deg, transparent 65%, var(--color-stage-bg)); } }
+    .cStage__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 32% 20%; transition: transform 1s ease, filter .5s; }
+    .cStage[data-expression="thinking"] .cStage__img { transform: scale(1.03); filter: brightness(.85); }
+    .cStage[data-expression="recommend"] .cStage__img { transform: scale(1.06); }
+    .cStage[data-expression="sorry"] .cStage__img { filter: saturate(.6) brightness(.85); }
+    .cStage__tag { position: absolute; z-index: 2; top: 12px; left: 12px; font-size: 11px; letter-spacing: .12em; padding: 2px 10px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--color-window-line); }
+    .cStage__full { position: absolute; z-index: 2; top: 10px; right: 12px; font-size: 12px; padding: 4px 12px; border-radius: 999px; background: rgba(0,0,0,.5); border: 1px solid var(--color-window-line); }
+    @media (min-width: 768px) { .cStage__full { position: static; align-self: flex-end; } }
+    .cStage__full:focus-visible { outline: 2px solid var(--color-plate); }
+    .cStage__ui { z-index: 1; padding: 0 14px 16px; display: flex; flex-direction: column; gap: 10px; justify-content: center; min-width: 0; }
+    @media (min-width: 768px) { .cStage__ui { padding: 20px 24px 20px 8px; } }
+    .cShelf { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; }
+    .cShelf:empty { display: none; }
+    .cItem { flex: 0 0 190px; display: flex; gap: 8px; align-items: center; background: var(--color-card); color: var(--color-card-text); border-radius: 10px; padding: 6px; animation: cPull .5s cubic-bezier(.2,.8,.2,1) both; }
+    .cItem:nth-child(2) { animation-delay: .1s; } .cItem:nth-child(3) { animation-delay: .2s; }
+    @keyframes cPull { from { opacity: 0; transform: translateY(20px) rotate(-2deg); } }
+    .cItem__jacket { width: 34px; aspect-ratio: 2/3; border-radius: 3px; flex: none; }
+    .cItem__body { min-width: 0; font-size: 10px; color: var(--color-card-sub); line-height: 1.4; }
+    .cItem__body strong { display: block; font-size: 12px; color: var(--color-card-text); }
+    .cWindow { position: relative; background: var(--color-window); border: 1px solid var(--color-window-line); border-radius: 12px; padding: 18px 16px 12px; backdrop-filter: blur(8px); }
+    .cWindow__plate { position: absolute; left: 14px; top: -12px; background: var(--color-plate); color: var(--color-plate-text); font-family: 'Zen Old Mincho', serif; font-size: 14px; padding: 0 14px; border-radius: 6px; line-height: 1.7; }
+    .cWindow__plate small { font-family: 'Noto Sans JP', sans-serif; font-size: 10px; margin-left: 6px; }
+    .cWindow__text { margin: 0; font-size: 14px; line-height: 1.85; min-height: 3.6em; white-space: pre-wrap; }
+    .cStage--compact .cWindow__text { min-height: 2.4em; font-size: 13px; }
+    .cWindow__src { font-size: 10px; color: var(--color-stage-dim); margin-top: 4px; }
+    .cChoices { display: flex; flex-wrap: wrap; gap: 6px; }
+    .cChoice { all: unset; cursor: pointer; font-size: 13px; padding: 5px 14px; border-radius: 8px; background: rgba(0,0,0,.55); border: 1px solid var(--color-window-line); }
+    .cChoice::before { content: '▶ '; color: var(--color-plate); font-size: 10px; }
+    .cChoice:hover, .cChoice:focus-visible { border-color: var(--color-plate); background: rgba(200,134,46,.25); }
+    .cChoice:disabled { opacity: .4; cursor: default; }
+    .cNote { font-size: 10px; color: var(--color-stage-dim); margin: 0; }
+  </style>
+</head>
+<body>
+  <div data-root></div>
+  <script src="mock.js"></script>
+  <script src="card-mock.js"></script>
+  <script src="host.js"></script>
+  <script>
+    (() => {
+      const H = window.SayoHost;
+      const C = window.CardMock;
+      const M = window.SayoMock;
+      const view = H.viewFromUrl();
+      const scope = view === 'list' ? '映画' : null;
+      const variant = view === 'list' ? 'compact' : 'wide';
+      const opening = scope ? '映画の中から、今日の一本を探しましょうか。気分に近いものを選んでください。' : '何を観ようか迷ったら、気分に近いものをひとつ選んでください。棚から探してきますね。';
+      const stage = `
+        <section class="cStage cStage--${variant}" data-stage data-expression="default" aria-label="サヨの映画店">
+          <div class="cStage__visual">
+            <img class="cStage__img" src="img/sayo-full.webp" alt="映画店のカウンターで頬杖をつくサヨ">
+            <span class="cStage__tag">サヨの映画店</span>
+          </div>
+          <div class="cStage__ui">
+            <a class="cStage__full" href="c-novel-stage.html">全画面で話す →</a>
+            <div class="cShelf" data-shelf aria-label="サヨが選んだ作品"></div>
+            <div class="cWindow" aria-live="polite"><span class="cWindow__plate">サヨ<small>AI映画店主</small></span><p class="cWindow__text" data-text></p><div class="cWindow__src" data-src></div></div>
+            <div class="cChoices">${C.SEARCH_CHIPS.map((c) => `<button type="button" class="cChoice" data-choice>${c.label}</button>`).join('')}</div>
+            <p class="cNote">AIの回答です。選択肢は記事のタグから探します（回数は減りません）。</p>
+          </div>
+        </section>`;
+      H.mountSwitch(view, (v) => { location.search = `?view=${v}`; });
+      H.render(document.querySelector('[data-root]'), { view, slots: { afterHero: stage, listTop: stage } });
+
+      const root = document.querySelector('[data-stage]');
+      const text = root.querySelector('[data-text]');
+      let timer = null;
+      /** 1文字ずつ表示（動きを減らす設定では一度に表示） */
+      const typeOut = (str) => new Promise((resolve) => {
+        clearInterval(timer);
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { text.textContent = str; resolve(); return; }
+        let i = 0;
+        timer = setInterval(() => { i += 1; text.textContent = str.slice(0, i); if (i >= str.length) { clearInterval(timer); resolve(); } }, 28);
+      });
+      const item = (p) => `<a class="cItem" href="${p.slug}"><span class="cItem__jacket" style="${H.thumb(p)}"></span><span class="cItem__body"><strong>${p.title}</strong>${p.score.toFixed(1)} ${C.scoreRank(p.score)} ・ ${p.category}<br>${p.vodLabel}</span></a>`;
+
+      root.querySelectorAll('[data-choice]').forEach((b) => b.addEventListener('click', async () => {
+        root.querySelectorAll('[data-choice]').forEach((x) => { x.disabled = true; });
+        root.querySelector('[data-shelf]').innerHTML = '';
+        root.querySelector('[data-src]').textContent = '';
+        root.dataset.expression = 'thinking';
+        clearInterval(timer);
+        text.textContent = `「${b.textContent}」ですね。……少し、棚を見てきます。`;
+        const r = await C.search(b.textContent, scope);
+        root.dataset.expression = r.posts.length ? 'recommend' : 'sorry';
+        await typeOut(r.reply);
+        root.querySelector('[data-shelf]').innerHTML = r.posts.map(item).join('');
+        root.querySelector('[data-src]').textContent = scope ? '映画の記事から探しました' : 'すべての記事から探しました';
+        root.querySelectorAll('[data-choice]').forEach((x) => { x.disabled = false; });
+      }));
+      typeOut(opening);
+    })();
+  </script>
+</body>
+</html>

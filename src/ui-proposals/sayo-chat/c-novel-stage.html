@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 案C ノベル風</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Zen+Old+Mincho:wght@600;700&display=swap" rel="stylesheet">
+  <!--
+    案C：ノベルゲーム風の「舞台」
+    - 立ち絵を画面いっぱいに置き、下に名前札つきのメッセージウィンドウ。返事は1文字ずつ表示する。
+    - 記事カードは「棚から出した作品」としてウィンドウの上に並ぶ。
+    - 過去のやりとりは「履歴」ドロワーで読む。画面には最新の1往復だけを出す。
+    - 正式な立ち絵（表情5枚）が届くと、表情の切り替えがいちばん活きる案。
+  -->
+  <style>
+    :root {
+      --color-stage-bg: #0d0907;
+      --color-window: rgba(18, 12, 30, .86);
+      --color-window-line: rgba(255, 255, 255, .18);
+      --color-plate: #c8862e;
+      --color-plate-text: #1a0f06;
+      --color-text: #f5efe6;
+      --color-text-dim: #c9bda9;
+      --color-accent-strong: #ff2dfc;
+      --color-score-bg: #14082e;
+      --color-spoiler: #fb7185;
+      --color-warning: #fbbf24;
+      --color-card: rgba(255, 250, 242, .96);
+      --color-card-text: #2f2219;
+      --color-card-sub: #7a6656;
+      --color-black-rgb: 0, 0, 0;
+      --color-white-rgb: 255, 255, 255;
+      --font-body: 'Noto Sans JP', sans-serif;
+      --font-stage: 'Zen Old Mincho', serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body { font-family: var(--font-body); background: var(--color-stage-bg); color: var(--color-text); overflow: hidden; }
+    button, input { font: inherit; color: inherit; }
+
+    .stage { position: fixed; inset: 0; overflow: hidden; }
+    /* SP：立ち絵は画面の上6割。顔がウィンドウに隠れないようにする */
+    .stage__blur { display: none; }
+    .stage__bg {
+      position: absolute; left: 0; top: 0; width: 100%; height: 62vh; object-fit: cover; object-position: 32% 12%;
+      transition: transform 1.2s ease, filter .6s ease; transform-origin: 40% 30%;
+    }
+    /* PC：絵全体を中央に収め、左右の余白はぼかした同じ絵で埋める */
+    @media (min-width: 768px) {
+      .stage__blur {
+        display: block; position: absolute; inset: -40px; width: calc(100% + 80px); height: calc(100% + 80px);
+        object-fit: cover; filter: blur(28px) brightness(.45);
+      }
+      .stage__bg { height: 100%; object-fit: contain; object-position: center top; }
+    }
+    .stage::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(to bottom, rgba(var(--color-black-rgb), .35) 0%, transparent 18%, transparent 45%, rgba(var(--color-black-rgb), .75) 100%);
+    }
+    .stage[data-expression="thinking"] .stage__bg { transform: scale(1.03); filter: brightness(.9); }
+    .stage[data-expression="recommend"] .stage__bg { transform: scale(1.06) translate(1%, -1%); }
+    .stage[data-expression="sorry"] .stage__bg { filter: saturate(.6) brightness(.85); }
+    .stage[data-expression="secret"] .stage__bg { filter: sepia(.35) brightness(.8); transform: scale(1.04); }
+
+    .hud { position: fixed; top: 0; left: 0; right: 0; z-index: 5; display: flex; align-items: center; gap: 8px; padding: 12px 16px; }
+    .hud__site { display: none; }
+    @media (min-width: 768px) { .hud__site { display: inline; } }
+    .hud__logo { font-weight: 700; font-size: 14px; letter-spacing: .04em; text-shadow: 0 1px 4px rgba(var(--color-black-rgb), .6); flex: 1; }
+    .hud__pill {
+      all: unset; cursor: pointer; font-size: 12px; padding: 4px 12px; border-radius: 999px;
+      background: rgba(var(--color-black-rgb), .45); border: 1px solid var(--color-window-line); backdrop-filter: blur(6px);
+    }
+    .hud__pill:focus-visible { outline: 2px solid var(--color-plate); }
+    .hud__pill strong { font-size: 14px; }
+    .hud__expr { position: fixed; top: 52px; right: 16px; z-index: 5; font-size: 10px; color: var(--color-text-dim); background: rgba(var(--color-black-rgb), .45); padding: 1px 8px; border-radius: 999px; }
+
+    .bottom { position: fixed; left: 0; right: 0; bottom: 0; z-index: 4; padding: 0 12px calc(12px + env(safe-area-inset-bottom)); }
+    .bottom__inner { max-width: 880px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px; }
+
+    /* 棚から出した作品（記事カード） */
+    .shelf { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px; scroll-snap-type: x mandatory; }
+    .shelf:empty { display: none; }
+    .item {
+      flex: 0 0 200px; scroll-snap-align: start; display: flex; gap: 10px; align-items: center;
+      background: var(--color-card); color: var(--color-card-text); border-radius: 12px; padding: 8px; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(var(--color-black-rgb), .4);
+      animation: pull .5s cubic-bezier(.2,.8,.2,1) both;
+    }
+    .item:nth-child(2) { animation-delay: .12s; } .item:nth-child(3) { animation-delay: .24s; }
+    @keyframes pull { from { opacity: 0; transform: translateY(24px) rotate(-2deg); } to { opacity: 1; transform: none; } }
+    .item:hover, .item:focus-visible { outline: 2px solid var(--color-plate); }
+    .item__jacket { width: 40px; aspect-ratio: 2/3; border-radius: 4px; flex: none; position: relative; box-shadow: inset -3px 0 0 rgba(var(--color-black-rgb), .25); }
+    .item__body { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 2px; }
+    .item__title { font-weight: 700; font-size: 13px; line-height: 1.35; }
+    .item__meta { font-size: 10px; color: var(--color-card-sub); }
+    .item__score { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; }
+    .item__score b { background: var(--color-score-bg); color: var(--color-accent-strong); border-radius: 4px; padding: 0 5px; font-size: 10px; }
+
+    /* メッセージウィンドウ */
+    .window {
+      position: relative; background: var(--color-window); border: 1px solid var(--color-window-line);
+      border-radius: 14px; padding: 22px 18px 16px; min-height: 128px; backdrop-filter: blur(8px);
+      box-shadow: 0 12px 40px rgba(var(--color-black-rgb), .45);
+    }
+    .window__plate {
+      position: absolute; left: 16px; top: -14px; background: var(--color-plate); color: var(--color-plate-text);
+      font-family: var(--font-stage); font-size: 16px; padding: 2px 16px; border-radius: 6px; line-height: 1.6;
+    }
+    .window__plate small { font-family: var(--font-body); font-size: 10px; margin-left: 6px; }
+    .window__plate--user { background: rgba(var(--color-white-rgb), .9); }
+    .window__spoiler { display: inline-block; font-size: 11px; color: var(--color-spoiler); border: 1px solid var(--color-spoiler); border-radius: 4px; padding: 0 6px; margin-bottom: 6px; }
+    .window__text { font-size: 15px; line-height: 1.85; white-space: pre-wrap; word-break: break-word; min-height: 3.8em; }
+    @media (min-width: 768px) { .window__text { font-size: 17px; } }
+    .window__next { position: absolute; right: 16px; bottom: 8px; font-size: 12px; color: var(--color-plate); animation: nudge 1s infinite; }
+    .window__next[hidden] { display: none; }
+    @keyframes nudge { 50% { transform: translateY(3px); } }
+    .window__sys { color: var(--color-warning); }
+    .window__sys button { all: unset; cursor: pointer; text-decoration: underline; font-weight: 700; margin-left: 6px; }
+    .window__thinking { color: var(--color-text-dim); font-style: italic; }
+
+    /* 入力 */
+    .reply { display: flex; gap: 8px; align-items: center; }
+    .reply__field {
+      flex: 1; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+      background: rgba(var(--color-black-rgb), .55); border: 1px solid var(--color-window-line); border-radius: 12px; backdrop-filter: blur(6px);
+    }
+    .reply__field:focus-within { border-color: var(--color-plate); }
+    .reply__input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; padding: 12px 0; font-size: 16px; }
+    .reply__input::placeholder { color: var(--color-text-dim); }
+    .reply__count { font-size: 10px; color: var(--color-text-dim); }
+    .reply__count.is-over { color: var(--color-spoiler); font-weight: 700; }
+    .reply__send { all: unset; cursor: pointer; background: var(--color-plate); color: var(--color-plate-text); font-weight: 700; padding: 11px 18px; border-radius: 12px; }
+    .reply__send:disabled { opacity: .35; cursor: not-allowed; }
+    .reply__send:focus-visible { outline: 2px solid var(--color-text); outline-offset: 2px; }
+    .chips { display: flex; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+    .chip { all: unset; cursor: pointer; white-space: nowrap; font-size: 12px; padding: 4px 12px; border-radius: 999px; background: rgba(var(--color-black-rgb), .5); border: 1px solid var(--color-window-line); }
+    .chip:hover, .chip:focus-visible { border-color: var(--color-plate); }
+    .note { font-size: 10px; color: var(--color-text-dim); text-align: center; text-shadow: 0 1px 2px rgba(var(--color-black-rgb), .8); }
+
+    /* 履歴ドロワー */
+    .logDrawer {
+      position: fixed; inset: 0 0 0 auto; z-index: 20; width: min(420px, 100%);
+      background: rgba(12, 8, 20, .96); border-left: 1px solid var(--color-window-line);
+      transform: translateX(100%); transition: transform .3s ease; display: flex; flex-direction: column;
+    }
+    .logDrawer.is-open { transform: none; }
+    .logDrawer__head { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--color-window-line); font-family: var(--font-stage); }
+    .logDrawer__close { all: unset; cursor: pointer; padding: 4px 8px; }
+    .logDrawer__body { flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 14px; font-size: 14px; line-height: 1.8; }
+    .logDrawer__who { font-size: 11px; color: var(--color-plate); font-weight: 700; display: block; }
+    .logDrawer__who--user { color: var(--color-text-dim); }
+    .logDrawer__empty { color: var(--color-text-dim); font-size: 13px; }
+
+    .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <div class="stage" data-expression="default">
+    <img class="stage__blur" src="img/sayo-full.webp" alt="">
+    <img class="stage__bg" src="img/sayo-full.webp" alt="映画店のカウンターで頬杖をつくサヨ">
+  </div>
+
+  <div class="hud">
+    <span class="hud__logo"><span class="hud__site">KatsumaScore ／ </span>サヨの映画店</span>
+    <span class="hud__pill">今日あと <strong data-remaining>30</strong></span>
+    <button type="button" class="hud__pill" data-log-open aria-controls="logDrawer">履歴</button>
+  </div>
+  <span class="hud__expr" data-expr-label>default（通常）</span>
+
+  <div class="bottom">
+    <div class="bottom__inner">
+      <div class="shelf" data-shelf aria-label="サヨが選んだ記事"></div>
+      <div class="window" data-window aria-live="polite">
+        <span class="window__plate" data-plate>サヨ<small>AI映画店主</small></span>
+        <div data-spoiler-slot></div>
+        <p class="window__text" data-text></p>
+        <span class="window__next" data-next hidden>▼</span>
+      </div>
+      <div class="chips" data-chips></div>
+      <form class="reply" data-form>
+        <div class="reply__field">
+          <label class="srOnly" for="msg">サヨへのメッセージ</label>
+          <input id="msg" class="reply__input" autocomplete="off" placeholder="サヨに話しかける" data-input>
+          <span class="reply__count" data-count>0/200</span>
+        </div>
+        <button class="reply__send" type="submit" data-send>話す</button>
+      </form>
+      <p class="note" data-disclaimer></p>
+    </div>
+  </div>
+
+  <aside class="logDrawer" id="logDrawer" data-log-drawer aria-label="会話の履歴">
+    <div class="logDrawer__head"><span>これまでの会話</span><button type="button" class="logDrawer__close" data-log-close aria-label="閉じる">✕</button></div>
+    <div class="logDrawer__body" data-log><p class="logDrawer__empty">まだ会話はありません。</p></div>
+  </aside>
+
+  <script src="mock.js"></script>
+  <script>
+    (() => {
+      const M = window.SayoMock;
+      const $ = (s) => document.querySelector(s);
+      const stage = $('.stage');
+      const text = $('[data-text]');
+      const input = $('[data-input]');
+      const send = $('[data-send]');
+      const shelf = $('[data-shelf]');
+      const history = [];
+      let busy = false;
+      let locked = false;
+      let typing = null;
+      let lastMessage = '';
+
+      $('[data-disclaimer]').textContent = M.DISCLAIMER;
+      const setExpression = (k) => { stage.dataset.expression = k; $('[data-expr-label]').textContent = M.EXPRESSION_LABEL[k]; };
+
+      /** 1文字ずつ表示。ウィンドウをクリックすると全文を即表示する */
+      const typeOut = (str) => new Promise((resolve) => {
+        clearInterval(typing);
+        text.textContent = '';
+        $('[data-next]').hidden = true;
+        const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) { text.textContent = str; $('[data-next]').hidden = false; resolve(); return; }
+        let i = 0;
+        typing = setInterval(() => {
+          i += 1;
+          text.textContent = str.slice(0, i);
+          if (i >= str.length) { clearInterval(typing); typing = null; $('[data-next]').hidden = false; resolve(); }
+        }, 32);
+        $('[data-window]').onclick = () => {
+          if (!typing) return;
+          clearInterval(typing); typing = null; text.textContent = str; $('[data-next]').hidden = false; resolve();
+        };
+      });
+
+      const setPlate = (who) => {
+        const p = $('[data-plate]');
+        p.classList.toggle('window__plate--user', who === 'user');
+        p.innerHTML = who === 'user' ? 'あなた' : 'サヨ<small>AI映画店主</small>';
+      };
+
+      const pushLog = (who, str) => {
+        history.push({ who, str });
+        const body = $('[data-log]');
+        body.innerHTML = history.map((h) => `<div><span class="logDrawer__who ${h.who === 'user' ? 'logDrawer__who--user' : ''}">${h.who === 'user' ? 'あなた' : 'サヨ'}</span>${M.escapeHtml(h.str)}</div>`).join('');
+        body.scrollTop = body.scrollHeight;
+      };
+
+      const itemHtml = (a) => `
+        <a class="item" href="${a.url}">
+          <span class="item__jacket" style="background:linear-gradient(160deg,hsl(${a.hue} 45% 30%),hsl(${a.hue + 30} 55% 55%))"></span>
+          <span class="item__body">
+            <span class="item__title">${M.escapeHtml(a.title)}</span>
+            <span class="item__score">${a.katsumaScore.toFixed(1)}<b>${M.scoreRank(a.katsumaScore)}</b></span>
+            <span class="item__meta">${a.category} ・ ${a.vod.join(' / ')}<br>${a.vodCheckedAt}時点</span>
+          </span>
+        </a>`;
+
+      const sync = () => {
+        const n = input.value.length;
+        const c = $('[data-count]');
+        c.textContent = `${n}/${M.maxChars}`;
+        c.classList.toggle('is-over', n > M.maxChars);
+        send.disabled = busy || locked || !n || n > M.maxChars;
+        input.disabled = locked;
+      };
+      const lock = (ph) => { locked = true; input.placeholder = ph; sync(); };
+
+      const showSys = (status) => {
+        const info = M.STATUS_MESSAGE[status];
+        clearInterval(typing);
+        setPlate('sayo');
+        text.innerHTML = `<span class="window__sys">${info.title}${info.body ? `<br>${info.body}` : ''}${info.action ? `<button type="button">${info.action}</button>` : ''}</span>`;
+        const b = text.querySelector('button');
+        if (b) b.addEventListener('click', () => (status === 'error' ? submit(lastMessage) : typeOut(M.greeting())));
+      };
+
+      const submit = async (msg) => {
+        if (!msg || busy || locked) return;
+        busy = true; lastMessage = msg;
+        input.value = ''; sync();
+        pushLog('user', msg);
+        shelf.innerHTML = '';
+        $('[data-spoiler-slot]').innerHTML = '';
+        setPlate('user');
+        clearInterval(typing);
+        text.textContent = msg;
+        await new Promise((r) => setTimeout(r, 400));
+        setPlate('sayo');
+        setExpression('thinking');
+        text.innerHTML = '<span class="window__thinking">（棚の前で、少し考えています……）</span>';
+        const { body } = await M.send(msg);
+        busy = false;
+        $('[data-remaining]').textContent = body.remaining;
+        setExpression(M.expressionFor(body));
+        if (body.status === 'ok' || body.status === 'no_match') {
+          if (body.spoiler) $('[data-spoiler-slot]').innerHTML = '<span class="window__spoiler">ネタバレあり</span>';
+          pushLog('sayo', body.reply);
+          await typeOut(body.reply);
+          shelf.innerHTML = body.articles.map(itemHtml).join('');
+        } else {
+          showSys(body.status);
+        }
+        if (body.status.startsWith('limit') || body.remaining === 0) lock('今日はここまでです');
+        if (body.status === 'disabled') lock('ただいま準備中です');
+        sync();
+      };
+
+      M.QUICK_REPLIES.forEach((q) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.textContent = q;
+        b.addEventListener('click', () => submit(q));
+        $('[data-chips]').appendChild(b);
+      });
+      input.addEventListener('input', sync);
+      $('[data-form]').addEventListener('submit', (e) => { e.preventDefault(); submit(input.value.trim()); });
+      $('[data-log-open]').addEventListener('click', () => $('[data-log-drawer]').classList.add('is-open'));
+      $('[data-log-close]').addEventListener('click', () => $('[data-log-drawer]').classList.remove('is-open'));
+
+      const hello = M.greeting();
+      pushLog('sayo', hello);
+      typeOut(hello);
+      sync();
+      M.mountDebug({ position: 'left-top' });
+    })();
+  </script>
+</body>
+</html>

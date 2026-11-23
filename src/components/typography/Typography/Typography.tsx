@@ -60,7 +60,21 @@ const textAndFeatureColors: Swatch[] = [
   { name: 'Score Rank Mid', token: '--color-score-rank-mid', value: '#2563eb' },
   { name: 'Score Rank High', token: '--color-score-rank-high', value: '#c026d3' },
   { name: 'Score Hero Text Halo', token: '--color-score-hero-text-halo', value: '#ffffff' },
-  { name: 'Category', token: '--color-category', value: '#2563eb', textColor: '#ffffff' },
+  { name: 'Category', token: '--color-category', value: '#2563eb', textColor: '#ffffff' },  { name: 'Sayo Paper', token: '--color-sayo-paper', value: '#fffaf2' },
+  { name: 'Sayo Amber', token: '--color-sayo-amber', value: '#c8862e' },
+  { name: 'Sayo Amber Soft', token: '--color-sayo-amber-soft', value: '#f3dfc1' },
+  { name: 'Sayo Wood', token: '--color-sayo-wood', value: '#5b3a24', textColor: '#ffffff' },
+  { name: 'Sayo Text', token: '--color-sayo-text', value: '#2f2219', textColor: '#ffffff' },
+  { name: 'Sayo Sub', token: '--color-sayo-sub', value: '#7a6656', textColor: '#ffffff' },
+  { name: 'Sayo Line', token: '--color-sayo-line', value: '#e3d4bf' },
+  { name: 'Sayo Plate Text', token: '--color-sayo-plate-text', value: '#1a0f06', textColor: '#ffffff' },
+  { name: 'Sayo Stage', token: '--color-sayo-stage', value: '#0d0907', textColor: '#ffffff' },
+  { name: 'Sayo Stage Text', token: '--color-sayo-stage-text', value: '#f5efe6' },
+  { name: 'Sayo Stage Dim', token: '--color-sayo-stage-dim', value: '#c9bda9' },
+  { name: 'Sayo Spoiler', token: '--color-sayo-spoiler', value: '#fb7185' },
+  { name: 'Sayo Surface Dark 2', token: '--color-sayo-surface-dark-2', value: '#241843', textColor: '#ffffff' },
+  { name: 'Sayo Border Dark', token: '--color-sayo-border-dark', value: '#34285a', textColor: '#ffffff' },
+  { name: 'Sayo Text Dim', token: '--color-sayo-text-dim', value: '#b7aed1' },
 ];
 
 const serviceColors: Swatch[] = [

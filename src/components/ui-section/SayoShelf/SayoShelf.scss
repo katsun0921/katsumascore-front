@@ -1,0 +1,121 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+.sayoShelf {
+  display: flex;
+  gap: var(--space-8);
+  margin: 0;
+  padding: var(--space-4) 2px;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: none;
+
+  &__item {
+    display: flex;
+    flex: 0 0 250px;
+    gap: var(--space-8);
+    align-items: center;
+    padding: var(--space-8);
+    border-radius: 12px;
+    background: rgba(var(--color-sayo-card-rgb), 0.96);
+    box-shadow: 0 8px 24px rgba(var(--color-black-rgb), 0.4);
+    color: var(--color-sayo-text);
+    animation: sayo-shelf-pull 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
+    &:nth-child(2) {
+      animation-delay: 0.12s;
+    }
+
+    &:nth-child(3) {
+      animation-delay: 0.24s;
+    }
+
+    &--current {
+      box-shadow: 0 0 0 2px var(--color-sayo-amber), 0 8px 24px rgba(var(--color-black-rgb), 0.4);
+    }
+
+    @include layout-md {
+      flex-basis: 260px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__jacket {
+    flex: none;
+    width: 32px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+
+    &--empty {
+      display: block;
+      background: var(--color-secondary);
+    }
+
+    @include layout-md {
+      width: 40px;
+      height: 60px;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__title {
+    overflow: hidden;
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__meta {
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-caption);
+  }
+
+  &__acts {
+    display: flex;
+    gap: var(--space-8);
+    align-items: center;
+    white-space: nowrap;
+
+    a {
+      color: var(--color-accent);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    button {
+      padding: 1px var(--space-8);
+      border: 0;
+      border-radius: 999px;
+      background: var(--color-sayo-wood);
+      color: var(--color-text-inverse);
+      font-size: var(--font-size-caption);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--color-sayo-amber);
+      outline-offset: 2px;
+    }
+  }
+}
+
+@keyframes sayo-shelf-pull {
+  from {
+    opacity: 0;
+    transform: translateY(24px) rotate(-2deg);
+  }
+}

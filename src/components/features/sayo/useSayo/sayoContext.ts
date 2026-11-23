@@ -1,0 +1,82 @@
+import { createContext, useContext } from 'react';
+import type { SayoClient, SayoSearchResult, SayoStatus, SayoSummary } from '@/types/sayo';
+
+/** 探した結果の状態（モーダル・ノベル画面で共有） */
+export type SayoSearchState = {
+  query: string;
+  /** chip＝候補ボタン（気分タグ・LLMなし）／free＝自由入力（LLM） */
+  kind: 'chip' | 'free';
+  category?: string;
+  result: SayoSearchResult | null;
+  /** closed＝ai-chat が受付終了／limit＝残り0回／error＝取得に失敗 */
+  failure?: 'closed' | 'limit' | 'error';
+};
+
+/** モーダルの状態：作品の要約か、探した結果か */
+export type SayoModalState =
+  | { kind: 'summary'; ids: number[]; index: number; search: SayoSearchState | null }
+  | { kind: 'search'; search: SayoSearchState };
+
+/** ノベル画面の状態：作品の話か、探した結果の話か */
+export type SayoNovelState =
+  | { kind: 'post'; id: number; search: SayoSearchState | null }
+  | { kind: 'search'; search: SayoSearchState };
+
+/** LLMを使う操作を止めている理由。null なら送ってよい */
+export type SayoBlockReason = 'paused' | 'limit' | 'closed' | null;
+
+/**
+ * 取得済みの要約の入れ物。モーダルとノベル画面で同じ要約を使い回し、二重に取得して利用回数を余分に減らさないための仕組み。
+ * 画面をすべて閉じたら空にする（開き直したら、また1回数える）。
+ * 閉じる前に始めた取得の応答で、空にした入れ物がよみがえらないよう、取得の前に世代（generation）を控え、
+ * 入れるときに同じ世代のときだけ受け付ける
+ */
+export type SayoSummaryCache = {
+  get: (id: number) => SayoSummary | undefined;
+  /** 取得を始める前に呼ぶ。いまの世代を返す */
+  generation: () => number;
+  /** 取得した要約を入れる。generation が古い（閉じたあと）なら捨てる */
+  set: (summary: SayoSummary, generation: number) => void;
+};
+
+export type SayoContextValue = {
+  summaryCache: SayoSummaryCache;
+  client: SayoClient;
+  /** フラグ（取得前・失敗は null） */
+  status: SayoStatus | null;
+  /** サヨのUIを出してよいか（ja・取得済み・visible） */
+  visible: boolean;
+  /** 候補ボタンの文言 */
+  chips: string[];
+  /** リストページのカテゴリ（TOPは未指定） */
+  category?: string;
+  remaining: number;
+  setRemaining: (n: number) => void;
+  block: SayoBlockReason;
+  /** ai-chat の受付状況を確かめる（LLMを使う直前に呼ぶ）。受付中なら true */
+  ensureHealth: () => Promise<boolean>;
+  modal: SayoModalState | null;
+  novel: SayoNovelState | null;
+  openSummary: (id: number, ids: number[], trigger?: HTMLElement | null) => void;
+  openSearch: (query: string, kind: 'chip' | 'free', trigger?: HTMLElement | null) => void;
+  showSummaryInSearch: (id: number) => void;
+  backToSearch: () => void;
+  step: (delta: number) => void;
+  openNovel: () => void;
+  /** ノベル画面で話す作品を変える */
+  talkAbout: (id: number) => void;
+  backFromNovel: () => void;
+  closeAll: () => void;
+};
+
+export const SayoContext = createContext<SayoContextValue | null>(null);
+
+/** SayoProvider の中で使う。外で呼ぶと例外 */
+export const useSayo = (): SayoContextValue => {
+  const v = useContext(SayoContext);
+  if (!v) throw new Error('useSayo must be used inside SayoProvider');
+  return v;
+};
+
+/** SayoProvider の外でも呼べる版（外なら null）。カードのボタンなど、置く場所を選ばない部品で使う */
+export const useSayoOptional = (): SayoContextValue | null => useContext(SayoContext);

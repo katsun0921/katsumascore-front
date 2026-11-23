@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>サヨ会話UI 案B ウィジェット</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <!--
+    案B：全ページ共通のフローティングウィジェット
+    - 右下の丸いボタン（サヨの顔）から開く。PCは右下のパネル、SPは全画面のシート。
+    - 記事詳細ページでは「この作品についてサヨに聞く」で、作品名入りの質問を差し込める。
+    - 配色はサイト本体（紺・紫・ピンク）に合わせ、どのページに出ても浮かない。
+  -->
+  <style>
+    :root {
+      --color-secondary: #1e1b4b;
+      --color-accent: #6d28d9;
+      --color-accent-strong: #ff2dfc;
+      --color-accent-soft: #c084fc;
+      --color-bg: #ffffff;
+      --color-bg-muted: #f3f4f6;
+      --color-bg-dark: #0a0618;
+      --color-surface-dark: #1a1030;
+      --color-surface-dark-2: #241843;
+      --color-text-primary: #111827;
+      --color-text-secondary: #6b7280;
+      --color-text-inverse: #ffffff;
+      --color-text-dim: #b7aed1;
+      --color-border: #d1d5db;
+      --color-border-dark: #34285a;
+      --color-score-bg: #14082e;
+      --color-warning: #fbbf24;
+      --color-warning-bg: #3a2a07;
+      --color-spoiler: #fb7185;
+      --color-black-rgb: 0, 0, 0;
+      --color-accent-strong-rgb: 255, 45, 252;
+      --font-body: 'Noto Sans JP', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-body); background: var(--color-bg); color: var(--color-text-primary); line-height: 1.8; }
+    button, input, textarea { font: inherit; color: inherit; }
+
+    /* ── 背景：既存の記事詳細ページ（簡略） ── */
+    .siteHeader { background: var(--color-secondary); color: var(--color-text-inverse); padding: 12px 16px; font-weight: 700; }
+    .article { max-width: 760px; margin: 0 auto; padding: 24px 16px 120px; }
+    .article__cat { font-size: 12px; color: var(--color-accent); font-weight: 700; }
+    .article__title { font-size: 26px; line-height: 1.4; margin: 4px 0 16px; }
+    .article__hero { aspect-ratio: 16/9; border-radius: 12px; background: linear-gradient(135deg, hsl(205 45% 30%), hsl(235 55% 55%)); margin-bottom: 20px; }
+    .article p { margin-bottom: 16px; color: var(--color-text-primary); }
+    .article__ask {
+      display: flex; align-items: center; gap: 12px; margin: 24px 0; padding: 12px 16px;
+      border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-bg-muted);
+    }
+    .article__askFace { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+    .article__askText { flex: 1; font-size: 13px; color: var(--color-text-secondary); }
+    .article__askText strong { display: block; color: var(--color-text-primary); font-size: 14px; }
+    .article__askBtn { all: unset; cursor: pointer; font-size: 13px; font-weight: 700; color: var(--color-text-inverse); background: var(--color-accent); padding: 6px 14px; border-radius: 999px; white-space: nowrap; }
+    .article__askBtn:focus-visible { outline: 2px solid var(--color-accent-strong); outline-offset: 2px; }
+
+    /* ── ランチャー ── */
+    .launcher { position: fixed; right: 16px; bottom: 16px; z-index: 40; display: flex; align-items: flex-end; gap: 10px; }
+    .launcher__teaser {
+      background: var(--color-surface-dark); color: var(--color-text-inverse); font-size: 13px;
+      padding: 8px 12px; border-radius: 14px 14px 4px 14px; width: max-content; max-width: calc(100vw - 112px);
+      box-shadow: 0 8px 24px rgba(var(--color-black-rgb), .25); animation: pop .4s ease .8s both;
+    }
+    .launcher__teaser small { display: block; color: var(--color-text-dim); font-size: 11px; }
+    @keyframes pop { from { opacity: 0; transform: translateY(8px) scale(.96); } to { opacity: 1; transform: none; } }
+    .launcher__btn {
+      all: unset; cursor: pointer; position: relative; width: 64px; height: 64px; border-radius: 50%;
+      background: var(--color-surface-dark); padding: 3px;
+      box-shadow: 0 0 0 2px var(--color-accent-strong), 0 10px 28px rgba(var(--color-accent-strong-rgb), .35);
+      transition: transform .2s ease;
+    }
+    .launcher__btn:hover { transform: translateY(-2px); }
+    .launcher__btn:focus-visible { outline: 3px solid var(--color-accent-soft); outline-offset: 4px; }
+    .launcher__btn img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    .launcher__dot { position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: var(--color-accent-strong); border: 2px solid var(--color-surface-dark); }
+    .is-open .launcher { display: none; }
+
+    /* ── パネル ── */
+    .panel {
+      position: fixed; z-index: 50; inset: 0;
+      background: var(--color-bg-dark); color: var(--color-text-inverse);
+      display: flex; flex-direction: column;
+      transform: translateY(100%); transition: transform .35s cubic-bezier(.2,.8,.2,1); visibility: hidden;
+    }
+    .is-open .panel { transform: none; visibility: visible; }
+    @media (min-width: 768px) {
+      .panel {
+        inset: auto 24px 24px auto; width: 400px; height: min(640px, calc(100vh - 48px));
+        border-radius: 20px; overflow: hidden; border: 1px solid var(--color-border-dark);
+        box-shadow: 0 24px 64px rgba(var(--color-black-rgb), .45);
+        transform: translateY(16px) scale(.98); opacity: 0; transition: transform .25s ease, opacity .25s ease;
+      }
+      .is-open .panel { opacity: 1; }
+    }
+    .panel__head {
+      display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+      background: linear-gradient(90deg, var(--color-secondary), var(--color-surface-dark));
+      border-bottom: 1px solid var(--color-border-dark);
+    }
+    .panel__face { position: relative; width: 44px; height: 44px; flex: none; }
+    .panel__face img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 2px solid var(--color-accent-soft); transition: transform .3s ease, filter .3s ease; }
+    .panel[data-expression="thinking"] .panel__face img { animation: bob 1s ease-in-out infinite; }
+    .panel[data-expression="recommend"] .panel__face img { border-color: var(--color-accent-strong); transform: scale(1.06); }
+    .panel[data-expression="sorry"] .panel__face img { filter: saturate(.6); }
+    .panel[data-expression="secret"] .panel__face img { border-color: var(--color-spoiler); }
+    @keyframes bob { 50% { transform: translateY(-2px); } }
+    .panel__who { flex: 1; min-width: 0; }
+    .panel__name { font-weight: 700; font-size: 15px; line-height: 1.3; }
+    .panel__label { font-size: 11px; color: var(--color-text-dim); }
+    .panel__expr { font-size: 10px; color: var(--color-accent-soft); }
+    .panel__remain { font-size: 11px; color: var(--color-text-dim); text-align: right; line-height: 1.3; }
+    .panel__remain strong { display: block; font-size: 16px; color: var(--color-text-inverse); }
+    .panel__close { all: unset; cursor: pointer; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; font-size: 18px; }
+    .panel__close:hover, .panel__close:focus-visible { background: var(--color-surface-dark-2); }
+
+    .panel__log { flex: 1; overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 12px; }
+    .bubble { max-width: 88%; padding: 9px 13px; font-size: 14px; line-height: 1.7; border-radius: 4px 14px 14px 14px; background: var(--color-surface-dark-2); white-space: pre-wrap; word-break: break-word; animation: pop .25s ease; }
+    .bubble--user { align-self: flex-end; background: var(--color-accent); border-radius: 14px 4px 14px 14px; }
+    .bubble__spoilerTag { display: inline-block; font-size: 11px; font-weight: 700; color: var(--color-spoiler); margin-bottom: 4px; }
+    .dots { display: inline-flex; gap: 4px; }
+    .dots i { width: 6px; height: 6px; border-radius: 50%; background: var(--color-accent-soft); animation: blink 1s infinite; }
+    .dots i:nth-child(2) { animation-delay: .15s; } .dots i:nth-child(3) { animation-delay: .3s; }
+    @keyframes blink { 50% { opacity: .2; } }
+
+    /* ネタバレの確認を挟む（開くまで本文を出さない） */
+    .reveal { align-self: flex-start; max-width: 88%; border: 1px dashed var(--color-spoiler); border-radius: 12px; padding: 10px 12px; font-size: 13px; }
+    .reveal__btn { all: unset; cursor: pointer; margin-top: 6px; display: inline-block; font-weight: 700; color: var(--color-spoiler); }
+    .reveal__btn:focus-visible { outline: 2px solid var(--color-spoiler); }
+
+    /* 記事カード（縦リスト・コンパクト） */
+    .list { align-self: stretch; display: flex; flex-direction: column; gap: 8px; }
+    .row {
+      display: flex; gap: 10px; align-items: center; padding: 8px; border-radius: 12px;
+      background: var(--color-surface-dark); border: 1px solid var(--color-border-dark); color: inherit; text-decoration: none;
+      transition: border-color .2s ease;
+    }
+    .row:hover, .row:focus-visible { border-color: var(--color-accent-strong); outline: none; }
+    .row__thumb { width: 72px; aspect-ratio: 16/9; border-radius: 8px; flex: none; }
+    .row__body { flex: 1; min-width: 0; }
+    .row__title { font-size: 13px; font-weight: 700; line-height: 1.4; display: block; }
+    .row__meta { font-size: 10px; color: var(--color-text-dim); display: block; }
+    .row__score {
+      width: 40px; height: 40px; border-radius: 50%; flex: none; display: grid; place-items: center; text-align: center;
+      background: var(--color-score-bg); border: 2px solid var(--color-accent-strong); font-size: 12px; font-weight: 700; line-height: 1;
+    }
+    .row__score small { display: block; font-size: 8px; color: var(--color-accent-strong); }
+
+    .sys { align-self: stretch; font-size: 12px; background: var(--color-warning-bg); color: var(--color-warning); border-radius: 10px; padding: 10px 12px; }
+    .sys strong { display: block; font-size: 13px; }
+    .sys button { all: unset; cursor: pointer; text-decoration: underline; font-weight: 700; margin-top: 4px; display: inline-block; }
+
+    .panel__foot { border-top: 1px solid var(--color-border-dark); padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); background: var(--color-bg-dark); }
+    .chips { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+    .chip { all: unset; cursor: pointer; white-space: nowrap; font-size: 12px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--color-border-dark); color: var(--color-text-dim); }
+    .chip:hover, .chip:focus-visible { border-color: var(--color-accent-soft); color: var(--color-text-inverse); }
+    .compose { display: flex; gap: 6px; align-items: center; background: var(--color-surface-dark); border: 1px solid var(--color-border-dark); border-radius: 999px; padding: 4px 4px 4px 14px; }
+    .compose:focus-within { border-color: var(--color-accent-soft); }
+    .compose__input { flex: 1; min-width: 0; background: transparent; border: 0; outline: 0; font-size: 16px; padding: 6px 0; }
+    .compose__input::placeholder { color: var(--color-text-dim); }
+    .compose__count { font-size: 10px; color: var(--color-text-dim); }
+    .compose__count.is-over { color: var(--color-spoiler); font-weight: 700; }
+    .compose__send { all: unset; cursor: pointer; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--color-accent-strong); color: var(--color-bg-dark); font-weight: 700; }
+    .compose__send:disabled { opacity: .3; cursor: not-allowed; }
+    .compose__send:focus-visible { outline: 2px solid var(--color-accent-soft); outline-offset: 2px; }
+    .panel__note { font-size: 10px; color: var(--color-text-dim); margin-top: 6px; text-align: center; }
+
+    .srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  </style>
+</head>
+<body>
+  <header class="siteHeader">KatsumaScore</header>
+
+  <main class="article">
+    <span class="article__cat">映画 ／ ホラー</span>
+    <h1 class="article__title">『霧の灯台守』レビュー：静かな不安が積もっていく、眠れる怖さ</h1>
+    <div class="article__hero" role="img" aria-label="記事のアイキャッチ（仮）"></div>
+    <p>（既存の記事詳細ページの上にウィジェットが重なる見え方を確かめるための、架空の本文です。）孤島の灯台で働く男の日常が、少しずつ霧に侵食されていく。派手な驚かしはないが、音の使い方がうまい。</p>
+    <p>波の音が途切れる瞬間に、観客は自分から画面の暗がりを探し始める。その「探させる」演出が、この作品の怖さの正体だろう。</p>
+
+    <aside class="article__ask">
+      <img class="article__askFace" src="img/sayo-face.webp" alt="">
+      <div class="article__askText"><strong>この作品について、サヨに聞く</strong>似た雰囲気の作品や、記事の見どころを案内します</div>
+      <button type="button" class="article__askBtn" data-ask="『霧の灯台守』みたいな怖すぎないホラーはある？">聞いてみる</button>
+    </aside>
+
+    <p>中盤からは灯台の明かりそのものが不穏な意味を帯び、光が「安心」から「監視」へ反転していく。</p>
+    <p>終盤の展開は記事の後半で詳しく触れる。</p>
+  </main>
+
+  <div class="launcher">
+    <div class="launcher__teaser">何を観ようか迷ったら、どうぞ<small>サヨ ／ AI映画店主</small></div>
+    <button type="button" class="launcher__btn" data-open aria-label="サヨと話す（チャットを開く）">
+      <img src="img/sayo-face.webp" alt="">
+      <span class="launcher__dot" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <section class="panel" data-expression="default" role="dialog" aria-modal="false" aria-label="サヨとの会話">
+    <header class="panel__head">
+      <div class="panel__face"><img src="img/sayo-face.webp" alt=""></div>
+      <div class="panel__who">
+        <div class="panel__name">サヨ</div>
+        <div class="panel__label">AI映画店主 ・ <span class="panel__expr" data-expr-label>default（通常）</span></div>
+      </div>
+      <div class="panel__remain">今日あと<strong data-remaining>30</strong></div>
+      <button type="button" class="panel__close" data-close aria-label="閉じる">✕</button>
+    </header>
+    <div class="panel__log" data-log role="log" aria-live="polite"></div>
+    <form class="panel__foot" data-form>
+      <div class="chips" data-chips></div>
+      <div class="compose">
+        <label class="srOnly" for="msg">サヨへのメッセージ</label>
+        <input id="msg" class="compose__input" autocomplete="off" placeholder="サヨに話しかける" data-input>
+        <span class="compose__count" data-count>0/200</span>
+        <button class="compose__send" type="submit" data-send aria-label="送る">↑</button>
+      </div>
+      <p class="panel__note" data-disclaimer></p>
+    </form>
+  </section>
+
+  <script src="mock.js"></script>
+  <script>
+    (() => {
+      const M = window.SayoMock;
+      const $ = (s) => document.querySelector(s);
+      const panel = $('.panel');
+      const log = $('[data-log]');
+      const input = $('[data-input]');
+      const send = $('[data-send]');
+      let busy = false;
+      let locked = false;
+      let started = false;
+      let lastMessage = '';
+
+      $('[data-disclaimer]').textContent = M.DISCLAIMER;
+
+      const setExpression = (k) => { panel.dataset.expression = k; $('[data-expr-label]').textContent = M.EXPRESSION_LABEL[k]; };
+      const add = (el) => { log.appendChild(el); log.scrollTop = log.scrollHeight; return el; };
+      const node = (cls, html) => { const el = document.createElement('div'); el.className = cls; el.innerHTML = html; return el; };
+
+      const rowHtml = (a) => `
+        <a class="row" href="${a.url}">
+          <span class="row__thumb" style="background:linear-gradient(135deg,hsl(${a.hue} 45% 32%),hsl(${a.hue + 30} 55% 55%))"></span>
+          <span class="row__body">
+            <span class="row__title">${M.escapeHtml(a.title)}</span>
+            <span class="row__meta">${a.category} ・ ${a.vod.join(' / ')}（${a.vodCheckedAt}時点）</span>
+          </span>
+          <span class="row__score"><span>${a.katsumaScore.toFixed(1)}<small>${M.scoreRank(a.katsumaScore)}</small></span></span>
+        </a>`;
+
+      const showReply = (body) => {
+        const render = () => {
+          const tag = body.spoiler ? '<span class="bubble__spoilerTag">ネタバレあり</span><br>' : '';
+          add(node('bubble', tag + M.escapeHtml(body.reply)));
+          if (body.articles.length) add(node('list', body.articles.map(rowHtml).join('')));
+        };
+        if (!body.spoiler) { render(); return; }
+        const gate = add(node('reveal', 'この返事は結末に触れています。<br><button type="button" class="reveal__btn">読む</button>'));
+        gate.querySelector('button').addEventListener('click', () => { gate.remove(); render(); });
+      };
+      const showSys = (status) => {
+        const info = M.STATUS_MESSAGE[status];
+        const el = add(node('sys', `<strong>${info.title}</strong>${info.body || ''}${info.action ? `<br><button type="button">${info.action}</button>` : ''}`));
+        const b = el.querySelector('button');
+        if (b) b.addEventListener('click', () => { el.remove(); if (status === 'error') submit(lastMessage, true); else { add(node('bubble', M.greeting())); } });
+      };
+
+      const sync = () => {
+        const n = input.value.length;
+        const c = $('[data-count]');
+        c.textContent = `${n}/${M.maxChars}`;
+        c.classList.toggle('is-over', n > M.maxChars);
+        send.disabled = busy || locked || !n || n > M.maxChars;
+        input.disabled = locked;
+      };
+      const lock = (ph) => { locked = true; input.value = ''; input.placeholder = ph; sync(); };
+
+      const submit = async (text, retry = false) => {
+        if (!text || busy || locked) return;
+        busy = true; lastMessage = text;
+        if (!retry) add(node('bubble bubble--user', M.escapeHtml(text)));
+        input.value = ''; sync();
+        setExpression('thinking');
+        const t = add(node('bubble', '<span class="dots"><i></i><i></i><i></i></span>'));
+        const { body } = await M.send(text);
+        t.remove(); busy = false;
+        $('[data-remaining]').textContent = body.remaining;
+        setExpression(M.expressionFor(body));
+        if (body.status === 'ok' || body.status === 'no_match') showReply(body);
+        else showSys(body.status);
+        if (body.status.startsWith('limit') || body.remaining === 0) lock('今日はここまでです');
+        if (body.status === 'disabled') lock('ただいま準備中です');
+        sync();
+      };
+
+      const open = (prefill) => {
+        document.body.classList.add('is-open');
+        if (!started) { started = true; add(node('bubble', M.greeting())); }
+        if (prefill) { input.value = prefill; sync(); }
+        setTimeout(() => input.focus(), 300);
+      };
+      const close = () => { document.body.classList.remove('is-open'); $('[data-open]').focus(); };
+
+      M.QUICK_REPLIES.forEach((q) => {
+        const b = document.createElement('button');
+        b.type = 'button'; b.className = 'chip'; b.textContent = q;
+        b.addEventListener('click', () => submit(q));
+        $('[data-chips]').appendChild(b);
+      });
+      $('[data-open]').addEventListener('click', () => open());
+      $('[data-close]').addEventListener('click', close);
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && document.body.classList.contains('is-open')) close(); });
+      document.querySelectorAll('[data-ask]').forEach((b) => b.addEventListener('click', () => open(b.dataset.ask)));
+      input.addEventListener('input', sync);
+      $('[data-form]').addEventListener('submit', (e) => { e.preventDefault(); submit(input.value.trim()); });
+      sync();
+      M.mountDebug();
+    })();
+  </script>
+</body>
+</html>
