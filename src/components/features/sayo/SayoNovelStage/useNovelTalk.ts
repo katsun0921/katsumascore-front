@@ -80,7 +80,10 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   const [last, setLast] = useState<NovelChoice | null>(null);
   const [searchQuery, setSearchQuery] = useState(novel.kind === 'search' ? novel.search.query : '');
 
+  // サヨの返事・要約を表示した回数。送信を見送って表示を戻すとき、そのあいだに新しく表示されたもの（要約など）を上書きしないために比べる
+  const shownRef = useRef(0);
   const sayoSays = useCallback((line: string, expr: SayoExpression) => {
+    shownRef.current += 1;
     setSpeaker('sayo'); setThinking(false); setExpression(expr); setText(line);
     setLog((l) => [...l, { who: 'sayo', text: line }]);
   }, []);
@@ -190,10 +193,10 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
       sayoSays(texts.openSearch(r.reply), r.articles.length ? 'recommend' : 'sorry');
       return;
     }
-    if (!(await ensureHealth())) {
-      if (stale()) return;
-      setThinking(false); setExpression('sorry'); setText(''); return;
-    }
+    const open = await ensureHealth();
+    // 受付の確認を待つあいだに作品を切り替えたなら、前の作品の質問は送らない
+    if (stale()) return;
+    if (!open) { setThinking(false); setExpression('sorry'); setText(''); return; }
     // 受付の確認を待つあいだに残り0回になることがあるので、送る直前にもう一度確かめる
     if (remainingRef.current <= 0) { restore(); return; }
     if (postId === null) {
@@ -215,9 +218,13 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     // 返事を待つあいだに作品が切り替わったら（A→B→A と戻った場合も）、その返事で画面を上書きしない。回数だけ反映する
     const startEpoch = epochRef.current;
     const stale = () => epochRef.current !== startEpoch;
-    const before = { speaker, text, expression };
-    // 作品が切り替わったあとは、新しい作品の表示（要約など）を上書きしない
-    const restore = () => { if (stale()) return; setSpeaker(before.speaker); setThinking(false); setExpression(before.expression); setText(before.text); };
+    const before = { speaker, text, expression, thinking };
+    const shownAtStart = shownRef.current;
+    // 見送って表示を戻すとき、作品が切り替わった・そのあいだに要約や返事が表示された場合は、新しい表示を残す
+    const restore = () => {
+      if (stale() || shownRef.current !== shownAtStart) return;
+      setSpeaker(before.speaker); setThinking(before.thinking); setExpression(before.expression); setText(before.text);
+    };
     setBusy(true); setLast(choice);
     if (!(await showUser(choice.label, stale))) return;
     try {
