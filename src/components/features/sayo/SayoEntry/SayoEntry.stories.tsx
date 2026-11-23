@@ -32,6 +32,12 @@ export const List: Story = { args: { category: '映画' } };
 
 export const Paused: Story = { args: { options: { status: { paused: true } } } };
 
+/** 参加していない：候補ボタンも押せず、案内を出す */
+export const NotJoined: Story = { args: { options: { joined: false } } };
+
+/** 参加確認の失敗（通信・503）：参加していない扱いで同じ表示 */
+export const SessionError: Story = { args: { options: { sessionFails: true } } };
+
 export const LimitReached: Story = { args: { options: { remaining: 0 } } };
 
 /** 表示フラグ OFF：何も描かない */

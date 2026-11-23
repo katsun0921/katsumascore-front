@@ -39,6 +39,8 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   const [status, setStatus] = useState<SayoStatus | null>(null);
   const [remaining, setRemaining] = useState(initialRemaining);
   const [health, setHealth] = useState<boolean | null>(null);
+  // 参加済みか（GET /session）。null は確認前。確認が終わるまでサヨのUIは出さない
+  const [joined, setJoined] = useState<boolean | null>(null);
   const [modal, setModal] = useState<SayoModalState | null>(null);
   const [novel, setNovel] = useState<SayoNovelState | null>(null);
   const trigger = useRef<HTMLElement | null>(null);
@@ -61,14 +63,32 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
     return () => { alive = false; };
   }, [client, locale]);
 
-  const visible = locale === 'ja' && status !== null && status.visible;
+  // 参加確認は、表示フラグが ON のときだけ行う（出さないときは ai-chat へ通信しない）。回数は数えない。
+  // 失敗（通信・503）も、理由を区別せず参加していない扱いにする
+  const flagVisible = status?.visible === true;
+  useEffect(() => {
+    if (locale !== 'ja' || !flagVisible) return undefined;
+    let alive = true;
+    client.getSession()
+      .then((s) => {
+        if (!alive) return;
+        setJoined(s.joined);
+        if (s.joined) setRemaining(s.remaining);
+      })
+      .catch(() => { if (alive) setJoined(false); });
+    return () => { alive = false; };
+  }, [client, locale, flagVisible]);
+
+  const visible = locale === 'ja' && flagVisible && joined !== null;
 
   const block = useMemo<SayoBlockReason>(() => {
+    // 参加していない間は、要約・候補・詳しく知りたい・会話のすべてを止める（通信しない）
+    if (joined === false) return 'notJoined';
     if (status?.paused) return 'paused';
     if (health === false) return 'closed';
     if (remaining <= 0) return 'limit';
     return null;
-  }, [status, health, remaining]);
+  }, [joined, status, health, remaining]);
 
   const ensureHealth = useCallback(async () => {
     if (health !== null) return health;
@@ -83,16 +103,20 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   }, [client, health]);
 
   const openSummary = useCallback((id: number, ids: number[], el?: HTMLElement | null) => {
+    // 参加していないときは開かない（要約を取りに行かない）
+    if (!joined) return;
     trigger.current = el ?? null;
     const list = ids.includes(id) ? ids : [id, ...ids];
     setNovel(null);
     setModal({ kind: 'summary', ids: list, index: list.indexOf(id), search: null });
-  }, []);
+  }, [joined]);
 
   const runSearch = useCallback(async (search: SayoSearchState) => {
     const update = (patch: Partial<SayoSearchState>) => setModal((m) => (
       m && m.kind === 'search' && m.search.query === search.query ? { kind: 'search', search: { ...m.search, ...patch } } : m
     ));
+    // 参加していないときは通信しない（ボタンは無効だが、呼び出されても送らない）
+    if (!joined) return;
     // 残り0回では、候補ボタンも新しく探さない（要約・候補も1日の利用回数に数えるため）
     if (remaining <= 0) { update({ failure: 'limit' }); return; }
     if (search.kind === 'free' && !(await ensureHealth())) { update({ failure: 'closed' }); return; }
@@ -105,15 +129,16 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
     } catch {
       update({ failure: 'error' });
     }
-  }, [client, ensureHealth, remaining]);
+  }, [client, ensureHealth, joined, remaining]);
 
   const openSearch = useCallback((query: string, kind: 'chip' | 'free', el?: HTMLElement | null) => {
+    if (!joined) return;
     if (el !== undefined) trigger.current = el;
     const search: SayoSearchState = { query, kind, category, result: null };
     setNovel(null);
     setModal({ kind: 'search', search });
     void runSearch(search);
-  }, [category, runSearch]);
+  }, [category, joined, runSearch]);
 
   const showSummaryInSearch = useCallback((id: number) => {
     setModal((m) => {

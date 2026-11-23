@@ -45,6 +45,9 @@ jobs:
       - name: WordPress REST schema regression test
         run: npm run test:wp-schema
 
+      - name: 開発者ツール（設定ストア・UI確認シナリオ）のテスト
+        run: npm run test:devtools
+
       # generated/wp-schema.d.ts は openapi/wp.yaml からの生成物。
       # 手編集すると次回の `npm run wp:gen-types` で消えるため、
       # 再生成しても差分が出ないことを検査する。

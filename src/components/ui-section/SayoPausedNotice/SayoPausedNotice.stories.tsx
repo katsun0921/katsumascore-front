@@ -29,6 +29,9 @@ export const PausedWithMessage: Story = {
 /** 回数の上限 */
 export const Limit: Story = { args: { reason: 'limit' } };
 
+/** 参加していない（Cookie 無し・期限切れ・確認に失敗。理由は断定しない） */
+export const NotJoined: Story = { args: { reason: 'notJoined' } };
+
 /** ai-chat が受付終了（health の enabled: false） */
 export const Closed: Story = { args: { reason: 'closed' } };
 

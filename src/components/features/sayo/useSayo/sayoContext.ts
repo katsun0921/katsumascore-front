@@ -22,8 +22,17 @@ export type SayoNovelState =
   | { kind: 'post'; id: number; search: SayoSearchState | null }
   | { kind: 'search'; search: SayoSearchState };
 
-/** LLMを使う操作を止めている理由。null なら送ってよい */
-export type SayoBlockReason = 'paused' | 'limit' | 'closed' | null;
+/**
+ * 操作を止めている理由。null なら送ってよい。
+ * paused・closed は LLM を使う操作だけ止める。limit・notJoined は回数を数える操作すべて（要約・候補・詳しく知りたい・会話）を止める
+ */
+export type SayoBlockReason = 'paused' | 'limit' | 'closed' | 'notJoined' | null;
+
+/**
+ * 要約・候補・「詳しく知りたい」を含む、回数を数える操作すべてを止める理由か
+ * @param block 止めている理由
+ */
+export const blocksCountedActions = (block: SayoBlockReason): boolean => block === 'limit' || block === 'notJoined';
 
 /**
  * 取得済みの要約の入れ物。モーダルとノベル画面で同じ要約を使い回し、二重に取得して利用回数を余分に減らさないための仕組み。

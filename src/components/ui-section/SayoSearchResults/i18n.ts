@@ -1,7 +1,7 @@
 export const messages = {
   source: {
     tags: { ja: '記事のタグから', en: 'From review tags' },
-    tagsNote: { ja: '回数は減りません', en: 'Free' },
+    tagsNote: { ja: '1回使いました', en: 'Used 1 turn' },
     llm: { ja: 'AIが記事から', en: 'AI search' },
     llmNote: { ja: '1回使いました', en: 'Used 1 turn' },
   },

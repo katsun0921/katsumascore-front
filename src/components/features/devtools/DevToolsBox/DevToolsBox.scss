@@ -1,0 +1,84 @@
+.devToolsBox {
+  position: fixed;
+  bottom: var(--space-16);
+  left: var(--space-16);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-8);
+  color: var(--color-sayo-stage-text);
+
+  &__toggle {
+    padding: var(--space-4) var(--space-12);
+    border: 1px solid var(--color-accent-soft);
+    border-radius: 999px;
+    background: var(--color-bg-dark);
+    color: var(--color-accent-soft);
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+  }
+
+  &__sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+    width: min(360px, calc(100vw - 32px));
+    max-height: 70vh;
+    padding: var(--space-16);
+    overflow-y: auto;
+    border: 1px solid var(--color-sayo-border-dark);
+    border-radius: 12px;
+    background: var(--color-bg-dark);
+    box-shadow: 0 8px 24px rgba(var(--color-black-rgb), 0.5);
+  }
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: var(--font-size-fixed-14);
+  }
+
+  &__close {
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  &__note {
+    margin: 0;
+    color: var(--color-sayo-text-dim);
+    font-size: var(--font-size-fixed-12);
+  }
+
+  &__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+  }
+
+  &__tab {
+    padding: var(--space-4) var(--space-12);
+    border: 1px solid var(--color-sayo-border-dark);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--color-sayo-text-dim);
+    font-size: var(--font-size-fixed-12);
+    cursor: pointer;
+
+    &.is-active {
+      border-color: var(--color-accent-soft);
+      color: var(--color-text-inverse);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+}

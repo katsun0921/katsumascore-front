@@ -21,11 +21,15 @@ export const SayoCardAction = ({ articleId, title, groupIds, size = 'short', cla
   const locale = useLocale();
   if (!sayo?.visible) return null;
   const label = t(messages, ['label', size === 'long' ? 'long' : 'short'], locale);
+  // 参加していない間は押せない（通信もしない）。案内は title に出し、入口（SayoEntry）の案内文が詳しく伝える
+  const notJoined = sayo.block === 'notJoined';
   return (
     <SayoFaceButton
       label={label}
       ariaLabel={`『${title}』${t(messages, ['aria'], locale)}`}
       compact={size === 'compact'}
+      disabled={notJoined}
+      title={notJoined ? t(messages, ['notJoined'], locale) : undefined}
       className={className}
       onClick={() => sayo.openSummary(articleId, groupIds ?? [articleId], document.activeElement as HTMLElement | null)}
     />

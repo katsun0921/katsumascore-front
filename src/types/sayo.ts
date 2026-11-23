@@ -3,8 +3,11 @@
  * ai-chat・WordPress の応答は libs 側で zod 検証してからこの形にする。
  */
 
-/** 立ち絵の表情。API は返さないためフロントで決める */
+/** 立ち絵の表情。`thinking`（待ち表示）だけ画面で決め、それ以外は /message の `expression` を使う */
 export type SayoExpression = 'default' | 'thinking' | 'recommend' | 'sorry' | 'secret';
+
+/** ai-chat が返す表情（`MessageResponse.expression`）。`thinking` は含まない */
+export type SayoReplyExpression = Exclude<SayoExpression, 'thinking'>;
 
 /** WordPress /v1/sayo-chat-status（Next の /api/sayo-chat-status 経由） */
 export type SayoStatus = {
@@ -44,7 +47,7 @@ export type SayoMoodChip = {
   label: string;
 };
 
-/** 探した結果。source: 'tags'＝候補ボタン（回数を減らさない）／'llm'＝自由入力 */
+/** 探した結果。source: 'tags'＝候補ボタン（LLMなし。成功ごとに1回数える）／'llm'＝自由入力 */
 export type SayoSearchResult = {
   source: 'tags' | 'llm';
   reply: string;
@@ -70,7 +73,15 @@ export type SayoMessageResult = {
   articles: SayoArticle[];
   spoiler: boolean;
   remaining: number;
+  /** サーバーが決めた表情。画面で推測しない */
+  expression: SayoReplyExpression;
 };
+
+/**
+ * 参加状態（GET /api/chat/session）。回数を数えず、書き込まない。
+ * 参加していない理由（Cookie無し・期限切れ・改ざんなど）は区別しない
+ */
+export type SayoSession = { joined: false } | { joined: true; remaining: number };
 
 /**
  * サヨの取得関数のまとめ。本番は libs/api の実装、Storybook は features/sayo/mocks の架空実装を渡す。
@@ -79,6 +90,8 @@ export type SayoMessageResult = {
 export type SayoClient = {
   getStatus: (lang: 'ja' | 'en') => Promise<SayoStatus>;
   getHealth: () => Promise<{ enabled: boolean }>;
+  /** 参加済みかを確かめる。失敗（通信・503）は呼び出し側で「参加していない」として扱う */
+  getSession: () => Promise<SayoSession>;
   getSummary: (articleId: number) => Promise<SayoSummary>;
   searchByMood: (chip: SayoMoodChip, category?: string) => Promise<SayoSearchResult>;
   searchFree: (query: string, category?: string) => Promise<SayoSearchResult>;

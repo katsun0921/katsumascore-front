@@ -3,8 +3,8 @@ import { t } from '@/i18n/t';
 import { messages } from './i18n';
 
 export type SayoPausedNoticeProps = {
-  /** paused：WordPress の停止フラグ／limit：回数の上限／closed：ai-chat が受付終了（health） */
-  reason: 'paused' | 'limit' | 'closed';
+  /** paused：WordPress の停止フラグ／limit：回数の上限／closed：ai-chat が受付終了（health）／notJoined：参加していない（理由は区別しない） */
+  reason: 'paused' | 'limit' | 'closed' | 'notJoined';
   /** WordPress の案内文。null なら既定文 */
   message?: string | null;
   /** 再開予定（ISO 8601） */
@@ -34,8 +34,8 @@ export const SayoPausedNotice = ({ reason, message, resumeAt, tone = 'light', cl
     <div data-component='SayoPausedNotice' role='status' className={['sayoPausedNotice', `sayoPausedNotice--${tone}`, className].filter(Boolean).join(' ')}>
       <p className='sayoPausedNotice__text'>{message || t(messages, ['default', reason], locale)}</p>
       {when && <p className='sayoPausedNotice__when'>{t(messages, ['resume'], locale)}：{when}</p>}
-      {/* 残り0回では要約・候補ボタンも止めるので、「このまま使えます」とは言わない */}
-      {reason !== 'limit' && <p className='sayoPausedNotice__sub'>{t(messages, ['stillOk'], locale)}</p>}
+      {/* 残り0回・未参加では要約・候補ボタンも止めるので、「このまま使えます」とは言わない */}
+      {(reason === 'paused' || reason === 'closed') && <p className='sayoPausedNotice__sub'>{t(messages, ['stillOk'], locale)}</p>}
     </div>
   );
 };

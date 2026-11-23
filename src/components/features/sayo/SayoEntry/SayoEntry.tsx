@@ -7,8 +7,9 @@ export type SayoEntryProps = {
 };
 
 /**
- * 「何を観ようか迷ったら」の入口。候補ボタンはいつでも使え、
- * LLMを使う自由入力は止めている間（停止・上限・受付終了）は出さずに案内を出す。
+ * 「何を観ようか迷ったら」の入口。候補ボタンは、参加していれば使え、
+ * LLMを使う自由入力は止めている間（停止・上限・受付終了・未参加）は出さずに案内を出す。
+ * 参加していない間は、候補ボタンも押せなくして案内を出す（通信しない）。
  */
 export const SayoEntry = ({ className }: SayoEntryProps) => {
   const sayo = useSayoOptional();
@@ -29,6 +30,7 @@ export const SayoEntry = ({ className }: SayoEntryProps) => {
       category={category}
       inputId={category ? `sayo-ask-${category}` : 'sayo-ask'}
       onChip={(label) => openSearch(label, 'chip', document.activeElement as HTMLElement | null)}
+      disabled={block === 'notJoined'}
       onSubmit={block ? undefined : (text) => openSearch(text, 'free', document.activeElement as HTMLElement | null)}
       notice={notice}
     />

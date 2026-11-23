@@ -13,6 +13,8 @@ export type SayoAskBoxProps = {
   onChip: (label: string) => void;
   /** 自由入力の送信。未指定なら入力欄を出さない（停止中など） */
   onSubmit?: (text: string) => void;
+  /** true で候補ボタンも押せなくする（参加していない間など） */
+  disabled?: boolean;
   /** 入力欄の代わりに出すもの（停止中の案内など） */
   notice?: ReactNode;
   /** 同じページに複数置くときの input の id */
@@ -21,7 +23,7 @@ export type SayoAskBoxProps = {
 };
 
 /** 「何を観ようか迷ったら」の入口。入力は非制御で、送信時に値を取り出して渡す */
-export const SayoAskBox = ({ chips, category, onChip, onSubmit, notice, inputId = 'sayo-ask', className }: SayoAskBoxProps) => {
+export const SayoAskBox = ({ chips, category, onChip, onSubmit, notice, disabled = false, inputId = 'sayo-ask', className }: SayoAskBoxProps) => {
   const locale = useLocale();
   const title = category ? `${category}${t(messages, ['title', 'scoped'], locale)}` : t(messages, ['title', 'all'], locale);
 
@@ -44,7 +46,7 @@ export const SayoAskBox = ({ chips, category, onChip, onSubmit, notice, inputId 
         </p>
         <div className='sayoAskBox__chips'>
           {chips.map((label) => (
-            <button key={label} type='button' className='sayoAskBox__chip' onClick={() => onChip(label)}>
+            <button key={label} type='button' className='sayoAskBox__chip' disabled={disabled} onClick={() => onChip(label)}>
               {label}
             </button>
           ))}
