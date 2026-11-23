@@ -44,7 +44,7 @@ git branch --show-current
 
 ### 5. テンプレートを日本語で埋める
 
-**必須ルール（CLAUDE.md準拠）：**
+**必須ルール（AGENTS.md準拠）：**
 - タイトル形式: `feature: 〇〇を追加` または `bug: 〇〇を修正`
 - タイトル・本文はすべて日本語で記述する
 - 変更種別のチェックボックスは実際の変更に合わせて `[x]` にする
@@ -76,6 +76,10 @@ git branch --show-current
 - repo: `katsumascore-front`
 - head: 現在のブランチ名
 - base: `main`
+
+### 7. ラベルを付ける
+
+PR作成後、`gh pr edit <PR番号> --add-label <patch|minor|major>` でラベルを1つ付ける（`mcp__github__create_pull_request` はラベルを付けられない。既存PRの更新でも、ラベルが無ければ付ける）。
 
 ## 完了後の報告
 
