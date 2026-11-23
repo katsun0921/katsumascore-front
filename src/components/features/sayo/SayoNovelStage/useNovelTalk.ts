@@ -89,10 +89,11 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   }, []);
 
   const postId = novel.kind === 'post' ? novel.id : null;
-  // 返事が届いたときに「いま話している作品」を読むための参照（作品を切り替えたあとの古い返事を捨てる）
   // 同じ作品に戻っても古い返事を捨てられるよう、作品が変わるたびに世代（epoch）を進めて比べる
   const epochRef = useRef(0);
   useEffect(() => { epochRef.current += 1; }, [postId]);
+  // 画面を閉じたら、送信前（発言の表示・受付の確認を待っている間）の質問を取り消す。世代を進めて「古い」ことにする
+  useEffect(() => () => { epochRef.current += 1; }, []);
   // 残り回数は取得の直前に読む（依存に入れると回数が変わるたびに読み直してしまう）
   const remainingRef = useRef(remaining);
   useEffect(() => { remainingRef.current = remaining; }, [remaining]);
@@ -214,7 +215,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   const send = async (choice: NovelChoice) => {
     // 残り0回では、候補ボタンも含めて新しく取得しない。表示中の返答を消さないよう、何も変えずに戻る
-    if (busy || remainingRef.current <= 0) return;
+    // 要約や返事を待っている間（thinking）も受け付けない。要約が届く前に質問を送ると、あとで表示が食い違う
+    if (busy || thinking || remainingRef.current <= 0) return;
     // 返事を待つあいだに作品が切り替わったら（A→B→A と戻った場合も）、その返事で画面を上書きしない。回数だけ反映する
     const startEpoch = epochRef.current;
     const stale = () => epochRef.current !== startEpoch;
@@ -251,7 +253,7 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   return {
     speaker, text, thinking, spoiler, spoilerHidden: spoilerText !== null, reveal, expression, shelf,
-    currentId: postId ?? undefined, title, choices, busy, system, log,
+    currentId: postId ?? undefined, title, choices, busy: busy || thinking, system, log,
     send, retry: () => { if (last) void send(last); },
   };
 };
