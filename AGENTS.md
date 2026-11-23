@@ -342,7 +342,7 @@ src/
 | ファイル全体 | モジュールの役割はファイル先頭のブロックコメントでまとめてよい（`import` の直後でも可） |
 | 対象外 | 型・定数のみで関数・メソッドを持たないファイル |
 
-詳細なファイル役割の一覧は `src/libs/CLAUDE.md` を参照する。
+詳細なファイル役割の一覧は [`.claude/rules/src/libs.md`](.claude/rules/src/libs.md) を参照する。
 
 ---
 
@@ -602,14 +602,22 @@ export const English: Story = {
 
 `CLAUDE.md` は本ファイルを読み込むだけにした。旧 `CLAUDE.md` にあった内容を、以下に移した（上の本文と重なる節は、要約として残している）。
 
-最重要ルールのみを記載する。詳細は以下の rules ファイルを参照する。
+最重要ルールのみを記載する。詳細は以下の rules ファイルを参照する。**作業前に、変更するディレクトリに当てはまるファイルを読む。**
+（Claude Code は、各ファイルの `paths` に当てはまるファイルを扱うときに自動で読み込む。Codex など他のエージェントは自動では読まないので、ここから読む。）
 
 > **関連ドキュメント**
-> - コンポーネント設計: @.claude/rules/src/components.md
-> - スタイリング: @.claude/rules/styling.md
-> - libs 関数仕様: @.claude/rules/src/libs.md
-> - i18n実装: @.claude/rules/src/components/i18n-implementation.md
-> - パッケージ情報: @package.json
+> - コンポーネント設計（`src/components/**`）: [`.claude/rules/src/components.md`](.claude/rules/src/components.md)
+> - スタイリング（`src/**`）: [`.claude/rules/styling.md`](.claude/rules/styling.md)
+> - libs 関数仕様（`src/libs/**`）: [`.claude/rules/src/libs.md`](.claude/rules/src/libs.md)
+> - i18n実装（`src/components/**`・`src/i18n/**`）: [`.claude/rules/src/components/i18n-implementation.md`](.claude/rules/src/components/i18n-implementation.md)
+> - Config 設計（`src/components/**`）: [`.claude/rules/src/components/config.md`](.claude/rules/src/components/config.md)
+> - i18n と Config の責務分離（`src/components/**`）: [`.claude/rules/src/components/i18n.md`](.claude/rules/src/components/i18n.md)
+> - PostPage の設計（`src/components/ui-section/PostPage/**`）: [`.claude/rules/src/components/ui-section/postpage.md`](.claude/rules/src/components/ui-section/postpage.md)
+> - pages（`src/pages/**`）: [`.claude/rules/src/pages.md`](.claude/rules/src/pages.md)
+> - API ルート（`src/pages/api/**`）: [`.claude/rules/src/pages/api.md`](.claude/rules/src/pages/api.md)
+> - 型定義（`src/types/**`）: [`.claude/rules/src/types.md`](.claude/rules/src/types.md)
+> - Storybook（`.storybook/**`）: [`.claude/rules/storybook.md`](.claude/rules/storybook.md)
+> - パッケージ情報: [`package.json`](package.json)
 
 ---
 
