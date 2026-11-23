@@ -82,4 +82,4 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: katsun0921/katsumascore-workflows/.github/workflows/dependabot-auto-merge.yml@ac11848a8a2d5472ee952693f90093d320fda7fa
+    uses: katsun0921/katsumascore-workflows/.github/workflows/dependabot-auto-merge.yml@1689af975182fdba7fb1a957913f1d4876f2fb51
