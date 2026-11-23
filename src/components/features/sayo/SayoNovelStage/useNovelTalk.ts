@@ -197,7 +197,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     const open = await ensureHealth();
     // 受付の確認を待つあいだに作品を切り替えたなら、前の作品の質問は送らない（履歴からも消す）
     if (stale()) { restore(); return; }
-    if (!open) { setThinking(false); setExpression('sorry'); setText(''); return; }
+    // 受付終了で送らなかった質問も、履歴から消して表示を戻す（案内は、受付終了の表示が出す）
+    if (!open) { restore(); return; }
     // 受付の確認を待つあいだに残り0回になることがあるので、送る直前にもう一度確かめる
     if (remainingRef.current <= 0) { restore(); return; }
     if (postId === null) {
