@@ -1,10 +1,7 @@
 # main への push（マージ完了後）で Cloudflare Workers へデプロイする。
 #
-# タグ（vX.Y.Z）はこのワークフローでは作成しない。
-# マージ後はリリース前の Draft 状態として扱い、GitHub の Releases 画面で
-# Draft を publish したタイミングで GitHub がタグを作成する。
-# 複数のマージを1つの Draft にまとめてからリリースする運用のため、
-# マージごとの自動 patch インクリメントは行わない。
+# タグ（vX.Y.Z）と GitHub Release はこのワークフローでは作成しない。
+# PR のマージごとに release-tag.yml（共通の再利用可能ワークフロー）が作成する。
 #
 # 必要な GitHub Secrets（Repository settings → Secrets and variables → Actions）:
 #   CLOUDFLARE_API_TOKEN  — Workers デプロイ権限付き API トークン
