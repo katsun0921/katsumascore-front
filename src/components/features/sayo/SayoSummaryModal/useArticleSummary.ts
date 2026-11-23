@@ -8,7 +8,8 @@ export type ArticleSummaryState = {
 };
 
 /**
- * 承認済み要約を取得する（LLMなし・回数を減らさない）。id が変わるたびに読み直す
+ * 承認済み要約を取得する（LLMなし。1日の利用回数には数える）。id が変わるたびに読み直す。
+ * 残り0回のときは呼び出し側が id を null にして、取得しない
  * @param client SayoClient
  * @param id 記事ID。null なら読まない
  */

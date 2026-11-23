@@ -1,9 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 
-/** サヨ会話UIのHTMLモック（src/ui-proposals/sayo-chat/）をStorybookで開くためのラッパー */
+/**
+ * サヨ会話UIのHTMLモック（src/ui-proposals/sayo-chat/）をStorybookで開くためのラッパー。
+ * GitHub Pages などサブパス配信（STORYBOOK_BASE_PATH）でも開けるよう、Vite の base を前に付ける
+ */
 const HtmlProposal = ({ src }: { src: string }) => (
   <iframe
-    src={src}
+    src={`${import.meta.env.BASE_URL.replace(/\/$/, '')}${src}`}
     style={{ width: '100%', height: '100vh', border: 'none' }}
     title={src}
   />

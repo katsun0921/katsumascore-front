@@ -34,7 +34,8 @@ export const SayoPausedNotice = ({ reason, message, resumeAt, tone = 'light', cl
     <div data-component='SayoPausedNotice' role='status' className={['sayoPausedNotice', `sayoPausedNotice--${tone}`, className].filter(Boolean).join(' ')}>
       <p className='sayoPausedNotice__text'>{message || t(messages, ['default', reason], locale)}</p>
       {when && <p className='sayoPausedNotice__when'>{t(messages, ['resume'], locale)}：{when}</p>}
-      <p className='sayoPausedNotice__sub'>{t(messages, ['stillOk'], locale)}</p>
+      {/* 残り0回では要約・候補ボタンも止めるので、「このまま使えます」とは言わない */}
+      {reason !== 'limit' && <p className='sayoPausedNotice__sub'>{t(messages, ['stillOk'], locale)}</p>}
     </div>
   );
 };

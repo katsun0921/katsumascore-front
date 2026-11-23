@@ -20,6 +20,33 @@ const Typing = () => (
   </span>
 );
 
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+/**
+ * Tab・Shift+Tab でフォーカスがモーダルの外へ出ないようにする（先頭と末尾で折り返す）
+ * @param e キーイベント
+ * @param sheet モーダル本体。null なら何もしない
+ */
+const trapFocus = (e: KeyboardEvent, sheet: HTMLElement | null) => {
+  if (!sheet) return;
+  const nodes = sheet.querySelectorAll<HTMLElement>(FOCUSABLE);
+  if (nodes.length === 0) return;
+  const first = nodes[0];
+  const last = nodes[nodes.length - 1];
+  const active = document.activeElement;
+  if (!sheet.contains(active)) {
+    // すでに外にある（背景をクリックした直後など）ときは、先頭へ戻す
+    e.preventDefault();
+    first.focus();
+  } else if (e.shiftKey && active === first) {
+    e.preventDefault();
+    last.focus();
+  } else if (!e.shiftKey && active === last) {
+    e.preventDefault();
+    first.focus();
+  }
+};
+
 /**
  * 要約モーダル（作品の要約／探した結果）。SayoProvider が開閉する。
  * PCは中央、SPは下からのシート。Esc で閉じ、←→ で前後の作品。
@@ -29,9 +56,12 @@ export const SayoSummaryModal = () => {
   const locale = useLocale();
   const closeRef = useRef<HTMLButtonElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const sheetRef = useRef<HTMLElement>(null);
   const { modal } = sayo;
   const postId = modal && modal.kind === 'summary' ? modal.ids[modal.index] : null;
-  const { summary, loading, failed } = useArticleSummary(sayo.client, postId);
+  // 残り0回では、新しい要約を取りに行かない（要約も1日の利用回数に数えるため）
+  const limited = sayo.remaining <= 0;
+  const { summary, loading, failed } = useArticleSummary(sayo.client, limited ? null : postId);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
   useEffect(() => { scrollRef.current?.scrollTo({ top: 0 }); }, [postId, modal?.kind]);
@@ -40,6 +70,7 @@ export const SayoSummaryModal = () => {
     const onKey = (e: KeyboardEvent) => {
       const typing = (e.target as HTMLElement | null)?.tagName === 'INPUT';
       if (e.key === 'Escape') sayo.closeAll();
+      if (e.key === 'Tab') trapFocus(e, sheetRef.current);
       if (e.key === 'ArrowLeft' && !typing) sayo.step(-1);
       if (e.key === 'ArrowRight' && !typing) sayo.step(1);
     };
@@ -84,6 +115,7 @@ export const SayoSummaryModal = () => {
     <>
       <SayoBubble speaker='user'>{search.query}</SayoBubble>
       {search.failure === 'closed' && <SayoPausedNotice reason='closed' />}
+      {search.failure === 'limit' && <SayoPausedNotice reason='limit' />}
       {search.failure === 'error' && <p className='sayoSummaryModal__error' role='alert'>{t(messages, ['error'], locale)}</p>}
       {!search.failure && !search.result && <SayoBubble><Typing /></SayoBubble>}
       {search.result && (
@@ -110,6 +142,7 @@ export const SayoSummaryModal = () => {
 
   const summaryBody = !search && (
     <>
+      {limited && !summary && <SayoPausedNotice reason='limit' />}
       {loading && <SayoBubble><Typing /></SayoBubble>}
       {failed && <p className='sayoSummaryModal__error' role='alert'>{t(messages, ['error'], locale)}</p>}
       {summary && (
@@ -129,7 +162,7 @@ export const SayoSummaryModal = () => {
   return (
     <div data-component='SayoSummaryModal' className='sayoSummaryModal'>
       <div className='sayoSummaryModal__scrim' onClick={sayo.closeAll} aria-hidden='true' />
-      <section className='sayoSummaryModal__sheet' role='dialog' aria-modal='true' aria-labelledby='sayoModalTitle'>
+      <section ref={sheetRef} className='sayoSummaryModal__sheet' role='dialog' aria-modal='true' aria-labelledby='sayoModalTitle'>
         <div className='sayoSummaryModal__grab' aria-hidden='true' />
         <header className='sayoSummaryModal__head'>
           {header}

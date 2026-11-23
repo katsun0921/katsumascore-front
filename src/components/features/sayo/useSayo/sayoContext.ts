@@ -8,8 +8,8 @@ export type SayoSearchState = {
   kind: 'chip' | 'free';
   category?: string;
   result: SayoSearchResult | null;
-  /** closed＝ai-chat が受付終了／error＝取得に失敗 */
-  failure?: 'closed' | 'error';
+  /** closed＝ai-chat が受付終了／limit＝残り0回／error＝取得に失敗 */
+  failure?: 'closed' | 'limit' | 'error';
 };
 
 /** モーダルの状態：作品の要約か、探した結果か */

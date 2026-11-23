@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { SayoContextValue, SayoNovelState } from '@/components/features/sayo/useSayo';
 import type { SayoArticle, SayoExpression, SayoMessageResult, SayoMessageStatus } from '@/types/sayo';
 
@@ -12,7 +12,8 @@ export type NovelChoice = {
 
 export type NovelSystem = 'error' | 'session' | 'tooLong' | null;
 
-export type NovelLog = { who: 'sayo' | 'user'; text: string };
+/** 会話ログの1行。hidden は、利用者が「表示する」を押すまで本文を伏せるネタバレ */
+export type NovelLog = { who: 'sayo' | 'user'; text: string; hidden?: boolean };
 
 export type NovelTexts = {
   thinking: string;
@@ -82,12 +83,16 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   }, []);
 
   const postId = novel.kind === 'post' ? novel.id : null;
+  // 返事が届いたときに「いま話している作品」を読むための参照（作品を切り替えたあとの古い返事を捨てる）
+  const postIdRef = useRef<number | null>(postId);
+  useEffect(() => { postIdRef.current = postId; }, [postId]);
 
   // 作品が切り替わったら表示を考え中に戻す（エフェクト内で同期的に setState しないよう描画中に行う）
   const [prevPostId, setPrevPostId] = useState(postId);
   if (prevPostId !== postId) {
     setPrevPostId(postId);
-    if (postId !== null) { setThinking(true); setSpoiler(false); setSpoilerText(null); setSystem(null); }
+    // 送信中だった古い作品の処理は結果を捨てるので、新しい作品では送れる状態に戻す
+    if (postId !== null) { setThinking(true); setSpoiler(false); setSpoilerText(null); setSystem(null); setBusy(false); }
   }
 
   // 作品の話：承認済み要約から始める
@@ -118,12 +123,15 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [novel.kind]);
 
-  const showUser = async (line: string) => {
+  /** 利用者の発言を出して、考え中に切り替える。待つあいだに作品が変わったら false（以降の処理を止める） */
+  const showUser = async (line: string): Promise<boolean> => {
     setSystem(null); setSpoiler(false); setSpoilerText(null);
     setSpeaker('user'); setThinking(false); setText(line);
     setLog((l) => [...l, { who: 'user', text: line }]);
     await wait(400);
+    if (postIdRef.current !== postId) return false;
     setSpeaker('sayo'); setThinking(true); setExpression('thinking');
+    return true;
   };
 
   const applyMessage = (r: SayoMessageResult, current: SayoArticle | undefined) => {
@@ -134,7 +142,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     setShelf([...(current ? [current] : []), ...r.articles]);
     if (r.spoiler) {
       setThinking(false); setSpoiler(true); setSpoilerText(r.reply); setExpression('secret'); setText('');
-      setLog((l) => [...l, { who: 'sayo', text: r.reply }]);
+      // 履歴にも本文を出さない。「表示する」を押したとき（reveal）に開示する
+      setLog((l) => [...l, { who: 'sayo', text: r.reply, hidden: true }]);
       return;
     }
     sayoSays(r.reply, expressionFor(r));
@@ -142,40 +151,51 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   /** 選択肢・入力を1つ処理する。早期 return で分岐する */
   const runChoice = async (choice: NovelChoice) => {
+    // 返事を待つあいだに別の作品へ切り替わったら、その返事で画面を上書きしない（回数だけ反映する）
+    const stale = () => postIdRef.current !== postId;
     if (choice.kind === 'mood') {
       const r = await client.searchByMood({ label: choice.message }, category);
+      if (stale()) return;
       setSearchQuery(choice.message); setTitle(choice.message); setShelf(r.articles);
       sayoSays(texts.openSearch(r.reply), r.articles.length ? 'recommend' : 'sorry');
       return;
     }
-    if (!(await ensureHealth())) { setThinking(false); setExpression('sorry'); setText(''); return; }
+    if (!(await ensureHealth())) {
+      if (stale()) return;
+      setThinking(false); setExpression('sorry'); setText(''); return;
+    }
     if (postId === null) {
       const r = await client.searchFree(choice.message, category);
       if (r.remaining !== undefined) setRemaining(r.remaining);
+      if (stale()) return;
       setShelf(r.articles);
       sayoSays(texts.openSearch(r.reply), r.articles.length ? 'recommend' : 'sorry');
       return;
     }
     const r = await client.sendMessage({ message: choice.message, articleId: postId });
+    if (stale()) { setRemaining(r.remaining); return; }
     applyMessage(r, shelf.find((a) => a.id === postId));
   };
 
   const send = async (choice: NovelChoice) => {
     if (busy) return;
     setBusy(true); setLast(choice);
-    await showUser(choice.label);
+    if (!(await showUser(choice.label))) return;
     try {
       await runChoice(choice);
     } catch {
-      setThinking(false); setExpression('sorry'); setSystem('error');
+      // 切り替え前の作品の失敗は、いまの作品に出さない
+      if (postIdRef.current === postId) { setThinking(false); setExpression('sorry'); setSystem('error'); }
     } finally {
-      setBusy(false);
+      // 切り替え後は busy を別の送信が持っているので触らない
+      if (postIdRef.current === postId) setBusy(false);
     }
   };
 
   const reveal = () => {
     if (spoilerText === null) return;
     setText(spoilerText); setSpoilerText(null);
+    setLog((l) => l.map((x) => (x.hidden ? { ...x, hidden: false } : x)));
   };
 
   const choices: NovelChoice[] = postId !== null

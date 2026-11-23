@@ -148,7 +148,7 @@ export const SayoNovelStage = () => {
             // 同じ文が続くことがあるため、並び順を key に含める
             <div key={`${i}-${l.who}`}>
               <span className={`sayoNovelStage__logWho${l.who === 'user' ? ' sayoNovelStage__logWho--user' : ''}`}>{m([l.who === 'user' ? 'you' : 'sayo'])}</span>
-              {l.text}
+              {l.hidden ? m(['spoiler', 'hidden']) : l.text}
             </div>
           ))}
         </div>

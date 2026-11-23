@@ -86,6 +86,8 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
     const update = (patch: Partial<SayoSearchState>) => setModal((m) => (
       m && m.kind === 'search' && m.search.query === search.query ? { kind: 'search', search: { ...m.search, ...patch } } : m
     ));
+    // 残り0回では、候補ボタンも新しく探さない（要約・候補も1日の利用回数に数えるため）
+    if (remaining <= 0) { update({ failure: 'limit' }); return; }
     if (search.kind === 'free' && !(await ensureHealth())) { update({ failure: 'closed' }); return; }
     try {
       const result = search.kind === 'chip'
@@ -96,7 +98,7 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
     } catch {
       update({ failure: 'error' });
     }
-  }, [client, ensureHealth]);
+  }, [client, ensureHealth, remaining]);
 
   const openSearch = useCallback((query: string, kind: 'chip' | 'free', el?: HTMLElement | null) => {
     if (el !== undefined) trigger.current = el;
