@@ -183,7 +183,7 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   };
 
   /** 選択肢・入力を1つ処理する。早期 return で分岐する */
-  const runChoice = async (choice: NovelChoice, stale: () => boolean, restore: () => void) => {
+  const runChoice = async (choice: NovelChoice, stale: () => boolean, restore: () => boolean) => {
     // 送る直前にも残り回数を確かめる（待つあいだに別の取得で0回になることがある）。表示を元に戻して止める
     if (remainingRef.current <= 0) { restore(); return; }
     if (choice.kind === 'mood') {
@@ -197,8 +197,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     const open = await ensureHealth();
     // 受付の確認を待つあいだに作品を切り替えたなら、前の作品の質問は送らない（履歴からも消す）
     if (stale()) { restore(); return; }
-    // 受付終了で送らなかった質問も、履歴から消して表示を戻す（案内は、受付終了の表示が出す）
-    if (!open) { restore(); return; }
+    // 受付終了で送らなかった質問も、履歴から消して表示を戻す。受付終了はこれ以上できないので、表情は sorry にする（案内は受付終了の表示が出す）
+    if (!open) { if (restore()) setExpression('sorry'); return; }
     // 受付の確認を待つあいだに残り0回になることがあるので、送る直前にもう一度確かめる
     if (remainingRef.current <= 0) { restore(); return; }
     if (postId === null) {
@@ -228,10 +228,12 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     // 見送った質問は、会話履歴からも消す（送っていないため）
     const dropUser = () => setLog((l) => l.filter((x) => x.id !== userLogId));
     // 見送って表示を戻すとき、作品が切り替わった・そのあいだに要約や返事が表示された場合は、新しい表示を残す
-    const restore = () => {
+    /** 表示を戻せたら true（切り替わり・新しい表示があるときは戻さず false） */
+    const restore = (): boolean => {
       dropUser();
-      if (stale() || shownRef.current !== shownAtStart) return;
+      if (stale() || shownRef.current !== shownAtStart) return false;
       setSpeaker(before.speaker); setThinking(before.thinking); setExpression(before.expression); setText(before.text);
+      return true;
     };
     setBusy(true); setLast(choice);
     if (!(await showUser(choice.label, stale, userLogId))) { dropUser(); return; }
