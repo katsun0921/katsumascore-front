@@ -79,8 +79,8 @@ export const messages = {
         en: 'To continue a conversation, we temporarily store the conversation history (the text of your questions and answers) on our server, which runs on Cloudflare’s services. This history is deleted 24 hours after your session starts, that is, when you begin using the chat. The 24 hours are not extended by further use. The history keeps up to the last three exchanges per character; earlier exchanges are removed. Exchanges that were not completed and recorded are not stored in the history. Using a Cloudflare feature, data may be restorable to a point within the past 30 days, even after deletion.',
       },
       handlingItem5: {
-        ja: '利用状況の確認のために、回答ごとの費用・トークン数・所要時間・使用したブラウザの種類（ユーザーエージェント）などと、どのキャラクターと人格の版で答えたかの識別情報などを、Cloudflare社のサービス上に記録します。この記録は、Cloudflare社の設定に従って保持します。質問と回答の本文は、この記録には入れません。',
-        en: 'To monitor usage, we record, on Cloudflare’s services, items such as the cost, token count and duration of each answer, the type of browser (user agent), and identifiers of which character and persona version answered. These records are kept under Cloudflare’s settings. The text of your questions and answers is not included in these records.',
+        ja: '利用状況の確認のために、回答ごとの費用・トークン数・所要時間・使用したブラウザの種類（ユーザーエージェント）などと、どのキャラクターと人格の版で答えたかの識別情報などを、Cloudflare社のサービス上に記録します。この記録は、7日間保持します。質問と回答の本文は、この記録には入れません。',
+        en: 'To monitor usage, we record, on Cloudflare’s services, items such as the cost, token count and duration of each answer, the type of browser (user agent), and identifiers of which character and persona version answered. These records are kept for 7 days. The text of your questions and answers is not included in these records.',
       },
       handlingItem6: {
         ja: '質問と回答を、AIの学習や評価のために自動で保存・利用することはありません。',
