@@ -28,11 +28,12 @@ export const useArticleSummary = (client: SayoClient, id: number | null, onRemai
   useEffect(() => {
     if (id === null || cache?.get(id) || !canFetchRef.current) return undefined;
     let alive = true;
+    const generation = cache?.generation() ?? 0;
     client.getSummary(id)
       .then((summary) => {
         // 回数は、表示を捨てる場合でも使われているので反映する
         if (summary.remaining !== undefined) onRemaining?.(summary.remaining);
-        cache?.set(summary);
+        cache?.set(summary, generation);
         if (alive) setResult({ id, summary, failed: false });
       })
       .catch(() => { if (alive) setResult({ id, summary: null, failed: true }); });

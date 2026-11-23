@@ -121,10 +121,11 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
       return () => clearTimeout(id);
     }
     let alive = true;
+    const generation = summaryCache.generation();
     client.getSummary(postId).then((s) => {
       // 画面を閉じた・作品を切り替えたあとでも、消費された回数は反映する
       if (s.remaining !== undefined) setRemaining(s.remaining);
-      summaryCache.set(s);
+      summaryCache.set(s, generation);
       if (!alive) return;
       setTitle(s.article.title);
       setShelf([s.article]);
@@ -193,6 +194,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
       if (stale()) return;
       setThinking(false); setExpression('sorry'); setText(''); return;
     }
+    // 受付の確認を待つあいだに残り0回になることがあるので、送る直前にもう一度確かめる
+    if (remainingRef.current <= 0) { restore(); return; }
     if (postId === null) {
       const r = await client.searchFree(choice.message, category);
       if (r.remaining !== undefined) setRemaining(r.remaining);
@@ -213,7 +216,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     const startEpoch = epochRef.current;
     const stale = () => epochRef.current !== startEpoch;
     const before = { speaker, text, expression };
-    const restore = () => { setSpeaker(before.speaker); setThinking(false); setExpression(before.expression); setText(before.text); };
+    // 作品が切り替わったあとは、新しい作品の表示（要約など）を上書きしない
+    const restore = () => { if (stale()) return; setSpeaker(before.speaker); setThinking(false); setExpression(before.expression); setText(before.text); };
     setBusy(true); setLast(choice);
     if (!(await showUser(choice.label, stale))) return;
     try {

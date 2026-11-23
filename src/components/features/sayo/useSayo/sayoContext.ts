@@ -27,11 +27,16 @@ export type SayoBlockReason = 'paused' | 'limit' | 'closed' | null;
 
 /**
  * 取得済みの要約の入れ物。モーダルとノベル画面で同じ要約を使い回し、二重に取得して利用回数を余分に減らさないための仕組み。
- * 画面をすべて閉じたら空にする（開き直したら、また1回数える）
+ * 画面をすべて閉じたら空にする（開き直したら、また1回数える）。
+ * 閉じる前に始めた取得の応答で、空にした入れ物がよみがえらないよう、取得の前に世代（generation）を控え、
+ * 入れるときに同じ世代のときだけ受け付ける
  */
 export type SayoSummaryCache = {
   get: (id: number) => SayoSummary | undefined;
-  set: (summary: SayoSummary) => void;
+  /** 取得を始める前に呼ぶ。いまの世代を返す */
+  generation: () => number;
+  /** 取得した要約を入れる。generation が古い（閉じたあと）なら捨てる */
+  set: (summary: SayoSummary, generation: number) => void;
 };
 
 export type SayoContextValue = {

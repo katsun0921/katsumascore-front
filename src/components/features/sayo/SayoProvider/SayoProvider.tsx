@@ -43,9 +43,11 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   const [novel, setNovel] = useState<SayoNovelState | null>(null);
   const trigger = useRef<HTMLElement | null>(null);
   const summaries = useRef(new Map<number, SayoSummary>());
+  const summaryGeneration = useRef(0);
   const summaryCache = useMemo<SayoSummaryCache>(() => ({
     get: (id) => summaries.current.get(id),
-    set: (s) => { summaries.current.set(s.articleId, s); },
+    generation: () => summaryGeneration.current,
+    set: (s, generation) => { if (generation === summaryGeneration.current) summaries.current.set(s.articleId, s); },
   }), []);
   const initialized = useRef(false);
 
@@ -158,6 +160,7 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
 
   const closeAll = useCallback(() => {
     summaries.current.clear();
+    summaryGeneration.current += 1;
     setModal(null);
     setNovel(null);
     trigger.current?.focus();
