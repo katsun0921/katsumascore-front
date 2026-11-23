@@ -22,6 +22,12 @@ export type DevToolsChoiceProps<T extends string> = {
   display?: 'radio' | 'select';
 };
 
+/**
+ * 選択肢1つ分のラベルの class。選べないときは見た目を薄くする
+ * @param disabled 選べないか
+ */
+const optionClass = (disabled?: boolean): string => (disabled ? 'devToolsChoice__option is-disabled' : 'devToolsChoice__option');
+
 /** 開発者ツールの「選択肢から1つ選ぶ」部品。パネルの設定項目すべてで使い回す（サヨのデータ源、ABテストの案など） */
 export const DevToolsChoice = <T extends string>({ legend, name, value, options, onChange, display = 'radio' }: DevToolsChoiceProps<T>) => {
   const current = options.find((o) => o.value === value);
@@ -40,7 +46,7 @@ export const DevToolsChoice = <T extends string>({ legend, name, value, options,
         </select>
       ) : (
         options.map((o) => (
-          <label key={o.value} className={`devToolsChoice__option${o.disabled ? ' is-disabled' : ''}`}>
+          <label key={o.value} className={optionClass(o.disabled)}>
             <input type='radio' name={name} value={o.value} checked={o.value === value} disabled={o.disabled} onChange={(e) => pick(e.target.value)} />
             <span>
               {o.label}
