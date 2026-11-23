@@ -72,24 +72,14 @@ jobs:
 
           npm run chromatic -- --project-token="$CHROMATIC_PROJECT_TOKEN" --exit-zero-on-changes
 
-  # Dependabot の PR は、上の test が通りメジャー更新でなければ自動でマージする。
+  # Dependabot の PR は、上の test が通れば自動でマージする。
+  # 処理は共通の再利用可能ワークフロー（katsun0921/katsumascore-workflows）にあり、コミットSHAで固定して呼ぶ。
+  # パッチ・マイナー更新だけをマージし、メジャー更新と種類が不明な更新は手動でマージする。
   auto-merge:
     needs: test
     if: github.event.pull_request.user.login == 'dependabot[bot]'
-    runs-on: ubuntu-latest
+    # マージとブランチの削除に要る権限の上限。
     permissions:
       contents: write
       pull-requests: write
-    steps:
-      - name: Dependabot のメタデータを取得
-        id: meta
-        uses: dependabot/fetch-metadata@v3
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: パッチ・マイナー更新ならマージ
-        if: steps.meta.outputs.update-type != 'version-update:semver-major'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_URL: ${{ github.event.pull_request.html_url }}
-        run: gh pr merge "$PR_URL" --merge --delete-branch
+    uses: katsun0921/katsumascore-workflows/.github/workflows/dependabot-auto-merge.yml@fcdbe0815555c8c922ec34fa657b173f02464d08
