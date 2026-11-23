@@ -6,7 +6,19 @@ import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
 import { messages } from './i18n';
 
-const SECTION_IDS = ['usage', 'disclosure', 'analytics', 'copyright', 'disclaimer', 'links'] as const;
+const SECTION_IDS = ['usage', 'disclosure', 'analytics', 'chat', 'copyright', 'disclaimer', 'links'] as const;
+
+const CHAT_HANDLING_KEYS = [
+  'handlingItem1',
+  'handlingItem2',
+  'handlingItem3',
+  'handlingItem4',
+  'handlingItem5',
+  'handlingItem6',
+  'handlingItem7',
+] as const;
+const CHAT_PERSONAL_KEYS = ['personalItem1', 'personalItem2'] as const;
+const CHAT_LIMITS_KEYS = ['limitsItem1', 'limitsItem2', 'limitsItem3'] as const;
 
 export const PrivacyPolicyTemplate = () => {
   const locale = useLocale();
@@ -85,6 +97,43 @@ export const PrivacyPolicyTemplate = () => {
               </a>
               {t(messages, ['sections', 'analytics', 'p3AfterLink'], locale)}
             </p>
+          </section>
+
+          <section id='section-chat' className='scroll-mt-8 space-y-3'>
+            <h2 className='text-lg font-semibold text-color-primary'>
+              {t(messages, ['sections', 'chat', 'title'], locale)}
+            </h2>
+            <p className='text-sm leading-relaxed text-color-secondary'>{t(messages, ['sections', 'chat', 'intro'], locale)}</p>
+            <h3 className='text-base font-semibold text-color-primary'>
+              {t(messages, ['sections', 'chat', 'handlingTitle'], locale)}
+            </h3>
+            <ul className='list-disc space-y-2 pl-5 text-sm leading-relaxed text-color-secondary'>
+              {CHAT_HANDLING_KEYS.map((key) => (
+                <li key={key}>{t(messages, ['sections', 'chat', key], locale)}</li>
+              ))}
+            </ul>
+            <h3 className='text-base font-semibold text-color-primary'>
+              {t(messages, ['sections', 'chat', 'personalTitle'], locale)}
+            </h3>
+            <ul className='list-disc space-y-2 pl-5 text-sm leading-relaxed text-color-secondary'>
+              {CHAT_PERSONAL_KEYS.map((key) => (
+                <li key={key}>{t(messages, ['sections', 'chat', key], locale)}</li>
+              ))}
+            </ul>
+            <h3 className='text-base font-semibold text-color-primary'>
+              {t(messages, ['sections', 'chat', 'limitsTitle'], locale)}
+            </h3>
+            <ul className='list-disc space-y-2 pl-5 text-sm leading-relaxed text-color-secondary'>
+              {CHAT_LIMITS_KEYS.map((key) => (
+                <li key={key}>{t(messages, ['sections', 'chat', key], locale)}</li>
+              ))}
+            </ul>
+            <h3 className='text-base font-semibold text-color-primary'>
+              {t(messages, ['sections', 'chat', 'answersTitle'], locale)}
+            </h3>
+            <ul className='list-disc space-y-2 pl-5 text-sm leading-relaxed text-color-secondary'>
+              <li>{t(messages, ['sections', 'chat', 'answersItem1'], locale)}</li>
+            </ul>
           </section>
 
           <section id='section-copyright' className='scroll-mt-8 space-y-3'>
