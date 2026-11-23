@@ -55,6 +55,69 @@ export const messages = {
         en: '.',
       },
     },
+    chat: {
+      title: { ja: 'AIチャット「サヨ」について', en: 'About the AI chat “Sayo”' },
+      intro: {
+        ja: '「サヨ」は、KatsumaScoreの記事をもとに作品をご案内するAIのキャラクターです。架空の人物で、実在の人物ではありません。',
+        en: '“Sayo” is an AI character that guides you to works based on KatsumaScore articles. She is a fictional character, not a real person.',
+      },
+      handlingTitle: { ja: '入力された内容の扱い', en: 'How we handle what you enter' },
+      handlingItem1: {
+        ja: 'チャットに入力された質問は、回答を作るために、Cloudflare社のサービス（AI Gateway）を経由して、外部のAIサービス（Anthropic社のAPI）に送られます。会話の流れをふまえた回答を作るとき、新しい質問とあわせて、直前の質問と回答（同じキャラクターとの直近3往復までのうち、一定の字数に収まり、条件を満たすもの）も送られます。該当する記事がない、利用回数の上限に達した、といった理由で、送る前に止まる場合は、Anthropic社には何も送られません。一方、回答の作成を始めたあとにエラーや時間切れで回答が表示されなかった場合でも、質問や履歴は、Anthropic社に届いていることがあります。送る内容の長さを事前に数えるため、Anthropic社の長さを数える機能にも、同じ内容を送ります。',
+        en: 'Your questions are sent, via Cloudflare’s service (AI Gateway), to an external AI service (Anthropic’s API) to generate answers. When we generate an answer that follows the flow of the conversation, your previous questions and answers (up to the last three exchanges with the same character, within a character limit and only those that meet our conditions) are sent together with the new question. If processing stops before sending (for example, no matching article was found or you reached the usage limit), nothing is sent to Anthropic. However, if an error or timeout occurs after we start generating an answer and no answer is displayed, your question and the history may still have reached Anthropic. To count the length of what we send in advance, the same content is also sent to Anthropic’s token-counting feature.',
+      },
+      handlingItem2: {
+        ja: 'Anthropic社は、同社の規約により、API経由で送られた内容を、原則として30日以内に削除し、既定ではAIの学習に使わないとしています。ただし、Anthropic社の自動システムが利用ポリシー違反として検知した場合、入力と出力は最長2年間保持されることがあります。',
+        en: 'According to Anthropic’s terms, content sent through its API is generally deleted within 30 days and is not used to train its AI models by default. However, if Anthropic’s automated systems flag content as a usage policy violation, the inputs and outputs may be retained for up to two years.',
+      },
+      handlingItem3: {
+        ja: '記事を探すために、質問の文字列をCloudflare社のサービス（Workers AI）にも送ります。Cloudflare社は、これを通常は保持せず、AIの学習にも使わないとしています。',
+        en: 'To find articles, the text of your question is also sent to Cloudflare’s service (Workers AI). Cloudflare states that it does not normally retain this content and does not use it to train AI models.',
+      },
+      handlingItem4: {
+        ja: '会話を続けるために、会話履歴（質問と回答の本文）を、当サイトのサーバー（Cloudflare社のサービス上）に一時的に保存します。この会話履歴は、チャットの利用を始めたとき（セッションの開始）から24時間で削除します。使うたびに延長はされません。会話履歴は、キャラクターごとに直近3往復までで、それより前の往復は消えます。回答の生成と記録が最後まで終わらなかった往復は、会話履歴に保存しません。Cloudflare社の機能により、削除したあとも、過去30日以内の時点に復元できる場合があります。',
+        en: 'To continue a conversation, we temporarily store the conversation history (the text of your questions and answers) on our server, which runs on Cloudflare’s services. This history is deleted 24 hours after your session starts, that is, when you begin using the chat. The 24 hours are not extended by further use. The history keeps up to the last three exchanges per character; earlier exchanges are removed. Exchanges that were not completed and recorded are not stored in the history. Using a Cloudflare feature, data may be restorable to a point within the past 30 days, even after deletion.',
+      },
+      handlingItem5: {
+        ja: '利用状況の確認のために、回答ごとの費用・トークン数・所要時間・使用したブラウザの種類（ユーザーエージェント）などと、どのキャラクターと人格の版で答えたかの識別情報などを、Cloudflare社のサービス上に記録します。この記録は、Cloudflare社の設定に従って保持します。質問と回答の本文は、この記録には入れません。',
+        en: 'To monitor usage, we record, on Cloudflare’s services, items such as the cost, token count and duration of each answer, the type of browser (user agent), and identifiers of which character and persona version answered. These records are kept under Cloudflare’s settings. The text of your questions and answers is not included in these records.',
+      },
+      handlingItem6: {
+        ja: '質問と回答を、AIの学習や評価のために自動で保存・利用することはありません。',
+        en: 'We do not automatically save or use your questions and answers to train or evaluate AI.',
+      },
+      handlingItem7: {
+        ja: 'チャットの質問と回答の本文を、アクセス解析（Googleアナリティクス）へ送ることはありません。',
+        en: 'We do not send the text of your chat questions or answers to analytics (Google Analytics).',
+      },
+      personalTitle: { ja: '個人情報について', en: 'Personal information' },
+      personalItem1: {
+        ja: '氏名・メールアドレス・電話番号・住所など、個人を特定できる情報は入力しないでください。',
+        en: 'Please do not enter information that can identify you, such as your name, email address, phone number, or address.',
+      },
+      personalItem2: {
+        ja: '当サイトは、チャットのために、お名前やメールアドレスを集めません。',
+        en: 'We do not collect your name or email address for the chat.',
+      },
+      limitsTitle: { ja: '利用回数の制限と不正利用の防止', en: 'Usage limits and abuse prevention' },
+      limitsItem1: {
+        ja: '利用回数を制限し、会話を続けるために、署名付きのCookie（24時間）を使います。広告や分析には使いません。',
+        en: 'We use a signed cookie (24 hours) to limit usage and to continue a conversation. It is not used for advertising or analytics.',
+      },
+      limitsItem2: {
+        ja: 'IPアドレスは、そのまま保存せず、元に戻せない形（ハッシュ）に変えて、その日の利用回数を数えるためだけに使います（限定公開の期間は、合言葉の入力の回数を数えるためにも使います）。利用の記録は、利用枠を確保した時点から24時間保持します。限定公開の合言葉の入力の回数は、日本時間の日付が変わるまで保持します。',
+        en: 'We do not store your IP address as is. We convert it into an irreversible form (a hash) and use it only to count your daily usage (during the limited release, also to count passphrase entries). Usage records are kept for 24 hours from the time the usage slot is reserved, and, during the limited release, the count of passphrase entries until the date changes (Japan time).',
+      },
+      limitsItem3: {
+        ja: '自動プログラムによる利用を防ぐために、Cloudflare社のTurnstileを使います。その確認のために、IPアドレスやブラウザの情報などが、Cloudflare社に送られ、ボットの検知・ブロックのために処理されます。Cloudflare社は、取得したシグナルを検知の精度の改善にも使います。保持期間は、公開されていません。',
+        en: 'To prevent use by automated programs, we use Cloudflare Turnstile. For this check, your IP address, browser information and similar data are sent to Cloudflare and processed to detect and block bots. Cloudflare also uses the signals it collects to improve detection accuracy. The retention period is not publicly stated.',
+      },
+      answersTitle: { ja: '回答について', en: 'About the answers' },
+      answersItem1: {
+        ja: '回答はAIが作るもので、内容や配信状況は誤っている場合があります。最新の情報は、各サービスでご確認ください。',
+        en: 'Answers are generated by AI, and the content and streaming availability may be incorrect. Please check the latest information on each service.',
+      },
+    },
     copyright: {
       title: { ja: '著作権について', en: 'Copyright' },
       p1: {
