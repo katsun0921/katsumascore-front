@@ -62,7 +62,7 @@ const expressionFor = (r: SayoMessageResult): SayoExpression => {
  * 探した結果の話は棚に作品を並べ、候補ボタンで探し直せる（LLMなし）。
  */
 export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, texts: NovelTexts): NovelTalk => {
-  const { client, setRemaining, ensureHealth, category, chips, remaining } = sayo;
+  const { client, summaryCache, setRemaining, ensureHealth, category, chips, remaining } = sayo;
   const [speaker, setSpeaker] = useState<'sayo' | 'user'>('sayo');
   const [text, setText] = useState('');
   const [thinking, setThinking] = useState(true);
@@ -105,6 +105,16 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   // 作品の話：承認済み要約から始める
   useEffect(() => {
     if (postId === null) return undefined;
+    // モーダルで取得済みの要約があれば、取得し直さずに使う（利用回数を余分に減らさない）
+    const cached = summaryCache.get(postId);
+    if (cached) {
+      const id = setTimeout(() => {
+        setTitle(cached.article.title);
+        setShelf([cached.article]);
+        sayoSays(texts.openPost(cached.article.title, cached.summary), 'recommend');
+      }, 0);
+      return () => clearTimeout(id);
+    }
     // 残り0回では、新しい要約を取りに行かない（要約も1日の利用回数に数えるため）
     if (remainingRef.current <= 0) {
       const id = setTimeout(() => { setThinking(false); setExpression('sorry'); setText(''); }, 0);
@@ -114,6 +124,7 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     client.getSummary(postId).then((s) => {
       // 画面を閉じた・作品を切り替えたあとでも、消費された回数は反映する
       if (s.remaining !== undefined) setRemaining(s.remaining);
+      summaryCache.set(s);
       if (!alive) return;
       setTitle(s.article.title);
       setShelf([s.article]);
@@ -122,7 +133,7 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     return () => { alive = false; };
     // texts は描画ごとに作られるため依存に入れない
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [client, postId, sayoSays]);
+  }, [client, summaryCache, postId, sayoSays]);
 
   // 探した結果の話：結果を棚に並べる
   useEffect(() => {
@@ -167,7 +178,9 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   };
 
   /** 選択肢・入力を1つ処理する。早期 return で分岐する */
-  const runChoice = async (choice: NovelChoice, stale: () => boolean) => {
+  const runChoice = async (choice: NovelChoice, stale: () => boolean, restore: () => void) => {
+    // 送る直前にも残り回数を確かめる（待つあいだに別の取得で0回になることがある）。表示を元に戻して止める
+    if (remainingRef.current <= 0) { restore(); return; }
     if (choice.kind === 'mood') {
       const r = await client.searchByMood({ label: choice.message }, category);
       if (r.remaining !== undefined) setRemaining(r.remaining);
@@ -199,10 +212,12 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     // 返事を待つあいだに作品が切り替わったら（A→B→A と戻った場合も）、その返事で画面を上書きしない。回数だけ反映する
     const startEpoch = epochRef.current;
     const stale = () => epochRef.current !== startEpoch;
+    const before = { speaker, text, expression };
+    const restore = () => { setSpeaker(before.speaker); setThinking(false); setExpression(before.expression); setText(before.text); };
     setBusy(true); setLast(choice);
     if (!(await showUser(choice.label, stale))) return;
     try {
-      await runChoice(choice, stale);
+      await runChoice(choice, stale, restore);
     } catch {
       // 切り替え前の作品の失敗は、いまの作品に出さない
       if (!stale()) { setThinking(false); setExpression('sorry'); setSystem('error'); }

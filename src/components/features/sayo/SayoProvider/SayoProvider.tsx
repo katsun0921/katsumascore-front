@@ -2,10 +2,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { useLocale } from '@/i18n/provider';
 import { SayoContext } from '@/components/features/sayo/useSayo';
-import type { SayoBlockReason, SayoContextValue, SayoModalState, SayoNovelState, SayoSearchState } from '@/components/features/sayo/useSayo';
+import type { SayoBlockReason, SayoContextValue, SayoSummaryCache, SayoModalState, SayoNovelState, SayoSearchState } from '@/components/features/sayo/useSayo';
 import { SayoSummaryModal } from '@/components/features/sayo/SayoSummaryModal';
 import { SayoNovelStage } from '@/components/features/sayo/SayoNovelStage';
-import type { SayoClient, SayoStatus } from '@/types/sayo';
+import type { SayoClient, SayoStatus, SayoSummary } from '@/types/sayo';
 
 /** Storybook・確認用：最初から開いておく状態 */
 export type SayoInitialState = {
@@ -42,6 +42,11 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   const [modal, setModal] = useState<SayoModalState | null>(null);
   const [novel, setNovel] = useState<SayoNovelState | null>(null);
   const trigger = useRef<HTMLElement | null>(null);
+  const summaries = useRef(new Map<number, SayoSummary>());
+  const summaryCache = useMemo<SayoSummaryCache>(() => ({
+    get: (id) => summaries.current.get(id),
+    set: (s) => { summaries.current.set(s.articleId, s); },
+  }), []);
   const initialized = useRef(false);
 
   // フラグはマウント後に読む（CSR）。取得に失敗したら出さない
@@ -152,6 +157,7 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   }, [modal, novel]);
 
   const closeAll = useCallback(() => {
+    summaries.current.clear();
     setModal(null);
     setNovel(null);
     trigger.current?.focus();
@@ -181,9 +187,9 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
   }, [visible, initial, openSearch]);
 
   const value = useMemo<SayoContextValue>(() => ({
-    client, status, visible, chips, category, remaining, setRemaining, block, ensureHealth,
+    client, summaryCache, status, visible, chips, category, remaining, setRemaining, block, ensureHealth,
     modal, novel, openSummary, openSearch, showSummaryInSearch, backToSearch, step, openNovel, backFromNovel, closeAll, talkAbout,
-  }), [client, status, visible, chips, category, remaining, block, ensureHealth, modal, novel, openSummary, openSearch, showSummaryInSearch, backToSearch, step, openNovel, backFromNovel, closeAll, talkAbout]);
+  }), [client, summaryCache, status, visible, chips, category, remaining, block, ensureHealth, modal, novel, openSummary, openSearch, showSummaryInSearch, backToSearch, step, openNovel, backFromNovel, closeAll, talkAbout]);
 
   return (
     <SayoContext.Provider value={value}>

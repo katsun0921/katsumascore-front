@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { SayoClient, SayoSearchResult, SayoStatus } from '@/types/sayo';
+import type { SayoClient, SayoSearchResult, SayoStatus, SayoSummary } from '@/types/sayo';
 
 /** 探した結果の状態（モーダル・ノベル画面で共有） */
 export type SayoSearchState = {
@@ -25,7 +25,17 @@ export type SayoNovelState =
 /** LLMを使う操作を止めている理由。null なら送ってよい */
 export type SayoBlockReason = 'paused' | 'limit' | 'closed' | null;
 
+/**
+ * 取得済みの要約の入れ物。モーダルとノベル画面で同じ要約を使い回し、二重に取得して利用回数を余分に減らさないための仕組み。
+ * 画面をすべて閉じたら空にする（開き直したら、また1回数える）
+ */
+export type SayoSummaryCache = {
+  get: (id: number) => SayoSummary | undefined;
+  set: (summary: SayoSummary) => void;
+};
+
 export type SayoContextValue = {
+  summaryCache: SayoSummaryCache;
   client: SayoClient;
   /** フラグ（取得前・失敗は null） */
   status: SayoStatus | null;

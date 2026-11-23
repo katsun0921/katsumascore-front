@@ -99,7 +99,7 @@ export const SayoNovelStage = () => {
 
       <div className='sayoNovelStage__bottom'>
         <div className='sayoNovelStage__inner'>
-          <SayoShelf articles={talk.shelf} currentId={talk.currentId} onTalk={sayo.talkAbout} />
+          <SayoShelf articles={talk.shelf} currentId={talk.currentId} onTalk={sayo.remaining > 0 ? sayo.talkAbout : undefined} />
           <SayoNovelWindow
             speaker={talk.speaker}
             spoiler={talk.spoiler}
