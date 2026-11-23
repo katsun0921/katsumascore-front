@@ -154,10 +154,10 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   }, [novel.kind]);
 
   /** 利用者の発言を出して、考え中に切り替える。待つあいだに作品が変わったら false（以降の処理を止める） */
-  const showUser = async (line: string, stale: () => boolean): Promise<boolean> => {
+  const showUser = async (line: string, stale: () => boolean, logId: number): Promise<boolean> => {
     setSystem(null); setSpoiler(false); setSpoilerText(null);
     setSpeaker('user'); setThinking(false); setText(line);
-    setLog((l) => [...l, { who: 'user', text: line }]);
+    setLog((l) => [...l, { who: 'user', text: line, id: logId }]);
     await wait(400);
     if (stale()) return false;
     setSpeaker('sayo'); setThinking(true); setExpression('thinking');
@@ -195,8 +195,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
       return;
     }
     const open = await ensureHealth();
-    // 受付の確認を待つあいだに作品を切り替えたなら、前の作品の質問は送らない
-    if (stale()) return;
+    // 受付の確認を待つあいだに作品を切り替えたなら、前の作品の質問は送らない（履歴からも消す）
+    if (stale()) { restore(); return; }
     if (!open) { setThinking(false); setExpression('sorry'); setText(''); return; }
     // 受付の確認を待つあいだに残り0回になることがあるので、送る直前にもう一度確かめる
     if (remainingRef.current <= 0) { restore(); return; }
@@ -222,13 +222,18 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     const stale = () => epochRef.current !== startEpoch;
     const before = { speaker, text, expression, thinking };
     const shownAtStart = shownRef.current;
+    logSeq.current += 1;
+    const userLogId = logSeq.current;
+    // 見送った質問は、会話履歴からも消す（送っていないため）
+    const dropUser = () => setLog((l) => l.filter((x) => x.id !== userLogId));
     // 見送って表示を戻すとき、作品が切り替わった・そのあいだに要約や返事が表示された場合は、新しい表示を残す
     const restore = () => {
+      dropUser();
       if (stale() || shownRef.current !== shownAtStart) return;
       setSpeaker(before.speaker); setThinking(before.thinking); setExpression(before.expression); setText(before.text);
     };
     setBusy(true); setLast(choice);
-    if (!(await showUser(choice.label, stale))) return;
+    if (!(await showUser(choice.label, stale, userLogId))) { dropUser(); return; }
     try {
       await runChoice(choice, stale, restore);
     } catch {
