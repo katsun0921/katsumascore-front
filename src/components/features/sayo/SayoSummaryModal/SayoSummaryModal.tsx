@@ -59,9 +59,8 @@ export const SayoSummaryModal = () => {
   const sheetRef = useRef<HTMLElement>(null);
   const { modal } = sayo;
   const postId = modal && modal.kind === 'summary' ? modal.ids[modal.index] : null;
-  // 残り0回では、新しい要約を取りに行かない（要約も1日の利用回数に数えるため）
-  const limited = sayo.remaining <= 0;
-  const { summary, loading, failed } = useArticleSummary(sayo.client, limited ? null : postId, sayo.setRemaining);
+  // 残り0回では、新しい要約を取りに行かない（要約も1日の利用回数に数えるため）。最後の1回で取得した要約は表示し続ける
+  const { summary, loading, failed, limited } = useArticleSummary(sayo.client, postId, sayo.setRemaining, sayo.remaining > 0);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
   useEffect(() => { scrollRef.current?.scrollTo({ top: 0 }); }, [postId, modal?.kind]);
@@ -142,7 +141,7 @@ export const SayoSummaryModal = () => {
 
   const summaryBody = !search && (
     <>
-      {limited && !summary && <SayoPausedNotice reason='limit' />}
+      {limited && <SayoPausedNotice reason='limit' />}
       {loading && <SayoBubble><Typing /></SayoBubble>}
       {failed && <p className='sayoSummaryModal__error' role='alert'>{t(messages, ['error'], locale)}</p>}
       {summary && (

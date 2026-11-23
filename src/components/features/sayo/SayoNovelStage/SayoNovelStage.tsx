@@ -123,7 +123,8 @@ export const SayoNovelStage = () => {
             />
           )}
           <div className='sayoNovelStage__choices'>
-            {talk.choices.filter((c) => c.kind === 'mood' || !llmBlocked).map((c) => (
+            {/* 残り0回では候補ボタンも止める（回数に数えるため）。停止中・受付終了のときは候補ボタンだけ使える */}
+            {talk.choices.filter((c) => sayo.block !== 'limit' && (c.kind === 'mood' || !llmBlocked)).map((c) => (
               <SayoChoice key={c.message} label={c.label} onClick={() => void talk.send(c)} disabled={talk.busy} />
             ))}
           </div>

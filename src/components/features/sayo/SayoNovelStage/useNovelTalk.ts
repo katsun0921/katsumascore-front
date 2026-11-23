@@ -112,8 +112,9 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
     }
     let alive = true;
     client.getSummary(postId).then((s) => {
-      if (!alive) return;
+      // 画面を閉じた・作品を切り替えたあとでも、消費された回数は反映する
       if (s.remaining !== undefined) setRemaining(s.remaining);
+      if (!alive) return;
       setTitle(s.article.title);
       setShelf([s.article]);
       sayoSays(texts.openPost(s.article.title, s.summary), 'recommend');
@@ -167,8 +168,6 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
 
   /** 選択肢・入力を1つ処理する。早期 return で分岐する */
   const runChoice = async (choice: NovelChoice, stale: () => boolean) => {
-    // 残り0回では、候補ボタンも含めて新しく取得しない
-    if (remainingRef.current <= 0) { setThinking(false); setExpression('sorry'); setText(''); return; }
     if (choice.kind === 'mood') {
       const r = await client.searchByMood({ label: choice.message }, category);
       if (r.remaining !== undefined) setRemaining(r.remaining);
@@ -195,7 +194,8 @@ export const useNovelTalk = (sayo: SayoContextValue, novel: SayoNovelState, text
   };
 
   const send = async (choice: NovelChoice) => {
-    if (busy) return;
+    // 残り0回では、候補ボタンも含めて新しく取得しない。表示中の返答を消さないよう、何も変えずに戻る
+    if (busy || remainingRef.current <= 0) return;
     // 返事を待つあいだに作品が切り替わったら（A→B→A と戻った場合も）、その返事で画面を上書きしない。回数だけ反映する
     const startEpoch = epochRef.current;
     const stale = () => epochRef.current !== startEpoch;
