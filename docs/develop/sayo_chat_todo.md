@@ -7,11 +7,15 @@
 ## 決定事項
 
 - 2026-11-23：画面の置き場所は**案G**（TOP・リストにCSRで重ねる）。手順書の「専用ページ `/ja/chat`（`noindex`）」から変更。
-- 変わらないこと：限定公開は合言葉＋sid（`/session` でCookieを受け取ってから `/message`）。合言葉は入力欄で入れ、メモリだけに持つ。`ja` のみ。
+- 変わらないこと：限定公開は合言葉＋sid（`/session` でCookieを受け取ってから `/message`）。照合・署名はai-chatのWorker側。`ja` のみ。
+- 2026-11-23：**合言葉の入力欄は出さない。** テスターに渡す参加URL（`?key=`）の鍵を、middlewareが読んで ai-chat の `/session` へ送り、返ったCookie（`Path=/api/chat`）を設定する。フロントは合言葉を持たず、保存しない。
+- 鍵がない（Cookieが無い・期限切れ）ときは、要約・候補ボタン・「詳しく知りたい」を**無効（disabled）**にして案内文を出し、**通信しない**。
+- middlewareは、鍵を受けたらすぐURLから外してリダイレクトする。鍵をログ・例外・解析ツールに出さない。`/session` の失敗は理由を区別しない（案内文も理由を断定しない）。
+- 作業は #298 のこのブランチに足す（テストとStorybookも同じブランチ）。
 
-## 未決（先に決める）
+## 未決
 
-- [ ] **合言葉の入口**：LLMを使わない部分（要約・候補ボタン）を合言葉なしで見せてよいか。合言葉が要る場合、入口をどこに置くか（仕様 §10-1）。G2・G4 と、ai-chat のAPI追加の前提。
+- [x] **合言葉の入口**：上の決定のとおり（仕様 §10-1 は解決）。
 - [ ] **ai-chat のAPI追加**（仕様 §8）：`GET /api/chat/articles/{id}/summary`、気分タグ・カテゴリで記事を返すAPI、`MessageRequest` の `articleId`。ai-chat 側でSchemaと `test/api` の例を先に更新する。
 
 ## Todo
@@ -19,7 +23,7 @@
 | # | 内容 | 状態 | 旧手順（手順書3章） |
 |---|---|---|---|
 | G1 | Storybookでの部品：色のトークン・仮画像、ui-parts、ui-section、`features/sayo`（架空の `SayoClient`）、カードの `action` スロット、各部品の `i18n.ts`、状態ごとのStory | この PR（#298）で作成。マージで済 | F4・F6・F7の一部 |
-| G2 | #298の直し：表情は `MessageResponse` の `expression` を使う（`thinking` だけ画面で決める。仕様の「APIは表情を返さない」は誤り）。合言葉のフォームと `/session` の呼び出しを `SayoClient` に加える。ネタバレの履歴・要約の混在・映画リストの範囲（`g-summary-novel-review-instructions.md`） | 未 | F3・F4 |
+| G2 | #298の直し：表情は `MessageResponse` の `expression` を使う（`thinking` だけ画面で決める。仕様の「APIは表情を返さない」は誤り）。合言葉の入力欄は作らず、参加URLの鍵を受ける middleware と、鍵がないときの無効表示（案内文・通信なし）を加える。ネタバレの履歴・要約の混在・映画リストの範囲（`g-summary-novel-review-instructions.md`） | 未 | F3・F4 |
 | G3 | 会話ログと書き出し（手順書2.6）：ノベル画面の往復をメモリで並べ、「この回答をコピー」「会話をすべてコピー」（シート用の10列・文）と代替の `textarea`。テスターのシート記入に要る | 未 | F4 |
 | G4 | 本番の `SayoClient`（`src/libs/api/sayoChat.ts`）：zodで検証、合わないときは `error`。HTTPのコードにかかわらず本文を読む。相対パスだけ | 未 | F1 |
 | G5 | 表示・停止フラグ：WordPress側 `/wp-json/v1/sayo-chat-status` と、Nextの `/api/sayo-chat-status`（30秒キャッシュ）。取得に失敗したら出さない | 未 | — |
@@ -31,7 +35,7 @@
 
 ## 順番
 
-G1（この PR）→ 未決の2つ → G2〜G5（並行できる）→ G6・G7 → G8 → G9 → デプロイ → G10。
+G1（この PR）→ ai-chat のAPI追加 → G2〜G5（並行できる）→ G6・G7 → G8 → G9 → デプロイ → G10。
 G3（書き出し）が済み、G10と、シートの雛形への貼り付け確認（V7c）が済むまで、テスターには案内しない。
 
 ## 注意（手順書6章）
