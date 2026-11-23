@@ -61,7 +61,7 @@ export const SayoSummaryModal = () => {
   const postId = modal && modal.kind === 'summary' ? modal.ids[modal.index] : null;
   // 残り0回では、新しい要約を取りに行かない（要約も1日の利用回数に数えるため）
   const limited = sayo.remaining <= 0;
-  const { summary, loading, failed } = useArticleSummary(sayo.client, limited ? null : postId);
+  const { summary, loading, failed } = useArticleSummary(sayo.client, limited ? null : postId, sayo.setRemaining);
 
   useEffect(() => { closeRef.current?.focus(); }, []);
   useEffect(() => { scrollRef.current?.scrollTo({ top: 0 }); }, [postId, modal?.kind]);

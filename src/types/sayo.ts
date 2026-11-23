@@ -35,6 +35,8 @@ export type SayoSummary = {
   recommendFor: string;
   moodTags: string[];
   article: SayoArticle;
+  /** 取得後の残り回数。要約も1日の利用回数に数えるため、応答が返す（返さない実装では未指定） */
+  remaining?: number;
 };
 
 /** 入口の候補ボタン（気分タグで探す。LLMなし） */

@@ -68,14 +68,20 @@ export const createSayoMockClient = (opts: SayoMockOptions = {}): SayoClient => 
     },
     getSummary: async (id) => {
       await wait(delay);
-      return sayoMockSummary(id);
+      // 要約も1日の利用回数に数える（本番の仕様）。0回なら取れない
+      if (remaining <= 0) throw new Error('limit');
+      remaining -= 1;
+      return { ...sayoMockSummary(id), remaining };
     },
     searchByMood: async (chip, category) => {
       await wait(delay);
+      // 候補ボタンも1日の利用回数に数える
+      if (remaining <= 0) throw new Error('limit');
+      remaining -= 1;
       const def = sayoMockChips.find((c) => c.label === chip.label);
       const pool = category ? sayoMockArticles.filter((a) => a.category === category) : sayoMockArticles;
       const articles = def ? pool.filter((a) => a.moodTags.some((tag) => def.tags.includes(tag))).slice(0, 3) : [];
-      return { source: 'tags', reply: articles.length && def ? def.reply : NO_MATCH, articles };
+      return { source: 'tags', reply: articles.length && def ? def.reply : NO_MATCH, articles, remaining };
     },
     searchFree: async (query, category) => {
       await wait(delay * 3);
