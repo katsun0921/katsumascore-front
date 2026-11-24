@@ -8,7 +8,10 @@
 /** localStorage のキー */
 export const SAYO_CONSENT_KEY = 'katsumascore:sayo-consent';
 
-/** いまの規約の版。文面を変えたら上げる */
+/**
+ * いまの規約の版。文面を変えたら上げる。
+ * ai-chat の参加専用ページ（/api/chat/join）も同じキーにこの版を書くので、変えるときは ai-chat 側も同時に変える
+ */
 export const SAYO_CONSENT_VERSION = '2026-11-24';
 
 /** localStorage と同じ形の最小の入れ物（テストで差し替えるため） */
