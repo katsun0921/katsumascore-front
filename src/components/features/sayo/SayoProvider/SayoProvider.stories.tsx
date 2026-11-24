@@ -1,5 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { SayoStoryFrame } from '@/components/features/sayo/mocks/SayoStoryFrame';
+import { SAYO_CONSENT_KEY, resetSayoConsentMemory, saveSayoConsent } from '@/libs/sayoConsent';
+
+/** 利用規約に同意済みにしてから描く（同意画面を挟まずに通しで確かめる） */
+const agreed = async () => { saveSayoConsent(); return {}; };
+
+/** 利用規約の同意を消してから描く（はじめて使う人の見え方） */
+const firstUse = async () => {
+  try { window.localStorage.removeItem(SAYO_CONSENT_KEY); } catch { /* 使えないブラウザでは何もしない */ }
+  resetSayoConsentMemory();
+  return {};
+};
 
 /**
  * サヨを TOP・リストに置いた全体の動き。架空の SayoClient で通しで操作できる。
@@ -10,6 +21,8 @@ const meta = {
   component: SayoStoryFrame,
   parameters: { layout: 'fullscreen' },
   args: { view: 'top' },
+  // 既定は同意済み。はじめて使う人の見え方は FirstUse（ストーリーの loaders はメタのあとに動く）
+  loaders: [agreed],
 } satisfies Meta<typeof SayoStoryFrame>;
 
 export default meta;
@@ -17,6 +30,9 @@ type Story = StoryObj<typeof meta>;
 
 /** TOP：入口とカードの「要約」 */
 export const Top: Story = {};
+
+/** はじめて使う人：カードの「要約」や候補ボタンを押すと、先に利用規約の同意画面が出る。同意すると続きが開き、次からは出ない */
+export const FirstUse: Story = { loaders: [firstUse] };
 
 /** リスト（映画）：映画の記事の中から探す */
 export const List: Story = { args: { view: 'list' } };

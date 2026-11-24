@@ -1,0 +1,176 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+// 要約モーダル（70）・ノベル画面（80）より手前に出す
+.sayoConsentModal {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  align-items: end;
+
+  @include layout-md {
+    place-items: center center;
+    padding: var(--space-24);
+  }
+
+  &__scrim {
+    position: absolute;
+    inset: 0;
+    background: rgba(var(--color-black-rgb), 0.6);
+    backdrop-filter: blur(3px);
+  }
+
+  &__sheet {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    border-radius: 20px 20px 0 0;
+    background: var(--color-sayo-paper);
+    color: var(--color-sayo-text);
+    animation: sayo-consent-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    @include layout-md {
+      width: 560px;
+      max-height: min(720px, calc(100vh - 48px));
+      border-radius: 20px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &__head {
+    display: flex;
+    gap: var(--space-12);
+    align-items: center;
+    padding: var(--space-16);
+    border-bottom: 1px solid var(--color-sayo-line);
+  }
+
+  &__face {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--color-sayo-amber);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    color: var(--color-sayo-amber);
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__close {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-sayo-amber-soft);
+    }
+  }
+
+  &__scroll {
+    flex: 1;
+    padding: var(--space-16);
+    overflow-y: auto;
+  }
+
+  &__foot {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
+    padding: var(--space-16);
+    border-top: 1px solid var(--color-sayo-line);
+  }
+
+  &__check {
+    display: flex;
+    gap: var(--space-8);
+    align-items: center;
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    cursor: pointer;
+
+    input {
+      flex: none;
+      width: 20px;
+      height: 20px;
+      accent-color: var(--color-sayo-amber);
+      cursor: pointer;
+    }
+  }
+
+  &__hint {
+    min-height: 1.5em;
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-fixed-12);
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-8);
+    justify-content: flex-end;
+  }
+
+  &__cancel,
+  &__agree {
+    padding: var(--space-8) var(--space-16);
+    border-radius: 999px;
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  &__cancel {
+    border: 1px solid var(--color-sayo-line);
+    background: transparent;
+    color: var(--color-sayo-sub);
+  }
+
+  &__agree {
+    border: 0;
+    background: var(--color-sayo-amber);
+    color: var(--color-sayo-plate-text);
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
+
+@keyframes sayo-consent-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}

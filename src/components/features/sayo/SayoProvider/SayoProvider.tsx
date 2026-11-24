@@ -5,6 +5,8 @@ import { SayoContext } from '@/components/features/sayo/useSayo';
 import type { SayoBlockReason, SayoContextValue, SayoSummaryCache, SayoModalState, SayoNovelState, SayoSearchState } from '@/components/features/sayo/useSayo';
 import { SayoSummaryModal } from '@/components/features/sayo/SayoSummaryModal';
 import { SayoNovelStage } from '@/components/features/sayo/SayoNovelStage';
+import { SayoConsentModal } from '@/components/features/sayo/SayoConsentModal';
+import { useSayoConsent } from '@/components/features/sayo/useSayoConsent';
 import type { SayoClient, SayoStatus, SayoSummary } from '@/types/sayo';
 
 /** Storybook・確認用：最初から開いておく状態 */
@@ -32,6 +34,7 @@ export type SayoProviderProps = {
 
 /**
  * サヨのUI全体の状態を持つ。フラグを読み、モーダルとノベル画面を描く。
+ * はじめて使う人（利用規約に未同意）には、要約・探す操作の前に同意画面を出し、同意してから続ける。
  * docs/develop/sayo_chat_spec.md §4・§7
  */
 export const SayoProvider = ({ client, chips, category, initialRemaining = 30, initial, children }: SayoProviderProps) => {
@@ -50,6 +53,30 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
     set: (s, generation) => { if (generation === summaryGeneration.current) summaries.current.set(s.articleId, s); },
   }), []);
   const initialized = useRef(false);
+  const consent = useSayoConsent();
+  // 同意画面を出している間、同意のあとに続ける操作（要約を開く・探す）。null なら同意画面は出さない
+  const [pendingAction, setPendingAction] = useState<(() => void) | null>(null);
+
+  /**
+   * 利用規約に同意済みなら action をすぐ実行し、未同意なら同意画面を出して、同意のあとに実行する。
+   * 同意する前は、要約・候補の取得（利用回数に数える通信）を始めない
+   */
+  const withConsent = useCallback((action: () => void) => {
+    if (consent.agreed) { action(); return; }
+    setPendingAction(() => action);
+  }, [consent.agreed]);
+
+  const agreeConsent = useCallback(() => {
+    consent.agree();
+    const action = pendingAction;
+    setPendingAction(null);
+    action?.();
+  }, [consent, pendingAction]);
+
+  const cancelConsent = useCallback(() => {
+    setPendingAction(null);
+    trigger.current?.focus();
+  }, []);
 
   // フラグはマウント後に読む（CSR）。取得に失敗したら出さない
   useEffect(() => {
@@ -84,10 +111,12 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
 
   const openSummary = useCallback((id: number, ids: number[], el?: HTMLElement | null) => {
     trigger.current = el ?? null;
-    const list = ids.includes(id) ? ids : [id, ...ids];
-    setNovel(null);
-    setModal({ kind: 'summary', ids: list, index: list.indexOf(id), search: null });
-  }, []);
+    withConsent(() => {
+      const list = ids.includes(id) ? ids : [id, ...ids];
+      setNovel(null);
+      setModal({ kind: 'summary', ids: list, index: list.indexOf(id), search: null });
+    });
+  }, [withConsent]);
 
   const runSearch = useCallback(async (search: SayoSearchState) => {
     const update = (patch: Partial<SayoSearchState>) => setModal((m) => (
@@ -109,11 +138,13 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
 
   const openSearch = useCallback((query: string, kind: 'chip' | 'free', el?: HTMLElement | null) => {
     if (el !== undefined) trigger.current = el;
-    const search: SayoSearchState = { query, kind, category, result: null };
-    setNovel(null);
-    setModal({ kind: 'search', search });
-    void runSearch(search);
-  }, [category, runSearch]);
+    withConsent(() => {
+      const search: SayoSearchState = { query, kind, category, result: null };
+      setNovel(null);
+      setModal({ kind: 'search', search });
+      void runSearch(search);
+    });
+  }, [category, runSearch, withConsent]);
 
   const showSummaryInSearch = useCallback((id: number) => {
     setModal((m) => {
@@ -168,11 +199,11 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
 
   // 開いている間は後ろのページをスクロールさせない
   useEffect(() => {
-    if (!modal && !novel) return undefined;
+    if (!modal && !novel && !pendingAction) return undefined;
     const prev = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = prev; };
-  }, [modal, novel]);
+  }, [modal, novel, pendingAction]);
 
   // 確認用の初期状態（表示できると分かってから一度だけ）
   useEffect(() => {
@@ -199,6 +230,7 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
       {children}
       {visible && modal && !novel && <SayoSummaryModal />}
       {visible && novel && <SayoNovelStage />}
+      {visible && pendingAction && <SayoConsentModal onAgree={agreeConsent} onCancel={cancelConsent} />}
     </SayoContext.Provider>
   );
 };
