@@ -52,6 +52,43 @@ TOP／リスト（ISR）
 - ネタバレを含む返事（`spoiler: true`）は「ネタバレあり」の印と「表示する」を挟む。
 - 戻り方：ノベル画面の「← 要約に戻る／結果に戻る」と Esc でモーダルへ、✕で一覧へ。
 
+### 3.1 はじめて使う人への利用規約の同意（Phase 1c、2026-11-24）
+
+- カードの「要約」・入口の候補ボタン・自由入力を**はじめて**押したとき、モーダルを開く前に同意画面（`SayoConsentModal`）を出す。
+- 同意画面は2つのパターンを用意し、`SayoProvider` の `ConsentScreen` で選ぶ（2026-11-24）。どちらも props（`onAgree`・`onCancel`）と、規約の項目（`SayoConsentTerms`）・下部（`SayoConsentActions`）は共通。
+
+  | パターン | 部品 | 規約の見せ方 | 開き方・閉じ方 |
+  |---|---|---|---|
+  | details（既定） | `SayoConsentModal` | `<details>`（「利用規約を読む」）で折りたたむ。画面が短い | `div role="dialog"`。Esc・背景のクリック・フォーカスの閉じ込めは自前（`libs/focusTrap.ts`） |
+  | dialog | `SayoConsentDialog` | 折りたたまず、画面の中でスクロールして全文を読む | ブラウザの `<dialog>` を `showModal()` で開く。最前面への表示・背景の無効化・Esc・フォーカスの閉じ込めはブラウザ。Esc（`cancel` イベント）と背景のクリックは取り消しとして扱う |
+
+  どちらを本番で使うかは未決（Storybook の `SayoProvider` の `FirstUse`／`FirstUseDialog` で比べる）。
+- 規約の項目：AIの回答（誤りがありうる）／入力した内容の送信（外部のAIサービス。個人情報・秘密の値を入れない）／会話の保存（本文は保存しない。直近の数往復を最長24時間）／利用回数（要約・候補・会話の合計。日本時間0時に戻る）／ネタバレ／限定公開のテスト／同意の記録。
+- チェックボックスに印を付けたときだけ「同意して始める」を押せる。押すと同意を保存し、押したボタンの操作（要約を開く・探す）をそのまま続ける。「今はやめる」・✕・Esc・背景のクリックでは何も開かず、押したボタンへフォーカスを戻す。
+- **同意する前は、要約・候補の取得（利用回数に数える通信）を始めない。**
+- 同意は `localStorage` のキー `katsumascore:sayo-consent` に、**規約の版（`SAYO_CONSENT_VERSION`）だけ**を保存する（質問・回答・合言葉・日時は保存しない。手順書6章の「質問・回答を `localStorage` に出さない」に反しない）。保存済みなら二度と出さない。規約の文面を変えたら版を上げ、もう一度出す。
+- `localStorage` が使えないブラウザでは、ページを開いている間だけメモリで同意済みとする（再読み込みで、もう一度出る）。
+
+#### 同意の保存先：localStorage と Cookie の比較（2026-11-24）
+
+| 観点 | localStorage（採用） | Cookie |
+|---|---|---|
+| サーバーへの送信 | 送らない。ブラウザの中だけで読む | 対象のパスへの**すべてのリクエストに付く**（ページ・画像・API）。通信量がわずかに増える |
+| ページのキャッシュ（ISR・Cloudflare）への影響 | なし | `Path=/` に置くと、ページのリクエストにも Cookie が付く。キャッシュの設定によっては、Cookie 付きのリクエストがキャッシュを通らない・分かれるおそれがある。避けるにはパスを絞る必要がある |
+| 読めるタイミング | ブラウザで描いたあと（CSR）だけ。サヨのUIはもともと CSR なので困らない | サーバー（SSR・Worker）でも読める。ただし TOP・リストは ISR で利用者ごとに出し分けないので、サーバーで読めても使い道がない |
+| ai-chat（Worker）での強制 | できない（Worker からは見えない） | `Path=/api/chat` にすれば、Worker で「同意の Cookie がない要求を断る」ことはできる。ただし利用者が自分で作れる値なので、同意の証拠にはならない |
+| 有効期限 | 消されるまで残る。Safari（ITP）は、7日間サイトを訪れないと、スクリプトが書いた保存領域を消すことがある | `Max-Age` を決める必要がある。Safari（ITP）は、JavaScript で書いた Cookie の期限を**最長7日**に縮めるので、毎週のように同意画面が出直す（避けるにはサーバーの応答で `Set-Cookie` する仕組みが要る） |
+| 別のタブへの反映 | `storage` イベントで、ほかのタブの表示もすぐ切り替わる | 変化を知らせる仕組みがない（`cookieStore` はブラウザの対応が限られる） |
+| 規約の版の扱い | 版の文字列をそのまま保存し、違えば出し直す | 同じことはできる |
+| プライベートブラウズ・データ削除 | 閉じる・消すと失われ、もう一度出る | 同じ |
+| 実装の手間 | 小さい（読み書きと例外の処理だけ） | `SameSite`・`Secure`・`Path`・`Max-Age` の指定と、文字列の解析が要る |
+| 既存の決まりとの関係 | 手順書6章の「質問・回答・合言葉を `localStorage` に出さない」には当たらない（保存するのは規約の版だけ） | ai-chat の参加 Cookie（`Path=/api/chat`・HttpOnly・署名つき）とは別に作ることになる。参加 Cookie はフロントから書けない |
+
+**結論（2026-11-24、利用者決定）：同意のチェックの有無は localStorage に保存する。** 同意の表示を出し分けるだけで、サーバーで判定する必要がないこと、ISR のキャッシュに影響しないこと、Safari で7日ごとに出直さないことによる。一般公開（Phase 1b）で、同意していない要求を ai-chat 側で断る必要が出たら、ai-chat の応答で `Set-Cookie` する方式（`Path=/api/chat`）を、あらためて検討する。
+- テスターのシートへの記入の同意（シート先頭の条件）とは別のもの。
+- **合言葉との関係（2026-11-24、利用者決定）**：同意のチェックで ai-chat の合言葉を生成・発行しない（合言葉が画面に載ると誰でも参加でき、限定公開に反するため）。限定公開のあいだは、ai-chat の参加専用ページ（`/api/chat/join`）に同じ規約とチェックボックスを置き、「同意して参加する」で同意を取る。参加ページは同じオリジンなので、同じキー `katsumascore:sayo-consent` に規約の版を書き、TOP・リストではこの同意画面を出さない。この同意画面は、ブラウザのデータを消した人や、規約の版を上げたときのためのもの。版（`SAYO_CONSENT_VERSION`）と規約の文面は ai-chat の参加ページと揃え、変えるときは両リポジトリで同時に変える（ai-chat の `docs/front-implementation-guide.md` 1.1）。
+- 一般公開（Phase 1b）では、同意画面から Turnstile を通して `/session` を呼び、同意と参加を一度で済ませる形を検討する（合言葉は使わない）。
+
 ---
 
 ## 4. 表示の条件（フラグと上限）
@@ -127,6 +164,8 @@ TOP／リスト（ISR）
 | `SayoSummary` | `ui-section` | 要約の中身（書き出し・要約・こんな方に・気分タグ・注記） | SCSS |
 | `SayoSearchResults` | `ui-section` | 探した結果の一覧（最大3件） | SCSS |
 | `SayoPausedNotice` | `ui-section` | 停止中・上限の案内（文・再開予定） | SCSS |
+| `SayoConsentTerms` | `ui-section` | 利用規約の項目（番号つきの一覧。§3.1） | SCSS |
+| `SayoConsentActions` | `ui-section` | 同意画面の下部（チェックボックス・ボタン。印の状態は props） | SCSS |
 | `SayoNovelWindow` | `ui-section` | 名前札・ネタバレ印・本文・▼（本文は props。1文字ずつの制御は features） | SCSS |
 | `SayoShelf` | `ui-section` | 棚の作品カード列（「レビューを読む」「この作品の話を聞く」） | SCSS |
 | `SayoProvider` | `features/sayo/` | フラグ・残り回数・モーダルとノベル画面の開閉を持つ。子孫のボタンから開けるようにする | SCSS |
@@ -135,6 +174,9 @@ TOP／リスト（ISR）
 | `SayoEntry` | `features/sayo/` | `SayoAskBox` を Provider につなぐ | — |
 | `SayoSummaryModal` | `features/sayo/` | モーダル（要約／探した結果の切替、前後の作品、フォーカス管理） | SCSS |
 | `SayoNovelStage` | `features/sayo/` | ノベル画面（立ち絵・表情・1文字ずつ・選択肢・入力・履歴） | SCSS |
+| `SayoConsentModal` | `features/sayo/` | はじめて使う人への同意画面（`<details>` のパターン。§3.1） | SCSS |
+| `SayoConsentDialog` | `features/sayo/` | はじめて使う人への同意画面（`<dialog>` のパターン。§3.1） | SCSS |
+| `useSayoConsent` | `features/sayo/` | 同意済みかを `localStorage` から読む（`src/libs/sayoConsent.ts`） | — |
 | `useSayoStatus` | `src/hooks/` | フラグの取得（`/api/sayo-chat-status`） | — |
 | `useSayoSummary` / `useSayoSearch` / `useSayoTalk` / `useTypewriter` | `features/sayo/` | 取得・会話・1文字ずつの表示 | — |
 | `sayoChat.ts` | `src/libs/api/` | ai-chat の呼び出しと zod 検証 | — |

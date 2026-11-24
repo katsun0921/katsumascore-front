@@ -20,6 +20,7 @@
     "typecheck": "next typegen && tsc --noEmit",
     "test:wp-schema": "node --import tsx --test tests/unit/wp-post-schema.test.ts",
     "test:eslint-config": "node --test tests/unit/eslint-config.test.mjs",
+    "test:sayo-consent": "node --import tsx --test tests/unit/sayo-consent.test.ts",
     "lint": "eslint src .storybook eslint-rules eslint.config.mjs",
     "lint:scss": "stylelint \"src/**/*.scss\"",
     "lint:ui": "node scripts/lint-ui.mjs",

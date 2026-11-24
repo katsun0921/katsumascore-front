@@ -10,6 +10,8 @@ import { SayoProvider } from '@/components/features/sayo/SayoProvider';
 import type { SayoInitialState } from '@/components/features/sayo/SayoProvider';
 import { SayoEntry } from '@/components/features/sayo/SayoEntry';
 import { SayoCardAction } from '@/components/features/sayo/SayoCardAction';
+import { SayoConsentDialog } from '@/components/features/sayo/SayoConsentDialog';
+import { SayoConsentModal } from '@/components/features/sayo/SayoConsentModal';
 import { sayoMockArticles, sayoMockChips } from '@/mocks/sayo';
 import type { Post } from '@/types/post';
 import type { SayoArticle } from '@/types/sayo';
@@ -20,6 +22,8 @@ export type SayoStoryFrameProps = {
   view: 'top' | 'list';
   options?: SayoMockOptions;
   initial?: SayoInitialState;
+  /** 同意画面のパターン（details＝SayoConsentModal／dialog＝SayoConsentDialog）。既定は details */
+  consent?: 'details' | 'dialog';
 };
 
 const toPost = (a: SayoArticle): Post => ({
@@ -29,7 +33,7 @@ const toPost = (a: SayoArticle): Post => ({
 
 const chips = sayoMockChips.map((c) => c.label);
 
-export const SayoStoryFrame = ({ view, options, initial }: SayoStoryFrameProps) => {
+export const SayoStoryFrame = ({ view, options, initial, consent = 'details' }: SayoStoryFrameProps) => {
   const client = useMemo(() => createSayoMockClient(options), [options]);
   const ids = sayoMockArticles.map((a) => a.id);
   const isList = view === 'list';
@@ -37,8 +41,9 @@ export const SayoStoryFrame = ({ view, options, initial }: SayoStoryFrameProps) 
   const pool = isList ? sayoMockArticles.filter((a) => a.category === '映画') : sayoMockArticles;
   const listIds = pool.map((a) => a.id);
   const [lead, ...rest] = pool;
+  const ConsentScreen = consent === 'dialog' ? SayoConsentDialog : SayoConsentModal;
   return (
-    <SayoProvider client={client} chips={chips} category={category} initialRemaining={options?.remaining} initial={initial}>
+    <SayoProvider client={client} chips={chips} category={category} initialRemaining={options?.remaining} initial={initial} ConsentScreen={ConsentScreen}>
       {isList ? (
         <div className='min-h-screen bg-[var(--color-bg)]'>
           <div className='bg-[var(--color-secondary)] px-4 py-8 text-[color:var(--color-text-inverse)]'>

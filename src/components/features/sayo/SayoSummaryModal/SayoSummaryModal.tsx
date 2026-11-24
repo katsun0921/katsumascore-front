@@ -11,6 +11,7 @@ import { SayoPausedNotice } from '@/components/ui-section/SayoPausedNotice';
 import { useSayo } from '@/components/features/sayo/useSayo';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
+import { trapFocus } from '@/libs/focusTrap';
 import { useArticleSummary } from './useArticleSummary';
 import { messages } from './i18n';
 
@@ -19,33 +20,6 @@ const Typing = () => (
     <i /><i /><i />
   </span>
 );
-
-const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-/**
- * Tab・Shift+Tab でフォーカスがモーダルの外へ出ないようにする（先頭と末尾で折り返す）
- * @param e キーイベント
- * @param sheet モーダル本体。null なら何もしない
- */
-const trapFocus = (e: KeyboardEvent, sheet: HTMLElement | null) => {
-  if (!sheet) return;
-  const nodes = sheet.querySelectorAll<HTMLElement>(FOCUSABLE);
-  if (nodes.length === 0) return;
-  const first = nodes[0];
-  const last = nodes[nodes.length - 1];
-  const active = document.activeElement;
-  if (!sheet.contains(active)) {
-    // すでに外にある（背景をクリックした直後など）ときは、先頭へ戻す
-    e.preventDefault();
-    first.focus();
-  } else if (e.shiftKey && active === first) {
-    e.preventDefault();
-    last.focus();
-  } else if (!e.shiftKey && active === last) {
-    e.preventDefault();
-    first.focus();
-  }
-};
 
 /**
  * 要約モーダル（作品の要約／探した結果）。SayoProvider が開閉する。

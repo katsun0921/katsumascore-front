@@ -169,7 +169,7 @@ HomeTemplate からのみ参照。ロジック禁止。
 | `HomeVodFinder` | `components/ui-home/HomeVodFinder` | VOD 検索機能 |
 | `HomeReleaseHighlight` | `components/ui-home/HomeReleaseHighlight` | 劇場公開・VOD配信情報の最新1件ずつのハイライト表示 |
 
-### 3.4 ui-section（意味のある UI・31 コンポーネント）
+### 3.4 ui-section（意味のある UI・33 コンポーネント）
 
 props でデータを受け取る。読み取り専用 hooks（`useLocale` など）のみ許可。
 
@@ -202,10 +202,12 @@ props でデータを受け取る。読み取り専用 hooks（`useLocale` な�
 | `SayoSummary` | `components/ui-section/SayoSummary` | サヨ：承認済み要約の表示 |
 | `SayoSearchResults` | `components/ui-section/SayoSearchResults` | サヨ：探した結果の作品一覧 |
 | `SayoPausedNotice` | `components/ui-section/SayoPausedNotice` | サヨ：停止中・上限の案内 |
+| `SayoConsentTerms` | `components/ui-section/SayoConsentTerms` | サヨ：利用規約の項目（番号つきの一覧。折りたたみは同意画面の側） |
+| `SayoConsentActions` | `components/ui-section/SayoConsentActions` | サヨ：同意画面の下部（同意のチェックボックス・「今はやめる」「同意して始める」） |
 | `SayoNovelWindow` | `components/ui-section/SayoNovelWindow` | サヨ：ノベル画面のメッセージウィンドウ |
 | `SayoShelf` | `components/ui-section/SayoShelf` | サヨ：ノベル画面の「棚」（作品カード列） |
 
-### 3.5 features（ロジック・26 コンポーネント）
+### 3.5 features（ロジック・28 コンポーネント）
 
 hooks / state 使用可。データ取得・整形を担当。
 
@@ -241,6 +243,8 @@ hooks / state 使用可。データ取得・整形を担当。
 | `SayoEntry` | `components/features/sayo/SayoEntry` | サヨ：入口（SayoAskBox を Provider につなぐ） |
 | `SayoSummaryModal` | `components/features/sayo/SayoSummaryModal` | サヨ：要約・探した結果のモーダル |
 | `SayoNovelStage` | `components/features/sayo/SayoNovelStage` | サヨ：「詳しく知りたい」で開くノベル風の画面 |
+| `SayoConsentModal` | `components/features/sayo/SayoConsentModal` | サヨ：はじめて使う人への利用規約の同意画面（`<details>` のパターン。規約を折りたたむ。`SayoProvider` の既定） |
+| `SayoConsentDialog` | `components/features/sayo/SayoConsentDialog` | サヨ：はじめて使う人への利用規約の同意画面（`<dialog>` のパターン。`showModal()` で開き、規約を全文表示） |
 
 ### 3.6 templates（画面構造・12 テンプレート）
 
@@ -348,6 +352,8 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 |---------------|------|
 | `homeStaticProps.ts` | ホームページ静的 props 生成 |
 | `sayoAssets.ts` | サヨの立ち絵・顔アイコンの場所 |
+| `sayoConsent.ts` | サヨの利用規約への同意を localStorage に保存・読み込み（規約の版だけを保存。使えないときはメモリ） |
+| `focusTrap.ts` | モーダル内に Tab のフォーカスを閉じ込める（サヨの要約モーダル・同意画面） |
 | `releaseWorks.ts` | 週次まとめ記事（theater_release / vod_release）本文から作品リストを抽出 |
 | `getStaticGenres.ts` | ジャンル静的パス生成 |
 | `listFilters.ts` | リストフィルタロジック |
@@ -392,6 +398,7 @@ WP API レスポンスから詳細ページ用データを組み立てる。
 | `useCategoryFilterPosts` | `src/libs/useCategoryFilterPosts.ts` | カテゴリフィルタ投稿取得 |
 | `useCategoryPagedPosts` | `src/libs/useCategoryPagedPosts.ts` | カテゴリページド投稿取得 |
 | `useLocale` | `src/i18n/provider.tsx` | 現在のロケール取得 |
+| `useSayoConsent` | `src/components/features/sayo/useSayoConsent/` | サヨの利用規約に同意済みか（localStorage）と、同意の保存 |
 
 ---
 

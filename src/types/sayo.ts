@@ -84,3 +84,14 @@ export type SayoClient = {
   searchFree: (query: string, category?: string) => Promise<SayoSearchResult>;
   sendMessage: (req: { message: string; articleId?: number }) => Promise<SayoMessageResult>;
 };
+
+/**
+ * はじめて使う人への利用規約の同意画面が受け取る props。
+ * パターン（SayoConsentModal＝<details>／SayoConsentDialog＝<dialog>）が違っても同じ形にし、SayoProvider から差し替えられるようにする
+ */
+export type SayoConsentScreenProps = {
+  /** チェックを入れて「同意して始める」を押したとき */
+  onAgree: () => void;
+  /** 「今はやめる」・✕・Esc・背景のクリック */
+  onCancel: () => void;
+};

@@ -1,0 +1,62 @@
+.sayoConsentActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  color: var(--color-sayo-text);
+
+  &__check {
+    display: flex;
+    gap: var(--space-8);
+    align-items: center;
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    cursor: pointer;
+
+    input {
+      flex: none;
+      width: 20px;
+      height: 20px;
+      accent-color: var(--color-sayo-amber);
+      cursor: pointer;
+    }
+  }
+
+  &__hint {
+    min-height: 1.5em;
+    color: var(--color-sayo-sub);
+    font-size: var(--font-size-fixed-12);
+  }
+
+  &__buttons {
+    display: flex;
+    gap: var(--space-8);
+    justify-content: flex-end;
+  }
+
+  &__cancel,
+  &__agree {
+    padding: var(--space-8) var(--space-16);
+    border-radius: 999px;
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  &__cancel {
+    border: 1px solid var(--color-sayo-line);
+    background: transparent;
+    color: var(--color-sayo-sub);
+  }
+
+  &__agree {
+    border: 0;
+    background: var(--color-sayo-amber);
+    color: var(--color-sayo-plate-text);
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+}
