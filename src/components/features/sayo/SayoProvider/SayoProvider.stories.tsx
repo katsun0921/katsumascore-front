@@ -31,8 +31,11 @@ type Story = StoryObj<typeof meta>;
 /** TOP：入口とカードの「要約」 */
 export const Top: Story = {};
 
-/** はじめて使う人：カードの「要約」や候補ボタンを押すと、先に利用規約の同意画面が出る。同意すると続きが開き、次からは出ない */
+/** はじめて使う人（<details> のパターン）：カードの「要約」や候補ボタンを押すと、先に利用規約の同意画面が出る。同意すると続きが開き、次からは出ない */
 export const FirstUse: Story = { loaders: [firstUse] };
+
+/** はじめて使う人（<dialog> のパターン）：規約を折りたたまず、ブラウザの <dialog> で出す */
+export const FirstUseDialog: Story = { args: { consent: 'dialog' }, loaders: [firstUse] };
 
 /** リスト（映画）：映画の記事の中から探す */
 export const List: Story = { args: { view: 'list' } };

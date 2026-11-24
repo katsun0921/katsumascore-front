@@ -1,9 +1,4 @@
 export const messages = {
-  summary: { ja: '利用規約を読む', en: 'Read the terms of use' },
-  lead: {
-    ja: 'サヨは、KatsumaScoreの記事をもとに作品を案内するAIです。はじめて使う前に、次の内容をご確認ください。',
-    en: 'Sayo is an AI guide that answers from KatsumaScore reviews. Please review the following before your first use.',
-  },
   points: {
     ai: {
       title: { ja: 'AIの回答について', en: 'About AI answers' },

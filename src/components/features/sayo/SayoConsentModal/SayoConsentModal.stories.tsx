@@ -3,7 +3,8 @@ import { fn } from 'storybook/test';
 import { SayoConsentModal } from './SayoConsentModal';
 
 /**
- * はじめてサヨを使う人に出す同意画面。チェックを入れたときだけ「同意して始める」を押せる。
+ * はじめてサヨを使う人に出す同意画面（<details> のパターン）。チェックを入れたときだけ「同意して始める」を押せる。
+ * <dialog> で作るパターンは Features/Sayo/SayoConsentDialog。
  * 保存（localStorage）は SayoProvider が持つので、ここでは押したことだけを Actions に出す。
  */
 const meta = {

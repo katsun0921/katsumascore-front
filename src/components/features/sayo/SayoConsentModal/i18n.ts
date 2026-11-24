@@ -1,9 +1,10 @@
 export const messages = {
   title: { ja: 'サヨを使う前に', en: 'Before you start' },
   label: { ja: 'AI映画店主', en: 'AI movie guide' },
-  check: { ja: '利用規約を読み、内容に同意します', en: 'I have read and agree to the terms of use' },
-  agree: { ja: '同意して始める', en: 'Agree and start' },
-  cancel: { ja: '今はやめる', en: 'Not now' },
+  lead: {
+    ja: 'サヨは、KatsumaScoreの記事をもとに作品を案内するAIです。はじめて使う前に、次の内容をご確認ください。',
+    en: 'Sayo is an AI guide that answers from KatsumaScore reviews. Please review the following before your first use.',
+  },
+  summary: { ja: '利用規約を読む', en: 'Read the terms of use' },
   close: { ja: '閉じる', en: 'Close' },
-  hint: { ja: 'チェックを入れると始められます', en: 'Check the box to continue' },
 } as const;

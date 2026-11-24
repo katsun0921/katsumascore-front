@@ -3,33 +3,29 @@ import Image from 'next/image';
 import { SAYO_FACE_SRC } from '@/libs/sayoAssets';
 import { trapFocus } from '@/libs/focusTrap';
 import { SayoConsentTerms } from '@/components/ui-section/SayoConsentTerms';
+import { SayoConsentActions } from '@/components/ui-section/SayoConsentActions';
 import { useLocale } from '@/i18n/provider';
 import { t } from '@/i18n/t';
+import type { SayoConsentScreenProps } from '@/types/sayo';
 import { messages } from './i18n';
 
-export type SayoConsentModalProps = {
-  /** チェックを入れて「同意して始める」を押したとき */
-  onAgree: () => void;
-  /** 「今はやめる」・✕・Esc・背景のクリック */
-  onCancel: () => void;
+export type SayoConsentModalProps = SayoConsentScreenProps & {
   /** 規約を最初から開いておくか（Storybook 用） */
   defaultOpen?: boolean;
 };
 
 /**
- * はじめてサヨ（AI）を使う人に出す、利用規約の同意画面。
- * 規約は <details> で折りたたみ、チェックボックスに印を付けたときだけ「同意して始める」を押せる。
+ * はじめてサヨ（AI）を使う人に出す、利用規約の同意画面（<details> のパターン）。
+ * 規約は <details>（「利用規約を読む」）で折りたたみ、画面は短く保つ。
+ * チェックボックスに印を付けたときだけ「同意して始める」を押せる。
  * 同意の保存（localStorage）と、同意のあとに続ける操作は呼び出し側（SayoProvider）が持つ。
+ * <dialog> 要素で作るパターンは SayoConsentDialog
  */
-export const SayoConsentModal = ({ onAgree, onCancel, defaultOpen }: SayoConsentModalProps) => {
+export const SayoConsentModal = ({ onAgree, onCancel, defaultOpen = false }: SayoConsentModalProps) => {
   const locale = useLocale();
   const [checked, setChecked] = useState(false);
   const sheetRef = useRef<HTMLElement>(null);
-  const checkRef = useRef<HTMLInputElement>(null);
   const titleId = useId();
-  const hintId = useId();
-
-  useEffect(() => { checkRef.current?.focus(); }, []);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -53,24 +49,14 @@ export const SayoConsentModal = ({ onAgree, onCancel, defaultOpen }: SayoConsent
           <button type='button' className='sayoConsentModal__close' onClick={onCancel} aria-label={t(messages, ['close'], locale)}>✕</button>
         </header>
         <div className='sayoConsentModal__scroll'>
-          <SayoConsentTerms defaultOpen={defaultOpen} />
+          <p className='sayoConsentModal__lead'>{t(messages, ['lead'], locale)}</p>
+          <details className='sayoConsentModal__details' open={defaultOpen}>
+            <summary className='sayoConsentModal__summary'>{t(messages, ['summary'], locale)}</summary>
+            <SayoConsentTerms className='sayoConsentModal__terms' />
+          </details>
         </div>
         <footer className='sayoConsentModal__foot'>
-          <label className='sayoConsentModal__check'>
-            <input
-              ref={checkRef}
-              type='checkbox'
-              checked={checked}
-              onChange={(e) => setChecked(e.target.checked)}
-              aria-describedby={hintId}
-            />
-            <span>{t(messages, ['check'], locale)}</span>
-          </label>
-          <p id={hintId} className='sayoConsentModal__hint'>{checked ? '' : t(messages, ['hint'], locale)}</p>
-          <div className='sayoConsentModal__actions'>
-            <button type='button' className='sayoConsentModal__cancel' onClick={onCancel}>{t(messages, ['cancel'], locale)}</button>
-            <button type='button' className='sayoConsentModal__agree' onClick={onAgree} disabled={!checked}>{t(messages, ['agree'], locale)}</button>
-          </div>
+          <SayoConsentActions checked={checked} onCheckedChange={setChecked} onAgree={onAgree} onCancel={onCancel} autoFocus />
         </footer>
       </section>
     </div>

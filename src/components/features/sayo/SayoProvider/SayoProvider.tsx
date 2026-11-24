@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { ReactNode } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { useLocale } from '@/i18n/provider';
 import { SayoContext } from '@/components/features/sayo/useSayo';
 import type { SayoBlockReason, SayoContextValue, SayoSummaryCache, SayoModalState, SayoNovelState, SayoSearchState } from '@/components/features/sayo/useSayo';
@@ -7,7 +7,7 @@ import { SayoSummaryModal } from '@/components/features/sayo/SayoSummaryModal';
 import { SayoNovelStage } from '@/components/features/sayo/SayoNovelStage';
 import { SayoConsentModal } from '@/components/features/sayo/SayoConsentModal';
 import { useSayoConsent } from '@/components/features/sayo/useSayoConsent';
-import type { SayoClient, SayoStatus, SayoSummary } from '@/types/sayo';
+import type { SayoClient, SayoConsentScreenProps, SayoStatus, SayoSummary } from '@/types/sayo';
 
 /** Storybook・確認用：最初から開いておく状態 */
 export type SayoInitialState = {
@@ -29,6 +29,11 @@ export type SayoProviderProps = {
   /** 残り回数の初期値（/session の remaining） */
   initialRemaining?: number;
   initial?: SayoInitialState;
+  /**
+   * はじめて使う人に出す利用規約の同意画面。既定は SayoConsentModal（<details> で折りたたむ）。
+   * <dialog> のパターンにするときは SayoConsentDialog を渡す
+   */
+  ConsentScreen?: ComponentType<SayoConsentScreenProps>;
   children: ReactNode;
 };
 
@@ -37,7 +42,7 @@ export type SayoProviderProps = {
  * はじめて使う人（利用規約に未同意）には、要約・探す操作の前に同意画面を出し、同意してから続ける。
  * docs/develop/sayo_chat_spec.md §4・§7
  */
-export const SayoProvider = ({ client, chips, category, initialRemaining = 30, initial, children }: SayoProviderProps) => {
+export const SayoProvider = ({ client, chips, category, initialRemaining = 30, initial, ConsentScreen = SayoConsentModal, children }: SayoProviderProps) => {
   const locale = useLocale();
   const [status, setStatus] = useState<SayoStatus | null>(null);
   const [remaining, setRemaining] = useState(initialRemaining);
@@ -230,7 +235,7 @@ export const SayoProvider = ({ client, chips, category, initialRemaining = 30, i
       {children}
       {visible && modal && !novel && <SayoSummaryModal />}
       {visible && novel && <SayoNovelStage />}
-      {visible && pendingAction && <SayoConsentModal onAgree={agreeConsent} onCancel={cancelConsent} />}
+      {visible && pendingAction && <ConsentScreen onAgree={agreeConsent} onCancel={cancelConsent} />}
     </SayoContext.Provider>
   );
 };

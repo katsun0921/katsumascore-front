@@ -55,7 +55,15 @@ TOP／リスト（ISR）
 ### 3.1 はじめて使う人への利用規約の同意（Phase 1c、2026-11-24）
 
 - カードの「要約」・入口の候補ボタン・自由入力を**はじめて**押したとき、モーダルを開く前に同意画面（`SayoConsentModal`）を出す。
-- 規約の本文は `<details>`（「利用規約を読む」）で折りたたむ（`SayoConsentTerms`）。項目：AIの回答（誤りがありうる）／入力した内容の送信（外部のAIサービス。個人情報・秘密の値を入れない）／会話の保存（本文は保存しない。直近の数往復を最長24時間）／利用回数（要約・候補・会話の合計。日本時間0時に戻る）／ネタバレ／限定公開のテスト／同意の記録。
+- 同意画面は2つのパターンを用意し、`SayoProvider` の `ConsentScreen` で選ぶ（2026-11-24）。どちらも props（`onAgree`・`onCancel`）と、規約の項目（`SayoConsentTerms`）・下部（`SayoConsentActions`）は共通。
+
+  | パターン | 部品 | 規約の見せ方 | 開き方・閉じ方 |
+  |---|---|---|---|
+  | details（既定） | `SayoConsentModal` | `<details>`（「利用規約を読む」）で折りたたむ。画面が短い | `div role="dialog"`。Esc・背景のクリック・フォーカスの閉じ込めは自前（`libs/focusTrap.ts`） |
+  | dialog | `SayoConsentDialog` | 折りたたまず、画面の中でスクロールして全文を読む | ブラウザの `<dialog>` を `showModal()` で開く。最前面への表示・背景の無効化・Esc・フォーカスの閉じ込めはブラウザ。Esc（`cancel` イベント）と背景のクリックは取り消しとして扱う |
+
+  どちらを本番で使うかは未決（Storybook の `SayoProvider` の `FirstUse`／`FirstUseDialog` で比べる）。
+- 規約の項目：AIの回答（誤りがありうる）／入力した内容の送信（外部のAIサービス。個人情報・秘密の値を入れない）／会話の保存（本文は保存しない。直近の数往復を最長24時間）／利用回数（要約・候補・会話の合計。日本時間0時に戻る）／ネタバレ／限定公開のテスト／同意の記録。
 - チェックボックスに印を付けたときだけ「同意して始める」を押せる。押すと同意を保存し、押したボタンの操作（要約を開く・探す）をそのまま続ける。「今はやめる」・✕・Esc・背景のクリックでは何も開かず、押したボタンへフォーカスを戻す。
 - **同意する前は、要約・候補の取得（利用回数に数える通信）を始めない。**
 - 同意は `localStorage` のキー `katsumascore:sayo-consent` に、**規約の版（`SAYO_CONSENT_VERSION`）だけ**を保存する（質問・回答・合言葉・日時は保存しない。手順書6章の「質問・回答を `localStorage` に出さない」に反しない）。保存済みなら二度と出さない。規約の文面を変えたら版を上げ、もう一度出す。
@@ -137,7 +145,8 @@ TOP／リスト（ISR）
 | `SayoSummary` | `ui-section` | 要約の中身（書き出し・要約・こんな方に・気分タグ・注記） | SCSS |
 | `SayoSearchResults` | `ui-section` | 探した結果の一覧（最大3件） | SCSS |
 | `SayoPausedNotice` | `ui-section` | 停止中・上限の案内（文・再開予定） | SCSS |
-| `SayoConsentTerms` | `ui-section` | 利用規約の本文（`<details>` で折りたたみ。§3.1） | SCSS |
+| `SayoConsentTerms` | `ui-section` | 利用規約の項目（番号つきの一覧。§3.1） | SCSS |
+| `SayoConsentActions` | `ui-section` | 同意画面の下部（チェックボックス・ボタン。印の状態は props） | SCSS |
 | `SayoNovelWindow` | `ui-section` | 名前札・ネタバレ印・本文・▼（本文は props。1文字ずつの制御は features） | SCSS |
 | `SayoShelf` | `ui-section` | 棚の作品カード列（「レビューを読む」「この作品の話を聞く」） | SCSS |
 | `SayoProvider` | `features/sayo/` | フラグ・残り回数・モーダルとノベル画面の開閉を持つ。子孫のボタンから開けるようにする | SCSS |
@@ -146,7 +155,8 @@ TOP／リスト（ISR）
 | `SayoEntry` | `features/sayo/` | `SayoAskBox` を Provider につなぐ | — |
 | `SayoSummaryModal` | `features/sayo/` | モーダル（要約／探した結果の切替、前後の作品、フォーカス管理） | SCSS |
 | `SayoNovelStage` | `features/sayo/` | ノベル画面（立ち絵・表情・1文字ずつ・選択肢・入力・履歴） | SCSS |
-| `SayoConsentModal` | `features/sayo/` | はじめて使う人への同意画面（チェックボックス・同意して始める。§3.1） | SCSS |
+| `SayoConsentModal` | `features/sayo/` | はじめて使う人への同意画面（`<details>` のパターン。§3.1） | SCSS |
+| `SayoConsentDialog` | `features/sayo/` | はじめて使う人への同意画面（`<dialog>` のパターン。§3.1） | SCSS |
 | `useSayoConsent` | `features/sayo/` | 同意済みかを `localStorage` から読む（`src/libs/sayoConsent.ts`） | — |
 | `useSayoStatus` | `src/hooks/` | フラグの取得（`/api/sayo-chat-status`） | — |
 | `useSayoSummary` / `useSayoSearch` / `useSayoTalk` / `useTypewriter` | `features/sayo/` | 取得・会話・1文字ずつの表示 | — |

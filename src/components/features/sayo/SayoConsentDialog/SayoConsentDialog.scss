@@ -1,0 +1,134 @@
+@use "@/styles/scss/global/mixin/layout.scss" as *;
+
+// <dialog> は showModal() で最前面（top layer）に出るので z-index は要らない
+.sayoConsentDialog {
+  width: 100%;
+  max-width: 100%;
+  max-height: 90vh;
+  margin: auto auto 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 20px 20px 0 0;
+  background: var(--color-sayo-paper);
+  color: var(--color-sayo-text);
+
+  @include layout-md {
+    width: 560px;
+    max-height: min(720px, calc(100vh - 48px));
+    margin: auto;
+    border-radius: 20px;
+  }
+
+  &[open] {
+    animation: sayo-consent-dialog-up 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+    @media (prefers-reduced-motion: reduce) {
+      animation: none;
+    }
+  }
+
+  &::backdrop {
+    background: rgba(var(--color-black-rgb), 0.6);
+    backdrop-filter: blur(3px);
+  }
+
+  &__inner {
+    display: flex;
+    flex-direction: column;
+    max-height: inherit;
+  }
+
+  &__head {
+    display: flex;
+    gap: var(--space-12);
+    align-items: center;
+    padding: var(--space-16);
+    border-bottom: 1px solid var(--color-sayo-line);
+  }
+
+  &__face {
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border: 2px solid var(--color-sayo-amber);
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  &__meta {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__label {
+    color: var(--color-sayo-amber);
+    font-size: var(--font-size-fixed-12);
+    font-weight: 700;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &__close {
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: inherit;
+    font-size: 18px;
+    cursor: pointer;
+
+    &:hover {
+      background: var(--color-sayo-amber-soft);
+    }
+  }
+
+  &__scroll {
+    flex: 1;
+    min-height: 0;
+    padding: var(--space-16);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  &__lead {
+    margin-bottom: var(--space-16);
+    font-size: var(--font-size-fixed-14);
+    line-height: 1.8;
+  }
+
+  &__terms {
+    padding: var(--space-16);
+    border-radius: 12px;
+    background: rgba(var(--color-sayo-amber-rgb), 0.08);
+  }
+
+  &__termsHead {
+    margin-bottom: var(--space-12);
+    color: var(--color-sayo-wood);
+    font-size: var(--font-size-fixed-14);
+    font-weight: 700;
+  }
+
+  &__foot {
+    padding: var(--space-16);
+    border-top: 1px solid var(--color-sayo-line);
+  }
+}
+
+@keyframes sayo-consent-dialog-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
