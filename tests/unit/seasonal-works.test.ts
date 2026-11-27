@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { collectVodFilters, extractSeasonalWorks } from '../../src/libs/seasonalWorks';
+import {
+  collectVodFilters,
+  extractSeasonalWorks,
+  normalizeSeasonalWorks,
+} from '../../src/libs/seasonalWorks';
 
 /** 実際の入稿と同じ構造（h2 → p → details）のサンプル。 */
 const SAMPLE = `
@@ -76,4 +80,91 @@ test('h2 を持たない本文では空配列を返す（本文HTMLへフォー�
 test('あらすじは h2 直後の最初の p のみを採用する', () => {
   const works = extractSeasonalWorks('<h2>作品Z</h2><p>一文目。</p><p>二文目。</p>');
   assert.equal(works[0].summary, '一文目。');
+});
+
+// --- ACF `works` リピーターの正規化 ---
+
+test('ACF works を表示用の作品リストへ正規化する', () => {
+  const works = normalizeSeasonalWorks([
+    {
+      title: '作品A',
+      description: '作品Aのあらすじ。',
+      official_url: 'https://example.com/a/',
+      delivery_status: 'available',
+      has_other_services: 0,
+      vods: [{ service: 'danime', service_other: '', note: '' }],
+    },
+  ]);
+  assert.equal(works.length, 1);
+  assert.equal(works[0].title, '作品A');
+  assert.equal(works[0].summary, '作品Aのあらすじ。');
+  assert.equal(works[0].officialUrl, 'https://example.com/a/');
+  assert.deepEqual(
+    works[0].vods.map((v) => v.key),
+    ['dアニメストア'],
+  );
+});
+
+test('注記付きのサービスは key を保ったままラベルに注記を添える', () => {
+  const works = normalizeSeasonalWorks([
+    {
+      title: '作品B',
+      delivery_status: 'available',
+      vods: [{ service: 'abema', note: 'exclusive' }],
+    },
+  ]);
+  // 絞り込みキーは注記を含まない（ABEMA で絞れば独占配信も拾える）
+  assert.equal(works[0].vods[0].key, 'ABEMA');
+  assert.equal(works[0].vods[0].label, 'ABEMA（独占）');
+  assert.equal(works[0].vods[0].isUndecided, false);
+});
+
+test('その他サービスは自由入力の名称を使う', () => {
+  const works = normalizeSeasonalWorks([
+    {
+      title: '作品C',
+      delivery_status: 'available',
+      vods: [{ service: 'other', service_other: '謎の配信サービス' }],
+    },
+  ]);
+  assert.equal(works[0].vods[0].key, '謎の配信サービス');
+});
+
+test('配信未発表・その他フラグを未確定バッジとして追加する', () => {
+  const works = normalizeSeasonalWorks([
+    { title: '作品D', delivery_status: 'undecided_planned', vods: false },
+    { title: '作品E', delivery_status: 'available', has_other_services: 1, vods: [{ service: 'hulu' }] },
+  ]);
+  assert.deepEqual(works[0].vods, [
+    {
+      label: '配信サービス未発表（配信予定あり）',
+      key: '配信サービス未発表（配信予定あり）',
+      colorVar: null,
+      isUndecided: true,
+    },
+  ]);
+  const other = works[1].vods.find((v) => v.key === 'その他の配信サービス');
+  assert.ok(other);
+  assert.equal(other.isUndecided, true);
+
+  // 未確定バッジは絞り込みの選択肢に出さない
+  assert.deepEqual(collectVodFilters(works).map((f) => f.key), ['Hulu']);
+});
+
+test('display_order の昇順に並べ、未入力は後ろへ回す', () => {
+  const works = normalizeSeasonalWorks([
+    { title: '三番目', display_order: 3 },
+    { title: '未入力' },
+    { title: '一番目', display_order: '1' },
+  ]);
+  assert.deepEqual(
+    works.map((w) => w.title),
+    ['一番目', '三番目', '未入力'],
+  );
+});
+
+test('タイトルが空の行は落とし、works が空なら空配列を返す', () => {
+  assert.deepEqual(normalizeSeasonalWorks([{ title: '  ' }, { description: 'x' }]), []);
+  assert.deepEqual(normalizeSeasonalWorks(false), []);
+  assert.deepEqual(normalizeSeasonalWorks(undefined), []);
 });
